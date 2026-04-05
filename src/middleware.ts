@@ -7,7 +7,7 @@ export default auth((req) => {
 
   // 保護されたルート
   const seekerRoutes = ["/mypage"]
-  const companyRoutes = ["/company/dashboard", "/company/jobs", "/company/applications", "/company/scouts", "/company/billing"]
+  const companyRoutes = ["/company/dashboard", "/company/jobs", "/company/applications", "/company/scouts", "/company/billing", "/company/candidates"]
   const adminRoutes = ["/admin"]
 
   const isSeekerRoute = seekerRoutes.some((r) => pathname.startsWith(r))

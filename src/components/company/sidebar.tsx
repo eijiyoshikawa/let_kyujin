@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   Briefcase,
   Users,
+  Send,
   Building2,
 } from "lucide-react"
 
@@ -13,6 +14,7 @@ const navItems = [
   { href: "/company/dashboard", label: "ダッシュボード", icon: LayoutDashboard },
   { href: "/company/jobs", label: "求人管理", icon: Briefcase },
   { href: "/company/applications", label: "応募者管理", icon: Users },
+  { href: "/company/scouts", label: "スカウト", icon: Send },
 ]
 
 export function CompanySidebar({
