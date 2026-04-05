@@ -7,6 +7,7 @@ import {
   Briefcase,
   Users,
   Send,
+  CreditCard,
   Building2,
 } from "lucide-react"
 
@@ -15,6 +16,7 @@ const navItems = [
   { href: "/company/jobs", label: "求人管理", icon: Briefcase },
   { href: "/company/applications", label: "応募者管理", icon: Users },
   { href: "/company/scouts", label: "スカウト", icon: Send },
+  { href: "/company/billing", label: "課金履歴", icon: CreditCard },
 ]
 
 export function CompanySidebar({

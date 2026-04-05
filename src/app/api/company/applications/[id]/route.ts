@@ -64,5 +64,16 @@ export async function PUT(
     data: { status: parsed.data.status },
   })
 
+  // Trigger billing when status changes to "hired"
+  if (parsed.data.status === "hired") {
+    try {
+      const { createHiringInvoice } = await import("@/lib/billing")
+      await createHiringInvoice(id)
+    } catch (error) {
+      console.error(`[billing] Failed to create invoice for application ${id}:`, error)
+      // Don't fail the status update if billing fails
+    }
+  }
+
   return Response.json({ application: updated })
 }
