@@ -132,7 +132,18 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-gray-500">
+          {activeTab === "seeker" && (
+            <div className="mt-4 text-center">
+              <Link
+                href="/forgot-password"
+                className="text-sm text-gray-500 hover:text-gray-700"
+              >
+                パスワードをお忘れの方
+              </Link>
+            </div>
+          )}
+
+          <div className="mt-4 text-center text-sm text-gray-500">
             アカウントをお持ちでない方は
             <Link
               href={
