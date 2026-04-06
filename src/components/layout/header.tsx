@@ -92,7 +92,7 @@ export function Header() {
               onClick={() => setMenuOpen(false)}
               className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
             >
-              <Newspaper className="h-4 w-4" /> マガジン
+              <Newspaper className="h-4 w-4 text-blue-600" /> マガジン
             </Link>
             <Link
               href="/for-employers"

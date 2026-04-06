@@ -8,6 +8,8 @@ import {
   Camera,
   TrendingUp,
   ArrowRight,
+  Star,
+  Building2,
 } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -113,28 +115,28 @@ export default function JournalPage() {
   return (
     <div>
       {/* Blue header bar */}
-      <div className="bg-blue-700 text-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5">
-          <h1 className="flex items-center gap-2 text-xl font-bold">
+      <div className="bg-gradient-to-r from-blue-700 to-blue-600 text-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+          <h1 className="flex items-center gap-2.5 text-xl font-bold">
             <Newspaper className="h-6 w-6" />
             建設求人マガジン
           </h1>
-          <p className="mt-1 text-sm text-blue-100">
-            建設業界で働く方に役立つ情報を発信
+          <p className="mt-1.5 text-sm text-blue-100">
+            建設業界で働く方に役立つ情報を発信するメディアです。
           </p>
         </div>
       </div>
 
       {/* Category tabs */}
-      <div className="border-b bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-x-auto">
-          <div className="flex gap-1 py-2 min-w-max">
+      <div className="border-b bg-white shadow-sm">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-x-auto scrollbar-hide">
+          <div className="flex gap-1 py-2.5 min-w-max">
             {categoryTabs.map((tab, i) => (
               <span
                 key={tab}
                 className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium cursor-pointer transition ${
                   i === 0
-                    ? "bg-blue-600 text-white"
+                    ? "bg-blue-600 text-white shadow-sm"
                     : "text-gray-600 hover:bg-blue-50 hover:text-blue-600"
                 }`}
               >
@@ -146,26 +148,26 @@ export default function JournalPage() {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* Featured articles - 3 col with images */}
+        {/* Featured articles */}
         <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory sm:grid sm:grid-cols-3 sm:overflow-visible sm:pb-0">
           {featured.map((article) => (
             <Link
               key={article.slug}
               href={`/journal/${article.slug}`}
-              className="group shrink-0 w-72 snap-start rounded-lg overflow-hidden border bg-white hover:shadow-md transition sm:w-auto"
+              className="group shrink-0 w-72 snap-start rounded-lg overflow-hidden border bg-white hover:shadow-lg transition sm:w-auto"
             >
-              <div className="aspect-video relative">
+              <div className="aspect-video relative overflow-hidden">
                 <img
                   src={article.imageUrl}
                   alt={article.title}
                   loading="lazy"
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover group-hover:scale-105 transition duration-300"
                 />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-3 pt-8">
                   <span className="rounded bg-blue-600 px-2 py-0.5 text-xs font-medium text-white">
                     {article.category}
                   </span>
-                  <p className="mt-1 text-sm font-bold text-white line-clamp-2">
+                  <p className="mt-1.5 text-sm font-bold text-white line-clamp-2 drop-shadow-sm">
                     {article.title}
                   </p>
                 </div>
@@ -175,17 +177,17 @@ export default function JournalPage() {
         </div>
 
         {/* Dual CTA buttons */}
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Link
             href="/jobs"
-            className="flex items-center justify-center gap-2 rounded-full bg-blue-600 px-8 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+            className="flex items-center justify-center gap-2 rounded-full bg-blue-600 px-8 py-3 text-sm font-semibold text-white hover:bg-blue-700 transition shadow-sm"
           >
             <Search className="h-4 w-4" />
             求人を探す
           </Link>
           <Link
             href="/register"
-            className="flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-8 py-3 text-sm font-semibold text-white hover:from-orange-600 hover:to-amber-600"
+            className="flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-8 py-3 text-sm font-semibold text-white hover:from-orange-600 hover:to-amber-600 transition shadow-sm"
           >
             転職サポートを受ける
             <ArrowRight className="h-4 w-4" />
@@ -193,7 +195,7 @@ export default function JournalPage() {
         </div>
 
         {/* Main content + Sidebar */}
-        <div className="mt-8 flex flex-col gap-8 lg:flex-row">
+        <div className="mt-10 flex flex-col gap-8 lg:flex-row">
           {/* Article list */}
           <div className="flex-1 min-w-0">
             <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900 border-b-2 border-blue-600 pb-2">
@@ -205,14 +207,14 @@ export default function JournalPage() {
                 <Link
                   key={article.slug}
                   href={`/journal/${article.slug}`}
-                  className="group flex gap-4 rounded-lg border bg-white p-3 hover:shadow-md transition"
+                  className="group flex gap-4 rounded-lg border bg-white p-3 hover:shadow-md hover:border-blue-200 transition"
                 >
-                  <div className="h-24 w-40 shrink-0 rounded overflow-hidden">
+                  <div className="h-24 w-40 shrink-0 rounded-md overflow-hidden">
                     <img
                       src={article.imageUrl}
                       alt={article.title}
                       loading="lazy"
-                      className="h-full w-full object-cover"
+                      className="h-full w-full object-cover group-hover:scale-105 transition duration-300"
                     />
                   </div>
                   <div className="flex-1 min-w-0 py-0.5">
@@ -231,16 +233,6 @@ export default function JournalPage() {
                   </div>
                 </Link>
               ))}
-            </div>
-
-            <div className="mt-6 text-center">
-              <Link
-                href="/journal"
-                className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:underline"
-              >
-                マガジンをもっと見る
-                <ArrowRight className="h-4 w-4" />
-              </Link>
             </div>
           </div>
 
@@ -268,12 +260,13 @@ export default function JournalPage() {
             </div>
 
             {/* Search CTA */}
-            <div className="rounded-lg bg-blue-600 p-5 text-center text-white">
-              <p className="font-bold">求人を探す</p>
-              <p className="mt-1 text-xs text-blue-100">建設業界の求人を検索</p>
+            <div className="rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 p-5 text-center text-white shadow-sm">
+              <Search className="mx-auto h-8 w-8 text-blue-200" />
+              <p className="mt-2 font-bold">求人を探す</p>
+              <p className="mt-1 text-xs text-blue-200">建設業界の求人を検索</p>
               <Link
                 href="/jobs"
-                className="mt-3 inline-flex items-center gap-1 rounded-full bg-white px-5 py-2 text-sm font-semibold text-blue-600 hover:bg-blue-50"
+                className="mt-3 inline-flex items-center gap-1 rounded-full bg-white px-5 py-2 text-sm font-semibold text-blue-600 hover:bg-blue-50 transition shadow-sm"
               >
                 <Search className="h-3.5 w-3.5" />
                 求人検索
@@ -282,7 +275,8 @@ export default function JournalPage() {
 
             {/* Recommend articles with thumbnails */}
             <div className="rounded-lg border bg-white p-4">
-              <h3 className="font-bold text-sm text-gray-900 border-b pb-2">
+              <h3 className="flex items-center gap-1.5 font-bold text-sm text-gray-900 border-b pb-2">
+                <Star className="h-4 w-4 text-amber-500" />
                 おすすめ記事
               </h3>
               <ul className="mt-3 space-y-3">
@@ -292,18 +286,18 @@ export default function JournalPage() {
                       href={`/journal/${article.slug}`}
                       className="flex gap-3 group"
                     >
-                      <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded overflow-hidden">
+                      <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-md overflow-hidden">
                         <img
                           src={article.imageUrl}
                           alt=""
                           loading="lazy"
                           className="h-full w-full object-cover"
                         />
-                        <span className="absolute top-0 left-0 flex h-5 w-5 items-center justify-center bg-blue-600 text-[10px] font-bold text-white">
+                        <span className="absolute top-0 left-0 flex h-5 w-5 items-center justify-center bg-blue-600 text-[10px] font-bold text-white rounded-br">
                           {i + 1}
                         </span>
                       </div>
-                      <span className="text-xs text-gray-700 group-hover:text-blue-600 line-clamp-2 pt-0.5">
+                      <span className="text-xs text-gray-700 group-hover:text-blue-600 transition line-clamp-2 pt-0.5 leading-relaxed">
                         {article.title}
                       </span>
                     </Link>
@@ -317,10 +311,10 @@ export default function JournalPage() {
               <h3 className="font-bold text-gray-900 text-sm border-b pb-2">
                 カテゴリー
               </h3>
-              <ul className="mt-2 divide-y divide-gray-100">
+              <ul className="mt-1 divide-y divide-gray-100">
                 {categoryList.map((cat) => (
                   <li key={cat.name}>
-                    <span className="flex items-center justify-between py-2.5 text-sm text-gray-600 hover:text-blue-600 cursor-pointer">
+                    <span className="flex items-center justify-between py-2.5 text-sm text-gray-600 hover:text-blue-600 cursor-pointer transition">
                       <span>{cat.name}</span>
                       <span className="flex items-center gap-1 text-xs text-gray-400">
                         ({cat.count})
@@ -334,17 +328,18 @@ export default function JournalPage() {
 
             {/* Pickup companies */}
             <div className="rounded-lg border bg-white p-4">
-              <h3 className="font-bold text-sm text-gray-900 border-b pb-2">
+              <h3 className="flex items-center gap-1.5 font-bold text-sm text-gray-900 border-b pb-2">
+                <Building2 className="h-4 w-4 text-blue-600" />
                 ピックアップ企業
               </h3>
               <div className="mt-3 space-y-3">
                 {pickupCompanies.map((company) => (
                   <div
                     key={company.name}
-                    className="rounded-md border p-3 hover:bg-gray-50 transition cursor-pointer"
+                    className="rounded-md border p-3 hover:bg-blue-50/50 hover:border-blue-200 transition cursor-pointer"
                   >
                     <p className="text-sm font-semibold text-gray-900">{company.name}</p>
-                    <p className="mt-0.5 text-xs text-gray-500">{company.description}</p>
+                    <p className="mt-0.5 text-xs text-gray-500 leading-relaxed">{company.description}</p>
                   </div>
                 ))}
               </div>

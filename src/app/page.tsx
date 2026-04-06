@@ -14,25 +14,25 @@ import {
   ArrowRight,
   ChevronRight,
   MapPin,
-  Users,
   Smartphone,
   HeadphonesIcon,
   Newspaper,
   MessageSquareQuote,
   Bell,
   User,
+  Star,
 } from "lucide-react"
 import { PREFECTURES } from "@/lib/constants"
 
 const categories = [
-  { key: "construction", label: "建築・躯体工事", icon: HardHat, count: null, sub: "鳶職・型枠・鉄筋・大工" },
-  { key: "civil", label: "土木工事", icon: Shovel, count: null, sub: "土木作業員・重機オペ・舗装" },
-  { key: "electrical", label: "電気・設備工事", icon: Wrench, count: null, sub: "電気工事士・配管・空調" },
-  { key: "interior", label: "内装・仕上げ工事", icon: Hammer, count: null, sub: "クロス・床・塗装・左官" },
-  { key: "demolition", label: "解体・産廃", icon: Building2, count: null, sub: "解体工・産業廃棄物処理" },
-  { key: "driver", label: "ドライバー・重機", icon: Truck, count: null, sub: "ダンプ・トレーラー・重機運転" },
-  { key: "management", label: "施工管理", icon: ClipboardCheck, count: null, sub: "現場監督・工程管理" },
-  { key: "survey", label: "測量・設計", icon: Ruler, count: null, sub: "測量士・CADオペ" },
+  { key: "construction", label: "建築・躯体工事", icon: HardHat, sub: "鳶職・型枠・鉄筋・大工" },
+  { key: "civil", label: "土木工事", icon: Shovel, sub: "土木作業員・重機オペ・舗装" },
+  { key: "electrical", label: "電気・設備工事", icon: Wrench, sub: "電気工事士・配管・空調" },
+  { key: "interior", label: "内装・仕上げ工事", icon: Hammer, sub: "クロス・床・塗装・左官" },
+  { key: "demolition", label: "解体・産廃", icon: Building2, sub: "解体工・産業廃棄物処理" },
+  { key: "driver", label: "ドライバー・重機", icon: Truck, sub: "ダンプ・トレーラー・重機運転" },
+  { key: "management", label: "施工管理", icon: ClipboardCheck, sub: "現場監督・工程管理" },
+  { key: "survey", label: "測量・設計", icon: Ruler, sub: "測量士・CADオペ" },
 ]
 
 const popularAreas = [
@@ -48,6 +48,13 @@ const popularAreas = [
   { pref: "広島県", slug: "hiroshima" },
   { pref: "宮城県", slug: "miyagi" },
   { pref: "静岡県", slug: "shizuoka" },
+]
+
+const areaCategoryLinks = [
+  { key: "construction", label: "建築" },
+  { key: "civil", label: "土木" },
+  { key: "electrical", label: "電気" },
+  { key: "management", label: "施工管理" },
 ]
 
 const magazineArticles = [
@@ -118,22 +125,26 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* Hero Section - Photo background with blue overlay */}
+      {/* Hero Section */}
       <section className="relative overflow-hidden bg-blue-700">
         <Image
           src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1920&h=600&fit=crop"
           alt=""
           fill
           priority
-          className="object-cover opacity-20"
+          className="object-cover opacity-15"
         />
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-700/50 to-blue-800/80" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           <div className="text-center">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight">
+            <p className="text-sm font-medium text-blue-200 tracking-wide">
+              建築・土木・設備・解体に特化
+            </p>
+            <h1 className="mt-2 text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
               建設求人ポータル
             </h1>
-            <p className="mt-2 text-lg text-blue-100">
-              建築・土木・設備・解体の求人サイト
+            <p className="mt-3 text-lg text-blue-100">
+              建設業界で働く、すべての人のための求人サイト
             </p>
           </div>
 
@@ -141,13 +152,15 @@ export default async function HomePage() {
           <form
             action="/jobs"
             method="GET"
-            className="relative z-10 mx-auto mt-8 max-w-3xl rounded-lg bg-white p-3 shadow-lg -mb-6"
+            className="relative z-10 mx-auto mt-8 max-w-3xl rounded-xl bg-white p-4 shadow-2xl -mb-7"
           >
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <div className="flex-1">
+                <label className="sr-only" htmlFor="hero-category">職種</label>
                 <select
+                  id="hero-category"
                   name="category"
-                  className="w-full rounded-md border border-gray-300 px-3 py-2.5 text-sm text-gray-700"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-3 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 >
                   <option value="">職種を選択</option>
                   {categories.map((c) => (
@@ -158,9 +171,11 @@ export default async function HomePage() {
                 </select>
               </div>
               <div className="flex-1">
+                <label className="sr-only" htmlFor="hero-prefecture">勤務地</label>
                 <select
+                  id="hero-prefecture"
                   name="prefecture"
-                  className="w-full rounded-md border border-gray-300 px-3 py-2.5 text-sm text-gray-700"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-3 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 >
                   <option value="">勤務地を選択</option>
                   {PREFECTURES.map((p) => (
@@ -172,67 +187,60 @@ export default async function HomePage() {
               </div>
               <button
                 type="submit"
-                className="flex items-center justify-center gap-2 rounded-md bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
+                className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-8 py-3 text-sm font-bold text-white hover:bg-blue-700 transition shadow-sm"
               >
                 <Search className="h-4 w-4" />
                 求人検索
               </button>
             </div>
-            <div className="mt-2 text-center">
-              <Link
-                href="/register"
-                className="text-xs text-blue-600 hover:underline"
-              >
-                詳細条件を設定して探す →
-              </Link>
-            </div>
           </form>
         </div>
       </section>
 
-      {/* Category List - Vertical list style like x-work.jp */}
-      <section className="bg-white pt-12 pb-8">
+      {/* Category List */}
+      <section className="bg-white pt-14 pb-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900">
-            <HardHat className="h-5 w-5 text-blue-600" />
+            <Star className="h-5 w-5 text-amber-500" />
             人気の求人特集
           </h2>
-          <div className="mt-4 divide-y divide-gray-100">
+          <div className="mt-4 divide-y divide-gray-100 rounded-lg border">
             {categoriesWithCounts.map((cat, i) => {
               const Icon = cat.icon
               return (
                 <div key={cat.key}>
                   <Link
                     href={`/jobs?category=${cat.key}`}
-                    className="flex items-center gap-4 py-3.5 hover:bg-gray-50 transition rounded-md px-2 -mx-2"
+                    className="flex items-center gap-4 py-3.5 hover:bg-blue-50/50 transition px-4"
                   >
-                    <Icon className="h-5 w-5 text-blue-600 shrink-0" />
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50">
+                      <Icon className="h-4.5 w-4.5 text-blue-600" />
+                    </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-baseline gap-2">
                         <span className="font-semibold text-gray-900">
                           {cat.label}
                         </span>
-                        <span className="text-sm text-blue-600">
+                        <span className="text-sm font-medium text-blue-600">
                           ({cat.count.toLocaleString()})
                         </span>
                       </div>
                       <p className="text-xs text-gray-500 mt-0.5">{cat.sub}</p>
                     </div>
-                    <ChevronRight className="h-4 w-4 text-gray-400 shrink-0" />
+                    <ChevronRight className="h-4 w-4 text-gray-300 shrink-0" />
                   </Link>
-                  {/* Insert CTA after 3rd item */}
                   {i === 2 && (
-                    <div className="flex gap-3 justify-center py-4">
+                    <div className="flex gap-3 justify-center py-4 bg-gray-50/50 border-y border-gray-100">
                       <Link
                         href="/register"
-                        className="flex items-center justify-center gap-2 rounded-full bg-blue-600 px-8 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
+                        className="flex items-center justify-center gap-2 rounded-full bg-blue-600 px-8 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition shadow-sm"
                       >
                         <User className="h-4 w-4" />
                         会員登録する
                       </Link>
                       <Link
                         href="/login"
-                        className="flex items-center justify-center gap-2 rounded-full border-2 border-blue-600 px-8 py-2.5 text-sm font-semibold text-blue-600 hover:bg-blue-50"
+                        className="flex items-center justify-center gap-2 rounded-full border-2 border-blue-600 px-8 py-2.5 text-sm font-semibold text-blue-600 hover:bg-blue-50 transition"
                       >
                         ログイン
                       </Link>
@@ -245,8 +253,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Popular Areas - Prefecture × Category cross links */}
-      <section className="border-t bg-gray-50 py-8">
+      {/* Popular Areas */}
+      <section className="border-t bg-gray-50 py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900">
             <MapPin className="h-5 w-5 text-blue-600" />
@@ -256,7 +264,7 @@ export default async function HomePage() {
             {popularAreas.map((area) => (
               <div
                 key={area.slug}
-                className="rounded-lg border bg-white p-3 hover:shadow-md transition"
+                className="rounded-lg border bg-white p-3 hover:shadow-md hover:border-blue-200 transition"
               >
                 <Link
                   href={`/jobs?prefecture=${area.pref}`}
@@ -265,12 +273,7 @@ export default async function HomePage() {
                   {area.pref}
                 </Link>
                 <div className="mt-1.5 flex flex-wrap gap-x-2 gap-y-0.5">
-                  {[
-                    { key: "construction", label: "建築" },
-                    { key: "civil", label: "土木" },
-                    { key: "electrical", label: "電気" },
-                    { key: "management", label: "施工管理" },
-                  ].map((cat) => (
+                  {areaCategoryLinks.map((cat) => (
                     <Link
                       key={cat.key}
                       href={`/${area.pref}/${cat.key}`}
@@ -286,38 +289,38 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Magazine Section - Blue header bar + image cards */}
-      <section className="border-t bg-white py-8">
+      {/* Magazine Section */}
+      <section className="border-t bg-white py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-t-lg bg-blue-600 px-4 py-2.5 flex items-center justify-between">
+          <div className="rounded-t-lg bg-blue-600 px-5 py-3 flex items-center justify-between">
             <h2 className="flex items-center gap-2 text-white font-bold">
               <Newspaper className="h-5 w-5" />
               建設求人マガジン
             </h2>
             <Link
               href="/journal"
-              className="flex items-center gap-1 text-sm text-blue-100 hover:text-white"
+              className="flex items-center gap-1 text-sm text-blue-100 hover:text-white transition"
             >
               もっと見る
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
-          <div className="rounded-b-lg border border-t-0 p-4">
+          <div className="rounded-b-lg border border-t-0 p-5">
             <div className="grid gap-4 sm:grid-cols-3">
               {magazineArticles.map((article) => (
                 <Link
                   key={article.slug}
                   href={`/journal/${article.slug}`}
-                  className="group rounded-lg border bg-white overflow-hidden hover:shadow-md transition"
+                  className="group rounded-lg border bg-white overflow-hidden hover:shadow-lg transition"
                 >
-                  <div className="aspect-video relative">
+                  <div className="aspect-video relative overflow-hidden">
                     <img
                       src={article.imageUrl}
                       alt={article.title}
                       loading="lazy"
-                      className="h-full w-full object-cover"
+                      className="h-full w-full object-cover group-hover:scale-105 transition duration-300"
                     />
-                    <span className="absolute top-2 left-2 rounded bg-blue-600 px-2 py-0.5 text-xs font-medium text-white">
+                    <span className="absolute top-2 left-2 rounded bg-blue-600 px-2 py-0.5 text-xs font-medium text-white shadow-sm">
                       {article.category}
                     </span>
                   </div>
@@ -333,8 +336,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials - 転職体験談 */}
-      <section className="border-t bg-gray-50 py-8">
+      {/* Testimonials */}
+      <section className="border-t bg-gray-50 py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900">
             <MessageSquareQuote className="h-5 w-5 text-blue-600" />
@@ -344,10 +347,13 @@ export default async function HomePage() {
             {testimonials.map((t) => (
               <div
                 key={t.name}
-                className="rounded-lg border bg-white p-4 shadow-sm"
+                className="relative rounded-lg border bg-white p-5 shadow-sm"
               >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                <div className="absolute -top-3 left-5">
+                  <MessageSquareQuote className="h-6 w-6 text-blue-200" />
+                </div>
+                <div className="flex items-center gap-3 mt-1">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white">
                     <User className="h-5 w-5" />
                   </div>
                   <div>
@@ -355,12 +361,14 @@ export default async function HomePage() {
                       {t.name}（{t.age}歳）
                     </p>
                     <p className="text-xs text-gray-500">
-                      {t.from} → {t.to}
+                      <span className="text-gray-400">{t.from}</span>
+                      <span className="mx-1 text-blue-500">→</span>
+                      <span className="font-medium text-blue-600">{t.to}</span>
                     </p>
                   </div>
                 </div>
                 <p className="mt-3 text-sm text-gray-600 leading-relaxed">
-                  {t.comment}
+                  「{t.comment}」
                 </p>
               </div>
             ))}
@@ -369,7 +377,7 @@ export default async function HomePage() {
       </section>
 
       {/* 3 Merits Section */}
-      <section className="border-t bg-blue-50 py-10">
+      <section className="border-t bg-blue-50 py-12">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900">
             建設求人ポータルを活用する<span className="text-blue-600">メリット</span>と<span className="text-blue-600">3つの特徴</span>
@@ -378,7 +386,7 @@ export default async function HomePage() {
             建設求人ポータルは、建設業界で働く方を応援する求人サービスです。
           </p>
 
-          <div className="mt-8 space-y-6">
+          <div className="mt-8 space-y-5">
             <MeritCard
               number="01"
               title="「建設業界」特化の求人サービス"
@@ -401,18 +409,18 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* News / Announcements */}
-      <section className="border-t bg-white py-8">
+      {/* News */}
+      <section className="border-t bg-white py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900">
             <Bell className="h-5 w-5 text-blue-600" />
             お知らせ
           </h2>
-          <div className="mt-4 divide-y divide-gray-100">
+          <div className="mt-4 divide-y divide-gray-100 rounded-lg border">
             {newsItems.map((item, i) => (
-              <div key={i} className="flex gap-4 py-3 text-sm">
-                <span className="shrink-0 text-gray-400 tabular-nums">{item.date}</span>
-                <span className="text-gray-700">{item.title}</span>
+              <div key={i} className="flex gap-4 px-4 py-3.5 text-sm hover:bg-gray-50 transition cursor-pointer">
+                <span className="shrink-0 rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500 tabular-nums">{item.date}</span>
+                <span className="text-gray-700 hover:text-blue-600 transition">{item.title}</span>
               </div>
             ))}
           </div>
@@ -420,27 +428,27 @@ export default async function HomePage() {
       </section>
 
       {/* Stats */}
-      <section className="border-t bg-gray-50 py-8">
+      <section className="border-t bg-blue-600 py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
-              <p className="text-2xl font-bold text-blue-600">{totalJobs.toLocaleString()}+</p>
-              <p className="text-xs text-gray-500 mt-1">掲載求人数</p>
+              <p className="text-3xl sm:text-4xl font-bold text-white">{totalJobs.toLocaleString()}+</p>
+              <p className="text-sm text-blue-200 mt-1">掲載求人数</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-blue-600">47</p>
-              <p className="text-xs text-gray-500 mt-1">都道府県対応</p>
+              <p className="text-3xl sm:text-4xl font-bold text-white">47</p>
+              <p className="text-sm text-blue-200 mt-1">都道府県対応</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-blue-600">無料</p>
-              <p className="text-xs text-gray-500 mt-1">会員登録</p>
+              <p className="text-3xl sm:text-4xl font-bold text-white">無料</p>
+              <p className="text-sm text-blue-200 mt-1">会員登録</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA for Employers */}
-      <section className="border-t bg-gray-900 py-10">
+      <section className="bg-gray-900 py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
             <div>
@@ -454,14 +462,14 @@ export default async function HomePage() {
             <div className="flex gap-3">
               <Link
                 href="/for-employers"
-                className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+                className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-700 transition"
               >
                 詳しく見る
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="/company/register"
-                className="flex items-center gap-2 rounded-lg border border-white px-6 py-3 text-sm font-semibold text-white hover:bg-white/10"
+                className="flex items-center gap-2 rounded-lg border border-gray-500 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition"
               >
                 企業登録
               </Link>
@@ -485,15 +493,15 @@ function MeritCard({
   icon: React.ReactNode
 }) {
   return (
-    <div className="flex gap-4 rounded-lg bg-white p-5 text-left shadow-sm border">
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-600 text-white font-bold text-lg">
+    <div className="flex gap-4 rounded-xl bg-white p-5 text-left shadow-sm border hover:shadow-md transition">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white font-bold text-lg shadow-sm">
         {number}
       </div>
       <div className="flex-1">
         <h3 className="font-bold text-gray-900">{title}</h3>
         <p className="mt-1 text-sm text-gray-600 leading-relaxed">{description}</p>
       </div>
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center text-blue-600">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
         {icon}
       </div>
     </div>

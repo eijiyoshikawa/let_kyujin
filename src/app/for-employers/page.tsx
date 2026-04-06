@@ -2,7 +2,6 @@ import Link from "next/link"
 import {
   ArrowRight,
   Phone,
-  Mail,
   Building2,
   Users,
   Award,
@@ -221,18 +220,19 @@ export default function ForEmployersPage() {
       </section>
 
       {/* About Section */}
-      <section className="bg-blue-50 py-8">
+      <section className="bg-blue-50 py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center gap-6 sm:flex-row">
+          <div className="flex flex-col items-center gap-8 sm:flex-row">
             <div className="flex-1">
               <h2 className="text-xl font-bold text-gray-900">建設求人ポータルとは</h2>
-              <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+              <p className="mt-3 text-sm text-gray-600 leading-relaxed">
                 建設業・設備業などの現場人材の採用に強みを持つ日本最大級の「現場人材採用サービス」です。
                 掲載無料・成果報酬型で、建築・土木・設備・解体など幅広い職種の人材採用をサポートします。
               </p>
             </div>
-            <div className="flex h-32 w-48 shrink-0 items-center justify-center rounded-lg bg-blue-100">
-              <HardHat className="h-16 w-16 text-blue-400" />
+            <div className="flex h-36 w-52 shrink-0 flex-col items-center justify-center rounded-xl bg-gradient-to-br from-blue-100 to-blue-200 shadow-sm">
+              <HardHat className="h-14 w-14 text-blue-500" />
+              <p className="mt-2 text-xs font-bold text-blue-600">建設業界特化</p>
             </div>
           </div>
         </div>
@@ -305,13 +305,16 @@ export default function ForEmployersPage() {
           <h2 className="text-center text-2xl font-bold text-gray-900">
             掲載までの流れ
           </h2>
-          <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
             {steps.map((step, i) => {
               const Icon = step.icon
               return (
-                <div key={step.label} className="flex items-center gap-4">
+                <div key={step.label} className="flex items-center gap-3 sm:gap-4">
                   <div className="flex flex-col items-center">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-lg border-2 border-blue-600 bg-white">
+                    <div className="relative flex h-16 w-16 items-center justify-center rounded-lg border-2 border-blue-600 bg-white shadow-sm">
+                      <span className="absolute -top-2.5 -left-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white shadow-sm">
+                        {i + 1}
+                      </span>
                       <Icon className="h-7 w-7 text-blue-600" />
                     </div>
                     <span className="mt-2 text-center text-xs font-bold text-gray-900 whitespace-pre-line">
@@ -319,7 +322,7 @@ export default function ForEmployersPage() {
                     </span>
                   </div>
                   {i < steps.length - 1 && (
-                    <ChevronRight className="h-5 w-5 text-blue-400 shrink-0 hidden sm:block" />
+                    <ChevronRight className="h-5 w-5 text-blue-400 shrink-0" />
                   )}
                 </div>
               )
