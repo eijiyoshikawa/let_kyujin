@@ -2,6 +2,7 @@ import { type NextRequest } from "next/server"
 import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
+import { sendApplicationConfirmEmail } from "@/lib/email"
 
 const applicationSchema = z.object({
   jobId: z.string().uuid(),
@@ -79,6 +80,12 @@ export async function POST(request: NextRequest) {
     )
   }
 
+  // Fetch job title and company name for confirmation email
+  const jobDetail = await prisma.job.findUnique({
+    where: { id: jobId },
+    select: { title: true, company: { select: { name: true } } },
+  })
+
   const application = await prisma.application.create({
     data: {
       jobId,
@@ -88,6 +95,15 @@ export async function POST(request: NextRequest) {
       message: message ?? null,
     },
   })
+
+  // Send confirmation email (non-blocking)
+  if (session.user.email && jobDetail) {
+    sendApplicationConfirmEmail(
+      session.user.email,
+      jobDetail.title,
+      jobDetail.company?.name ?? "企業"
+    ).catch((err) => console.error("[email] Application confirm failed:", err))
+  }
 
   return Response.json({ application }, { status: 201 })
 }

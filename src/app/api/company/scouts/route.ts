@@ -2,6 +2,7 @@ import { type NextRequest } from "next/server"
 import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
+import { sendScoutNotificationEmail } from "@/lib/email"
 
 const scoutSchema = z.object({
   userId: z.string().uuid(),
@@ -113,6 +114,12 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Fetch user email and company name for notification
+  const [targetUser, company] = await Promise.all([
+    prisma.user.findUnique({ where: { id: userId }, select: { email: true } }),
+    prisma.company.findUnique({ where: { id: companyId }, select: { name: true } }),
+  ])
+
   const scout = await prisma.scout.create({
     data: {
       companyId,
@@ -122,6 +129,13 @@ export async function POST(request: NextRequest) {
       status: "sent",
     },
   })
+
+  // Send scout notification email (non-blocking)
+  if (targetUser?.email && company?.name) {
+    sendScoutNotificationEmail(targetUser.email, company.name).catch((err) =>
+      console.error("[email] Scout notification failed:", err)
+    )
+  }
 
   return Response.json({ scout }, { status: 201 })
 }

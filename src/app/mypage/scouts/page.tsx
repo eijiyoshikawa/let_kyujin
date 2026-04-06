@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 import Link from "next/link"
 import { Building2, Briefcase, Mail } from "lucide-react"
 import type { Metadata } from "next"
+import { ScoutActions } from "./scout-actions"
 
 export const metadata: Metadata = {
   title: "スカウト一覧",
@@ -106,6 +107,10 @@ export default async function ScoutsPage() {
                   <Briefcase className="h-3.5 w-3.5" />
                   {scout.job.title}
                 </Link>
+              )}
+
+              {(scout.status === "sent" || scout.status === "read") && (
+                <ScoutActions scoutId={scout.id} />
               )}
             </div>
           ))}
