@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { MapPin, Banknote, Building2, Clock, HardHat } from "lucide-react"
+import { MapPin, Banknote, Building2, Clock, HardHat, ChevronRight } from "lucide-react"
 import { getCategoryLabel } from "@/lib/categories"
 
 type JobCardProps = {
@@ -21,65 +21,74 @@ export function JobCard({ job }: { job: JobCardProps }) {
   return (
     <Link
       href={`/jobs/${job.id}`}
-      className="block rounded-lg border bg-white p-4 shadow-sm transition hover:shadow-md hover:border-blue-300"
+      className="group flex gap-4 rounded-lg border bg-white p-4 shadow-sm transition hover:shadow-md hover:border-blue-300"
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="inline-flex items-center gap-1 rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
-              <HardHat className="h-3 w-3" />
-              {getCategoryLabel(job.category)}
+      {/* Left: category icon */}
+      <div className="hidden sm:flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-blue-50 group-hover:bg-blue-100 transition">
+        <HardHat className="h-6 w-6 text-blue-600" />
+      </div>
+
+      {/* Center: content */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="inline-flex items-center gap-1 rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+            {getCategoryLabel(job.category)}
+          </span>
+          {job.employmentType && (
+            <span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+              {employmentTypeLabel(job.employmentType)}
             </span>
-            {job.source === "hellowork" && (
-              <span className="rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
-                HW
-              </span>
-            )}
-          </div>
-          <h3 className="mt-1.5 text-base font-semibold text-gray-900 line-clamp-2">
-            {job.title}
-          </h3>
-          {job.company && (
-            <p className="mt-1 flex items-center gap-1 text-sm text-gray-600">
-              <Building2 className="h-3.5 w-3.5 shrink-0" />
-              {job.company.name}
-            </p>
+          )}
+          {job.source === "hellowork" && (
+            <span className="rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+              HW
+            </span>
           )}
         </div>
-      </div>
 
-      <div className="mt-3 flex flex-wrap gap-3 text-sm text-gray-600">
-        <span className="flex items-center gap-1">
-          <MapPin className="h-3.5 w-3.5" />
-          {job.prefecture}
-          {job.city && ` ${job.city}`}
-        </span>
-        {job.salaryMin && (
-          <span className="flex items-center gap-1">
-            <Banknote className="h-3.5 w-3.5" />
-            {formatSalary(job.salaryMin, job.salaryMax, job.salaryType)}
-          </span>
-        )}
-        {job.employmentType && (
-          <span className="flex items-center gap-1">
-            <Clock className="h-3.5 w-3.5" />
-            {employmentTypeLabel(job.employmentType)}
-          </span>
-        )}
-      </div>
+        <h3 className="mt-1.5 text-base font-semibold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition">
+          {job.title}
+        </h3>
 
-      {job.tags.length > 0 && (
-        <div className="mt-2 flex flex-wrap gap-1">
-          {job.tags.slice(0, 3).map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600"
-            >
-              {tag}
+        {job.company && (
+          <p className="mt-1 flex items-center gap-1 text-sm text-gray-500">
+            <Building2 className="h-3.5 w-3.5 shrink-0" />
+            {job.company.name}
+          </p>
+        )}
+
+        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500">
+          <span className="flex items-center gap-1">
+            <MapPin className="h-3.5 w-3.5 text-gray-400" />
+            {job.prefecture}
+            {job.city && ` ${job.city}`}
+          </span>
+          {job.salaryMin && (
+            <span className="flex items-center gap-1 font-medium text-blue-600">
+              <Banknote className="h-3.5 w-3.5" />
+              {formatSalary(job.salaryMin, job.salaryMax, job.salaryType)}
             </span>
-          ))}
+          )}
         </div>
-      )}
+
+        {job.tags.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-1">
+            {job.tags.slice(0, 4).map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full bg-gray-50 border border-gray-200 px-2 py-0.5 text-xs text-gray-500"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Right: chevron */}
+      <div className="hidden sm:flex items-center">
+        <ChevronRight className="h-5 w-5 text-gray-300 group-hover:text-blue-500 transition" />
+      </div>
     </Link>
   )
 }

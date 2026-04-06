@@ -8,9 +8,16 @@ import {
   Clock,
   CheckCircle,
   ArrowLeft,
+  HardHat,
+  Share2,
+  ChevronRight,
+  Briefcase,
+  Globe,
+  Users,
 } from "lucide-react"
 import type { Metadata } from "next"
 import { generateJobPostingSchema } from "@/lib/structured-data"
+import { getCategoryLabel } from "@/lib/categories"
 
 type Props = {
   params: Promise<{ id: string }>
@@ -25,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!job) return { title: "求人が見つかりません" }
   return {
     title: job.title,
-    description: `${job.prefecture}の${job.title}の求人詳細。`,
+    description: `${job.prefecture}の${job.title}の求人詳細。建設業界特化の求人ポータル。`,
   }
 }
 
@@ -53,7 +60,6 @@ export default async function JobDetailPage({ params }: Props) {
 
   if (!job) notFound()
 
-  // Increment view count
   prisma.job
     .update({ where: { id }, data: { viewCount: { increment: 1 } } })
     .catch(() => {})
@@ -82,201 +88,291 @@ export default async function JobDetailPage({ params }: Props) {
   })
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="bg-gray-50 min-h-screen">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Link
-        href="/jobs"
-        className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        求人一覧に戻る
-      </Link>
 
-      <div className="mt-4 rounded-lg border bg-white p-6 shadow-sm">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            {job.source === "hellowork" && (
-              <span className="mb-2 inline-block rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
-                ハローワーク転載
-              </span>
+      {/* Breadcrumb */}
+      <div className="border-b bg-white">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-3">
+          <nav className="flex items-center gap-1 text-xs text-gray-500">
+            <Link href="/" className="hover:text-blue-600">トップ</Link>
+            <ChevronRight className="h-3 w-3" />
+            <Link href="/jobs" className="hover:text-blue-600">求人検索</Link>
+            <ChevronRight className="h-3 w-3" />
+            <Link href={`/jobs?category=${job.category}`} className="hover:text-blue-600">
+              {getCategoryLabel(job.category)}
+            </Link>
+            <ChevronRight className="h-3 w-3" />
+            <span className="text-gray-700 line-clamp-1">{job.title}</span>
+          </nav>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-6 lg:flex-row">
+          {/* Main content */}
+          <div className="flex-1 min-w-0 space-y-6">
+            {/* Header card */}
+            <div className="rounded-xl border bg-white p-6 shadow-sm">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="inline-flex items-center gap-1 rounded-lg bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-700">
+                  <HardHat className="h-3 w-3" />
+                  {getCategoryLabel(job.category)}
+                </span>
+                {job.employmentType && (
+                  <span className="rounded-lg bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
+                    {employmentTypeLabel(job.employmentType)}
+                  </span>
+                )}
+                {job.source === "hellowork" && (
+                  <span className="rounded-lg bg-green-100 px-2.5 py-1 text-xs font-medium text-green-700">
+                    ハローワーク転載
+                  </span>
+                )}
+              </div>
+
+              <h1 className="mt-3 text-xl sm:text-2xl font-bold text-gray-900 leading-tight">
+                {job.title}
+              </h1>
+
+              {job.company && (
+                <p className="mt-2 flex items-center gap-1.5 text-gray-600">
+                  <Building2 className="h-4 w-4 text-gray-400" />
+                  {job.company.name}
+                </p>
+              )}
+
+              {/* Key info grid */}
+              <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                <div className="flex items-center gap-3 rounded-lg bg-gray-50 p-3">
+                  <MapPin className="h-5 w-5 text-blue-500 shrink-0" />
+                  <div>
+                    <p className="text-[10px] font-medium text-gray-400 uppercase">勤務地</p>
+                    <p className="text-sm font-medium text-gray-900">
+                      {job.prefecture}{job.city ? ` ${job.city}` : ""}
+                    </p>
+                  </div>
+                </div>
+                {job.salaryMin && (
+                  <div className="flex items-center gap-3 rounded-lg bg-blue-50 p-3">
+                    <Banknote className="h-5 w-5 text-blue-600 shrink-0" />
+                    <div>
+                      <p className="text-[10px] font-medium text-gray-400 uppercase">給与</p>
+                      <p className="text-sm font-bold text-blue-700">
+                        {formatSalary(job.salaryMin, job.salaryMax, job.salaryType)}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {job.employmentType && (
+                  <div className="flex items-center gap-3 rounded-lg bg-gray-50 p-3">
+                    <Clock className="h-5 w-5 text-blue-500 shrink-0" />
+                    <div>
+                      <p className="text-[10px] font-medium text-gray-400 uppercase">雇用形態</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        {employmentTypeLabel(job.employmentType)}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Description */}
+            {job.description && (
+              <div className="rounded-xl border bg-white p-6 shadow-sm">
+                <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900 border-b pb-3">
+                  <Briefcase className="h-5 w-5 text-blue-600" />
+                  仕事内容
+                </h2>
+                <p className="mt-4 whitespace-pre-wrap text-sm text-gray-700 leading-relaxed">
+                  {job.description}
+                </p>
+              </div>
             )}
-            <h1 className="text-2xl font-bold text-gray-900">{job.title}</h1>
+
+            {/* Requirements */}
+            {job.requirements && (
+              <div className="rounded-xl border bg-white p-6 shadow-sm">
+                <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900 border-b pb-3">
+                  <CheckCircle className="h-5 w-5 text-blue-600" />
+                  応募条件
+                </h2>
+                <p className="mt-4 whitespace-pre-wrap text-sm text-gray-700 leading-relaxed">
+                  {job.requirements}
+                </p>
+              </div>
+            )}
+
+            {/* Benefits */}
+            {job.benefits.length > 0 && (
+              <div className="rounded-xl border bg-white p-6 shadow-sm">
+                <h2 className="text-lg font-bold text-gray-900 border-b pb-3">
+                  福利厚生
+                </h2>
+                <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                  {job.benefits.map((b) => (
+                    <li key={b} className="flex items-center gap-2 text-sm text-gray-700">
+                      <CheckCircle className="h-4 w-4 text-green-500 shrink-0" />
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Tags */}
+            {job.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {job.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs text-gray-600"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Company Info */}
             {job.company && (
-              <p className="mt-1 flex items-center gap-1 text-gray-600">
-                <Building2 className="h-4 w-4" />
-                {job.company.name}
+              <div className="rounded-xl border bg-white p-6 shadow-sm">
+                <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900 border-b pb-3">
+                  <Building2 className="h-5 w-5 text-blue-600" />
+                  企業情報
+                </h2>
+                <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                  <DlItem label="企業名" value={job.company.name} />
+                  {job.company.industry && (
+                    <DlItem label="業種" value={job.company.industry} />
+                  )}
+                  {job.company.employeeCount && (
+                    <DlItem label="従業員数" value={`${job.company.employeeCount}名`} icon={<Users className="h-3.5 w-3.5 text-gray-400" />} />
+                  )}
+                  {(job.company.prefecture || job.company.address) && (
+                    <DlItem label="所在地" value={[job.company.prefecture, job.company.city, job.company.address].filter(Boolean).join(" ")} icon={<MapPin className="h-3.5 w-3.5 text-gray-400" />} />
+                  )}
+                  {job.company.websiteUrl && (
+                    <DlItem label="Webサイト" value={job.company.websiteUrl} icon={<Globe className="h-3.5 w-3.5 text-gray-400" />} isLink />
+                  )}
+                </div>
+                {job.company.description && (
+                  <p className="mt-4 text-sm text-gray-600 leading-relaxed border-t pt-4">
+                    {job.company.description}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* HW notice */}
+            {job.source === "hellowork" && (
+              <p className="text-xs text-gray-400 leading-relaxed">
+                この求人はハローワークインターネットサービスより転載しています。最新の情報はハローワークでご確認ください。
               </p>
             )}
           </div>
-        </div>
 
-        {/* Key Info */}
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <InfoItem
-            icon={<MapPin className="h-5 w-5 text-gray-400" />}
-            label="勤務地"
-            value={`${job.prefecture}${job.city ? ` ${job.city}` : ""}${job.address ? ` ${job.address}` : ""}`}
-          />
-          {job.salaryMin && (
-            <InfoItem
-              icon={<Banknote className="h-5 w-5 text-gray-400" />}
-              label="給与"
-              value={formatSalary(job.salaryMin, job.salaryMax, job.salaryType)}
-            />
-          )}
-          {job.employmentType && (
-            <InfoItem
-              icon={<Clock className="h-5 w-5 text-gray-400" />}
-              label="雇用形態"
-              value={employmentTypeLabel(job.employmentType)}
-            />
-          )}
-        </div>
+          {/* Sticky sidebar */}
+          <aside className="w-full shrink-0 lg:w-72">
+            <div className="sticky top-20 space-y-4">
+              {/* Apply CTA card */}
+              <div className="rounded-xl border bg-white p-5 shadow-sm">
+                <p className="text-center text-sm font-medium text-gray-600">
+                  この求人に興味がありますか？
+                </p>
+                <Link
+                  href={`/jobs/${job.id}/apply`}
+                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-3 text-base font-bold text-white hover:bg-blue-700 transition shadow-sm"
+                >
+                  応募する
+                </Link>
+                <p className="mt-2 text-center text-[10px] text-gray-400">
+                  会員登録（無料）が必要です
+                </p>
+              </div>
 
-        {/* Description */}
-        {job.description && (
-          <div className="mt-8">
-            <h2 className="text-lg font-semibold text-gray-900">仕事内容</h2>
-            <p className="mt-2 whitespace-pre-wrap text-gray-700">
-              {job.description}
-            </p>
-          </div>
-        )}
+              {/* Quick info */}
+              <div className="rounded-xl border bg-white p-4 shadow-sm text-sm">
+                <h3 className="font-bold text-gray-900 border-b pb-2 mb-3">求人概要</h3>
+                <dl className="space-y-2.5">
+                  <div className="flex justify-between">
+                    <dt className="text-gray-500">カテゴリ</dt>
+                    <dd className="font-medium text-gray-900">{getCategoryLabel(job.category)}</dd>
+                  </div>
+                  {job.employmentType && (
+                    <div className="flex justify-between">
+                      <dt className="text-gray-500">雇用形態</dt>
+                      <dd className="font-medium text-gray-900">{employmentTypeLabel(job.employmentType)}</dd>
+                    </div>
+                  )}
+                  <div className="flex justify-between">
+                    <dt className="text-gray-500">勤務地</dt>
+                    <dd className="font-medium text-gray-900">{job.prefecture}</dd>
+                  </div>
+                  {job.salaryMin && (
+                    <div className="flex justify-between">
+                      <dt className="text-gray-500">給与</dt>
+                      <dd className="font-medium text-blue-600">{formatSalary(job.salaryMin, job.salaryMax, job.salaryType)}</dd>
+                    </div>
+                  )}
+                  {job.publishedAt && (
+                    <div className="flex justify-between">
+                      <dt className="text-gray-500">掲載日</dt>
+                      <dd className="text-gray-900">{job.publishedAt.toLocaleDateString("ja-JP")}</dd>
+                    </div>
+                  )}
+                </dl>
+              </div>
 
-        {/* Requirements */}
-        {job.requirements && (
-          <div className="mt-6">
-            <h2 className="text-lg font-semibold text-gray-900">応募条件</h2>
-            <p className="mt-2 whitespace-pre-wrap text-gray-700">
-              {job.requirements}
-            </p>
-          </div>
-        )}
-
-        {/* Benefits */}
-        {job.benefits.length > 0 && (
-          <div className="mt-6">
-            <h2 className="text-lg font-semibold text-gray-900">福利厚生</h2>
-            <ul className="mt-2 space-y-1">
-              {job.benefits.map((b) => (
-                <li key={b} className="flex items-center gap-2 text-gray-700">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  {b}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Tags */}
-        {job.tags.length > 0 && (
-          <div className="mt-6 flex flex-wrap gap-2">
-            {job.tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-600"
+              {/* Back to search */}
+              <Link
+                href="/jobs"
+                className="flex items-center justify-center gap-1.5 rounded-lg border bg-white py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 transition shadow-sm"
               >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* Apply CTA */}
-        <div className="mt-8 border-t pt-6">
-          <Link
-            href={`/jobs/${job.id}/apply`}
-            className="inline-flex w-full items-center justify-center rounded-lg bg-blue-600 px-6 py-3 text-base font-semibold text-white hover:bg-blue-700 sm:w-auto"
-          >
-            この求人に応募する
-          </Link>
+                <ArrowLeft className="h-4 w-4" />
+                求人一覧に戻る
+              </Link>
+            </div>
+          </aside>
         </div>
-
-        {/* Source notice for HW jobs */}
-        {job.source === "hellowork" && (
-          <p className="mt-4 text-xs text-gray-400">
-            この求人はハローワークインターネットサービスより転載しています。
-            最新の情報はハローワークでご確認ください。
-          </p>
-        )}
-      </div>
-
-      {/* Company Info */}
-      {job.company && (
-        <div className="mt-6 rounded-lg border bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900">企業情報</h2>
-          <dl className="mt-4 grid gap-3 sm:grid-cols-2">
-            <DlItem label="企業名" value={job.company.name} />
-            {job.company.industry && (
-              <DlItem label="業種" value={job.company.industry} />
-            )}
-            {job.company.employeeCount && (
-              <DlItem label="従業員数" value={`${job.company.employeeCount}名`} />
-            )}
-            {job.company.address && (
-              <DlItem label="所在地" value={job.company.address} />
-            )}
-          </dl>
-          {job.company.description && (
-            <p className="mt-4 text-sm text-gray-600">{job.company.description}</p>
-          )}
-        </div>
-      )}
-    </div>
-  )
-}
-
-function InfoItem({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode
-  label: string
-  value: string
-}) {
-  return (
-    <div className="flex items-start gap-3 rounded-lg bg-gray-50 p-3">
-      {icon}
-      <div>
-        <p className="text-xs text-gray-500">{label}</p>
-        <p className="text-sm font-medium text-gray-900">{value}</p>
       </div>
     </div>
   )
 }
 
-function DlItem({ label, value }: { label: string; value: string }) {
+function DlItem({ label, value, icon, isLink }: { label: string; value: string; icon?: React.ReactNode; isLink?: boolean }) {
   return (
     <div>
-      <dt className="text-xs text-gray-500">{label}</dt>
-      <dd className="text-sm text-gray-900">{value}</dd>
+      <dt className="flex items-center gap-1 text-xs text-gray-500">
+        {icon}
+        {label}
+      </dt>
+      <dd className="mt-0.5 text-sm text-gray-900">
+        {isLink ? (
+          <a href={value} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline truncate block">
+            {value}
+          </a>
+        ) : (
+          value
+        )}
+      </dd>
     </div>
   )
 }
 
-function formatSalary(
-  min: number | null,
-  max: number | null,
-  type: string | null
-): string {
+function formatSalary(min: number | null, max: number | null, type: string | null): string {
   const unit = type === "hourly" ? "時給" : type === "annual" ? "年収" : "月給"
-  const fmt = (n: number) =>
-    n >= 10000 ? `${(n / 10000).toFixed(0)}万` : `${n.toLocaleString()}`
+  const fmt = (n: number) => n >= 10000 ? `${(n / 10000).toFixed(0)}万` : `${n.toLocaleString()}`
   if (min && max) return `${unit} ${fmt(min)}〜${fmt(max)}円`
   if (min) return `${unit} ${fmt(min)}円〜`
   return ""
 }
 
 function employmentTypeLabel(type: string): string {
-  const labels: Record<string, string> = {
-    full_time: "正社員",
-    part_time: "パート",
-    contract: "契約社員",
-  }
+  const labels: Record<string, string> = { full_time: "正社員", part_time: "パート", contract: "契約社員" }
   return labels[type] ?? type
 }
