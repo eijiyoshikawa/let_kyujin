@@ -1,7 +1,8 @@
 import { prisma } from "@/lib/db"
 import { JobCard } from "@/components/jobs/job-card"
-import { Search, SlidersHorizontal, ChevronRight } from "lucide-react"
+import { Search, SlidersHorizontal } from "lucide-react"
 import Link from "next/link"
+import { Pagination } from "@/components/pagination"
 import { PREFECTURES } from "@/lib/constants"
 import { AREAS } from "@/lib/areas"
 import { CATEGORIES, getCategoryLabel } from "@/lib/categories"
@@ -224,29 +225,14 @@ export default async function JobsPage({ searchParams }: Props) {
             </div>
 
             {/* Pagination */}
-            {totalPages > 1 && (
-              <nav className="mt-8 flex items-center justify-center gap-1">
-                {page > 1 && (
-                  <PaginationLink page={page - 1} params={params} label="前へ" />
-                )}
-                {Array.from({ length: Math.min(7, totalPages) }, (_, i) => {
-                  const p = Math.max(1, Math.min(page - 3, totalPages - 6)) + i
-                  if (p > totalPages) return null
-                  return (
-                    <PaginationLink
-                      key={p}
-                      page={p}
-                      params={params}
-                      label={String(p)}
-                      active={p === page}
-                    />
-                  )
-                })}
-                {page < totalPages && (
-                  <PaginationLink page={page + 1} params={params} label="次へ" />
-                )}
-              </nav>
-            )}
+            <div className="mt-8">
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                basePath="/jobs"
+                searchParams={params}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -297,30 +283,6 @@ function FilterBadge({
     >
       {label}
       <span className="text-blue-400">&times;</span>
-    </a>
-  )
-}
-
-function PaginationLink({
-  page, params, label, active = false,
-}: {
-  page: number; params: Record<string, string | undefined>; label: string; active?: boolean
-}) {
-  const newParams = new URLSearchParams()
-  for (const [k, v] of Object.entries(params)) {
-    if (v) newParams.set(k, v)
-  }
-  newParams.set("page", String(page))
-  return (
-    <a
-      href={`/jobs?${newParams.toString()}`}
-      className={`flex h-9 min-w-9 items-center justify-center rounded-lg px-3 text-sm font-medium transition ${
-        active
-          ? "bg-blue-600 text-white shadow-sm"
-          : "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-      }`}
-    >
-      {label}
     </a>
   )
 }

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db"
 import { redirect } from "next/navigation"
 import type { Metadata } from "next"
 import { ApplicationStatusSelect } from "@/components/company/application-status-select"
+import { Pagination } from "@/components/pagination"
 
 export const metadata: Metadata = {
   title: "応募者管理",
@@ -160,23 +161,9 @@ export default async function CompanyApplicationsPage({
       )}
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="mt-4 flex justify-center gap-2">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <a
-              key={p}
-              href={`/company/applications?status=${statusFilter}&page=${p}`}
-              className={`rounded-md px-3 py-1 text-sm ${
-                p === page
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-600 border hover:bg-gray-50"
-              }`}
-            >
-              {p}
-            </a>
-          ))}
-        </div>
-      )}
+      <div className="mt-4">
+        <Pagination currentPage={page} totalPages={totalPages} basePath="/company/applications" searchParams={{ status: statusFilter }} />
+      </div>
     </div>
   )
 }

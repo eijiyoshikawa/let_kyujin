@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db"
 import { redirect } from "next/navigation"
 import type { Metadata } from "next"
 import { PREFECTURES } from "@/lib/constants"
+import { Pagination } from "@/components/pagination"
 import { ScoutSendButton } from "@/components/company/scout-send-button"
 
 export const metadata: Metadata = {
@@ -143,23 +144,9 @@ export default async function CompanyScoutsPage({
           </div>
         )}
 
-        {totalPages > 1 && (
-          <div className="mt-4 flex justify-center gap-2">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-              <a
-                key={p}
-                href={`/company/scouts?tab=sent&status=${statusFilter}&page=${p}`}
-                className={`rounded-md px-3 py-1 text-sm ${
-                  p === page
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-gray-600 border hover:bg-gray-50"
-                }`}
-              >
-                {p}
-              </a>
-            ))}
-          </div>
-        )}
+        <div className="mt-4">
+          <Pagination currentPage={page} totalPages={totalPages} basePath="/company/scouts" searchParams={{ tab: "sent", status: statusFilter }} />
+        </div>
       </div>
     )
   }
@@ -303,23 +290,9 @@ export default async function CompanyScoutsPage({
         </div>
       )}
 
-      {totalPages > 1 && (
-        <div className="mt-4 flex justify-center gap-2">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <a
-              key={p}
-              href={`/company/scouts?tab=candidates&prefecture=${prefectureFilter}&category=${categoryFilter}&page=${p}`}
-              className={`rounded-md px-3 py-1 text-sm ${
-                p === page
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-600 border hover:bg-gray-50"
-              }`}
-            >
-              {p}
-            </a>
-          ))}
-        </div>
-      )}
+      <div className="mt-4">
+        <Pagination currentPage={page} totalPages={totalPages} basePath="/company/scouts" searchParams={{ tab: "candidates", prefecture: prefectureFilter, category: categoryFilter }} />
+      </div>
     </div>
   )
 }

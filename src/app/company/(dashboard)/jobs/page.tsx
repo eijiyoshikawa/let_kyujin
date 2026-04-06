@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { Plus, Pencil } from "lucide-react"
+import { Pagination } from "@/components/pagination"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -160,23 +161,9 @@ export default async function CompanyJobsPage({
       )}
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="mt-4 flex justify-center gap-2">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <Link
-              key={p}
-              href={`/company/jobs?status=${statusFilter}&page=${p}`}
-              className={`rounded-md px-3 py-1 text-sm ${
-                p === page
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-600 border hover:bg-gray-50"
-              }`}
-            >
-              {p}
-            </Link>
-          ))}
-        </div>
-      )}
+      <div className="mt-4">
+        <Pagination currentPage={page} totalPages={totalPages} basePath="/company/jobs" searchParams={{ status: statusFilter }} />
+      </div>
     </div>
   )
 }

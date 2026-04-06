@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db"
 import Link from "next/link"
 import type { Metadata } from "next"
+import { Pagination } from "@/components/pagination"
 
 export const metadata: Metadata = {
   title: "企業管理",
@@ -121,23 +122,9 @@ export default async function AdminCompaniesPage({
         </div>
       )}
 
-      {totalPages > 1 && (
-        <div className="mt-4 flex justify-center gap-2">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <Link
-              key={p}
-              href={`/admin/companies?q=${query}&page=${p}`}
-              className={`rounded-md px-3 py-1 text-sm ${
-                p === page
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-600 border hover:bg-gray-50"
-              }`}
-            >
-              {p}
-            </Link>
-          ))}
-        </div>
-      )}
+      <div className="mt-4">
+        <Pagination currentPage={page} totalPages={totalPages} basePath="/admin/companies" searchParams={{ q: query }} />
+      </div>
     </div>
   )
 }

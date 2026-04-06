@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { Building2, MapPin } from "lucide-react"
+import { Pagination } from "@/components/pagination"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -147,43 +148,9 @@ export default async function ApplicationsPage({ searchParams }: Props) {
       )}
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <nav className="mt-8 flex justify-center gap-2">
-          {page > 1 && (
-            <Link
-              href={`/mypage/applications?page=${page - 1}`}
-              className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
-            >
-              前へ
-            </Link>
-          )}
-          {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-            const p = Math.max(1, Math.min(page - 2, totalPages - 4)) + i
-            if (p > totalPages) return null
-            return (
-              <Link
-                key={p}
-                href={`/mypage/applications?page=${p}`}
-                className={`rounded-lg border px-3 py-2 text-sm ${
-                  p === page
-                    ? "border-blue-600 bg-blue-600 text-white"
-                    : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-                }`}
-              >
-                {p}
-              </Link>
-            )
-          })}
-          {page < totalPages && (
-            <Link
-              href={`/mypage/applications?page=${page + 1}`}
-              className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
-            >
-              次へ
-            </Link>
-          )}
-        </nav>
-      )}
+      <div className="mt-8">
+        <Pagination currentPage={page} totalPages={totalPages} basePath="/mypage/applications" />
+      </div>
     </div>
   )
 }
