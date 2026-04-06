@@ -35,7 +35,11 @@ export default async function CompanyApplicationsPage({
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * perPage,
       take: perPage,
-      include: {
+      select: {
+        id: true,
+        status: true,
+        message: true,
+        createdAt: true,
         job: { select: { id: true, title: true } },
         user: {
           select: {
@@ -103,6 +107,9 @@ export default async function CompanyApplicationsPage({
                   ステータス
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">
+                  メッセージ
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">
                   応募日
                 </th>
               </tr>
@@ -132,6 +139,15 @@ export default async function CompanyApplicationsPage({
                       applicationId={app.id}
                       currentStatus={app.status}
                     />
+                  </td>
+                  <td className="max-w-48 px-4 py-3">
+                    {app.message ? (
+                      <p className="text-xs text-gray-600 line-clamp-2" title={app.message}>
+                        {app.message}
+                      </p>
+                    ) : (
+                      <span className="text-xs text-gray-400">—</span>
+                    )}
                   </td>
                   <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-500">
                     {app.createdAt.toLocaleDateString("ja-JP")}

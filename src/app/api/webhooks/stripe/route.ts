@@ -53,6 +53,21 @@ export async function POST(request: NextRequest) {
       break
     }
 
+    case "invoice.created":
+    case "invoice.sent": {
+      const invoice = event.data.object as Stripe.Invoice
+      const billingEventId = invoice.metadata?.billingEventId
+
+      if (billingEventId) {
+        await prisma.billingEvent.update({
+          where: { id: billingEventId },
+          data: { status: "invoiced" },
+        })
+        console.log(`[stripe-webhook] BillingEvent ${billingEventId} status → invoiced (${event.type})`)
+      }
+      break
+    }
+
     default:
       // Ignore unhandled event types
       break

@@ -41,6 +41,37 @@ if (process.env.LINE_CLIENT_ID && process.env.LINE_CLIENT_SECRET) {
   })
 }
 
+// Admin credentials
+if (process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD_HASH) {
+  providers.push(
+    Credentials({
+      id: "admin-credentials",
+      name: "管理者ログイン",
+      credentials: {
+        email: { label: "メールアドレス", type: "email" },
+        password: { label: "パスワード", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) return null
+        if (credentials.email !== process.env.ADMIN_EMAIL) return null
+
+        const isValid = await compare(
+          credentials.password as string,
+          process.env.ADMIN_PASSWORD_HASH!
+        )
+        if (!isValid) return null
+
+        return {
+          id: "admin",
+          email: process.env.ADMIN_EMAIL,
+          name: "管理者",
+          role: "admin" as const,
+        }
+      },
+    })
+  )
+}
+
 // Credential providers (always available)
 providers.push(
   Credentials({

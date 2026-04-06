@@ -3,6 +3,14 @@ import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 
+const VALID_STATUS_TRANSITIONS: Record<string, string[]> = {
+  applied: ["reviewing", "rejected"],
+  reviewing: ["interview", "rejected"],
+  interview: ["offered", "rejected"],
+  offered: ["hired", "rejected"],
+  // hired and rejected are terminal states
+}
+
 const updateStatusSchema = z.object({
   status: z.enum([
     "applied",
@@ -37,7 +45,7 @@ export async function PUT(
 
   const application = await prisma.application.findUnique({
     where: { id },
-    select: { companyId: true },
+    select: { companyId: true, status: true },
   })
 
   if (!application || application.companyId !== companyId) {
@@ -59,19 +67,39 @@ export async function PUT(
     )
   }
 
+  const newStatus = parsed.data.status
+  const currentStatus = application.status
+
+  // Validate status transition
+  const allowed = VALID_STATUS_TRANSITIONS[currentStatus]
+  if (!allowed || !allowed.includes(newStatus)) {
+    return Response.json(
+      { error: `「${currentStatus}」から「${newStatus}」への変更はできません` },
+      { status: 400 }
+    )
+  }
+
   const updated = await prisma.application.update({
     where: { id },
-    data: { status: parsed.data.status },
+    data: { status: newStatus },
   })
 
   // Trigger billing when status changes to "hired"
-  if (parsed.data.status === "hired") {
+  if (newStatus === "hired") {
     try {
-      const { createHiringInvoice } = await import("@/lib/billing")
-      await createHiringInvoice(id)
+      // Idempotency check: ensure no existing billing event for this application
+      const existingBilling = await prisma.billingEvent.findFirst({
+        where: { applicationId: id, eventType: "hired" },
+      })
+
+      if (!existingBilling) {
+        const { createHiringInvoice } = await import("@/lib/billing")
+        await createHiringInvoice(id)
+      } else {
+        console.log(`[billing] Skipped duplicate invoice for application ${id}`)
+      }
     } catch (error) {
       console.error(`[billing] Failed to create invoice for application ${id}:`, error)
-      // Don't fail the status update if billing fails
     }
   }
 

@@ -2,6 +2,9 @@ import { type NextRequest } from "next/server"
 import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
+import { CATEGORIES } from "@/lib/categories"
+
+const VALID_CATEGORIES = CATEGORIES.map((c) => c.value)
 
 const jobSchema = z.object({
   title: z.string().min(1).max(200),
@@ -85,6 +88,13 @@ export async function POST(request: NextRequest) {
   }
 
   const data = parsed.data
+
+  if (!(VALID_CATEGORIES as readonly string[]).includes(data.category)) {
+    return Response.json(
+      { error: `無効なカテゴリです。有効な値: ${VALID_CATEGORIES.join(", ")}` },
+      { status: 400 }
+    )
+  }
 
   const job = await prisma.job.create({
     data: {
