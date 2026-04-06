@@ -57,38 +57,22 @@ const PREFECTURES: Record<string, string> = {
 }
 
 const CATEGORIES: Record<string, string> = {
-  driver: "ドライバー",
-  construction: "建設",
-  manufacturing: "製造",
-  logistics: "物流",
-  nursing: "介護",
-  cleaning: "清掃",
-  security: "警備",
-  food: "飲食",
+  construction: "建築・躯体工事",
+  civil: "土木工事",
+  electrical: "電気・設備工事",
+  interior: "内装・仕上げ工事",
+  demolition: "解体・産廃",
+  driver: "ドライバー・重機",
+  management: "施工管理・現場監督",
+  survey: "測量・設計",
   other: "その他",
 }
-
-// Popular combos for static generation
-const POPULAR_PREFECTURES = [
-  "tokyo",
-  "osaka",
-  "aichi",
-  "fukuoka",
-  "kanagawa",
-  "saitama",
-  "chiba",
-  "hokkaido",
-  "hyogo",
-  "hiroshima",
-]
-const POPULAR_CATEGORIES = ["driver", "construction", "manufacturing", "logistics", "nursing"]
 
 type Props = {
   params: Promise<{ prefecture: string; category: string }>
 }
 
 export async function generateStaticParams() {
-  // ビルド時にはDB接続不要。ISR(revalidate)でオンデマンド生成する。
   return []
 }
 
@@ -101,7 +85,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "ページが見つかりません" }
   }
 
-  const title = `${prefLabel}の${catLabel}求人一覧 | 求人検索`
+  const title = `${prefLabel}の${catLabel}求人一覧`
   const description = `${prefLabel}で募集中の${catLabel}の求人情報を掲載。給与・勤務地・雇用形態など詳細条件で検索できます。`
 
   return {
@@ -167,7 +151,7 @@ export default async function PrefectureCategoryPage({ params }: Props) {
       </h1>
       <p className="mt-2 text-gray-600">
         {prefLabel}で現在募集中の{catLabel}の求人は{" "}
-        <span className="font-semibold text-blue-600">{jobs.length}</span> 件です。
+        <span className="font-semibold text-orange-600">{jobs.length}</span> 件です。
       </p>
 
       {jobs.length === 0 ? (
@@ -177,7 +161,7 @@ export default async function PrefectureCategoryPage({ params }: Props) {
           </p>
           <Link
             href="/jobs"
-            className="mt-4 inline-block rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            className="mt-4 inline-block rounded-lg bg-orange-600 px-6 py-2 text-sm font-medium text-white hover:bg-orange-700"
           >
             すべての求人を見る
           </Link>
