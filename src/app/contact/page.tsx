@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { AnimateOnScroll } from "@/components/animate-on-scroll"
 import {
   Phone,
   Mail,
@@ -81,7 +82,7 @@ export default function ContactPage() {
   return (
     <div>
       {/* Header */}
-      <div className="bg-blue-700 text-white">
+      <div className="bg-gradient-to-br from-blue-800 via-blue-700 to-blue-600 text-white">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8">
           <h1 className="flex items-center gap-2 text-2xl font-bold">
             <HelpCircle className="h-7 w-7" />
@@ -95,8 +96,9 @@ export default function ContactPage() {
 
       <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
         {/* Contact info cards */}
+        <AnimateOnScroll animation="stagger">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="rounded-xl border bg-white p-6 shadow-sm">
+          <div className="hover-lift rounded-xl border bg-white p-6 shadow-sm">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
               <Phone className="h-5 w-5 text-blue-600" />
             </div>
@@ -108,7 +110,7 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div className="rounded-xl border bg-white p-6 shadow-sm">
+          <div className="hover-lift rounded-xl border bg-white p-6 shadow-sm">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
               <Mail className="h-5 w-5 text-blue-600" />
             </div>
@@ -119,7 +121,7 @@ export default function ContactPage() {
             </p>
           </div>
 
-          <div className="rounded-xl border bg-white p-6 shadow-sm sm:col-span-2 lg:col-span-1">
+          <div className="hover-lift rounded-xl border bg-white p-6 shadow-sm sm:col-span-2 lg:col-span-1">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
               <MapPin className="h-5 w-5 text-blue-600" />
             </div>
@@ -132,17 +134,21 @@ export default function ContactPage() {
             <p className="mt-2 text-xs text-gray-500">株式会社LET</p>
           </div>
         </div>
+        </AnimateOnScroll>
 
         {/* Support categories */}
+        <AnimateOnScroll>
         <h2 className="mt-12 flex items-center gap-2 text-xl font-bold text-gray-900">
           <MessageSquare className="h-5 w-5 text-blue-600" />
           サポート情報
         </h2>
+        </AnimateOnScroll>
+        <AnimateOnScroll animation="stagger">
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           {supportLinks.map((section) => {
             const Icon = section.icon
             return (
-              <div key={section.title} className="rounded-xl border bg-white p-5 shadow-sm">
+              <div key={section.title} className="hover-lift rounded-xl border bg-white p-5 shadow-sm">
                 <div className="flex items-center gap-2">
                   <Icon className="h-5 w-5 text-blue-600" />
                   <h3 className="font-bold text-gray-900">{section.title}</h3>
@@ -165,15 +171,19 @@ export default function ContactPage() {
             )
           })}
         </div>
+        </AnimateOnScroll>
 
         {/* FAQ */}
+        <AnimateOnScroll>
         <h2 className="mt-12 flex items-center gap-2 text-xl font-bold text-gray-900">
           <HelpCircle className="h-5 w-5 text-blue-600" />
           よくある質問
         </h2>
+        </AnimateOnScroll>
+        <AnimateOnScroll animation="stagger">
         <div className="mt-4 space-y-3">
           {faqs.map((faq) => (
-            <div key={faq.q} className="rounded-xl border bg-white p-5 shadow-sm">
+            <div key={faq.q} className="hover-lift rounded-xl border bg-white p-5 shadow-sm">
               <h3 className="flex items-start gap-2 font-bold text-gray-900">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
                   Q
@@ -186,9 +196,11 @@ export default function ContactPage() {
             </div>
           ))}
         </div>
+        </AnimateOnScroll>
 
         {/* CTA */}
-        <div className="mt-12 rounded-xl bg-blue-50 border border-blue-100 p-8 text-center">
+        <AnimateOnScroll animation="scale">
+        <div className="mt-12 rounded-2xl bg-blue-50 border border-blue-100 p-8 text-center">
           <h3 className="text-lg font-bold text-gray-900">
             解決しない場合は
           </h3>
@@ -212,6 +224,7 @@ export default function ContactPage() {
             </a>
           </div>
         </div>
+        </AnimateOnScroll>
       </div>
     </div>
   )

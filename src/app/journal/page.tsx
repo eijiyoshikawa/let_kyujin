@@ -11,6 +11,7 @@ import {
   Star,
   Building2,
 } from "lucide-react"
+import { AnimateOnScroll } from "@/components/animate-on-scroll"
 
 export const metadata: Metadata = {
   title: "建設求人マガジン",
@@ -115,7 +116,7 @@ export default function JournalPage() {
   return (
     <div>
       {/* Blue header bar */}
-      <div className="bg-gradient-to-r from-blue-700 to-blue-600 text-white">
+      <div className="bg-gradient-to-br from-blue-800 via-blue-700 to-blue-600 text-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
           <h1 className="flex items-center gap-2.5 text-xl font-bold">
             <Newspaper className="h-6 w-6" />
@@ -149,12 +150,13 @@ export default function JournalPage() {
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Featured articles */}
+        <AnimateOnScroll animation="stagger">
         <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory sm:grid sm:grid-cols-3 sm:overflow-visible sm:pb-0">
           {featured.map((article) => (
             <Link
               key={article.slug}
               href={`/journal/${article.slug}`}
-              className="group shrink-0 w-72 snap-start rounded-lg overflow-hidden border bg-white hover:shadow-lg transition sm:w-auto"
+              className="hover-lift group shrink-0 w-72 snap-start rounded-xl overflow-hidden border bg-white hover:shadow-lg transition sm:w-auto"
             >
               <div className="aspect-video relative overflow-hidden">
                 <img
@@ -175,8 +177,10 @@ export default function JournalPage() {
             </Link>
           ))}
         </div>
+        </AnimateOnScroll>
 
         {/* Dual CTA buttons */}
+        <AnimateOnScroll>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Link
             href="/jobs"
@@ -193,21 +197,24 @@ export default function JournalPage() {
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
+        </AnimateOnScroll>
 
         {/* Main content + Sidebar */}
         <div className="mt-10 flex flex-col gap-8 lg:flex-row">
           {/* Article list */}
           <div className="flex-1 min-w-0">
+            <AnimateOnScroll>
             <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900 border-b-2 border-blue-600 pb-2">
               <TrendingUp className="h-5 w-5 text-blue-600" />
               ピックアップ記事
             </h2>
+            </AnimateOnScroll>
             <div className="mt-4 space-y-4">
               {recent.map((article) => (
                 <Link
                   key={article.slug}
                   href={`/journal/${article.slug}`}
-                  className="group flex gap-4 rounded-lg border bg-white p-3 hover:shadow-md hover:border-blue-200 transition"
+                  className="hover-lift group flex gap-4 rounded-xl border bg-white p-3 hover:shadow-md hover:border-blue-200 transition"
                 >
                   <div className="h-24 w-40 shrink-0 rounded-md overflow-hidden">
                     <img
@@ -239,7 +246,8 @@ export default function JournalPage() {
           {/* Sidebar */}
           <aside className="w-full shrink-0 lg:w-72 space-y-6">
             {/* Social links */}
-            <div className="rounded-lg border bg-white p-4">
+            <AnimateOnScroll>
+            <div className="rounded-xl border bg-white p-4">
               <h3 className="font-bold text-sm text-gray-900 border-b pb-2">公式SNS</h3>
               <div className="mt-3 flex gap-3 justify-center">
                 <a
@@ -258,9 +266,11 @@ export default function JournalPage() {
                 </a>
               </div>
             </div>
+            </AnimateOnScroll>
 
             {/* Search CTA */}
-            <div className="rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 p-5 text-center text-white shadow-sm">
+            <AnimateOnScroll>
+            <div className="rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 p-5 text-center text-white shadow-sm">
               <Search className="mx-auto h-8 w-8 text-blue-200" />
               <p className="mt-2 font-bold">求人を探す</p>
               <p className="mt-1 text-xs text-blue-200">建設業界の求人を検索</p>
@@ -272,9 +282,11 @@ export default function JournalPage() {
                 求人検索
               </Link>
             </div>
+            </AnimateOnScroll>
 
             {/* Recommend articles with thumbnails */}
-            <div className="rounded-lg border bg-white p-4">
+            <AnimateOnScroll>
+            <div className="rounded-xl border bg-white p-4">
               <h3 className="flex items-center gap-1.5 font-bold text-sm text-gray-900 border-b pb-2">
                 <Star className="h-4 w-4 text-amber-500" />
                 おすすめ記事
@@ -305,9 +317,11 @@ export default function JournalPage() {
                 ))}
               </ul>
             </div>
+            </AnimateOnScroll>
 
             {/* Categories with chevrons */}
-            <div className="rounded-lg border bg-white p-4">
+            <AnimateOnScroll>
+            <div className="rounded-xl border bg-white p-4">
               <h3 className="font-bold text-gray-900 text-sm border-b pb-2">
                 カテゴリー
               </h3>
@@ -325,9 +339,11 @@ export default function JournalPage() {
                 ))}
               </ul>
             </div>
+            </AnimateOnScroll>
 
             {/* Pickup companies */}
-            <div className="rounded-lg border bg-white p-4">
+            <AnimateOnScroll>
+            <div className="rounded-xl border bg-white p-4">
               <h3 className="flex items-center gap-1.5 font-bold text-sm text-gray-900 border-b pb-2">
                 <Building2 className="h-4 w-4 text-blue-600" />
                 ピックアップ企業
@@ -336,7 +352,7 @@ export default function JournalPage() {
                 {pickupCompanies.map((company) => (
                   <div
                     key={company.name}
-                    className="rounded-md border p-3 hover:bg-blue-50/50 hover:border-blue-200 transition cursor-pointer"
+                    className="hover-lift rounded-md border p-3 hover:bg-blue-50/50 hover:border-blue-200 transition cursor-pointer"
                   >
                     <p className="text-sm font-semibold text-gray-900">{company.name}</p>
                     <p className="mt-0.5 text-xs text-gray-500 leading-relaxed">{company.description}</p>
@@ -344,6 +360,7 @@ export default function JournalPage() {
                 ))}
               </div>
             </div>
+            </AnimateOnScroll>
           </aside>
         </div>
       </div>

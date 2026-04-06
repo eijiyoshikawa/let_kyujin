@@ -19,6 +19,8 @@ import {
   HardHat,
 } from "lucide-react"
 import type { Metadata } from "next"
+import { AnimateOnScroll } from "@/components/animate-on-scroll"
+import { LogoSlider } from "@/components/logo-slider"
 
 export const metadata: Metadata = {
   title: "建設会社の採用担当者の方へ",
@@ -166,7 +168,7 @@ export default function ForEmployersPage() {
             </div>
 
             {/* Right side - Contact form card */}
-            <div className="w-full shrink-0 rounded-lg bg-white p-6 shadow-xl lg:w-96">
+            <div className="w-full shrink-0 rounded-xl bg-white p-6 shadow-xl lg:w-96">
               <h2 className="text-center text-lg font-bold text-gray-900">
                 掲載をお考えの方はこちら
               </h2>
@@ -219,92 +221,111 @@ export default function ForEmployersPage() {
         </div>
       </section>
 
+      <LogoSlider />
+
       {/* About Section */}
       <section className="bg-blue-50 py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center gap-8 sm:flex-row">
-            <div className="flex-1">
-              <h2 className="text-xl font-bold text-gray-900">建設求人ポータルとは</h2>
-              <p className="mt-3 text-sm text-gray-600 leading-relaxed">
-                建設業・設備業などの現場人材の採用に強みを持つ日本最大級の「現場人材採用サービス」です。
-                掲載無料・成果報酬型で、建築・土木・設備・解体など幅広い職種の人材採用をサポートします。
-              </p>
+          <AnimateOnScroll>
+            <div className="flex flex-col items-center gap-8 sm:flex-row">
+              <div className="flex-1">
+                <h2 className="text-xl font-bold text-gray-900">建設求人ポータルとは</h2>
+                <p className="mt-3 text-sm text-gray-600 leading-relaxed">
+                  建設業・設備業などの現場人材の採用に強みを持つ日本最大級の「現場人材採用サービス」です。
+                  掲載無料・成果報酬型で、建築・土木・設備・解体など幅広い職種の人材採用をサポートします。
+                </p>
+              </div>
+              <div className="flex h-36 w-52 shrink-0 flex-col items-center justify-center rounded-xl bg-gradient-to-br from-blue-100 to-blue-200 shadow-sm">
+                <HardHat className="h-14 w-14 text-blue-500" />
+                <p className="mt-2 text-xs font-bold text-blue-600">建設業界特化</p>
+              </div>
             </div>
-            <div className="flex h-36 w-52 shrink-0 flex-col items-center justify-center rounded-xl bg-gradient-to-br from-blue-100 to-blue-200 shadow-sm">
-              <HardHat className="h-14 w-14 text-blue-500" />
-              <p className="mt-2 text-xs font-bold text-blue-600">建設業界特化</p>
-            </div>
-          </div>
+          </AnimateOnScroll>
         </div>
       </section>
 
       {/* 3 Reasons Section */}
       <section className="py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-2xl font-bold text-gray-900">
-            建設求人ポータルが選ばれる<span className="text-blue-600">3つの理由</span>
-          </h2>
-          <div className="mt-10 grid gap-8 sm:grid-cols-3">
-            {reasons.map((r) => {
-              const Icon = r.icon
-              return (
-                <div key={r.title} className="text-center">
-                  <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue-50">
-                    <Icon className="h-10 w-10 text-blue-600" />
+          <AnimateOnScroll>
+            <h2 className="text-center text-2xl font-bold text-gray-900">
+              建設求人ポータルが選ばれる<span className="text-blue-600">3つの理由</span>
+            </h2>
+          </AnimateOnScroll>
+          <AnimateOnScroll animation="stagger">
+            <div className="mt-10 grid gap-8 sm:grid-cols-3">
+              {reasons.map((r) => {
+                const Icon = r.icon
+                return (
+                  <div key={r.title} className="text-center hover-lift rounded-xl">
+                    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue-50">
+                      <Icon className="h-10 w-10 text-blue-600" />
+                    </div>
+                    <h3 className="mt-4 text-base font-bold text-gray-900">{r.title}</h3>
+                    <p className="mt-2 text-sm text-gray-600 leading-relaxed">{r.description}</p>
                   </div>
-                  <h3 className="mt-4 text-base font-bold text-gray-900">{r.title}</h3>
-                  <p className="mt-2 text-sm text-gray-600 leading-relaxed">{r.description}</p>
-                </div>
-              )
-            })}
-          </div>
+                )
+              })}
+            </div>
+          </AnimateOnScroll>
         </div>
       </section>
 
       {/* Track Record Section */}
-      <section className="border-t bg-gray-50 py-12">
+      <section className="border-t bg-gradient-to-b from-gray-50 to-white py-12">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl font-bold text-gray-900">
-            <span className="text-blue-600">20,000社</span>以上の取引実績
-          </h2>
-          <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:justify-center">
-            {trackRecordPoints.map((p) => (
-              <div key={p.title} className="flex-1 rounded-lg border bg-white p-5 shadow-sm">
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-blue-600" />
-                  <h3 className="font-bold text-gray-900">{p.title}</h3>
+          <AnimateOnScroll animation="scale">
+            <h2 className="text-2xl font-bold text-gray-900">
+              <span className="text-blue-600">20,000社</span>以上の取引実績
+            </h2>
+          </AnimateOnScroll>
+          <AnimateOnScroll animation="stagger">
+            <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:justify-center">
+              {trackRecordPoints.map((p) => (
+                <div key={p.title} className="flex-1 rounded-xl border bg-white p-5 shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-blue-600" />
+                    <h3 className="font-bold text-gray-900">{p.title}</h3>
+                  </div>
+                  <p className="mt-2 text-sm text-gray-600">{p.description}</p>
                 </div>
-                <p className="mt-2 text-sm text-gray-600">{p.description}</p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </AnimateOnScroll>
         </div>
       </section>
 
       {/* Testimonials */}
       <section className="border-t bg-white py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-2xl font-bold text-gray-900">
-            お客様からの声
-          </h2>
-          <div className="mt-8 grid gap-6 sm:grid-cols-3">
-            {testimonials.map((t) => (
-              <div key={t.company} className="rounded-lg border bg-white p-5 shadow-sm">
-                <MessageSquareQuote className="h-6 w-6 text-blue-300" />
-                <p className="mt-3 text-sm text-gray-600 leading-relaxed">{t.comment}</p>
-                <p className="mt-3 border-t pt-3 text-xs font-bold text-gray-900">{t.company}</p>
-              </div>
-            ))}
-          </div>
+          <AnimateOnScroll>
+            <h2 className="text-center text-2xl font-bold text-gray-900">
+              お客様からの声
+            </h2>
+          </AnimateOnScroll>
+          <AnimateOnScroll animation="stagger">
+            <div className="mt-8 grid gap-6 sm:grid-cols-3">
+              {testimonials.map((t) => (
+                <div key={t.company} className="rounded-xl border bg-white p-5 shadow-sm hover-lift">
+                  <MessageSquareQuote className="h-6 w-6 text-blue-300" />
+                  <p className="mt-3 text-sm text-gray-600 leading-relaxed">{t.comment}</p>
+                  <p className="mt-3 border-t pt-3 text-xs font-bold text-gray-900">{t.company}</p>
+                </div>
+              ))}
+            </div>
+          </AnimateOnScroll>
         </div>
       </section>
 
       {/* Flow Section */}
-      <section className="border-t bg-gray-50 py-12">
+      <section className="border-t bg-gradient-to-b from-gray-50 to-white py-12">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-2xl font-bold text-gray-900">
-            掲載までの流れ
-          </h2>
+          <AnimateOnScroll>
+            <h2 className="text-center text-2xl font-bold text-gray-900">
+              掲載までの流れ
+            </h2>
+          </AnimateOnScroll>
+          <AnimateOnScroll animation="slide-left">
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
             {steps.map((step, i) => {
               const Icon = step.icon
@@ -328,21 +349,25 @@ export default function ForEmployersPage() {
               )
             })}
           </div>
+          </AnimateOnScroll>
         </div>
       </section>
 
       {/* Comparison Table */}
       <section className="border-t bg-white py-12">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-2xl font-bold text-gray-900">
-            他社との<span className="text-blue-600">料金・サービスの比較表</span>
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            建設求人ポータルは掲載無料、1人あたり10万円〜の成果報酬
-            <br className="hidden sm:block" />
-            採用のミスマッチが少ない人材を低コストで採用可能です
-          </p>
+          <AnimateOnScroll>
+            <h2 className="text-center text-2xl font-bold text-gray-900">
+              他社との<span className="text-blue-600">料金・サービスの比較表</span>
+            </h2>
+            <p className="mt-2 text-center text-sm text-gray-600">
+              建設求人ポータルは掲載無料、1人あたり10万円〜の成果報酬
+              <br className="hidden sm:block" />
+              採用のミスマッチが少ない人材を低コストで採用可能です
+            </p>
+          </AnimateOnScroll>
 
+          <AnimateOnScroll animation="scale">
           <div className="mt-8 overflow-x-auto">
             <table className="w-full min-w-[640px] border-collapse text-sm">
               <thead>
@@ -388,35 +413,38 @@ export default function ForEmployersPage() {
               </tbody>
             </table>
           </div>
+          </AnimateOnScroll>
         </div>
       </section>
 
       {/* CTA */}
       <section className="border-t bg-blue-600 py-12">
-        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-white">
-            まずは無料で掲載を始めましょう
-          </h2>
-          <p className="mt-2 text-blue-100">
-            掲載料0円・成果報酬型。採用が決まるまで費用はかかりません。
-          </p>
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <Link
-              href="/company/register"
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-8 py-3.5 text-base font-bold text-blue-600 shadow-lg hover:bg-blue-50 transition"
-            >
-              無料で企業登録する
-              <ArrowRight className="h-5 w-5" />
-            </Link>
-            <a
-              href="tel:03-6845-3624"
-              className="inline-flex items-center justify-center gap-2 rounded-lg border-2 border-white px-8 py-3.5 text-base font-bold text-white hover:bg-white/10 transition"
-            >
-              <Phone className="h-5 w-5" />
-              03-6845-3624
-            </a>
+        <AnimateOnScroll animation="scale">
+          <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+            <h2 className="text-2xl font-bold text-white">
+              まずは無料で掲載を始めましょう
+            </h2>
+            <p className="mt-2 text-blue-100">
+              掲載料0円・成果報酬型。採用が決まるまで費用はかかりません。
+            </p>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <Link
+                href="/company/register"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-8 py-3.5 text-base font-bold text-blue-600 shadow-lg hover:bg-blue-50 transition"
+              >
+                無料で企業登録する
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+              <a
+                href="tel:03-6845-3624"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white px-8 py-3.5 text-base font-bold text-white hover:bg-white/10 transition"
+              >
+                <Phone className="h-5 w-5" />
+                03-6845-3624
+              </a>
+            </div>
           </div>
-        </div>
+        </AnimateOnScroll>
       </section>
     </div>
   )
