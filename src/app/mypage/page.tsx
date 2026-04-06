@@ -116,9 +116,9 @@ export default async function MyPage() {
           href="/jobs"
           className="flex items-center gap-4 rounded-lg border bg-white p-5 shadow-sm transition hover:shadow-md"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
             <svg
-              className="h-5 w-5 text-orange-600"
+              className="h-5 w-5 text-blue-600"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={2}

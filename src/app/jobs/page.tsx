@@ -76,7 +76,7 @@ export default async function JobsPage({ searchParams }: Props) {
               name="q"
               defaultValue={params.q ?? ""}
               placeholder="職種・キーワードで検索"
-              className="w-full rounded-lg border border-gray-300 py-2.5 pl-10 pr-4 text-sm focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+              className="w-full rounded-lg border border-gray-300 py-2.5 pl-10 pr-4 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -93,7 +93,7 @@ export default async function JobsPage({ searchParams }: Props) {
                 id="prefecture"
                 name="prefecture"
                 defaultValue={params.prefecture ?? ""}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               >
                 <option value="">すべて</option>
                 {PREFECTURES.map((pref) => (
@@ -114,7 +114,7 @@ export default async function JobsPage({ searchParams }: Props) {
                   id="city"
                   name="city"
                   defaultValue={params.city ?? ""}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 >
                   <option value="">すべて</option>
                   {cities.map((city) => (
@@ -135,7 +135,7 @@ export default async function JobsPage({ searchParams }: Props) {
                 id="category"
                 name="category"
                 defaultValue={params.category ?? ""}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               >
                 <option value="">すべて</option>
                 {CATEGORIES.map((cat) => (
@@ -155,7 +155,7 @@ export default async function JobsPage({ searchParams }: Props) {
                 id="employment_type"
                 name="employment_type"
                 defaultValue={params.employment_type ?? ""}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               >
                 <option value="">すべて</option>
                 {EMPLOYMENT_TYPES.map((et) => (
@@ -178,7 +178,7 @@ export default async function JobsPage({ searchParams }: Props) {
                 defaultValue={params.salary_min ?? ""}
                 placeholder="例: 25"
                 min={0}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -187,7 +187,7 @@ export default async function JobsPage({ searchParams }: Props) {
           <div className="mt-4">
             <button
               type="submit"
-              className="rounded-lg bg-orange-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-orange-700"
+              className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700"
             >
               検索
             </button>
@@ -277,10 +277,10 @@ function FilterBadge({
   return (
     <a
       href={`/jobs?${newParams.toString()}`}
-      className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-700 hover:bg-orange-200"
+      className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 hover:bg-blue-200"
     >
       {label}
-      <span className="text-orange-400">&times;</span>
+      <span className="text-blue-400">&times;</span>
     </a>
   )
 }
@@ -306,7 +306,7 @@ function PaginationLink({
       href={`/jobs?${newParams.toString()}`}
       className={`rounded-lg border px-3 py-2 text-sm ${
         active
-          ? "border-orange-600 bg-orange-600 text-white"
+          ? "border-blue-600 bg-blue-600 text-white"
           : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
       }`}
     >

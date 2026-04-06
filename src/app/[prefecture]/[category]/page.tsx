@@ -151,7 +151,7 @@ export default async function PrefectureCategoryPage({ params }: Props) {
       </h1>
       <p className="mt-2 text-gray-600">
         {prefLabel}で現在募集中の{catLabel}の求人は{" "}
-        <span className="font-semibold text-orange-600">{jobs.length}</span> 件です。
+        <span className="font-semibold text-blue-600">{jobs.length}</span> 件です。
       </p>
 
       {jobs.length === 0 ? (
@@ -161,7 +161,7 @@ export default async function PrefectureCategoryPage({ params }: Props) {
           </p>
           <Link
             href="/jobs"
-            className="mt-4 inline-block rounded-lg bg-orange-600 px-6 py-2 text-sm font-medium text-white hover:bg-orange-700"
+            className="mt-4 inline-block rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-700"
           >
             すべての求人を見る
           </Link>
