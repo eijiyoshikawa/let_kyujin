@@ -31,6 +31,8 @@ model User {
 
   applications Application[]
   scouts       Scout[]
+  resume       Resume?
+  uploadedFiles UploadedFile[]
 
   @@map("users")
 }
@@ -177,6 +179,68 @@ model BillingEvent {
   application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
   @@map("billing_events")
+}
+
+// ========================================
+// 履歴書・職務経歴書（アプリ内作成）
+// ========================================
+model Resume {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @unique @map("user_id") @db.Uuid
+
+  // 基本情報
+  fullName      String?  @map("full_name") @db.VarChar(100)
+  furigana      String?  @db.VarChar(100)
+  birthDate     DateTime? @map("birth_date") @db.Date
+  gender        String?  @db.VarChar(10)
+  postalCode    String?  @map("postal_code") @db.VarChar(10)
+  address       String?
+  phone         String?  @db.VarChar(20)
+  email         String?  @db.VarChar(255)
+  photo         String?  @db.VarChar(500) // 証明写真URL
+
+  // 学歴・職歴 (JSON配列)
+  educationHistory Json? @map("education_history") @db.JsonB // [{year, month, content}]
+  workHistory      Json? @map("work_history") @db.JsonB      // [{year, month, content}]
+
+  // 免許・資格 (JSON配列)
+  licenses Json? @db.JsonB // [{year, month, name}]
+
+  // 志望動機・自己PR
+  motivation String?
+  selfPr     String? @map("self_pr")
+
+  // 職務経歴書
+  careerSummary    String?  @map("career_summary")  // 職務要約
+  careerDetails    Json?    @map("career_details") @db.JsonB // [{company, period, position, description}]
+  skills           String[] @default([])              // 保有スキル
+  qualifications   String[] @default([])              // 資格一覧
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("resumes")
+}
+
+// ========================================
+// アップロードファイル
+// ========================================
+model UploadedFile {
+  id       String @id @default(uuid()) @db.Uuid
+  userId   String @map("user_id") @db.Uuid
+  fileName String @map("file_name") @db.VarChar(255)
+  fileType String @map("file_type") @db.VarChar(20) // resume | cv | other
+  fileUrl  String @map("file_url") @db.VarChar(500)
+  fileSize Int    @map("file_size") // bytes
+  mimeType String @map("mime_type") @db.VarChar(100)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("uploaded_files")
 }
 
 // ========================================

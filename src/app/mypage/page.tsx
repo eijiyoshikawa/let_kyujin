@@ -113,6 +113,19 @@ export default async function MyPage() {
         </Link>
 
         <Link
+          href="/mypage/resume"
+          className="flex items-center gap-4 rounded-lg border bg-white p-5 shadow-sm transition hover:shadow-md"
+        >
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100">
+            <FileText className="h-5 w-5 text-amber-600" />
+          </div>
+          <div>
+            <p className="font-semibold text-gray-900">履歴書・職務経歴書</p>
+            <p className="text-sm text-gray-500">作成・アップロード</p>
+          </div>
+        </Link>
+
+        <Link
           href="/jobs"
           className="flex items-center gap-4 rounded-lg border bg-white p-5 shadow-sm transition hover:shadow-md"
         >
