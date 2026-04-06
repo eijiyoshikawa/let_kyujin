@@ -128,23 +128,13 @@ export default async function HomePage() {
           className="object-cover opacity-20"
         />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-          <div className="flex items-center gap-8">
-            <div className="flex-1 text-center lg:text-left">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight">
-                建設求人ポータル
-              </h1>
-              <p className="mt-2 text-lg text-blue-100">
-                建築・土木・設備・解体の求人サイト
-              </p>
-            </div>
-            <div className="hidden lg:block w-64 h-48 relative rounded-lg overflow-hidden shadow-xl">
-              <Image
-                src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop"
-                alt="建設作業員"
-                fill
-                className="object-cover"
-              />
-            </div>
+          <div className="text-center">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight">
+              建設求人ポータル
+            </h1>
+            <p className="mt-2 text-lg text-blue-100">
+              建築・土木・設備・解体の求人サイト
+            </p>
           </div>
 
           {/* Search Form */}
