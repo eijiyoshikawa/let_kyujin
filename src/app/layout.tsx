@@ -5,11 +5,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "求人ポータル | ノンデスク産業特化の求人サイト",
-    template: "%s | 求人ポータル",
+    default: "建設求人ポータル | 建設業界特化の求人サイト",
+    template: "%s | 建設求人ポータル",
   },
   description:
-    "ドライバー・建設・製造業に特化した求人サイト。ハローワーク求人も掲載。",
+    "建築・土木・設備・解体に特化した求人サイト。ハローワーク求人も掲載。株式会社LET運営。",
 };
 
 export default function RootLayout({

@@ -3,9 +3,9 @@ import { CheckCircle, ArrowRight } from "lucide-react"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "企業の採用担当者の方へ",
+  title: "建設会社の採用担当者の方へ",
   description:
-    "掲載無料・成果報酬型の求人掲載。ノンデスク産業に特化した求人ポータルで、ドライバー・建設・製造業の人材を採用。",
+    "掲載無料・成果報酬型の求人掲載。建設業界に特化した求人ポータルで、建築・土木・設備の人材を採用。",
 }
 
 const features = [
@@ -15,7 +15,7 @@ const features = [
       "求人の掲載は完全無料。初期費用・月額費用は一切かかりません。採用が決まるまで費用ゼロでご利用いただけます。",
   },
   {
-    title: "成果報酬型（1人あたり10万円〜）",
+    title: "成果報酬型",
     description:
       "採用が決まった場合のみ費用が発生する成果報酬型。採用コストを最適化し、無駄のない採用活動を実現します。",
   },
@@ -40,7 +40,7 @@ const steps = [
   {
     number: "2",
     title: "求人掲載",
-    description: "テンプレートに沿って求人情報を入力するだけ。写真や動画の掲載も可能です。",
+    description: "テンプレートに沿って求人情報を入力するだけ。建設業界向けのカテゴリで求職者に届きやすい。",
   },
   {
     number: "3",
@@ -53,20 +53,20 @@ export default function ForEmployersPage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 to-blue-800 py-16 sm:py-24">
+      <section className="bg-gradient-to-br from-orange-600 to-amber-700 py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
             掲載無料・成果報酬型の
             <br />
-            求人掲載
+            建設業界求人掲載
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-blue-100">
-            ドライバー・建設・製造業に特化した求人ポータル。
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-orange-100">
+            建築・土木・設備・解体に特化した求人ポータル。
             採用が決まるまで費用はかかりません。
           </p>
           <Link
             href="/company/register"
-            className="mt-8 inline-flex items-center gap-2 rounded-lg bg-white px-8 py-4 text-lg font-semibold text-blue-600 shadow-lg hover:bg-blue-50 transition"
+            className="mt-8 inline-flex items-center gap-2 rounded-lg bg-white px-8 py-4 text-lg font-semibold text-orange-600 shadow-lg hover:bg-orange-50 transition"
           >
             無料で掲載を始める
             <ArrowRight className="h-5 w-5" />
@@ -87,7 +87,7 @@ export default function ForEmployersPage() {
                 className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
               >
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="mt-0.5 h-6 w-6 flex-shrink-0 text-blue-600" />
+                  <CheckCircle className="mt-0.5 h-6 w-6 flex-shrink-0 text-orange-600" />
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900">
                       {feature.title}
@@ -112,7 +112,7 @@ export default function ForEmployersPage() {
           <div className="mt-10 grid gap-8 sm:grid-cols-3">
             {steps.map((step) => (
               <div key={step.number} className="text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-xl font-bold text-white">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-orange-600 text-xl font-bold text-white">
                   {step.number}
                 </div>
                 <h3 className="mt-4 text-lg font-semibold text-gray-900">
@@ -138,7 +138,7 @@ export default function ForEmployersPage() {
           </p>
           <Link
             href="/company/register"
-            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-8 py-4 text-lg font-semibold text-white shadow-lg hover:bg-blue-700 transition"
+            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-orange-600 px-8 py-4 text-lg font-semibold text-white shadow-lg hover:bg-orange-700 transition"
           >
             無料で企業登録する
             <ArrowRight className="h-5 w-5" />

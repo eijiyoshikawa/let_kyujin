@@ -8,11 +8,11 @@ export default function PrivacyPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
       <h1 className="text-2xl font-bold text-gray-900">プライバシーポリシー</h1>
-      <p className="mt-2 text-sm text-gray-500">最終更新日: 2025年1月1日</p>
+      <p className="mt-2 text-sm text-gray-500">最終更新日: 2026年4月6日</p>
 
       <div className="mt-8 space-y-8 text-gray-700 leading-relaxed">
         <p>
-          株式会社サンプル（以下「当社」といいます）は、個人情報の保護に関する法律（個人情報保護法）その他の関連法令を遵守し、以下のとおり個人情報の取扱いについて定めます。
+          株式会社LET（以下「当社」といいます）は、個人情報の保護に関する法律（個人情報保護法）その他の関連法令を遵守し、以下のとおり個人情報の取扱いについて定めます。
         </p>
 
         <section>
@@ -101,11 +101,10 @@ export default function PrivacyPage() {
             個人情報の取扱いに関するお問い合わせは、以下の窓口までご連絡ください。
           </p>
           <div className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm">
-            <p>株式会社サンプル 個人情報管理責任者</p>
-            <p className="mt-1">
-              メール: privacy@example.com
-            </p>
-            <p>住所: 〒100-0001 東京都千代田区千代田1-1-1 サンプルビル3F</p>
+            <p className="font-medium">株式会社LET</p>
+            <p className="mt-1">個人情報管理責任者: 取締役 吉川英治</p>
+            <p className="mt-1">住所: 〒541-0058 大阪府大阪市中央区南久宝寺町4丁目4-12 IB CENTERビル8F</p>
+            <p className="mt-1">電話: 06-6786-8320</p>
           </div>
         </section>
       </div>

@@ -55,10 +55,19 @@ export function Footer() {
               </li>
             </ul>
           </div>
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900">運営会社</h3>
+            <div className="mt-3 space-y-1 text-sm text-gray-600">
+              <p>株式会社LET</p>
+              <p className="text-xs">大阪府大阪市中央区南久宝寺町4-4-12</p>
+              <p className="text-xs">IB CENTERビル8F</p>
+              <p className="text-xs">TEL: 06-6786-8320</p>
+            </div>
+          </div>
         </div>
         <div className="mt-8 border-t pt-6 text-center text-xs text-gray-500">
           <p>ハローワーク求人はハローワークインターネットサービスより転載しています。</p>
-          <p className="mt-1">&copy; {new Date().getFullYear()} 求人ポータル. All rights reserved.</p>
+          <p className="mt-1">&copy; {new Date().getFullYear()} 株式会社LET. All rights reserved.</p>
         </div>
       </div>
     </footer>
