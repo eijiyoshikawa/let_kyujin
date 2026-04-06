@@ -66,6 +66,8 @@ export function Footer() {
               <p>大阪府大阪市中央区南久宝寺町</p>
               <p>4-4-12 IB CENTERビル8F</p>
               <p>TEL: 06-6786-8320</p>
+              <p className="mt-2 text-gray-500">有料職業紹介事業</p>
+              <p>許可番号: 27-ユ-304693</p>
             </div>
           </div>
         </div>
@@ -73,7 +75,7 @@ export function Footer() {
         {/* Bottom */}
         <div className="mt-8 border-t border-gray-700 pt-6">
           <p className="text-center text-xs text-gray-500">
-            ハローワーク求人はハローワークインターネットサービスより転載しています。
+            有料職業紹介事業許可番号 27-ユ-304693 | ハローワーク求人はハローワークインターネットサービスより転載しています。
           </p>
           <p className="mt-1 text-center text-xs text-gray-500">
             &copy; {new Date().getFullYear()} 株式会社LET. All rights reserved.

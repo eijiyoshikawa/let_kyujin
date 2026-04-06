@@ -63,6 +63,18 @@ export default function AboutPage() {
                   </th>
                   <td className="px-4 py-3">06-6786-8320</td>
                 </tr>
+                <tr>
+                  <th className="bg-gray-50 px-4 py-3 text-left font-medium text-gray-900">
+                    有料職業紹介事業許可番号
+                  </th>
+                  <td className="px-4 py-3">27-ユ-304693</td>
+                </tr>
+                <tr>
+                  <th className="bg-gray-50 px-4 py-3 text-left font-medium text-gray-900">
+                    許可年月日
+                  </th>
+                  <td className="px-4 py-3">令和7年1月1日</td>
+                </tr>
               </tbody>
             </table>
           </div>
