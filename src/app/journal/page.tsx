@@ -1,12 +1,20 @@
 import Link from "next/link"
 import type { Metadata } from "next"
+import {
+  Newspaper,
+  Search,
+  ChevronRight,
+  CirclePlay,
+  Camera,
+  TrendingUp,
+  ArrowRight,
+} from "lucide-react"
 
 export const metadata: Metadata = {
   title: "建設求人マガジン",
   description: "建設業界で働く方に役立つ情報を発信。転職ガイド、資格情報、業界ニュースなど。",
 }
 
-// Static articles data (will be replaced with CMS/WordPress later)
 const articles = [
   {
     slug: "construction-career-guide",
@@ -15,6 +23,7 @@ const articles = [
     category: "転職ガイド",
     date: "2026-04-01",
     featured: true,
+    imageUrl: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=300&fit=crop",
   },
   {
     slug: "tobi-salary",
@@ -23,6 +32,7 @@ const articles = [
     category: "年収・給与",
     date: "2026-03-28",
     featured: true,
+    imageUrl: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop",
   },
   {
     slug: "electrician-license",
@@ -30,7 +40,8 @@ const articles = [
     excerpt: "電気工事士は建設業界で重宝される国家資格。試験の難易度や勉強方法、合格率を詳しく解説。",
     category: "資格",
     date: "2026-03-25",
-    featured: false,
+    featured: true,
+    imageUrl: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=400&h=300&fit=crop",
   },
   {
     slug: "construction-manager-role",
@@ -39,6 +50,7 @@ const articles = [
     category: "職種解説",
     date: "2026-03-20",
     featured: false,
+    imageUrl: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&h=300&fit=crop",
   },
   {
     slug: "civil-engineering-career",
@@ -47,6 +59,7 @@ const articles = [
     category: "キャリア",
     date: "2026-03-15",
     featured: false,
+    imageUrl: "https://images.unsplash.com/photo-1590496793929-36417d3117de?w=400&h=300&fit=crop",
   },
   {
     slug: "construction-safety",
@@ -55,6 +68,7 @@ const articles = [
     category: "業界知識",
     date: "2026-03-10",
     featured: false,
+    imageUrl: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&h=300&fit=crop",
   },
   {
     slug: "interior-finishing-guide",
@@ -63,6 +77,7 @@ const articles = [
     category: "職種解説",
     date: "2026-03-05",
     featured: false,
+    imageUrl: "https://images.unsplash.com/photo-1636761358953-129e627e4301?w=400&h=300&fit=crop",
   },
   {
     slug: "demolition-work",
@@ -71,8 +86,11 @@ const articles = [
     category: "業界知識",
     date: "2026-03-01",
     featured: false,
+    imageUrl: "https://images.unsplash.com/photo-1517581177682-a085bb7ffb15?w=400&h=300&fit=crop",
   },
 ]
+
+const categoryTabs = ["ホーム", "転職ガイド", "年収・給与", "資格", "職種解説", "キャリア", "業界知識"]
 
 const categoryList = [
   { name: "転職ガイド", count: 1 },
@@ -83,166 +101,257 @@ const categoryList = [
   { name: "業界知識", count: 2 },
 ]
 
+const pickupCompanies = [
+  { name: "株式会社山田建設", description: "東京・神奈川を中心に建築工事を手掛ける総合建設会社" },
+  { name: "大和土木株式会社", description: "道路・橋梁・トンネルなど土木工事のスペシャリスト" },
+]
+
 export default function JournalPage() {
   const featured = articles.filter((a) => a.featured)
   const recent = articles.filter((a) => !a.featured)
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      {/* Header */}
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900">
-          📰 建設求人マガジン
-        </h1>
-        <p className="mt-2 text-sm text-gray-600">
-          建設業界で働く方に役立つ情報を発信。転職ガイド、資格情報、業界ニュースなど。
-        </p>
-      </div>
-
-      <div className="mt-8 flex flex-col gap-8 lg:flex-row">
-        {/* Main content */}
-        <div className="flex-1 min-w-0">
-          {/* Featured articles */}
-          <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900 border-b-2 border-blue-600 pb-2">
-            ピックアップ
-          </h2>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            {featured.map((article) => (
-              <ArticleCard key={article.slug} article={article} size="large" />
-            ))}
-          </div>
-
-          {/* Recent articles */}
-          <h2 className="mt-8 flex items-center gap-2 text-lg font-bold text-gray-900 border-b-2 border-blue-600 pb-2">
-            最新記事
-          </h2>
-          <div className="mt-4 space-y-4">
-            {recent.map((article) => (
-              <ArticleCard key={article.slug} article={article} size="small" />
-            ))}
-          </div>
-        </div>
-
-        {/* Sidebar */}
-        <aside className="w-full shrink-0 lg:w-64">
-          {/* Search CTA */}
-          <div className="rounded-lg bg-blue-600 p-5 text-center text-white">
-            <p className="font-bold">求人を探す</p>
-            <p className="mt-1 text-xs text-blue-100">建設業界の求人を検索</p>
-            <Link
-              href="/jobs"
-              className="mt-3 inline-block rounded-full bg-white px-5 py-2 text-sm font-semibold text-blue-600 hover:bg-blue-50"
-            >
-              求人検索 →
-            </Link>
-          </div>
-
-          {/* Categories */}
-          <div className="mt-6 rounded-lg border bg-white p-4">
-            <h3 className="font-bold text-gray-900 text-sm border-b pb-2">
-              カテゴリー
-            </h3>
-            <ul className="mt-2 space-y-1">
-              {categoryList.map((cat) => (
-                <li key={cat.name}>
-                  <span className="flex items-center justify-between py-1.5 text-sm text-gray-600 hover:text-blue-600 cursor-pointer">
-                    {cat.name}
-                    <span className="text-xs text-gray-400">({cat.count})</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Popular articles */}
-          <div className="mt-6 rounded-lg border bg-white p-4">
-            <h3 className="font-bold text-gray-900 text-sm border-b pb-2">
-              人気の記事
-            </h3>
-            <ul className="mt-2 space-y-3">
-              {articles.slice(0, 5).map((article, i) => (
-                <li key={article.slug}>
-                  <Link
-                    href={`/journal/${article.slug}`}
-                    className="flex gap-3 group"
-                  >
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded bg-blue-100 text-xs font-bold text-blue-600">
-                      {i + 1}
-                    </span>
-                    <span className="text-xs text-gray-700 group-hover:text-blue-600 line-clamp-2">
-                      {article.title}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </aside>
-      </div>
-    </div>
-  )
-}
-
-function ArticleCard({
-  article,
-  size,
-}: {
-  article: (typeof articles)[number]
-  size: "large" | "small"
-}) {
-  if (size === "large") {
-    return (
-      <Link
-        href={`/journal/${article.slug}`}
-        className="group rounded-lg border bg-white overflow-hidden hover:shadow-md transition"
-      >
-        <div className="aspect-video bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center p-4">
-          <span className="text-white text-sm font-bold text-center">
-            {article.title}
-          </span>
-        </div>
-        <div className="p-4">
-          <div className="flex items-center gap-2">
-            <span className="rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
-              {article.category}
-            </span>
-            <span className="text-xs text-gray-400">{article.date}</span>
-          </div>
-          <h3 className="mt-2 font-semibold text-gray-900 group-hover:text-blue-600 transition line-clamp-2">
-            {article.title}
-          </h3>
-          <p className="mt-1 text-xs text-gray-500 line-clamp-2">
-            {article.excerpt}
+    <div>
+      {/* Blue header bar */}
+      <div className="bg-blue-700 text-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5">
+          <h1 className="flex items-center gap-2 text-xl font-bold">
+            <Newspaper className="h-6 w-6" />
+            建設求人マガジン
+          </h1>
+          <p className="mt-1 text-sm text-blue-100">
+            建設業界で働く方に役立つ情報を発信
           </p>
         </div>
-      </Link>
-    )
-  }
+      </div>
 
-  return (
-    <Link
-      href={`/journal/${article.slug}`}
-      className="group flex gap-4 rounded-lg border bg-white p-4 hover:shadow-md transition"
-    >
-      <div className="hidden sm:flex h-20 w-32 shrink-0 rounded bg-gradient-to-br from-gray-100 to-gray-200 items-center justify-center">
-        <span className="text-xs text-gray-400 text-center px-2">
-          {article.category}
-        </span>
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <span className="rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
-            {article.category}
-          </span>
-          <span className="text-xs text-gray-400">{article.date}</span>
+      {/* Category tabs */}
+      <div className="border-b bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-x-auto">
+          <div className="flex gap-1 py-2 min-w-max">
+            {categoryTabs.map((tab, i) => (
+              <span
+                key={tab}
+                className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium cursor-pointer transition ${
+                  i === 0
+                    ? "bg-blue-600 text-white"
+                    : "text-gray-600 hover:bg-blue-50 hover:text-blue-600"
+                }`}
+              >
+                {tab}
+              </span>
+            ))}
+          </div>
         </div>
-        <h3 className="mt-1.5 font-semibold text-sm text-gray-900 group-hover:text-blue-600 transition line-clamp-2">
-          {article.title}
-        </h3>
-        <p className="mt-1 text-xs text-gray-500 line-clamp-1">
-          {article.excerpt}
-        </p>
       </div>
-    </Link>
+
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        {/* Featured articles - 3 col with images */}
+        <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory sm:grid sm:grid-cols-3 sm:overflow-visible sm:pb-0">
+          {featured.map((article) => (
+            <Link
+              key={article.slug}
+              href={`/journal/${article.slug}`}
+              className="group shrink-0 w-72 snap-start rounded-lg overflow-hidden border bg-white hover:shadow-md transition sm:w-auto"
+            >
+              <div className="aspect-video relative">
+                <img
+                  src={article.imageUrl}
+                  alt={article.title}
+                  loading="lazy"
+                  className="h-full w-full object-cover"
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+                  <span className="rounded bg-blue-600 px-2 py-0.5 text-xs font-medium text-white">
+                    {article.category}
+                  </span>
+                  <p className="mt-1 text-sm font-bold text-white line-clamp-2">
+                    {article.title}
+                  </p>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Dual CTA buttons */}
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+          <Link
+            href="/jobs"
+            className="flex items-center justify-center gap-2 rounded-full bg-blue-600 px-8 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+          >
+            <Search className="h-4 w-4" />
+            求人を探す
+          </Link>
+          <Link
+            href="/register"
+            className="flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-8 py-3 text-sm font-semibold text-white hover:from-orange-600 hover:to-amber-600"
+          >
+            転職サポートを受ける
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        {/* Main content + Sidebar */}
+        <div className="mt-8 flex flex-col gap-8 lg:flex-row">
+          {/* Article list */}
+          <div className="flex-1 min-w-0">
+            <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900 border-b-2 border-blue-600 pb-2">
+              <TrendingUp className="h-5 w-5 text-blue-600" />
+              ピックアップ記事
+            </h2>
+            <div className="mt-4 space-y-4">
+              {recent.map((article) => (
+                <Link
+                  key={article.slug}
+                  href={`/journal/${article.slug}`}
+                  className="group flex gap-4 rounded-lg border bg-white p-3 hover:shadow-md transition"
+                >
+                  <div className="h-24 w-40 shrink-0 rounded overflow-hidden">
+                    <img
+                      src={article.imageUrl}
+                      alt={article.title}
+                      loading="lazy"
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0 py-0.5">
+                    <div className="flex items-center gap-2">
+                      <span className="rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                        {article.category}
+                      </span>
+                      <span className="text-xs text-gray-400">{article.date}</span>
+                    </div>
+                    <h3 className="mt-1.5 font-semibold text-sm text-gray-900 group-hover:text-blue-600 transition line-clamp-2">
+                      {article.title}
+                    </h3>
+                    <p className="mt-1 text-xs text-gray-500 line-clamp-2 hidden sm:block">
+                      {article.excerpt}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            <div className="mt-6 text-center">
+              <Link
+                href="/journal"
+                className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:underline"
+              >
+                マガジンをもっと見る
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <aside className="w-full shrink-0 lg:w-72 space-y-6">
+            {/* Social links */}
+            <div className="rounded-lg border bg-white p-4">
+              <h3 className="font-bold text-sm text-gray-900 border-b pb-2">公式SNS</h3>
+              <div className="mt-3 flex gap-3 justify-center">
+                <a
+                  href="#"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white hover:bg-red-700 transition"
+                  aria-label="YouTube"
+                >
+                  <CirclePlay className="h-5 w-5" />
+                </a>
+                <a
+                  href="#"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 transition"
+                  aria-label="Instagram"
+                >
+                  <Camera className="h-5 w-5" />
+                </a>
+              </div>
+            </div>
+
+            {/* Search CTA */}
+            <div className="rounded-lg bg-blue-600 p-5 text-center text-white">
+              <p className="font-bold">求人を探す</p>
+              <p className="mt-1 text-xs text-blue-100">建設業界の求人を検索</p>
+              <Link
+                href="/jobs"
+                className="mt-3 inline-flex items-center gap-1 rounded-full bg-white px-5 py-2 text-sm font-semibold text-blue-600 hover:bg-blue-50"
+              >
+                <Search className="h-3.5 w-3.5" />
+                求人検索
+              </Link>
+            </div>
+
+            {/* Recommend articles with thumbnails */}
+            <div className="rounded-lg border bg-white p-4">
+              <h3 className="font-bold text-sm text-gray-900 border-b pb-2">
+                おすすめ記事
+              </h3>
+              <ul className="mt-3 space-y-3">
+                {articles.slice(0, 5).map((article, i) => (
+                  <li key={article.slug}>
+                    <Link
+                      href={`/journal/${article.slug}`}
+                      className="flex gap-3 group"
+                    >
+                      <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded overflow-hidden">
+                        <img
+                          src={article.imageUrl}
+                          alt=""
+                          loading="lazy"
+                          className="h-full w-full object-cover"
+                        />
+                        <span className="absolute top-0 left-0 flex h-5 w-5 items-center justify-center bg-blue-600 text-[10px] font-bold text-white">
+                          {i + 1}
+                        </span>
+                      </div>
+                      <span className="text-xs text-gray-700 group-hover:text-blue-600 line-clamp-2 pt-0.5">
+                        {article.title}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Categories with chevrons */}
+            <div className="rounded-lg border bg-white p-4">
+              <h3 className="font-bold text-gray-900 text-sm border-b pb-2">
+                カテゴリー
+              </h3>
+              <ul className="mt-2 divide-y divide-gray-100">
+                {categoryList.map((cat) => (
+                  <li key={cat.name}>
+                    <span className="flex items-center justify-between py-2.5 text-sm text-gray-600 hover:text-blue-600 cursor-pointer">
+                      <span>{cat.name}</span>
+                      <span className="flex items-center gap-1 text-xs text-gray-400">
+                        ({cat.count})
+                        <ChevronRight className="h-3.5 w-3.5" />
+                      </span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Pickup companies */}
+            <div className="rounded-lg border bg-white p-4">
+              <h3 className="font-bold text-sm text-gray-900 border-b pb-2">
+                ピックアップ企業
+              </h3>
+              <div className="mt-3 space-y-3">
+                {pickupCompanies.map((company) => (
+                  <div
+                    key={company.name}
+                    className="rounded-md border p-3 hover:bg-gray-50 transition cursor-pointer"
+                  >
+                    <p className="text-sm font-semibold text-gray-900">{company.name}</p>
+                    <p className="mt-0.5 text-xs text-gray-500">{company.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
   )
 }

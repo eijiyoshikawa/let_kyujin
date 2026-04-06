@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { HardHat, Search, User, Menu, X } from "lucide-react"
+import { HardHat, Search, User, Menu, X, Newspaper, Building2, Info } from "lucide-react"
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -47,7 +47,7 @@ export function Header() {
               href="/journal"
               className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
             >
-              📰 マガジン
+              <Newspaper className="h-4 w-4" /> マガジン
             </Link>
             <Link
               href="/register"
@@ -92,21 +92,21 @@ export function Header() {
               onClick={() => setMenuOpen(false)}
               className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
             >
-              📰 マガジン
+              <Newspaper className="h-4 w-4" /> マガジン
             </Link>
             <Link
               href="/for-employers"
               onClick={() => setMenuOpen(false)}
               className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
             >
-              🏢 企業の方へ
+              <Building2 className="h-4 w-4 text-blue-600" /> 企業の方へ
             </Link>
             <Link
               href="/about"
               onClick={() => setMenuOpen(false)}
               className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
             >
-              ℹ️ サイトについて
+              <Info className="h-4 w-4 text-blue-600" /> サイトについて
             </Link>
             <div className="border-t pt-2 mt-2 flex gap-2">
               <Link
