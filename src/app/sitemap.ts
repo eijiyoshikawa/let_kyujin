@@ -3,7 +3,18 @@ import { prisma } from "@/lib/db"
 
 export const dynamic = "force-dynamic"
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://www.example.com"
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://let-kyujin.vercel.app"
+
+const journalSlugs = [
+  "construction-career-guide",
+  "tobi-salary",
+  "electrician-license",
+  "construction-manager-role",
+  "civil-engineering-career",
+  "construction-safety",
+  "interior-finishing-guide",
+  "demolition-work",
+]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
@@ -18,6 +29,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: "hourly",
       priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/journal`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/for-employers`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
     },
     {
       url: `${BASE_URL}/about`,
@@ -38,6 +61,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.3,
     },
   ]
+
+  // Journal articles
+  const journalPages: MetadataRoute.Sitemap = journalSlugs.map((slug) => ({
+    url: `${BASE_URL}/journal/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }))
 
   // Active job detail pages
   const jobs = await prisma.job.findMany({
@@ -65,5 +96,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-  return [...staticPages, ...jobPages, ...seoCombos]
+  return [...staticPages, ...journalPages, ...jobPages, ...seoCombos]
 }

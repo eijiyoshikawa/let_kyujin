@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { MapPin, Banknote, Building2, Clock } from "lucide-react"
+import { MapPin, Banknote, Building2, Clock, HardHat } from "lucide-react"
+import { getCategoryLabel } from "@/lib/categories"
 
 type JobCardProps = {
   id: string
@@ -24,7 +25,18 @@ export function JobCard({ job }: { job: JobCardProps }) {
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <h3 className="text-base font-semibold text-gray-900 line-clamp-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="inline-flex items-center gap-1 rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+              <HardHat className="h-3 w-3" />
+              {getCategoryLabel(job.category)}
+            </span>
+            {job.source === "hellowork" && (
+              <span className="rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                HW
+              </span>
+            )}
+          </div>
+          <h3 className="mt-1.5 text-base font-semibold text-gray-900 line-clamp-2">
             {job.title}
           </h3>
           {job.company && (
@@ -34,11 +46,6 @@ export function JobCard({ job }: { job: JobCardProps }) {
             </p>
           )}
         </div>
-        {job.source === "hellowork" && (
-          <span className="shrink-0 rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
-            HW
-          </span>
-        )}
       </div>
 
       <div className="mt-3 flex flex-wrap gap-3 text-sm text-gray-600">

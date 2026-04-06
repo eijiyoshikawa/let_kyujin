@@ -24,7 +24,7 @@ export default function CompanyRegisterPage() {
 
   const validate = (): string | null => {
     if (!form.companyName.trim()) return "会社名を入力してください。";
-    if (!form.industry.trim()) return "業種を入力してください。";
+    if (!form.industry) return "業種を選択してください。";
     if (!form.prefecture) return "都道府県を選択してください。";
     if (!form.contactEmail.trim())
       return "担当者メールアドレスを入力してください。";
@@ -104,7 +104,7 @@ export default function CompanyRegisterPage() {
                 value={form.companyName}
                 onChange={(e) => updateField("companyName", e.target.value)}
                 className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                placeholder="株式会社サンプル"
+                placeholder="株式会社○○建設"
               />
             </div>
 
@@ -115,15 +115,32 @@ export default function CompanyRegisterPage() {
               >
                 業種 <span className="text-red-500">*</span>
               </label>
-              <input
+              <select
                 id="industry"
-                type="text"
                 required
                 value={form.industry}
                 onChange={(e) => updateField("industry", e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                placeholder="運送業"
-              />
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                <option value="">選択してください</option>
+                <option value="総合建設（ゼネコン）">総合建設（ゼネコン）</option>
+                <option value="建築工事">建築工事</option>
+                <option value="土木工事">土木工事</option>
+                <option value="電気設備工事">電気設備工事</option>
+                <option value="管工事・空調設備">管工事・空調設備</option>
+                <option value="内装仕上工事">内装仕上工事</option>
+                <option value="塗装工事">塗装工事</option>
+                <option value="防水工事">防水工事</option>
+                <option value="解体工事">解体工事</option>
+                <option value="舗装工事">舗装工事</option>
+                <option value="とび・土工工事">とび・土工工事</option>
+                <option value="鉄骨・鉄筋工事">鉄骨・鉄筋工事</option>
+                <option value="産業廃棄物処理">産業廃棄物処理</option>
+                <option value="測量・設計">測量・設計</option>
+                <option value="不動産・デベロッパー">不動産・デベロッパー</option>
+                <option value="建設機械レンタル">建設機械レンタル</option>
+                <option value="その他建設関連">その他建設関連</option>
+              </select>
             </div>
 
             <div>

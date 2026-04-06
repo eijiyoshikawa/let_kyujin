@@ -3,17 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { PREFECTURES } from "@/lib/constants"
-
-const CATEGORIES = [
-  { value: "driver", label: "ドライバー・運転" },
-  { value: "construction", label: "建設・土木" },
-  { value: "manufacturing", label: "製造・工場" },
-  { value: "office", label: "事務" },
-  { value: "sales", label: "営業・販売" },
-  { value: "service", label: "サービス・介護" },
-  { value: "it", label: "IT・情報処理" },
-  { value: "other", label: "その他" },
-]
+import { CATEGORIES } from "@/lib/categories"
 
 interface ProfileFormData {
   name: string
