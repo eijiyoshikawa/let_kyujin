@@ -25,7 +25,7 @@ export function Footer() {
               会員登録（無料）
             </Link>
             <Link
-              href="/for-employers"
+              href="/contact"
               className="rounded-full border border-gray-500 px-5 py-2 text-sm font-medium text-gray-300 hover:bg-gray-800 transition"
             >
               ヘルプ・お問い合わせ
