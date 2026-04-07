@@ -50,12 +50,6 @@ const popularAreas = [
   { pref: "静岡県", slug: "shizuoka" },
 ]
 
-const magazineArticles = [
-  { slug: "construction-career-guide", title: "未経験から建設業界へ転職するには", category: "転職", imageUrl: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=300&fit=crop" },
-  { slug: "tobi-salary", title: "鳶職人の給与水準 — 経験年数ごとのデータ", category: "給与", imageUrl: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop" },
-  { slug: "electrician-license", title: "第二種電気工事士 試験対策まとめ", category: "資格", imageUrl: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=400&h=300&fit=crop" },
-]
-
 const newsItems = [
   { date: "2026.04.01", title: "サイトデザインをリニューアルしました", tag: "お知らせ" },
   { date: "2026.03.15", title: "求人掲載数が5,000件を突破しました", tag: "実績" },
@@ -70,6 +64,14 @@ export default async function HomePage() {
   }).catch(() => [])
 
   const totalJobs = categoryCounts.reduce((sum, c) => sum + c._count, 0)
+
+  // Latest magazine articles from DB
+  const magazineArticles = await prisma.article.findMany({
+    where: { status: "published" },
+    orderBy: { publishedAt: "desc" },
+    take: 3,
+    select: { slug: true, title: true, category: true, imageUrl: true },
+  }).catch(() => [])
 
   const categoriesWithCounts = categories.map((cat) => ({
     ...cat,
@@ -171,6 +173,7 @@ export default async function HomePage() {
       </section>
 
       {/* Magazine */}
+      {magazineArticles.length > 0 && (
       <section className="border-t bg-white py-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
@@ -184,9 +187,11 @@ export default async function HomePage() {
             <div className="mt-3 grid gap-4 sm:grid-cols-3">
               {magazineArticles.map((a) => (
                 <Link key={a.slug} href={`/journal/${a.slug}`} className="group overflow-hidden rounded-lg border bg-white">
-                  <div className="aspect-video relative overflow-hidden">
-                    <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-[1.02] transition duration-300" />
-                  </div>
+                  {a.imageUrl && (
+                    <div className="aspect-video relative overflow-hidden">
+                      <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-[1.02] transition duration-300" />
+                    </div>
+                  )}
                   <div className="p-3">
                     <span className="text-[10px] font-medium text-blue-600">{a.category}</span>
                     <p className="mt-0.5 text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-blue-600 transition">{a.title}</p>
@@ -197,6 +202,7 @@ export default async function HomePage() {
           </AnimateOnScroll>
         </div>
       </section>
+      )}
 
       {/* Service Features */}
       <section className="border-t bg-blue-50 py-10">

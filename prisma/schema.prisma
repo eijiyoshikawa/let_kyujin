@@ -244,6 +244,32 @@ model UploadedFile {
 }
 
 // ========================================
+// マガジン記事
+// ========================================
+model Article {
+  id              String    @id @default(uuid()) @db.Uuid
+  slug            String    @unique @db.VarChar(200)
+  title           String    @db.VarChar(200)
+  excerpt         String?   @db.VarChar(500)
+  body            String    // HTML本文
+  category        String    @db.VarChar(50) // career, salary, license, job-type, industry, interview
+  tags            String[]  @default([])
+  imageUrl        String?   @map("image_url") @db.VarChar(500)
+  metaDescription String?   @map("meta_description") @db.VarChar(300)
+  authorName      String    @default("建設求人ポータル編集部") @map("author_name") @db.VarChar(100)
+  status          String    @default("published") @db.VarChar(20) // draft | published
+  featured        Boolean   @default(false)
+  viewCount       Int       @default(0) @map("view_count")
+  publishedAt     DateTime? @map("published_at") @db.Timestamptz()
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamptz()
+
+  @@index([status, publishedAt(sort: Desc)], name: "idx_articles_published")
+  @@index([category, status], name: "idx_articles_category")
+  @@map("articles")
+}
+
+// ========================================
 // SEOランディングページ
 // ========================================
 model SeoPage {
