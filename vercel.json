@@ -1,4 +1,5 @@
 {
+  "buildCommand": "pnpm prisma generate && pnpm build",
   "crons": [
     {
       "path": "/api/cron/expire-jobs",
