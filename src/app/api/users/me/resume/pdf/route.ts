@@ -1,7 +1,6 @@
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
-import { renderToBuffer } from "@react-pdf/renderer"
-import { ResumePdfDocument } from "@/lib/resume-pdf"
+import { generateResumeHtml } from "@/lib/resume-html"
 
 export async function GET() {
   const session = await auth()
@@ -17,14 +16,11 @@ export async function GET() {
     return Response.json({ error: "履歴書データがありません。先に保存してください。" }, { status: 404 })
   }
 
-  const buffer = await renderToBuffer(
-    ResumePdfDocument({ resume })
-  )
+  const html = generateResumeHtml(resume)
 
-  return new Response(new Uint8Array(buffer), {
+  return new Response(html, {
     headers: {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": `inline; filename="resume_${Date.now()}.pdf"`,
+      "Content-Type": "text/html; charset=utf-8",
     },
   })
 }
