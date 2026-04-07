@@ -13,7 +13,7 @@ export default function AboutPage() {
         <section>
           <h2 className="text-lg font-semibold text-gray-900">本サイトの目的</h2>
           <p className="mt-2">
-            本サイトは、ドライバー・建設・製造業などノンデスク産業に特化した求人ポータルサイトです。
+            本サイト「現場キャリア」は、ドライバー・建設・製造業などノンデスク産業に特化した求人サイトです。
             デスクワーク以外の現場で働く方々が、より自分に合った仕事を見つけやすくすることを目的としています。
           </p>
         </section>

@@ -4,9 +4,12 @@ import { Footer } from "@/components/layout/footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_BASE_URL ?? "https://genbacareer.jp"
+  ),
   title: {
-    default: "求人ポータル | ノンデスク産業特化の求人サイト",
-    template: "%s | 求人ポータル",
+    default: "現場キャリア | ノンデスク産業特化の求人サイト",
+    template: "%s | 現場キャリア",
   },
   description:
     "ドライバー・建設・製造業に特化した求人サイト。ハローワーク求人も掲載。",

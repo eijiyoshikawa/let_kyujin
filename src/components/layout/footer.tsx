@@ -58,7 +58,7 @@ export function Footer() {
         </div>
         <div className="mt-8 border-t pt-6 text-center text-xs text-gray-500">
           <p>ハローワーク求人はハローワークインターネットサービスより転載しています。</p>
-          <p className="mt-1">&copy; {new Date().getFullYear()} 求人ポータル. All rights reserved.</p>
+          <p className="mt-1">&copy; {new Date().getFullYear()} 現場キャリア. All rights reserved.</p>
         </div>
       </div>
     </footer>

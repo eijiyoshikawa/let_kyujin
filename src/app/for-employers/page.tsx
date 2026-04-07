@@ -5,7 +5,7 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "企業の採用担当者の方へ",
   description:
-    "掲載無料・成果報酬型の求人掲載。ノンデスク産業に特化した求人ポータルで、ドライバー・建設・製造業の人材を採用。",
+    "掲載無料・成果報酬型の求人掲載。ノンデスク産業に特化した現場キャリアで、ドライバー・建設・製造業の人材を採用。",
 }
 
 const features = [
@@ -61,7 +61,7 @@ export default function ForEmployersPage() {
             求人掲載
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-blue-100">
-            ドライバー・建設・製造業に特化した求人ポータル。
+            ドライバー・建設・製造業に特化した現場キャリア。
             採用が決まるまで費用はかかりません。
           </p>
           <Link
