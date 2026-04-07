@@ -125,35 +125,31 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-lg font-bold text-gray-900">職種から探す</h2>
           <AnimateOnScroll animation="stagger">
-            <div className="mt-3 divide-y rounded-lg border">
-              {categoriesWithCounts.map((cat, i) => {
+            <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+              {categoriesWithCounts.map((cat) => {
                 const Icon = cat.icon
                 return (
-                  <div key={cat.key}>
-                    <Link href={`/jobs?category=${cat.key}`} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition">
-                      <Icon className="h-5 w-5 text-blue-600 shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <span className="text-sm font-medium text-gray-900">{cat.label}</span>
-                        <span className="ml-2 text-xs text-gray-400">({cat.count.toLocaleString()})</span>
-                        <p className="text-xs text-gray-400">{cat.sub}</p>
-                      </div>
-                      <ChevronRight className="h-4 w-4 text-gray-300 shrink-0" />
-                    </Link>
-                    {i === 2 && (
-                      <div className="flex gap-2 justify-center py-3 border-y bg-gray-50">
-                        <Link href="/register" className="rounded bg-blue-600 px-6 py-2 text-xs font-medium text-white hover:bg-blue-700">
-                          会員登録（無料）
-                        </Link>
-                        <Link href="/login" className="rounded border border-gray-300 px-6 py-2 text-xs font-medium text-gray-600 hover:bg-gray-100">
-                          ログイン
-                        </Link>
-                      </div>
-                    )}
-                  </div>
+                  <Link key={cat.key} href={`/jobs?category=${cat.key}`} className="flex items-center gap-3 rounded-lg border px-4 py-3 hover:bg-gray-50 hover:border-blue-300 transition">
+                    <Icon className="h-5 w-5 text-blue-600 shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <span className="text-sm font-medium text-gray-900">{cat.label}</span>
+                      <span className="ml-1.5 text-xs text-gray-400">({cat.count.toLocaleString()})</span>
+                      <p className="text-xs text-gray-400">{cat.sub}</p>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-gray-300 shrink-0" />
+                  </Link>
                 )
               })}
             </div>
           </AnimateOnScroll>
+          <div className="mt-4 flex gap-2 justify-center">
+            <Link href="/register" className="rounded bg-blue-600 px-6 py-2 text-xs font-medium text-white hover:bg-blue-700">
+              会員登録（無料）
+            </Link>
+            <Link href="/login" className="rounded border border-gray-300 px-6 py-2 text-xs font-medium text-gray-600 hover:bg-gray-100">
+              ログイン
+            </Link>
+          </div>
         </div>
       </section>
 
