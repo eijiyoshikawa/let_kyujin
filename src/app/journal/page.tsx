@@ -105,8 +105,7 @@ const categoryList = [
 ]
 
 const pickupCompanies = [
-  { name: "株式会社山田建設", description: "東京・神奈川を中心に建築工事を手掛ける総合建設会社" },
-  { name: "大和土木株式会社", description: "道路・橋梁・トンネルなど土木工事のスペシャリスト" },
+  { name: "掲載企業を募集中", description: "建設業界の企業様の求人掲載を受け付けています" },
 ]
 
 export default function JournalPage() {

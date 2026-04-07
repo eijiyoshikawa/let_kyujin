@@ -199,7 +199,7 @@ export default function ContactPage() {
         </AnimateOnScroll>
 
         {/* CTA */}
-        <AnimateOnScroll animation="scale">
+        <AnimateOnScroll animation="fade-up">
         <div className="mt-12 rounded-2xl bg-blue-50 border border-blue-100 p-8 text-center">
           <h3 className="text-lg font-bold text-gray-900">
             解決しない場合は

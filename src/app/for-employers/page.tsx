@@ -38,44 +38,44 @@ const jobCategories = [
 const reasons = [
   {
     icon: Users,
-    title: "20〜30代からの応募が中心",
-    description: "現場仕事を希望している20〜30代の3割が月間利用。若手人材の確保に最適です。",
+    title: "建設業界の求職者が集まるサイト",
+    description: "建築・土木・設備・解体の求人に特化しているため、現場経験のある求職者が中心です。",
   },
   {
     icon: Award,
-    title: "各種免許・資格保有者が90%以上",
-    description: "業界ならではの免許や資格が必要な職種に対応。有資格者の採用率を大幅に向上できます。",
+    title: "有資格者が多い",
+    description: "施工管理技士・電気工事士・クレーン免許など、業界に必要な資格を持つ求職者が登録しています。",
   },
   {
     icon: Briefcase,
-    title: "ハイクラス・業界経験者多数",
-    description: "業種経験が豊富な人材から、マネジメント層にいたるまで幅広い人材にアプローチできます。",
+    title: "掲載からスカウトまで対応",
+    description: "求人の掲載だけでなく、条件に合う求職者への直接スカウトも可能です。",
   },
 ]
 
 const trackRecordPoints = [
   {
-    title: "現場の採用に強い",
-    description: "求人の9割以上が建設・物流・製造業界からの掲載です。",
+    title: "建設業界に特化",
+    description: "掲載求人のほぼ全てが建設・設備・解体関連。業界の求職者に確実に届きます。",
   },
   {
-    title: "攻めのスカウト採用",
-    description: "求人掲載だけでなく、スカウトで御社の月間採用数を最大化します。",
+    title: "スカウト機能",
+    description: "登録求職者のプロフィールを閲覧し、直接メッセージを送ることができます。",
   },
 ]
 
 const testimonials = [
   {
-    company: "千葉県 A社（建設業）",
-    comment: "他の求人媒体と比べて応募の質が高く、経験者の採用に成功しました。クロスワークを使って良かったと思います。",
+    company: "千葉県の総合建設会社（従業員50名）",
+    comment: "大手の求人媒体では応募が来なかった施工管理のポジションで、2名の採用に至りました。業界特化のサイトだからこそだと思います。",
   },
   {
-    company: "大阪府 B社（設備業）",
-    comment: "費用をもう少しだけ抑えたいと思っていましたが、掲載費用が無料なのはとてもありがたい。人材紹介に頼らずとも良い人材が見つかります。",
+    company: "大阪府の電気設備会社（従業員30名）",
+    comment: "掲載費が無料なので試しに使い始めましたが、有資格者からの応募があり驚きました。今は継続して利用しています。",
   },
   {
-    company: "埼玉県 C社（建設業）",
-    comment: "SNSでしたい求人にスムーズにアクセスでき、人目に触れる機会が多く、応募数が格段に上がりました。",
+    company: "埼玉県の解体工事会社（従業員15名）",
+    comment: "若い人の応募が少なくて困っていましたが、20代からの応募がありました。スカウト機能も使いやすいです。",
   },
 ]
 
@@ -89,7 +89,7 @@ const steps = [
 const comparisonRows = [
   {
     label: "登録ユーザー",
-    ours: "20〜30代の若手、\n40代中堅層が70%超",
+    ours: "建設業界の求職者が中心",
     major: "人口動態に比例",
     niche: "40〜50代が多い",
   },
@@ -107,7 +107,7 @@ const comparisonRows = [
   },
   {
     label: "掲載可能な職種",
-    ours: "建設、設備、解体等に特化し\n90種類以上の職種をカバー",
+    ours: "建設、設備、解体等に特化した\n専門職をカバー",
     major: "ホワイトカラーの\n求人に特化",
     niche: "特定の職種に特化",
   },
@@ -138,18 +138,18 @@ export default function ForEmployersPage() {
               </h1>
 
               {/* Stats row */}
-              <div className="mt-6 flex flex-wrap gap-4">
-                <div className="rounded-lg bg-white/10 px-4 py-2.5 backdrop-blur-sm">
-                  <p className="text-xs text-blue-200">登録者数</p>
-                  <p className="text-lg font-bold text-white">月間1万人以上</p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <div className="rounded bg-white/10 px-4 py-2">
+                  <p className="text-xs text-blue-200">料金体系</p>
+                  <p className="text-base font-bold text-white">掲載無料・成果報酬</p>
                 </div>
-                <div className="rounded-lg bg-white/10 px-4 py-2.5 backdrop-blur-sm">
-                  <p className="text-xs text-blue-200">採用単価</p>
-                  <p className="text-lg font-bold text-white">1人あたり10万円〜</p>
+                <div className="rounded bg-white/10 px-4 py-2">
+                  <p className="text-xs text-blue-200">成果報酬</p>
+                  <p className="text-base font-bold text-white">1人あたり10万円〜</p>
                 </div>
-                <div className="rounded-lg bg-white/10 px-4 py-2.5 backdrop-blur-sm">
-                  <p className="text-xs text-blue-200">スカウト活用で</p>
-                  <p className="text-lg font-bold text-white">即日採用</p>
+                <div className="rounded bg-white/10 px-4 py-2">
+                  <p className="text-xs text-blue-200">機能</p>
+                  <p className="text-base font-bold text-white">スカウト対応</p>
                 </div>
               </div>
 
@@ -274,9 +274,9 @@ export default function ForEmployersPage() {
       {/* Track Record Section */}
       <section className="border-t bg-gradient-to-b from-gray-50 to-white py-12">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-          <AnimateOnScroll animation="scale">
+          <AnimateOnScroll animation="fade-up">
             <h2 className="text-2xl font-bold text-gray-900">
-              <span className="text-blue-600">20,000社</span>以上の取引実績
+              サービスの特徴
             </h2>
           </AnimateOnScroll>
           <AnimateOnScroll animation="stagger">
@@ -325,7 +325,7 @@ export default function ForEmployersPage() {
               掲載までの流れ
             </h2>
           </AnimateOnScroll>
-          <AnimateOnScroll animation="slide-left">
+          <AnimateOnScroll animation="fade-up">
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
             {steps.map((step, i) => {
               const Icon = step.icon
@@ -367,7 +367,7 @@ export default function ForEmployersPage() {
             </p>
           </AnimateOnScroll>
 
-          <AnimateOnScroll animation="scale">
+          <AnimateOnScroll animation="fade-up">
           <div className="mt-8 overflow-x-auto">
             <table className="w-full min-w-[640px] border-collapse text-sm">
               <thead>
@@ -419,7 +419,7 @@ export default function ForEmployersPage() {
 
       {/* CTA */}
       <section className="border-t bg-blue-600 py-12">
-        <AnimateOnScroll animation="scale">
+        <AnimateOnScroll animation="fade-up">
           <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-white">
               まずは無料で掲載を始めましょう
