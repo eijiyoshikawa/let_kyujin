@@ -18,6 +18,12 @@ export function Header() {
               求人検索
             </Link>
             <Link
+              href="/journal"
+              className="text-sm font-medium text-gray-600 hover:text-gray-900"
+            >
+              マガジン
+            </Link>
+            <Link
               href="/for-employers"
               className="text-sm font-medium text-gray-600 hover:text-gray-900"
             >

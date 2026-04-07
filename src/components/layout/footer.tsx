@@ -36,6 +36,31 @@ export function Footer() {
             </ul>
           </div>
           <div>
+            <h3 className="text-sm font-semibold text-gray-900">マガジン</h3>
+            <ul className="mt-3 space-y-2">
+              <li>
+                <Link href="/journal" className="text-sm text-gray-600 hover:text-gray-900">
+                  記事一覧
+                </Link>
+              </li>
+              <li>
+                <Link href="/journal/truck" className="text-sm text-gray-600 hover:text-gray-900">
+                  トラック
+                </Link>
+              </li>
+              <li>
+                <Link href="/journal/cons-management" className="text-sm text-gray-600 hover:text-gray-900">
+                  施工管理
+                </Link>
+              </li>
+              <li>
+                <Link href="/journal/factory" className="text-sm text-gray-600 hover:text-gray-900">
+                  工場・製造
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
             <h3 className="text-sm font-semibold text-gray-900">サイト情報</h3>
             <ul className="mt-3 space-y-2">
               <li>

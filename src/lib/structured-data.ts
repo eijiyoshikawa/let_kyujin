@@ -91,3 +91,52 @@ export function generateJobPostingSchema(job: JobInput): Record<string, unknown>
 
   return schema
 }
+
+type ArticleInput = {
+  slug: string
+  title: string
+  metaDescription: string | null
+  content: string
+  publishedAt: Date | null
+  updatedAt: Date
+  author: { name: string; slug: string }
+  category: { name: string; slug: string }
+}
+
+export function generateArticleSchema(article: ArticleInput): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.metaDescription ?? article.title,
+    url: `${BASE_URL}/journal/${article.category.slug}/${article.slug}`,
+    datePublished: article.publishedAt?.toISOString(),
+    dateModified: article.updatedAt.toISOString(),
+    author: {
+      "@type": "Organization",
+      name: article.author.name,
+      url: `${BASE_URL}/journal/editor/${article.author.slug}`,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "求人ポータル",
+      url: BASE_URL,
+    },
+    articleSection: article.category.name,
+  }
+}
+
+export function generateBreadcrumbSchema(
+  items: { name: string; url?: string }[]
+): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      ...(item.url && { item: item.url }),
+    })),
+  }
+}
