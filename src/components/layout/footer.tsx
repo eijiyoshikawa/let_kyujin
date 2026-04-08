@@ -14,6 +14,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/journal" className="text-sm text-gray-600 hover:text-gray-900">
+                  ジャーナル
+                </Link>
+              </li>
+              <li>
                 <Link href="/register" className="text-sm text-gray-600 hover:text-gray-900">
                   会員登録
                 </Link>

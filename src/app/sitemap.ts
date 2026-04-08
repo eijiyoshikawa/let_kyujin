@@ -65,5 +65,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-  return [...staticPages, ...jobPages, ...seoCombos]
+  // Journal articles
+  const articles = await prisma.article.findMany({
+    select: { slug: true, updatedAt: true },
+    orderBy: { publishedAt: "desc" },
+  })
+
+  const journalListPage: MetadataRoute.Sitemap = [
+    {
+      url: `${BASE_URL}/journal`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+  ]
+
+  const articlePages: MetadataRoute.Sitemap = articles.map((article) => ({
+    url: `${BASE_URL}/journal/${article.slug}`,
+    lastModified: article.updatedAt,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }))
+
+  return [...staticPages, ...jobPages, ...seoCombos, ...journalListPage, ...articlePages]
 }

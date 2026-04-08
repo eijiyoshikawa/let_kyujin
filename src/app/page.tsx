@@ -1,5 +1,7 @@
 import Link from "next/link"
 import { Search, Truck, HardHat, Factory, ArrowRight } from "lucide-react"
+import { prisma } from "@/lib/db"
+import { ArticleCard } from "@/components/articles/article-card"
 
 const categories = [
   { key: "driver", label: "ドライバー・運転手", icon: Truck, color: "bg-blue-50 text-blue-700" },
@@ -7,7 +9,15 @@ const categories = [
   { key: "manufacturing", label: "製造・工場", icon: Factory, color: "bg-green-50 text-green-700" },
 ]
 
-export default function HomePage() {
+export const dynamic = "force-dynamic"
+
+export default async function HomePage() {
+  const latestArticles = await prisma.article.findMany({
+    include: { author: { select: { name: true } } },
+    orderBy: { publishedAt: "desc" },
+    take: 6,
+  }).catch(() => [])
+
   return (
     <div>
       {/* Hero Section */}
@@ -68,6 +78,31 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Latest Journal */}
+      {latestArticles.length > 0 && (
+        <section className="py-12">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold text-gray-900">
+                最新ジャーナル
+              </h2>
+              <Link
+                href="/journal"
+                className="flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700"
+              >
+                すべて見る
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {latestArticles.map((article) => (
+                <ArticleCard key={article.id} article={article} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CTA */}
       <section className="border-t bg-white py-12">

@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client"
 import { hashSync } from "bcryptjs"
+import { seedArticles } from "./seed-articles"
 
 const prisma = new PrismaClient()
 
@@ -103,7 +104,63 @@ async function main() {
     })
   }
 
-  console.log("Seed completed: 2 companies, 1 company user, 1 seeker, 10 jobs")
+  // ========================================
+  // 著者
+  // ========================================
+  const author1 = await prisma.author.create({
+    data: {
+      slug: "editorial-team",
+      name: "現場キャリア編集部",
+      title: null,
+      bio: "現場キャリア編集部は、ドライバー・建設・製造業界の転職に精通した編集チームです。",
+      avatarUrl: null,
+    },
+  })
+
+  const author2 = await prisma.author.create({
+    data: {
+      slug: "tanaka-koji",
+      name: "田中浩司",
+      title: "元トラックドライバー・ライター",
+      bio: "大型トラックドライバーとして15年勤務した後、物流業界専門ライターに転身。現場のリアルな声を届けます。",
+      avatarUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+    },
+  })
+
+  const author3 = await prisma.author.create({
+    data: {
+      slug: "suzuki-yumi",
+      name: "鈴木裕美",
+      title: "キャリアアドバイザー",
+      bio: "国家資格キャリアコンサルタント。ノンデスク産業への転職支援実績500名以上。",
+      avatarUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
+    },
+  })
+
+  // ========================================
+  // ジャーナル記事
+  // ========================================
+  const allArticles = seedArticles
+
+  // Assign authors by category
+  const authorMap: Record<string, string> = {
+    driver: author2.id,
+    construction: author1.id,
+    manufacturing: author1.id,
+    career: author3.id,
+    general: author1.id,
+  }
+
+  for (const article of allArticles) {
+    await prisma.article.create({
+      data: {
+        ...article,
+        authorId: authorMap[article.category] ?? author1.id,
+      },
+    })
+  }
+
+  console.log(`Seed completed: 2 companies, 1 company user, 1 seeker, 10 jobs, 3 authors, ${allArticles.length} articles`)
 }
 
 main()
