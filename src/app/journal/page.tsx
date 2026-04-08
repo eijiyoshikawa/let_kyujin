@@ -11,16 +11,18 @@ export const metadata: Metadata = {
 }
 
 type Props = {
-  searchParams: Promise<{ category?: string; page?: string }>
+  searchParams: Promise<{ category?: string; subcategory?: string; page?: string }>
 }
 
 const PER_PAGE = 12
 
 export default async function JournalPage({ searchParams }: Props) {
-  const { category, page } = await searchParams
+  const { category, subcategory, page } = await searchParams
   const currentPage = Math.max(1, Number(page) || 1)
 
-  const where = category ? { category } : {}
+  const where: Record<string, string> = {}
+  if (category) where.category = category
+  if (subcategory) where.subcategory = subcategory
 
   const [articles, total] = await Promise.all([
     prisma.article.findMany({
@@ -65,6 +67,7 @@ export default async function JournalPage({ searchParams }: Props) {
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
             const params = new URLSearchParams()
             if (category) params.set("category", category)
+            if (subcategory) params.set("subcategory", subcategory)
             if (p > 1) params.set("page", String(p))
             const href = `/journal${params.toString() ? `?${params.toString()}` : ""}`
             return (

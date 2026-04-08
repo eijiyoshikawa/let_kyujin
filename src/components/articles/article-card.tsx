@@ -1,11 +1,17 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ARTICLE_CATEGORIES, type ArticleCategory } from "@/lib/article-constants"
+import {
+  ARTICLE_CATEGORIES,
+  CONSTRUCTION_SUBCATEGORIES,
+  type ArticleCategory,
+  type ConstructionSubcategory,
+} from "@/lib/article-constants"
 
 type ArticleCardProps = {
   slug: string
   title: string
   category: string
+  subcategory?: string | null
   imageUrl: string
   excerpt: string
   publishedAt: Date
@@ -14,6 +20,9 @@ type ArticleCardProps = {
 
 export function ArticleCard({ article }: { article: ArticleCardProps }) {
   const cat = ARTICLE_CATEGORIES[article.category as ArticleCategory]
+  const sub = article.subcategory
+    ? CONSTRUCTION_SUBCATEGORIES[article.subcategory as ConstructionSubcategory]
+    : null
 
   return (
     <Link
@@ -30,13 +39,22 @@ export function ArticleCard({ article }: { article: ArticleCardProps }) {
         />
       </div>
       <div className="p-4">
-        {cat && (
-          <span
-            className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${cat.color}`}
-          >
-            {cat.label}
-          </span>
-        )}
+        <div className="flex flex-wrap gap-1.5">
+          {cat && (
+            <span
+              className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${cat.color}`}
+            >
+              {cat.label}
+            </span>
+          )}
+          {sub && (
+            <span
+              className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${sub.color}`}
+            >
+              {sub.label}
+            </span>
+          )}
+        </div>
         <h3 className="mt-2 text-base font-semibold text-gray-900 line-clamp-2 group-hover:text-blue-600">
           {article.title}
         </h3>
