@@ -5,7 +5,7 @@ import { Newspaper, Search, ChevronRight, ArrowRight } from "lucide-react"
 import { Pagination } from "@/components/pagination"
 
 export const metadata: Metadata = {
-  title: "建設求人マガジン",
+  title: "現場キャリアマガジン",
   description: "建設業界で働く方に役立つ情報を発信。転職ガイド、資格情報、業界ニュースなど。",
 }
 
@@ -68,7 +68,7 @@ export default async function JournalPage({ searchParams }: Props) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5">
           <h1 className="flex items-center gap-2 text-xl font-bold">
             <Newspaper className="h-6 w-6" />
-            建設求人マガジン
+            現場キャリアマガジン
           </h1>
           <p className="mt-1 text-sm text-blue-200">建設業界で働く方に役立つ情報を発信</p>
         </div>

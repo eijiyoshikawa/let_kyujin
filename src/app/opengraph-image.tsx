@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og"
 
 export const runtime = "edge"
-export const alt = "建設求人ポータル"
+export const alt = "現場キャリア"
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
 
@@ -26,7 +26,7 @@ export default function OGImage() {
         <div style={{ position: "absolute", bottom: -60, left: -60, width: 200, height: 200, borderRadius: "50%", background: "rgba(255,255,255,0.05)" }} />
 
         <div style={{ fontSize: 72, fontWeight: 800, color: "white", marginBottom: 16, display: "flex", alignItems: "center", gap: 16 }}>
-          建設求人ポータル
+          現場キャリア
         </div>
         <div style={{ fontSize: 32, color: "rgba(255,255,255,0.85)", marginBottom: 40 }}>
           建築・土木・設備・解体に特化した求人サイト

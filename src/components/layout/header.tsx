@@ -31,7 +31,7 @@ export function Header() {
         <div className="flex h-14 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <HardHat className="h-7 w-7 text-blue-600" />
-            <span className="text-lg font-bold text-gray-900">建設求人ポータル</span>
+            <span className="text-lg font-bold text-gray-900">現場キャリア</span>
           </Link>
 
           {/* Desktop nav */}

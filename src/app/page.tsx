@@ -92,7 +92,7 @@ export default async function HomePage() {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           <p className="text-center text-sm text-blue-200">建築・土木・設備・解体に特化</p>
           <h1 className="mt-2 text-center text-3xl sm:text-4xl font-bold text-white">
-            建設求人ポータル
+            現場キャリア
           </h1>
 
           <form action="/jobs" method="GET" className="relative z-10 mx-auto mt-8 max-w-3xl rounded-lg bg-white p-3 shadow-lg -mb-6">

@@ -134,7 +134,7 @@ export default function ForEmployersPage() {
               <h1 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight">
                 現場人材の採用なら
                 <br />
-                <span className="text-3xl sm:text-4xl lg:text-5xl">建設求人ポータル</span>
+                <span className="text-3xl sm:text-4xl lg:text-5xl">現場キャリア</span>
               </h1>
 
               {/* Stats row */}
@@ -229,7 +229,7 @@ export default function ForEmployersPage() {
           <AnimateOnScroll>
             <div className="flex flex-col items-center gap-8 sm:flex-row">
               <div className="flex-1">
-                <h2 className="text-xl font-bold text-gray-900">建設求人ポータルとは</h2>
+                <h2 className="text-xl font-bold text-gray-900">現場キャリアとは</h2>
                 <p className="mt-3 text-sm text-gray-600 leading-relaxed">
                   建設業・設備業などの現場人材の採用に強みを持つ日本最大級の「現場人材採用サービス」です。
                   掲載無料・成果報酬型で、建築・土木・設備・解体など幅広い職種の人材採用をサポートします。
@@ -249,7 +249,7 @@ export default function ForEmployersPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateOnScroll>
             <h2 className="text-center text-2xl font-bold text-gray-900">
-              建設求人ポータルが選ばれる<span className="text-blue-600">3つの理由</span>
+              現場キャリアが選ばれる<span className="text-blue-600">3つの理由</span>
             </h2>
           </AnimateOnScroll>
           <AnimateOnScroll animation="stagger">
@@ -361,7 +361,7 @@ export default function ForEmployersPage() {
               他社との<span className="text-blue-600">料金・サービスの比較表</span>
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
-              建設求人ポータルは掲載無料、1人あたり10万円〜の成果報酬
+              現場キャリアは掲載無料、1人あたり10万円〜の成果報酬
               <br className="hidden sm:block" />
               採用のミスマッチが少ない人材を低コストで採用可能です
             </p>
@@ -374,7 +374,7 @@ export default function ForEmployersPage() {
                 <tr>
                   <th className="w-28 border border-gray-200 bg-gray-50 p-3"></th>
                   <th className="border-2 border-blue-600 bg-blue-600 p-3 text-white font-bold text-base">
-                    建設求人ポータル
+                    現場キャリア
                   </th>
                   <th className="border border-gray-200 bg-blue-50 p-3 font-bold text-gray-700">
                     大手求人媒体
