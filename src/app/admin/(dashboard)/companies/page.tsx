@@ -50,8 +50,18 @@ export default async function AdminCompaniesPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900">企業管理</h1>
-      <p className="mt-1 text-sm text-gray-500">登録企業: {total} 社</p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">企業管理</h1>
+          <p className="mt-1 text-sm text-gray-500">登録企業: {total} 社</p>
+        </div>
+        <Link
+          href="/admin/companies/new"
+          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+        >
+          + 企業を追加
+        </Link>
+      </div>
 
       {/* Search */}
       <form className="mt-4 flex gap-2">
