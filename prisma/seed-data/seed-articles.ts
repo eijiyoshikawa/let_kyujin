@@ -36,7 +36,7 @@ async function seedArticles() {
         category: plan.category,
         tags: plan.tags,
         metaDescription: plan.excerpt,
-        authorName: "現場キャリア編集部",
+        authorName: "ゲンバキャリア編集部",
         status: "published",
         featured: i < 3, // 最初の3記事をfeaturedに
         publishedAt,
@@ -57,7 +57,7 @@ function generatePlaceholderBody(title: string, excerpt: string, tags: string[])
 
 <h2>まとめ</h2>
 <p>建設業界は人手不足が続いており、未経験者の方にもチャンスがある業界です。資格取得や経験を積むことで着実にキャリアアップが可能です。</p>
-<p>現場キャリアでは、建築・土木・設備・解体に特化した求人情報を掲載しています。あなたに合った求人を探してみてください。</p>
+<p>ゲンバキャリアでは、建築・土木・設備・解体に特化した求人情報を掲載しています。あなたに合った求人を探してみてください。</p>
 `.trim()
 }
 

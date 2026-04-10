@@ -23,7 +23,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
         }}
       >
         <div style={{ fontSize: 64, fontWeight: 800, color: "white", marginBottom: 16 }}>
-          現場キャリア
+          ゲンバキャリア
         </div>
         <div style={{ fontSize: 28, color: "rgba(255,255,255,0.8)" }}>
           建築・土木・設備・解体の求人サイト

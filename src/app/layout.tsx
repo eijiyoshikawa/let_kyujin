@@ -8,8 +8,8 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://let-kyujin.vercel.a
 
 export const metadata: Metadata = {
   title: {
-    default: "現場キャリア | 建設業界特化の求人サイト",
-    template: "%s | 現場キャリア",
+    default: "ゲンバキャリア | 建設業界特化の求人サイト",
+    template: "%s | ゲンバキャリア",
   },
   description:
     "建築・土木・設備・解体に特化した求人サイト。ハローワーク求人も掲載。株式会社LET運営。",
@@ -17,14 +17,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "ja_JP",
-    siteName: "現場キャリア",
-    title: "現場キャリア | 建設業界特化の求人サイト",
+    siteName: "ゲンバキャリア",
+    title: "ゲンバキャリア | 建設業界特化の求人サイト",
     description: "建築・土木・設備・解体に特化した求人サイト。ハローワーク求人も掲載。",
     url: siteUrl,
   },
   twitter: {
     card: "summary_large_image",
-    title: "現場キャリア",
+    title: "ゲンバキャリア",
     description: "建築・土木・設備・解体に特化した求人サイト",
   },
   robots: {
