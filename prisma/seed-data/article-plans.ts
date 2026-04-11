@@ -229,6 +229,53 @@ export const articlePlans: ArticlePlan[] = [
   { slug: "paint-specialist-license", title: "塗装技能士の資格 — 1級・2級の違いと取得方法", category: "license", tags: ["塗装","技能士"], excerpt: "塗装技能士の受験資格、実技試験の内容、合格後の仕事の広がりを解説。" },
   { slug: "construction-team-building", title: "建設現場のチームワーク — 安全と品質を支える連携", category: "industry", tags: ["チームワーク","現場管理"], excerpt: "多職種が同時に働く建設現場でのチームワークの重要性。朝礼・KY活動の意義。" },
   { slug: "construction-career-summary-2026", title: "2026年上半期の建設業界振り返り — 求人動向と今後", category: "industry", tags: ["振り返り","市場"], excerpt: "2026年上半期の建設業界の求人動向、賃金の変化、主要プロジェクトの状況を振り返り。" },
+
+  // === 追加200記事 第1バッチ（2026/7/19〜） ===
+  { slug: "construction-eye-protection", title: "建設現場の目の保護 — 保護メガネの選び方と使用義務", category: "industry", tags: ["目の保護","安全"], excerpt: "建設現場で発生する目の事故と、保護メガネの種類・選び方・使用義務について解説。" },
+  { slug: "construction-foot-safety", title: "建設作業員の足元の安全 — 安全靴の種類と選び方", category: "industry", tags: ["安全靴","装備"], excerpt: "現場の足元を守る安全靴の種類、規格、選び方のポイントを職種別に解説。" },
+  { slug: "construction-vibration-illness", title: "振動障害とは — 建設作業員が知るべき予防法", category: "industry", tags: ["振動障害","健康"], excerpt: "削岩機・ブレーカー作業で起こる振動障害の症状と予防法。労災認定の基準も紹介。" },
+  { slug: "construction-skin-protection", title: "建設現場の皮膚トラブル対策 — 手荒れ・湿疹の予防", category: "industry", tags: ["皮膚","健康"], excerpt: "セメント・塗料等による皮膚トラブルの原因と予防。保護クリームと手袋の選び方。" },
+  { slug: "construction-first-aid", title: "建設現場の応急処置 — 知っておくべき基本手順", category: "industry", tags: ["応急処置","安全"], excerpt: "切り傷・打撲・骨折・やけど等、建設現場で起こりうる事故への応急処置の基本。" },
+  { slug: "construction-aed-training", title: "AEDの使い方 — 建設現場で命を救う知識", category: "industry", tags: ["AED","救命"], excerpt: "心肺停止時にAEDで命を救うための基本知識。建設現場でのAED設置と使用手順。" },
+  { slug: "construction-typhoon-prep", title: "台風時の建設現場対策 — 事前準備と作業中止判断", category: "industry", tags: ["台風","安全対策"], excerpt: "台風接近時の現場養生、作業中止判断、資材の固定など、被害を最小限にする備え。" },
+  { slug: "construction-lightning-safety", title: "雷発生時の建設現場対応 — 屋外作業の危険回避", category: "industry", tags: ["雷","安全"], excerpt: "雷注意報・警報時の建設現場の対応。高所作業・鉄骨作業の中止基準と避難方法。" },
+  { slug: "construction-winter-safety-tips", title: "冬場の建設現場の安全対策 — 凍結・寒冷対策", category: "industry", tags: ["冬場","安全"], excerpt: "冬季の建設現場で注意すべき凍結路面・低体温症・機械トラブルへの対策を解説。" },
+  { slug: "construction-night-site-safety", title: "夜間工事の安全対策 — 照明と交通誘導", category: "industry", tags: ["夜間工事","安全"], excerpt: "夜間工事特有の危険と対策。照明の設置基準、交通誘導員の配置、体調管理のコツ。" },
+  { slug: "construction-heavy-load-lifting", title: "重量物運搬の安全ルール — 腰痛事故防止", category: "industry", tags: ["重量物","腰痛"], excerpt: "建設現場での重量物運搬の法的制限と、腰痛事故を防ぐ正しい運搬方法。" },
+  { slug: "construction-electrical-safety", title: "建設現場の電気安全 — 感電事故の防止", category: "industry", tags: ["電気","感電"], excerpt: "建設現場で発生する感電事故の原因と対策。仮設電源・電動工具の安全な使い方。" },
+
+  { slug: "curtain-wall-installer", title: "カーテンウォール工事の仕事内容 — 高層ビルの外装", category: "job-type", tags: ["カーテンウォール","外装"], excerpt: "高層ビルの外装を構成するカーテンウォール工事の仕事内容と必要な技術を紹介。" },
+  { slug: "alc-panel-installer", title: "ALCパネル工事の専門職 — 軽量気泡コンクリート", category: "job-type", tags: ["ALC","パネル"], excerpt: "ALCパネルの取付工事の仕事内容と、必要な資格・技能・年収の目安を解説。" },
+  { slug: "metal-roof-worker", title: "金属屋根工事の専門職 — 板金工の仕事", category: "job-type", tags: ["屋根","板金"], excerpt: "ガルバリウム鋼板・銅板など金属屋根工事を担う板金工の仕事内容と年収を紹介。" },
+  { slug: "tile-setter-pro", title: "タイル工の仕事と年収 — 住宅から商業施設まで", category: "job-type", tags: ["タイル","職種解説"], excerpt: "タイル張り職人の仕事内容、タイル張り技能士の資格、年収相場を詳しく解説。" },
+  { slug: "exterior-siding-worker", title: "サイディング工事の仕事内容 — 外壁の専門職", category: "job-type", tags: ["サイディング","外装"], excerpt: "サイディング（外壁材）の取付工事の流れと、必要な技術・資格・年収を紹介。" },
+  { slug: "drywall-specialist", title: "乾式壁工事の専門職 — 軽量鉄骨下地組立", category: "job-type", tags: ["乾式壁","内装"], excerpt: "LGS（軽量鉄骨）下地とボードによる乾式壁工事の仕事内容と求められる技能。" },
+  { slug: "concrete-finisher", title: "コンクリート仕上げ工の役割 — 美しい表面を作る", category: "job-type", tags: ["コンクリート","仕上げ"], excerpt: "コンクリート打設後の金ゴテ仕上げを担う仕上げ工の技術と年収を解説。" },
+  { slug: "masonry-worker", title: "石工の仕事内容と技術 — 伝統から現代建築まで", category: "job-type", tags: ["石工","伝統技術"], excerpt: "墓石・石垣・石張り等の石工の仕事内容と、石材技能士の資格、独立の可能性を紹介。" },
+
+  { slug: "architect-1st-class-study", title: "1級建築士の受験対策 — 合格までの勉強法", category: "license", tags: ["建築士","1級"], excerpt: "1級建築士試験の概要と合格者の勉強法。学科・設計製図それぞれの対策を解説。" },
+  { slug: "architect-2nd-class-study", title: "2級建築士の受験対策 — 独学合格の道", category: "license", tags: ["建築士","2級"], excerpt: "2級建築士試験の受験資格・試験内容・独学での合格戦略を詳しく紹介。" },
+  { slug: "wooden-architect", title: "木造建築士の資格と活用場面", category: "license", tags: ["木造建築士","資格"], excerpt: "木造建築士の試験概要と、木造住宅業界でのキャリア活用について解説。" },
+  { slug: "land-house-investigator", title: "土地家屋調査士の仕事と資格", category: "license", tags: ["土地家屋調査士","資格"], excerpt: "不動産登記の専門家である土地家屋調査士の仕事内容、試験、独立開業について。" },
+  { slug: "real-estate-broker-construction", title: "宅地建物取引士と建設業 — 資格の活かし方", category: "license", tags: ["宅建","キャリア"], excerpt: "宅建士の資格を建設業界でどう活かすか。ハウスメーカー・不動産部門での需要。" },
+  { slug: "labor-safety-consultant", title: "労働安全コンサルタントの資格 — 取得とキャリア", category: "license", tags: ["安全","コンサル"], excerpt: "労働安全コンサルタントの試験内容、受験資格、独立開業への道を解説。" },
+  { slug: "refrigeration-3rd-class", title: "第三種冷凍機械責任者の資格 — 取得ガイド", category: "license", tags: ["冷凍機械","資格"], excerpt: "冷凍空調設備の保安を担う第三種冷凍機械責任者の試験概要と勉強法。" },
+
+  { slug: "construction-career-at-20s", title: "20代の建設業界キャリア戦略 — 成長の黄金期", category: "career", tags: ["20代","キャリア"], excerpt: "20代で建設業界でのキャリアを最大化するための資格取得・経験の積み方。" },
+  { slug: "construction-technical-writing", title: "建設分野の技術ライターという道", category: "career", tags: ["技術ライター","キャリア"], excerpt: "建設業界経験を活かして技術ライターになる方法。副業・独立の選択肢も紹介。" },
+  { slug: "construction-trainer-career", title: "建設技能講師の道 — 経験を教育に活かす", category: "career", tags: ["講師","教育"], excerpt: "職業訓練校や技能講習の講師として、現場経験を次世代に伝えるキャリア。" },
+  { slug: "construction-inspector-career", title: "建設検査員としてのキャリア — 第三者検査機関", category: "career", tags: ["検査員","キャリア"], excerpt: "建設物の第三者検査員として独立した立場で活躍するキャリアパスを紹介。" },
+  { slug: "construction-consultant-career", title: "建設コンサルタントへの転身 — 計画・設計の専門家", category: "career", tags: ["コンサル","キャリア"], excerpt: "建設業界で経験を積んだ後、建設コンサルタントとして独立する道を解説。" },
+  { slug: "construction-resume-mistakes", title: "建設業履歴書のNG例 — 採用担当が見る落とし穴", category: "career", tags: ["履歴書","面接"], excerpt: "建設会社の採用担当者が挙げる履歴書のNG例と、印象を良くする書き方のコツ。" },
+
+  { slug: "construction-salary-east-japan", title: "東日本の建設業年収事情 — 関東・東北・北海道", category: "salary", tags: ["年収","地域"], excerpt: "関東・東北・北海道エリアの建設業の年収相場を職種別に比較して解説。" },
+  { slug: "construction-salary-west-japan", title: "西日本の建設業年収事情 — 関西・中国・四国", category: "salary", tags: ["年収","地域"], excerpt: "関西・中国・四国エリアの建設業の年収相場と地域特性を詳しく紹介。" },
+  { slug: "construction-allowance-details", title: "建設業の手当詳細一覧 — 基本給以外の収入", category: "salary", tags: ["手当","給与"], excerpt: "建設業界の各種手当（資格・職長・危険・家族等）の相場と支給条件を徹底解説。" },
+  { slug: "construction-savings-strategy", title: "建設作業員の貯蓄術 — 効率的な資産形成", category: "salary", tags: ["貯蓄","資産形成"], excerpt: "変動しやすい建設業の収入から確実に貯蓄するための家計管理と節約のコツ。" },
+
+  { slug: "interview-female-dokata", title: "土木の現場で活躍する30代女性の話", category: "interview", tags: ["女性","土木"], excerpt: "土木現場で現場代理人として働く30代女性の体験談。職場環境の変化と仕事のやりがい。" },
+  { slug: "interview-returnee-japan", title: "海外から帰国した建設技術者の話", category: "interview", tags: ["海外","帰国"], excerpt: "東南アジアで10年働き、日本に帰国した40代建設技術者のキャリアと気づき。" },
+  { slug: "interview-young-sekokan-female", title: "25歳女性施工管理技士の1年目", category: "interview", tags: ["女性","若手"], excerpt: "大学卒業後すぐ施工管理技士として働き始めた25歳女性の1年目のリアル。" },
 ]
 
 
