@@ -323,6 +323,57 @@ export const articlePlans: ArticlePlan[] = [
   { slug: "interview-plumber-life", title: "ベテラン配管工の人生 — 40年の経験を語る", category: "interview", tags: ["配管工","ベテラン"], excerpt: "配管工として40年以上働いてきた65歳ベテラン職人の人生と仕事への想い。" },
   { slug: "interview-glass-worker", title: "ガラス職人の仕事と誇り — 窓の向こうに見える街", category: "interview", tags: ["ガラス工","職人"], excerpt: "ビル・住宅のガラス工事を30年続けてきた職人が語る仕事の魅力と誇り。" },
   { slug: "interview-roofer-20years", title: "屋根職人20年の歩み — 空の近くで働く", category: "interview", tags: ["屋根","職人"], excerpt: "屋根工事一筋20年の42歳職人が語る、この仕事の魅力と大変さ。" },
+
+  // === 追加200記事 第3バッチ（建設業特化・インタビューなし） ===
+  // industry（業界動向・技術・制度）
+  { slug: "construction-decarbonization", title: "建設業の脱炭素化 — 2050年カーボンニュートラルへの道", category: "industry", tags: ["脱炭素","SDGs"], excerpt: "建設業界の脱炭素化の現状と取り組み。CO2削減目標と具体的な施策を紹介。" },
+  { slug: "construction-wooden-highrise", title: "木造高層建築の最前線 — CLT工法の可能性", category: "industry", tags: ["木造","CLT"], excerpt: "CLT工法を使った木造高層ビル建築の現状。海外事例と日本の取り組みを解説。" },
+  { slug: "construction-precast-method", title: "プレキャスト工法の活用拡大", category: "industry", tags: ["プレキャスト","工法"], excerpt: "工場生産・現場組立のプレキャスト工法が建設業で普及。省力化と品質向上の効果。" },
+  { slug: "construction-modular-building", title: "モジュール建築の現在地 — 省力化と品質の両立", category: "industry", tags: ["モジュール建築","工業化"], excerpt: "工場で建物を製造し現場で組み立てるモジュール建築。ホテル・集合住宅で拡大中。" },
+  { slug: "construction-renovation-craftsman", title: "リノベ時代の職人需要 — 拡大する改修工事", category: "industry", tags: ["リノベ","職人需要"], excerpt: "リノベーション市場の拡大に伴う職人需要の変化と、求められる多能工スキルを解説。" },
+  { slug: "construction-urban-redevelopment", title: "都市再開発プロジェクトの現状", category: "industry", tags: ["再開発","都市"], excerpt: "東京・大阪・名古屋の大型再開発プロジェクト。建設業界への影響と求人動向。" },
+  { slug: "construction-infrastructure-aging", title: "インフラ老朽化対策 — 更新需要の拡大", category: "industry", tags: ["インフラ","老朽化"], excerpt: "橋梁・トンネル・上下水道等のインフラ老朽化対策。維持管理・更新の需要増加。" },
+  { slug: "construction-smart-city", title: "スマートシティ構想と建設業界", category: "industry", tags: ["スマートシティ","DX"], excerpt: "スマートシティ建設での建設業界の役割。IoT・AI・データ連携を組み込んだ街づくり。" },
+  { slug: "construction-resilience-project", title: "国土強靱化計画と建設需要", category: "industry", tags: ["国土強靱化","防災"], excerpt: "国土強靱化5か年計画による建設需要。防災・減災プロジェクトの拡大。" },
+  { slug: "construction-zeb-zeh-guide", title: "ZEB・ZEHの基礎知識 — 省エネ建築の主流", category: "industry", tags: ["ZEB","ZEH"], excerpt: "ゼロエネルギービル・ゼロエネルギーハウスの基礎知識と建設現場での対応。" },
+
+  // job-type（専門職種）
+  { slug: "katawaku-daiku", title: "型枠大工の仕事内容 — 建物の骨組みを作る", category: "job-type", tags: ["型枠大工","職種"], excerpt: "コンクリート構造物の型枠を組む型枠大工の仕事内容、必要な技術、年収を解説。" },
+  { slug: "tekkin-worker", title: "鉄筋工の仕事と技術 — 見えない部分の職人", category: "job-type", tags: ["鉄筋工","職種"], excerpt: "鉄筋コンクリート構造物の鉄筋を組み立てる鉄筋工の仕事と必要な資格。" },
+  { slug: "concrete-worker", title: "コンクリート工の仕事 — 打設と仕上げのプロ", category: "job-type", tags: ["コンクリート工","職種"], excerpt: "コンクリートの打設・締固め・仕上げを担当するコンクリート工の仕事内容。" },
+  { slug: "tile-worker", title: "タイル工の仕事内容 — 美観と耐久性を両立", category: "job-type", tags: ["タイル工","内装"], excerpt: "外壁・内装・床のタイル貼り工事を行うタイル工の仕事と必要な技能。" },
+  { slug: "waterproofing-worker", title: "防水工の仕事 — 建物を水から守る", category: "job-type", tags: ["防水工","職種"], excerpt: "屋上・外壁・地下の防水工事を行う防水工の仕事内容と資格、年収を解説。" },
+  { slug: "insulation-worker", title: "断熱工の仕事 — 省エネ時代の必須職種", category: "job-type", tags: ["断熱工","省エネ"], excerpt: "建物の断熱材施工を担当する断熱工の仕事。省エネ基準強化で需要拡大中。" },
+  { slug: "sash-installer", title: "サッシ工の仕事内容 — 窓・建具のプロ", category: "job-type", tags: ["サッシ工","建具"], excerpt: "窓サッシ・玄関ドア等の建具を取り付けるサッシ工の仕事と求められるスキル。" },
+  { slug: "interior-finisher", title: "内装仕上工の仕事 — クロス・床材の職人", category: "job-type", tags: ["内装","仕上"], excerpt: "クロス貼り・床材施工等の内装仕上工事を担当する職人の仕事内容と年収。" },
+  { slug: "lgs-worker", title: "軽天工の仕事 — 軽量鉄骨下地のプロ", category: "job-type", tags: ["軽天工","LGS"], excerpt: "軽量鉄骨下地（LGS）を組む軽天工の仕事内容。内装工事に欠かせない職種。" },
+  { slug: "stone-mason", title: "石工の仕事 — 伝統と現代建築をつなぐ", category: "job-type", tags: ["石工","伝統"], excerpt: "石材の加工・据付を行う石工の仕事内容。伝統技能と現代建築の融合。" },
+
+  // license（建設業特化の資格）
+  { slug: "registered-core-skilled", title: "登録基幹技能者とは — 職長の上位資格", category: "license", tags: ["登録基幹技能者","上位資格"], excerpt: "職種ごとの熟練職長を認定する登録基幹技能者制度の概要と取得メリット。" },
+  { slug: "katawaku-ginoushi", title: "型枠施工技能士の試験と実務", category: "license", tags: ["型枠","技能士"], excerpt: "型枠大工の国家資格・型枠施工技能士の受験資格と試験内容を解説。" },
+  { slug: "tekkin-kumitate-ginoushi", title: "鉄筋組立技能士の取得ガイド", category: "license", tags: ["鉄筋","技能士"], excerpt: "鉄筋工の国家資格・鉄筋組立て技能士の試験概要と合格のポイント。" },
+  { slug: "sakan-ginoushi", title: "左官技能士 — 日本の伝統技能を支える資格", category: "license", tags: ["左官","技能士"], excerpt: "左官工の国家資格・左官技能士の等級・試験内容・受験資格を解説。" },
+  { slug: "kenchiku-daiku-ginoushi", title: "建築大工技能士の試験攻略", category: "license", tags: ["大工","技能士"], excerpt: "建築大工の国家資格・建築大工技能士の受験準備と実技試験のポイント。" },
+  { slug: "concrete-technician", title: "コンクリート技士 — 品質管理のスペシャリスト", category: "license", tags: ["コンクリート","技士"], excerpt: "コンクリートの品質管理を担うコンクリート技士の受験資格と試験内容。" },
+  { slug: "concrete-diagnosis", title: "コンクリート診断士の取得 — 維持管理時代の必須資格", category: "license", tags: ["コンクリート診断士","維持管理"], excerpt: "コンクリート構造物の劣化診断を行う上位資格・コンクリート診断士について。" },
+  { slug: "building-equipment-inspector-cert", title: "建築設備検査員資格者講習のすべて", category: "license", tags: ["建築設備検査員","講習"], excerpt: "建築設備の定期検査を行う資格者講習の受講要件・内容・費用を詳しく解説。" },
+  { slug: "specific-building-investigator", title: "特定建築物調査員 — 建築物の調査報告", category: "license", tags: ["特定建築物調査員","法令"], excerpt: "特定建築物の定期調査を行う特定建築物調査員の役割と取得ステップ。" },
+  { slug: "emergency-risk-judge", title: "応急危険度判定士 — 災害時の建物判定", category: "license", tags: ["応急危険度","防災"], excerpt: "地震等の被災建物の危険度を判定する応急危険度判定士の登録と活動内容。" },
+
+  // career（建設業キャリア）
+  { slug: "site-supervisor-independence", title: "現場監督から独立するための道", category: "career", tags: ["独立","現場監督"], excerpt: "現場監督として経験を積んだ後、独立して建設会社を立ち上げるまでのステップ。" },
+  { slug: "craftsman-to-sekokan", title: "職人から施工管理へ — キャリアチェンジの実情", category: "career", tags: ["職人","施工管理"], excerpt: "現場作業員から施工管理技士にステップアップするために必要な準備を解説。" },
+  { slug: "engineer-license-career", title: "技術士（建設部門）取得で広がるキャリア", category: "career", tags: ["技術士","キャリア"], excerpt: "建設業界の最高峰資格・技術士（建設部門）取得による年収・キャリアへの影響。" },
+  { slug: "general-contractor-transfer", title: "大手ゼネコンへの転職戦略", category: "career", tags: ["ゼネコン","転職"], excerpt: "中堅建設会社から大手ゼネコンへ転職するための準備と求められるスキル。" },
+  { slug: "subcontractor-to-primary", title: "下請けから元請けへの脱却戦略", category: "career", tags: ["元請け","経営"], excerpt: "下請け工事中心の建設会社が元請け案件を獲得するために必要な戦略。" },
+
+  // salary（地域別・交渉術）
+  { slug: "construction-salary-tokyo", title: "首都圏の建設業年収 — 最高水準の理由", category: "salary", tags: ["年収","首都圏"], excerpt: "東京・神奈川・千葉・埼玉の建設業年収相場と、大型プロジェクトの影響を解説。" },
+  { slug: "construction-salary-kansai", title: "関西地方の建設業年収事情", category: "salary", tags: ["年収","関西"], excerpt: "大阪・兵庫・京都を中心とした関西地方の建設業年収と、万博関連の需要を紹介。" },
+  { slug: "construction-salary-tohoku", title: "東北地方の建設業年収と復興需要", category: "salary", tags: ["年収","東北"], excerpt: "東北地方の建設業年収水準と、震災復興・除染等の特殊需要を解説。" },
+  { slug: "construction-salary-shikoku", title: "四国地方の建設業年収 — 地方の実情", category: "salary", tags: ["年収","四国"], excerpt: "徳島・香川・愛媛・高知の建設業年収相場と、地域の建設需要を紹介。" },
+  { slug: "construction-salary-negotiation-tips", title: "建設業の年収交渉テクニック集", category: "salary", tags: ["交渉","テクニック"], excerpt: "建設業の転職・昇給時に使える年収交渉の具体的なテクニックとNG行動を解説。" },
 ]
 
 
