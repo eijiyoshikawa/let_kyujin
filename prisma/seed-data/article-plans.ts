@@ -374,6 +374,57 @@ export const articlePlans: ArticlePlan[] = [
   { slug: "construction-salary-tohoku", title: "東北地方の建設業年収と復興需要", category: "salary", tags: ["年収","東北"], excerpt: "東北地方の建設業年収水準と、震災復興・除染等の特殊需要を解説。" },
   { slug: "construction-salary-shikoku", title: "四国地方の建設業年収 — 地方の実情", category: "salary", tags: ["年収","四国"], excerpt: "徳島・香川・愛媛・高知の建設業年収相場と、地域の建設需要を紹介。" },
   { slug: "construction-salary-negotiation-tips", title: "建設業の年収交渉テクニック集", category: "salary", tags: ["交渉","テクニック"], excerpt: "建設業の転職・昇給時に使える年収交渉の具体的なテクニックとNG行動を解説。" },
+
+  // === 追加200記事 第4バッチ（建設業特化・インタビューなし） ===
+  // industry（働き方・DX・労働環境）
+  { slug: "construction-workstyle-reform", title: "建設業の働き方改革 — 現場の実情と変化", category: "industry", tags: ["働き方改革","労働環境"], excerpt: "2024年問題以降の建設業働き方改革の進展と、現場での変化を紹介。" },
+  { slug: "construction-dx-cases", title: "建設DXの最新事例集", category: "industry", tags: ["DX","ICT"], excerpt: "建設業界で実際に導入されているDX事例を紹介。業務効率化と品質向上の実例。" },
+  { slug: "construction-foreign-workers", title: "建設業の外国人労働者受入れ現状", category: "industry", tags: ["外国人労働者","多文化"], excerpt: "建設業界で増えている外国人労働者の受入状況と、現場での取り組みを解説。" },
+  { slug: "construction-specified-skill", title: "特定技能制度と建設業界", category: "industry", tags: ["特定技能","制度"], excerpt: "特定技能制度による外国人労働者の受入と、建設業界への影響を紹介。" },
+  { slug: "construction-accident-prevention", title: "建設業の事故防止対策 — 死亡災害ゼロへ", category: "industry", tags: ["安全","事故防止"], excerpt: "建設業の事故統計と、現場で実施されている具体的な事故防止対策を解説。" },
+  { slug: "construction-productivity", title: "建設業の生産性向上 — 具体的な取組み", category: "industry", tags: ["生産性","効率化"], excerpt: "建設業の生産性向上に向けた具体的な取り組みと、成功事例を紹介。" },
+  { slug: "construction-sdgs-activity", title: "建設業のSDGs取組み事例", category: "industry", tags: ["SDGs","社会貢献"], excerpt: "建設業界のSDGs関連の取り組みと、企業の社会貢献活動を紹介。" },
+  { slug: "construction-two-days-off", title: "建設業の週休二日制 — 導入状況と課題", category: "industry", tags: ["週休二日","休日"], excerpt: "建設業界での週休二日制導入の進捗と、現場での実現の課題を解説。" },
+
+  // job-type（追加専門職種）
+  { slug: "spraying-worker", title: "吹付工の仕事 — 法面・トンネルのプロ", category: "job-type", tags: ["吹付","法面"], excerpt: "法面・トンネルのコンクリート吹付を担当する吹付工の仕事と技術を解説。" },
+  { slug: "landscape-worker", title: "造園工の仕事 — 緑と景観を作る職人", category: "job-type", tags: ["造園","緑化"], excerpt: "公園・庭園・緑化工事を担当する造園工の仕事内容と必要な資格を紹介。" },
+  { slug: "block-worker", title: "ブロック工の仕事 — 塀・擁壁の専門職", category: "job-type", tags: ["ブロック","エクステリア"], excerpt: "コンクリートブロック・組積工事を担当する職人の仕事と技術を解説。" },
+  { slug: "sheet-metal-worker", title: "板金工の仕事 — 屋根・外装のプロ", category: "job-type", tags: ["板金工","屋根"], excerpt: "屋根・外壁の金属板加工と取付を行う建築板金工の仕事内容を紹介。" },
+  { slug: "exterior-worker", title: "外構工事の仕事 — 建物の顔を作る", category: "job-type", tags: ["外構","エクステリア"], excerpt: "門扉・フェンス・駐車場・植栽等の外構工事を担当する職種を解説。" },
+  { slug: "concrete-floor-worker", title: "土間コンクリート工 — 床面の仕上げ", category: "job-type", tags: ["土間","仕上げ"], excerpt: "倉庫・工場・駐車場の土間コンクリート施工と仕上げを担当する専門職。" },
+  { slug: "scaffolding-pro", title: "足場職人の仕事 — 高所作業の基盤を作る", category: "job-type", tags: ["足場","高所"], excerpt: "すべての建設工事の基盤となる足場を組立・解体する足場職人の仕事。" },
+  { slug: "crane-slinger", title: "玉掛け作業員の仕事 — クレーン作業の要", category: "job-type", tags: ["玉掛け","クレーン"], excerpt: "クレーンで吊る荷物の掛け外しを担当する玉掛け作業員の仕事と技術。" },
+  { slug: "blasting-engineer", title: "発破技士の仕事 — トンネル・採石のプロ", category: "job-type", tags: ["発破","火薬"], excerpt: "火薬を扱ってトンネル掘削や採石を行う発破技士の仕事と必要な資格。" },
+  { slug: "pile-driver-worker", title: "杭打ち作業員の仕事 — 建物の基礎を支える", category: "job-type", tags: ["杭打ち","基礎"], excerpt: "建物の基礎となる杭を打設する杭打ち工事の仕事内容と必要な技術。" },
+
+  // license（特別教育・作業主任者）
+  { slug: "scaffold-special-edu", title: "足場の組立等特別教育 — 必須の安全講習", category: "license", tags: ["足場","特別教育"], excerpt: "足場上での作業を行うために必要な足場の組立等特別教育の概要と取得方法。" },
+  { slug: "harness-special-edu", title: "フルハーネス型安全帯特別教育", category: "license", tags: ["ハーネス","安全"], excerpt: "2022年から義務化されたフルハーネス型墜落制止用器具使用の特別教育について。" },
+  { slug: "asbestos-chief", title: "石綿作業主任者 — アスベスト対策の専門家", category: "license", tags: ["石綿","作業主任者"], excerpt: "解体・改修工事でのアスベスト対策を指揮する石綿作業主任者の技能講習。" },
+  { slug: "oxygen-deficiency-chief", title: "酸素欠乏危険作業主任者", category: "license", tags: ["酸欠","作業主任者"], excerpt: "地下・タンク内等の酸欠危険場所での作業を指揮する資格について解説。" },
+  { slug: "high-pressure-chief", title: "高圧室内作業主任者 — シールド工事のプロ", category: "license", tags: ["高圧室内","作業主任者"], excerpt: "シールドトンネル等の高圧室内作業を指揮する作業主任者の資格を紹介。" },
+  { slug: "ground-excavation-chief", title: "地山掘削作業主任者 — 土工事の要", category: "license", tags: ["地山掘削","作業主任者"], excerpt: "地山の掘削作業を指揮する地山掘削作業主任者技能講習の概要と受講方法。" },
+  { slug: "gas-welding-course", title: "ガス溶接技能講習の取得ガイド", category: "license", tags: ["ガス溶接","技能講習"], excerpt: "ガス溶接作業に必要なガス溶接技能講習の受講資格・内容・活用場面を解説。" },
+  { slug: "arc-welding-special-edu", title: "アーク溶接等特別教育 — 溶接作業の基本", category: "license", tags: ["アーク溶接","特別教育"], excerpt: "アーク溶接作業に従事するために必要な特別教育の概要と取得方法。" },
+
+  // career（年代別戦略・CCUS等）
+  { slug: "construction-side-job", title: "建設業従事者の副業事情", category: "career", tags: ["副業","収入"], excerpt: "建設業で働きながら副業する選択肢と、注意すべきポイントを解説。" },
+  { slug: "construction-retirement-career", title: "定年後の建設業キャリア — 65歳以降の働き方", category: "career", tags: ["定年後","シニア"], excerpt: "定年後も建設業で活躍するための働き方と、会社選びのポイントを紹介。" },
+  { slug: "construction-transfer-timing", title: "建設業の転職に最適なタイミング", category: "career", tags: ["転職","タイミング"], excerpt: "建設業で転職を成功させるための最適なタイミングと、準備のポイントを解説。" },
+  { slug: "construction-ccus-guide", title: "建設キャリアアップシステム（CCUS）活用法", category: "career", tags: ["CCUS","キャリア"], excerpt: "建設キャリアアップシステム（CCUS）の概要とレベル認定の活用方法を紹介。" },
+  { slug: "construction-career-20s", title: "20代建設業キャリア戦略", category: "career", tags: ["20代","キャリア"], excerpt: "20代の建設業従事者に向けた、資格取得とキャリア形成の戦略を解説。" },
+  { slug: "construction-career-30s", title: "30代建設業キャリア戦略", category: "career", tags: ["30代","キャリア"], excerpt: "30代の建設業従事者に向けた、キャリアアップと家庭との両立の戦略を紹介。" },
+  { slug: "construction-career-40s", title: "40代建設業キャリア戦略", category: "career", tags: ["40代","キャリア"], excerpt: "40代の建設業従事者に向けた、管理職志向または独立の選択と戦略を解説。" },
+
+  // salary（給与制度・保険・手当）
+  { slug: "construction-daily-monthly-wage", title: "日給月給制とは — 建設業特有の給与制度", category: "salary", tags: ["日給月給","給与"], excerpt: "建設業で多く採用されている日給月給制の仕組みと、月給制との違いを解説。" },
+  { slug: "construction-social-insurance-guide", title: "建設業従事者の社会保険ガイド", category: "salary", tags: ["社会保険","福利厚生"], excerpt: "建設業で働く方の社会保険加入の現状と、加入促進の流れを紹介。" },
+  { slug: "construction-taikyosai-guide", title: "建退共（建設業退職金共済）の活用法", category: "salary", tags: ["建退共","退職金"], excerpt: "建設業退職金共済制度の仕組みと、加入・受給までの流れを詳しく解説。" },
+  { slug: "construction-rousai-insurance", title: "建設業の労災保険 — 一人親方も対象", category: "salary", tags: ["労災","保険"], excerpt: "建設業従事者の労災保険の仕組みと、一人親方特別加入制度について解説。" },
+  { slug: "construction-hitori-oyakata-income", title: "一人親方の収入管理と確定申告", category: "salary", tags: ["一人親方","確定申告"], excerpt: "建設業の一人親方が知っておくべき収入管理・経費計算・確定申告の基本。" },
+  { slug: "construction-severance-pay", title: "建設業の退職金事情 — 各種制度の比較", category: "salary", tags: ["退職金","制度"], excerpt: "建設業における退職金制度の種類と、加入できる各種共済制度を比較。" },
+  { slug: "construction-license-allowance", title: "建設業の資格手当一覧 — 取得で月収アップ", category: "salary", tags: ["資格手当","月収"], excerpt: "建設業の主要資格ごとの手当相場を一覧化。資格取得でどれだけ収入が上がるか。" },
 ]
 
 
