@@ -276,6 +276,53 @@ export const articlePlans: ArticlePlan[] = [
   { slug: "interview-female-dokata", title: "土木の現場で活躍する30代女性の話", category: "interview", tags: ["女性","土木"], excerpt: "土木現場で現場代理人として働く30代女性の体験談。職場環境の変化と仕事のやりがい。" },
   { slug: "interview-returnee-japan", title: "海外から帰国した建設技術者の話", category: "interview", tags: ["海外","帰国"], excerpt: "東南アジアで10年働き、日本に帰国した40代建設技術者のキャリアと気づき。" },
   { slug: "interview-young-sekokan-female", title: "25歳女性施工管理技士の1年目", category: "interview", tags: ["女性","若手"], excerpt: "大学卒業後すぐ施工管理技士として働き始めた25歳女性の1年目のリアル。" },
+
+  // === 追加200記事 第2バッチ ===
+  { slug: "construction-vr-training", title: "VRを活用した建設安全訓練の最前線", category: "industry", tags: ["VR","安全教育"], excerpt: "仮想現実技術を使った建設現場の安全訓練の事例。墜落・感電等の危険体験を安全に。" },
+  { slug: "construction-ar-application", title: "AR技術の建設現場応用事例", category: "industry", tags: ["AR","ICT"], excerpt: "拡張現実（AR）を活用した建設現場の作業支援・施工管理の最新事例を紹介。" },
+  { slug: "construction-iot-sensor", title: "IoTセンサーで変わる建設現場の管理", category: "industry", tags: ["IoT","ICT"], excerpt: "建設現場でのIoTセンサーの活用事例。温湿度・作業員の位置・機器の稼働状況管理。" },
+  { slug: "construction-5g-application", title: "5G通信が変える建設業界", category: "industry", tags: ["5G","通信"], excerpt: "5G通信の高速・低遅延を活かした建設現場の活用事例。遠隔施工・リアルタイム管理。" },
+  { slug: "construction-ai-image-inspection", title: "AI画像解析による品質検査の実例", category: "industry", tags: ["AI","品質管理"], excerpt: "AIカメラによる建設現場の品質検査の導入事例。コンクリート欠陥・配筋確認の自動化。" },
+  { slug: "construction-digital-twin", title: "デジタルツインと建設DXの未来", category: "industry", tags: ["デジタルツイン","DX"], excerpt: "建物や現場をデジタル空間に再現するデジタルツイン技術。設計から維持管理まで活用。" },
+  { slug: "construction-wearable-tech", title: "ウェアラブル技術で進化する現場", category: "industry", tags: ["ウェアラブル","ICT"], excerpt: "スマートウォッチ・バイタルセンサー等、ウェアラブル端末による現場管理の進化。" },
+  { slug: "construction-smart-helmet", title: "スマートヘルメットの機能と導入効果", category: "industry", tags: ["スマートヘルメット","安全"], excerpt: "センサー・カメラ・通信機能を搭載したスマートヘルメットの機能と現場での効果。" },
+  { slug: "construction-blockchain-application", title: "ブロックチェーンの建設業活用", category: "industry", tags: ["ブロックチェーン","DX"], excerpt: "建設業界でのブロックチェーン活用事例。材料トレーサビリティ・契約管理等の可能性。" },
+  { slug: "construction-3d-printer-reality", title: "3Dプリンター建築の実用化現状", category: "industry", tags: ["3Dプリンター","新技術"], excerpt: "3Dプリンターで住宅を建てる技術の実用化状況。海外事例と日本での取組み。" },
+  { slug: "construction-cloud-services", title: "建設業クラウドサービスの選び方", category: "industry", tags: ["クラウド","ICT"], excerpt: "建設業向けクラウドサービスの種類と選び方。施工管理・図面管理・写真管理等。" },
+  { slug: "construction-data-analytics", title: "建設データ分析で生産性向上", category: "industry", tags: ["データ分析","生産性"], excerpt: "建設現場のデータ分析による生産性向上の事例。工程・品質・安全の可視化。" },
+
+  { slug: "elevator-installer", title: "エレベーター設置工事の仕事 — 昇降機業界の専門職", category: "job-type", tags: ["エレベーター","昇降機"], excerpt: "エレベーター設置工事の仕事内容と必要な資格。昇降機業界でのキャリアを解説。" },
+  { slug: "escalator-installer", title: "エスカレーター設置工事の仕事 — 大型施設の専門職", category: "job-type", tags: ["エスカレーター","昇降機"], excerpt: "商業施設・駅等に設置するエスカレーターの据付工事の仕事と必要な技術。" },
+  { slug: "hvac-installer", title: "空調設備工事の仕事内容 — 快適な環境を作る", category: "job-type", tags: ["空調","設備"], excerpt: "ビル・住宅の空調設備工事の仕事内容、必要な資格、年収相場を詳しく解説。" },
+  { slug: "fire-alarm-installer", title: "自動火災報知設備工事の仕事 — 安全を守る専門職", category: "job-type", tags: ["火災報知","消防"], excerpt: "ビル・施設の火災報知設備の設置工事の仕事と、消防設備士の資格について。" },
+  { slug: "sprinkler-installer", title: "スプリンクラー設備工事の仕事 — 消火設備のプロ", category: "job-type", tags: ["スプリンクラー","消火"], excerpt: "スプリンクラー等の消火設備の設置工事の流れ、必要な資格、年収を解説。" },
+  { slug: "ev-charger-installer", title: "EV充電器設置工事の仕事 — 電気自動車時代の新職種", category: "job-type", tags: ["EV","電気"], excerpt: "電気自動車の充電器設置工事という新しい職種。必要な資格と将来性を紹介。" },
+  { slug: "smart-home-integrator", title: "スマートホーム設備工事 — IoT時代の電気工事", category: "job-type", tags: ["スマートホーム","IoT"], excerpt: "スマートホーム設備の設置工事の仕事内容と、求められる電気・IT知識を解説。" },
+  { slug: "security-system-installer", title: "セキュリティシステム設置工事の仕事", category: "job-type", tags: ["セキュリティ","設備"], excerpt: "防犯カメラ・入退室管理等のセキュリティ設備の設置工事の仕事内容と資格。" },
+
+  { slug: "crane-derrick-1t", title: "クレーン・デリック運転士免許の取り方", category: "license", tags: ["クレーン","国家資格"], excerpt: "クレーン・デリック運転士免許の試験概要、受験資格、合格のポイントを解説。" },
+  { slug: "tower-crane-operator", title: "タワークレーンオペレーターの資格と仕事", category: "license", tags: ["タワークレーン","資格"], excerpt: "高層建築で活躍するタワークレーンオペレーターに必要な資格と仕事内容。" },
+  { slug: "hoist-operator-license", title: "巻上機運転特別教育の概要と取得方法", category: "license", tags: ["巻上機","特別教育"], excerpt: "ウインチ等の巻上機を運転するための特別教育の内容と受講方法を解説。" },
+  { slug: "lift-operator-license", title: "リフト運転特別教育 — 建設用リフトの資格", category: "license", tags: ["リフト","特別教育"], excerpt: "建設現場で使用するリフトの運転に必要な特別教育の概要と活用場面を紹介。" },
+  { slug: "power-shovel-license", title: "ドラグ・ショベル運転の特別教育", category: "license", tags: ["パワーショベル","特別教育"], excerpt: "小型のドラグ・ショベル運転に必要な特別教育の内容と、活用場面を解説。" },
+  { slug: "bulldozer-license", title: "ブルドーザー運転特別教育の取得ガイド", category: "license", tags: ["ブルドーザー","特別教育"], excerpt: "ブルドーザー運転の特別教育の内容・日数・費用・活用場面を詳しく紹介。" },
+  { slug: "road-roller-license", title: "ローラー運転特別教育 — 舗装工事の資格", category: "license", tags: ["ローラー","舗装"], excerpt: "舗装工事で使うロードローラーの運転に必要な特別教育の概要と取得方法。" },
+
+  { slug: "construction-evaluator-career", title: "建築物評価士のキャリア — 既存建物の価値判定", category: "career", tags: ["評価士","キャリア"], excerpt: "建築物の価値を評価する建築物評価士のキャリア。不動産取引での需要と資格。" },
+  { slug: "construction-interview-mistakes", title: "建設業面接のNG行動 — 採用担当が避ける人", category: "career", tags: ["面接","NG"], excerpt: "建設業の面接で避けるべきNG行動と、好印象を与える受け答えのポイント。" },
+  { slug: "construction-portfolio-building", title: "施工実績の見せ方 — キャリアアップに活かす", category: "career", tags: ["実績","ポートフォリオ"], excerpt: "建設業でのキャリアアップに役立つ施工実績の整理と見せ方のコツを解説。" },
+  { slug: "construction-recruitment-agent", title: "建設専門転職エージェントの活用法", category: "career", tags: ["エージェント","転職"], excerpt: "建設業界特化の転職エージェントの種類と活用方法。無料相談のメリット。" },
+  { slug: "construction-from-restaurant", title: "飲食業から建設業への転職 — 成功のポイント", category: "career", tags: ["飲食業","転職"], excerpt: "飲食業界から建設業界へ転職する際のポイント。活かせるスキルと注意点。" },
+  { slug: "construction-from-manufacturing", title: "製造業から建設業への転職 — 相性の良さ", category: "career", tags: ["製造業","転職"], excerpt: "製造業経験者が建設業界に転職する際の強みと活かせるスキルを解説。" },
+
+  { slug: "construction-salary-kyushu", title: "九州地方の建設業年収事情 — 地域特性を解説", category: "salary", tags: ["年収","九州"], excerpt: "福岡・熊本・鹿児島等、九州の建設業年収相場と、地域特有のプロジェクトを紹介。" },
+  { slug: "construction-salary-chubu", title: "中部地方の建設業年収 — 製造業集積地の特徴", category: "salary", tags: ["年収","中部"], excerpt: "愛知・静岡・新潟等、中部地方の建設業年収と、製造業関連の建設需要を解説。" },
+  { slug: "construction-investment-basics", title: "建設業従事者の投資入門 — 資産運用の基本", category: "salary", tags: ["投資","資産運用"], excerpt: "建設業で働く方向けの投資の基本。リスクとリターン、始め方のステップ。" },
+  { slug: "construction-nisa-ideco-guide", title: "NISA・iDeCoの活用法 — 建設業従事者の節税", category: "salary", tags: ["NISA","iDeCo"], excerpt: "建設業で働く方がNISA・iDeCoを活用して節税しながら資産形成する方法。" },
+
+  { slug: "interview-plumber-life", title: "ベテラン配管工の人生 — 40年の経験を語る", category: "interview", tags: ["配管工","ベテラン"], excerpt: "配管工として40年以上働いてきた65歳ベテラン職人の人生と仕事への想い。" },
+  { slug: "interview-glass-worker", title: "ガラス職人の仕事と誇り — 窓の向こうに見える街", category: "interview", tags: ["ガラス工","職人"], excerpt: "ビル・住宅のガラス工事を30年続けてきた職人が語る仕事の魅力と誇り。" },
+  { slug: "interview-roofer-20years", title: "屋根職人20年の歩み — 空の近くで働く", category: "interview", tags: ["屋根","職人"], excerpt: "屋根工事一筋20年の42歳職人が語る、この仕事の魅力と大変さ。" },
 ]
 
 
