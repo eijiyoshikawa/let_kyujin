@@ -1,34 +1,48 @@
 import { PrismaClient } from "@prisma/client"
+import { readFileSync, existsSync } from "node:fs"
+import { join, dirname } from "node:path"
+import { fileURLToPath } from "node:url"
 import { articlePlans } from "./article-plans"
 
 const prisma = new PrismaClient()
 
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const ARTICLES_DIR = join(__dirname, "articles")
+
 /**
- * 200記事をDBに投入するseedスクリプト。
- * 2026/1/1から1日1記事のペースで publishedAt を設定。
- * body は仮のプレースホルダー（後続バッチで本文を差し替え）。
+ * 199 件のマガジン記事を DB に upsert するシードスクリプト。
+ *
+ * 本文の優先順位:
+ *   1. prisma/seed-data/articles/<slug>.html があればそれを使用（実コンテンツ）
+ *   2. なければ generatePlaceholderBody() の仮本文
+ *
+ * upsert なので、HTML ファイルを追加してから再実行すると既存記事の body が
+ * 実コンテンツに差し変わる（title/excerpt/category/tags なども更新）。
+ *
+ * 公開日は 2026/1/1 から 1 日 1 記事のペースで採番。
  */
 async function seedArticles() {
   const startDate = new Date("2026-01-01T09:00:00+09:00")
 
-  let created = 0
-  let skipped = 0
+  let real = 0
+  let placeholder = 0
 
   for (let i = 0; i < articlePlans.length; i++) {
     const plan = articlePlans[i]
     const publishedAt = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000)
 
-    // Skip if already exists
-    const existing = await prisma.article.findUnique({ where: { slug: plan.slug } })
-    if (existing) {
-      skipped++
-      continue
-    }
+    const htmlPath = join(ARTICLES_DIR, `${plan.slug}.html`)
+    const hasRealContent = existsSync(htmlPath)
+    const body = hasRealContent
+      ? readFileSync(htmlPath, "utf-8").trim()
+      : generatePlaceholderBody(plan.title, plan.excerpt, plan.tags)
 
-    const body = generatePlaceholderBody(plan.title, plan.excerpt, plan.tags)
+    if (hasRealContent) real++
+    else placeholder++
 
-    await prisma.article.create({
-      data: {
+    await prisma.article.upsert({
+      where: { slug: plan.slug },
+      create: {
         slug: plan.slug,
         title: plan.title,
         excerpt: plan.excerpt,
@@ -38,17 +52,31 @@ async function seedArticles() {
         metaDescription: plan.excerpt,
         authorName: "建設求人ポータル編集部",
         status: "published",
-        featured: i < 3, // 最初の3記事をfeaturedに
+        featured: i < 3, // 最初の 3 記事を featured
         publishedAt,
       },
+      update: {
+        title: plan.title,
+        excerpt: plan.excerpt,
+        body,
+        category: plan.category,
+        tags: plan.tags,
+        metaDescription: plan.excerpt,
+        // featured / publishedAt は既存値を尊重
+      },
     })
-    created++
   }
 
-  console.log(`Articles seed complete: ${created} created, ${skipped} skipped (already exist)`)
+  console.log(
+    `Articles seed complete: ${real} real content / ${placeholder} placeholder / ${articlePlans.length} total`
+  )
 }
 
-function generatePlaceholderBody(title: string, excerpt: string, tags: string[]): string {
+function generatePlaceholderBody(
+  title: string,
+  excerpt: string,
+  tags: string[]
+): string {
   return `
 <p>${excerpt}</p>
 
