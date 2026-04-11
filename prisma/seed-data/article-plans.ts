@@ -425,6 +425,57 @@ export const articlePlans: ArticlePlan[] = [
   { slug: "construction-hitori-oyakata-income", title: "一人親方の収入管理と確定申告", category: "salary", tags: ["一人親方","確定申告"], excerpt: "建設業の一人親方が知っておくべき収入管理・経費計算・確定申告の基本。" },
   { slug: "construction-severance-pay", title: "建設業の退職金事情 — 各種制度の比較", category: "salary", tags: ["退職金","制度"], excerpt: "建設業における退職金制度の種類と、加入できる各種共済制度を比較。" },
   { slug: "construction-license-allowance", title: "建設業の資格手当一覧 — 取得で月収アップ", category: "salary", tags: ["資格手当","月収"], excerpt: "建設業の主要資格ごとの手当相場を一覧化。資格取得でどれだけ収入が上がるか。" },
+
+  // === 追加200記事 第5バッチ・最終（建設業特化・インタビューなし） ===
+  // industry（労働環境・社会課題）
+  { slug: "construction-mental-care", title: "建設業のメンタルヘルスケア", category: "industry", tags: ["メンタル","健康"], excerpt: "建設業従事者のメンタルヘルス課題と、現場で進められているケアの取組みを紹介。" },
+  { slug: "construction-harassment-prevention", title: "建設業のハラスメント防止対策", category: "industry", tags: ["ハラスメント","労働環境"], excerpt: "建設業界でのパワハラ・セクハラ防止の取組みと、職場環境の改善事例を解説。" },
+  { slug: "construction-heat-stroke", title: "建設現場の熱中症対策", category: "industry", tags: ["熱中症","安全"], excerpt: "夏の建設現場で重要な熱中症対策と、空調服等の最新装備を紹介。" },
+  { slug: "construction-winter-work", title: "冬の建設現場 — 寒冷地・雪国の工夫", category: "industry", tags: ["冬季","寒冷地"], excerpt: "冬の建設現場での寒さ対策と、雪国特有の工事の工夫を紹介。" },
+  { slug: "construction-local-revitalization", title: "建設業と地方創生の関わり", category: "industry", tags: ["地方創生","地域"], excerpt: "地方の建設業が地域経済と地方創生に果たす役割を解説。" },
+  { slug: "construction-post-covid", title: "建設業のコロナ後の変化", category: "industry", tags: ["コロナ後","変化"], excerpt: "コロナ禍を経て変わった建設業の働き方・現場管理・デジタル化を紹介。" },
+  { slug: "construction-diversity-inclusion", title: "建設業のダイバーシティ＆インクルージョン", category: "industry", tags: ["ダイバーシティ","D&I"], excerpt: "建設業界で進むダイバーシティ推進と包摂的な職場作りの事例を紹介。" },
+  { slug: "construction-sme-support", title: "建設業中小企業の経営支援", category: "industry", tags: ["中小企業","経営"], excerpt: "建設業の中小企業が活用できる経営支援制度と、人材確保の方策を解説。" },
+
+  // job-type（土木系専門職）
+  { slug: "tunnel-worker", title: "トンネル工事作業員の仕事", category: "job-type", tags: ["トンネル","土木"], excerpt: "山岳トンネル・シールドトンネル工事に従事する作業員の仕事内容と必要技術。" },
+  { slug: "dam-worker", title: "ダム工事作業員 — 大規模土木のプロ", category: "job-type", tags: ["ダム","土木"], excerpt: "ダム建設現場で活躍する作業員の仕事内容と、大規模土木工事の特徴を紹介。" },
+  { slug: "bridge-worker", title: "橋梁工事作業員の仕事", category: "job-type", tags: ["橋梁","土木"], excerpt: "橋梁の新設・補修工事に従事する専門職の仕事内容と必要な技術を解説。" },
+  { slug: "harbor-worker", title: "港湾工事作業員 — 海上工事の専門職", category: "job-type", tags: ["港湾","海上"], excerpt: "港湾・海洋構造物の工事を行う専門職種の仕事内容と特徴を紹介。" },
+  { slug: "paving-worker", title: "舗装工の仕事 — 道路を作る職人", category: "job-type", tags: ["舗装","道路"], excerpt: "アスファルト舗装・コンクリート舗装を行う舗装工の仕事内容と必要な技能。" },
+  { slug: "sealing-worker", title: "シーリング工の仕事 — 建物の気密を守る", category: "job-type", tags: ["シーリング","防水"], excerpt: "外壁・サッシ・ガラス等のシーリング工事を担当する専門職の仕事を紹介。" },
+  { slug: "painting-types-guide", title: "塗装工の種類 — 建築・橋梁・重防食", category: "job-type", tags: ["塗装","種類"], excerpt: "建築塗装・橋梁塗装・重防食塗装など、塗装工の種類と特徴を解説。" },
+  { slug: "railway-track-worker", title: "軌道工の仕事 — 鉄道を支える職人", category: "job-type", tags: ["軌道工","鉄道"], excerpt: "鉄道の線路（軌道）の敷設・保守を担当する軌道工の仕事内容を紹介。" },
+  { slug: "steel-erector", title: "鉄骨建方工 — 高層建築の骨組みを建てる", category: "job-type", tags: ["鉄骨","建方"], excerpt: "鉄骨の建方作業を担当する専門職の仕事内容と必要な技能・資格を解説。" },
+  { slug: "building-dismantler-guide", title: "解体工の現場と仕事 — 需要拡大中", category: "job-type", tags: ["解体","職種"], excerpt: "老朽化建物の解体工事を担当する解体工の仕事内容と、求められる技術を紹介。" },
+
+  // license（施工管理技士・専門資格）
+  { slug: "license-study-method", title: "建設系資格の効率的な勉強法", category: "license", tags: ["勉強法","資格"], excerpt: "忙しい建設業従事者が効率よく資格を取得するための勉強法とコツを解説。" },
+  { slug: "license-reskill-guide", title: "転職時の資格棚卸しと再取得", category: "license", tags: ["棚卸し","転職"], excerpt: "建設業での転職時に保有資格を活かすための棚卸しと、追加取得のすすめ。" },
+  { slug: "construction-machinery-sekokan", title: "建設機械施工技士の取得ガイド", category: "license", tags: ["建設機械","施工管理"], excerpt: "建設機械の施工管理を担う建設機械施工技士（1級・2級）の試験概要を解説。" },
+  { slug: "landscape-sekokan-guide", title: "造園施工管理技士 — 緑化工事の管理者", category: "license", tags: ["造園","施工管理"], excerpt: "造園工事の施工管理を担う造園施工管理技士の試験内容と取得メリットを紹介。" },
+  { slug: "kankouji-sekokan-guide", title: "管工事施工管理技士の試験と実務", category: "license", tags: ["管工事","施工管理"], excerpt: "給排水・空調等の管工事を管理する管工事施工管理技士の試験と実務を解説。" },
+  { slug: "electrical-sekokan-guide", title: "電気工事施工管理技士の取得ガイド", category: "license", tags: ["電気","施工管理"], excerpt: "電気工事の施工管理を担う電気工事施工管理技士の試験と実務について紹介。" },
+  { slug: "building-equipment-engineer", title: "建築設備士 — 設備設計の専門家", category: "license", tags: ["建築設備士","設計"], excerpt: "空調・衛生・電気等の建築設備設計を担う建築設備士の資格を詳しく解説。" },
+  { slug: "building-cad-exam", title: "建築CAD検定 — 図面作成の実力証明", category: "license", tags: ["CAD","検定"], excerpt: "建築CAD検定の種類・試験内容・取得のメリットを紹介。" },
+
+  // career（キャリアチェンジ・採用）
+  { slug: "construction-career-change-out", title: "建設業から他業界への転職", category: "career", tags: ["他業界","転職"], excerpt: "建設業から他業界へ転職する際に活かせるスキルと、おすすめの業界を紹介。" },
+  { slug: "construction-women-advance-guide", title: "建設業の女性活躍 — 制度と実情", category: "career", tags: ["女性","活躍"], excerpt: "建設業界で進む女性活躍推進の制度・事例・環境整備の現状を解説。" },
+  { slug: "construction-diversity-hiring", title: "建設業のダイバーシティ採用", category: "career", tags: ["多様性","採用"], excerpt: "建設業でのダイバーシティ採用の取組みと、多様な人材の受入状況を紹介。" },
+  { slug: "construction-mid-career-hiring", title: "建設業の中途採用市場", category: "career", tags: ["中途採用","市場"], excerpt: "建設業界の中途採用市場の動向と、成功するための準備を解説。" },
+  { slug: "construction-new-grad-hiring", title: "建設業の新卒採用と若手育成", category: "career", tags: ["新卒","育成"], excerpt: "建設業の新卒採用事情と、企業が行っている若手育成プログラムを紹介。" },
+  { slug: "construction-internship-guide", title: "建設業のインターンシップ活用", category: "career", tags: ["インターンシップ","学生"], excerpt: "建設業界のインターンシップの種類と、学生・企業双方のメリットを解説。" },
+  { slug: "construction-uij-turn", title: "建設業でのUIJターン就職", category: "career", tags: ["UIJターン","地方"], excerpt: "建設業界でのUIJターン就職の現状と、地方ならではのメリットを紹介。" },
+
+  // salary（地域・賃金動向）
+  { slug: "construction-salary-hokkaido", title: "北海道の建設業年収事情", category: "salary", tags: ["年収","北海道"], excerpt: "札幌を中心とした北海道の建設業年収と、雪国特有の工事需要を紹介。" },
+  { slug: "construction-salary-okinawa-detail", title: "沖縄県の建設業年収 — 島しょの特殊性", category: "salary", tags: ["年収","沖縄"], excerpt: "沖縄県の建設業年収と、リゾート建設・米軍基地関連の特殊需要を解説。" },
+  { slug: "construction-wage-increase-trend", title: "建設業の賃上げ動向と見通し", category: "salary", tags: ["賃上げ","動向"], excerpt: "近年の建設業界の賃上げ動向と、今後の賃金見通しを解説。" },
+  { slug: "construction-labor-cost-structure", title: "建設業の労務費の仕組み", category: "salary", tags: ["労務費","構造"], excerpt: "建設業の労務費の内訳と、元請・下請の関係による賃金への影響を解説。" },
+  { slug: "construction-unit-price-nego", title: "一人親方の単価アップ交渉術", category: "salary", tags: ["単価","交渉"], excerpt: "一人親方が元請・工務店との単価交渉で使える具体的なテクニックを紹介。" },
+  { slug: "construction-commission-wage", title: "建設業の歩合給制の実態", category: "salary", tags: ["歩合","給与"], excerpt: "建設業で採用される歩合給制の仕組みと、メリット・デメリットを解説。" },
+  { slug: "construction-overseas-allowance", title: "海外勤務の手当と待遇", category: "salary", tags: ["海外","手当"], excerpt: "建設業の海外勤務で支給される手当の種類と、待遇の実情を紹介。" },
 ]
 
 
