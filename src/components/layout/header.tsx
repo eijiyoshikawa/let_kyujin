@@ -8,56 +8,55 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <header className="bg-white border-b sticky top-0 z-50">
-      {/* Top bar */}
-      <div className="bg-blue-700">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-8 items-center justify-between text-xs text-blue-100">
-            <span>建築・土木・設備・解体の求人サイト</span>
-            <div className="hidden sm:flex items-center gap-4">
-              <Link href="/about" className="hover:text-white">
-                サイトについて
-              </Link>
-              <Link href="/for-employers" className="hover:text-white">
-                企業の方はこちら
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
+    <header className="bg-white sticky top-0 z-50 shadow-sm">
+      {/* Orange accent line */}
+      <div className="h-1 bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600" />
 
       {/* Main header */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-14 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <HardHat className="h-7 w-7 text-blue-600" />
+            <HardHat className="h-7 w-7 text-primary-500" />
             <span className="text-lg font-bold text-gray-900">建設求人ポータル</span>
           </Link>
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1">
             <Link
+              href="/about"
+              className="px-2.5 py-1.5 text-xs text-gray-500 hover:text-primary-600 transition"
+            >
+              サイトについて
+            </Link>
+            <Link
+              href="/for-employers"
+              className="px-2.5 py-1.5 text-xs text-gray-500 hover:text-primary-600 transition"
+            >
+              企業の方はこちら
+            </Link>
+            <span className="mx-1 h-4 w-px bg-gray-200" />
+            <Link
               href="/jobs"
-              className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+              className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-primary-50 transition"
             >
               <Search className="h-4 w-4" />
               求人検索
             </Link>
             <Link
               href="/journal"
-              className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+              className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-primary-50 transition"
             >
               <Newspaper className="h-4 w-4" /> マガジン
             </Link>
             <Link
               href="/register"
-              className="rounded-full bg-blue-600 px-5 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              className="rounded-full bg-green-500 px-5 py-2 text-sm font-medium text-white hover:bg-green-600 shadow-sm transition"
             >
               会員登録
             </Link>
             <Link
               href="/login"
-              className="flex items-center gap-1.5 rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="flex items-center gap-1.5 rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:border-primary-300 hover:text-primary-600 transition"
             >
               <User className="h-4 w-4" />
               ログイン
@@ -67,7 +66,7 @@ export function Header() {
           {/* Mobile menu button */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="flex md:hidden items-center justify-center rounded-md p-2 text-gray-600 hover:bg-gray-100"
+            className="flex md:hidden items-center justify-center rounded-md p-2 text-gray-600 hover:bg-primary-50"
             aria-label="メニューを開く"
           >
             {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -82,44 +81,44 @@ export function Header() {
             <Link
               href="/jobs"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
+              className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary-50"
             >
-              <Search className="h-4 w-4 text-blue-600" />
+              <Search className="h-4 w-4 text-primary-500" />
               求人検索
             </Link>
             <Link
               href="/journal"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
+              className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary-50"
             >
-              <Newspaper className="h-4 w-4 text-blue-600" /> マガジン
+              <Newspaper className="h-4 w-4 text-primary-500" /> マガジン
             </Link>
             <Link
               href="/for-employers"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
+              className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary-50"
             >
-              <Building2 className="h-4 w-4 text-blue-600" /> 企業の方へ
+              <Building2 className="h-4 w-4 text-primary-500" /> 企業の方へ
             </Link>
             <Link
               href="/about"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
+              className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary-50"
             >
-              <Info className="h-4 w-4 text-blue-600" /> サイトについて
+              <Info className="h-4 w-4 text-primary-500" /> サイトについて
             </Link>
             <div className="border-t pt-2 mt-2 flex gap-2">
               <Link
                 href="/register"
                 onClick={() => setMenuOpen(false)}
-                className="flex-1 rounded-full bg-blue-600 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700"
+                className="flex-1 rounded-full bg-green-500 py-2.5 text-center text-sm font-medium text-white hover:bg-green-600 shadow-sm"
               >
                 会員登録
               </Link>
               <Link
                 href="/login"
                 onClick={() => setMenuOpen(false)}
-                className="flex-1 flex items-center justify-center gap-1.5 rounded-full border border-gray-300 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="flex-1 flex items-center justify-center gap-1.5 rounded-full border border-gray-300 py-2.5 text-sm font-medium text-gray-700 hover:border-primary-300"
               >
                 <User className="h-4 w-4" />
                 ログイン

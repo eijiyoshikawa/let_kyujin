@@ -43,7 +43,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" className="h-full antialiased">
-      <body className="min-h-full flex flex-col font-sans bg-gray-50">
+      <body className="min-h-full flex flex-col font-sans bg-warm-50">
         <GoogleAnalytics />
         <Header />
         <main className="flex-1">{children}</main>
