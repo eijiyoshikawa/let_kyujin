@@ -67,8 +67,8 @@ export default async function JobsPage({ searchParams }: Props) {
 
   return (
     <div>
-      {/* Blue search header */}
-      <div className="bg-blue-700">
+      {/* Search header */}
+      <div className="bg-gradient-to-br from-primary-500 to-primary-700">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
           <h1 className="text-xl font-bold text-white">求人検索</h1>
           <form action="/jobs" className="mt-4">
@@ -80,12 +80,12 @@ export default async function JobsPage({ searchParams }: Props) {
                   name="q"
                   defaultValue={params.q ?? ""}
                   placeholder="職種・キーワードで検索"
-                  className="w-full rounded-lg border-0 py-2.5 pl-10 pr-4 text-sm shadow-sm focus:ring-2 focus:ring-blue-400"
+                  className="w-full rounded-lg border-0 py-2.5 pl-10 pr-4 text-sm shadow-sm focus:ring-2 focus:ring-primary-400"
                 />
               </div>
               <button
                 type="submit"
-                className="flex items-center gap-1.5 rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-blue-700 shadow-sm hover:bg-blue-50 transition"
+                className="flex items-center gap-1.5 rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-primary-700 shadow-sm hover:bg-primary-50 transition"
               >
                 <Search className="h-4 w-4" />
                 検索
@@ -105,7 +105,7 @@ export default async function JobsPage({ searchParams }: Props) {
 
               <div className="rounded-lg border bg-white shadow-sm">
                 <div className="flex items-center gap-2 border-b px-4 py-3">
-                  <SlidersHorizontal className="h-4 w-4 text-blue-600" />
+                  <SlidersHorizontal className="h-4 w-4 text-primary-500" />
                   <h2 className="text-sm font-bold text-gray-900">絞り込み</h2>
                 </div>
 
@@ -160,7 +160,7 @@ export default async function JobsPage({ searchParams }: Props) {
                       defaultValue={params.salary_min ?? ""}
                       placeholder="例: 25"
                       min={0}
-                      className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                     />
                   </div>
                 </div>
@@ -168,14 +168,14 @@ export default async function JobsPage({ searchParams }: Props) {
                 <div className="border-t p-4">
                   <button
                     type="submit"
-                    className="w-full rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition"
+                    className="w-full rounded-lg bg-primary-600 py-2.5 text-sm font-semibold text-white hover:bg-primary-700 transition"
                   >
                     この条件で検索
                   </button>
                   {hasFilters && (
                     <Link
                       href="/jobs"
-                      className="mt-2 block text-center text-xs text-gray-500 hover:text-blue-600"
+                      className="mt-2 block text-center text-xs text-gray-500 hover:text-primary-600"
                     >
                       条件をリセット
                     </Link>
@@ -202,7 +202,7 @@ export default async function JobsPage({ searchParams }: Props) {
                 <FilterBadge label={employmentTypeLabel(params.employment_type)} paramName="employment_type" params={params} />
               )}
               <span className="ml-auto text-sm text-gray-500">
-                <span className="font-bold text-blue-600">{total.toLocaleString()}</span> 件
+                <span className="font-bold text-primary-600">{total.toLocaleString()}</span> 件
               </span>
             </div>
 
@@ -214,7 +214,7 @@ export default async function JobsPage({ searchParams }: Props) {
                   <p className="mt-3 text-gray-500">条件に合う求人が見つかりませんでした。</p>
                   <Link
                     href="/jobs"
-                    className="mt-3 inline-block text-sm font-medium text-blue-600 hover:text-blue-700"
+                    className="mt-3 inline-block text-sm font-medium text-primary-600 hover:text-primary-700"
                   >
                     条件を変更して再検索 →
                   </Link>
@@ -255,7 +255,7 @@ function FilterSelect({
         id={id}
         name={name}
         defaultValue={defaultValue}
-        className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
       >
         <option value="">すべて</option>
         {options.map((opt) => (
@@ -279,10 +279,10 @@ function FilterBadge({
   return (
     <a
       href={`/jobs?${newParams.toString()}`}
-      className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 hover:bg-blue-200 transition"
+      className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-3 py-1 text-xs font-medium text-primary-700 hover:bg-primary-200 transition"
     >
       {label}
-      <span className="text-blue-400">&times;</span>
+      <span className="text-primary-400">&times;</span>
     </a>
   )
 }
