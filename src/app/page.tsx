@@ -200,27 +200,27 @@ export default async function HomePage() {
 
       <LogoSlider />
 
-      {/* Magazine + Interview - 2 column layout like reference */}
-      <section className="border-t bg-white py-8">
+      {/* Magazine + Interview - 2 column layout */}
+      <section className="border-t bg-white py-10">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div className="grid gap-8 lg:grid-cols-2">
             {/* Left: Magazine */}
-            <div>
-              <div className="flex items-center gap-2 border-b border-primary-500 pb-2">
-                <BookOpen className="h-4 w-4 text-primary-500" />
-                <h2 className="text-sm font-bold text-gray-900">建設求人ポータル・マガジン</h2>
+            <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
+              <div className="flex items-center gap-2 bg-primary-600 px-5 py-3">
+                <BookOpen className="h-5 w-5 text-white" />
+                <h2 className="text-base font-bold text-white">建設求人ポータル・マガジン</h2>
               </div>
-              <div className="mt-3 space-y-3">
+              <div className="divide-y">
                 {magazineArticles.map((a) => (
-                  <Link key={a.slug} href={`/journal/${a.slug}`} className="group flex gap-3 items-start">
+                  <Link key={a.slug} href={`/journal/${a.slug}`} className="group flex gap-4 items-center px-5 py-4 hover:bg-primary-50 transition">
                     {a.imageUrl && (
-                      <div className="w-20 h-14 shrink-0 rounded-lg overflow-hidden">
+                      <div className="w-24 h-16 shrink-0 rounded-lg overflow-hidden shadow-sm">
                         <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-primary-600 transition leading-snug">{a.title}</p>
-                      <span className="mt-1 inline-block text-[10px] font-medium text-primary-600">{a.category}</span>
+                      <p className="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition leading-relaxed">{a.title}</p>
+                      <span className="mt-1.5 inline-block rounded-full bg-primary-50 px-2.5 py-0.5 text-[10px] font-medium text-primary-600">{a.category}</span>
                     </div>
                   </Link>
                 ))}
@@ -228,56 +228,41 @@ export default async function HomePage() {
             </div>
 
             {/* Right: Interview / 転職体験談 */}
-            <div>
-              <div className="flex items-center gap-2 border-b border-primary-500 pb-2">
-                <MessageCircle className="h-4 w-4 text-primary-500" />
-                <h2 className="text-sm font-bold text-gray-900">転職体験談</h2>
+            <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
+              <div className="flex items-center gap-2 bg-stone-700 px-5 py-3">
+                <MessageCircle className="h-5 w-5 text-white" />
+                <h2 className="text-base font-bold text-white">転職体験談</h2>
               </div>
-              <div className="mt-3 space-y-3">
-                {interviewArticles.length > 0 ? (
-                  interviewArticles.map((a) => (
-                    <Link key={a.slug} href={`/journal/${a.slug}`} className="group flex gap-3 items-start">
-                      {a.imageUrl && (
-                        <div className="w-20 h-14 shrink-0 rounded-lg overflow-hidden">
-                          <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
-                        </div>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-primary-600 transition leading-snug">{a.title}</p>
+              <div className="divide-y">
+                {(interviewArticles.length > 0 ? interviewArticles : magazineArticles).map((a, i) => (
+                  <Link key={`interview-${a.slug}-${i}`} href={`/journal/${a.slug}`} className="group flex gap-4 items-center px-5 py-4 hover:bg-primary-50 transition">
+                    {a.imageUrl && (
+                      <div className="w-24 h-16 shrink-0 rounded-lg overflow-hidden shadow-sm">
+                        <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
                       </div>
-                    </Link>
-                  ))
-                ) : (
-                  magazineArticles.slice(0, 3).map((a) => (
-                    <Link key={`int-${a.slug}`} href={`/journal/${a.slug}`} className="group flex gap-3 items-start">
-                      {a.imageUrl && (
-                        <div className="w-20 h-14 shrink-0 rounded-lg overflow-hidden">
-                          <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
-                        </div>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-primary-600 transition leading-snug">{a.title}</p>
-                      </div>
-                    </Link>
-                  ))
-                )}
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition leading-relaxed">{a.title}</p>
+                    </div>
+                  </Link>
+                ))}
               </div>
             </div>
           </div>
 
           {/* CTA buttons + Magazine link */}
-          <div className="mt-6 flex flex-col items-center gap-3">
+          <div className="mt-8 flex flex-col items-center gap-4">
             <div className="flex gap-3">
-              <Link href="/register" className="flex items-center gap-1.5 rounded-lg bg-green-500 px-6 py-2.5 text-sm font-medium text-white hover:bg-green-600 shadow-sm transition">
+              <Link href="/register" className="flex items-center gap-2 rounded-xl bg-green-500 px-8 py-3 text-sm font-bold text-white hover:bg-green-600 shadow-md transition">
                 <User className="h-4 w-4" />
                 会員登録する
               </Link>
-              <Link href="/login" className="rounded-lg border border-gray-300 px-6 py-2.5 text-sm font-medium text-gray-600 hover:border-primary-300 hover:text-primary-600 transition">
+              <Link href="/login" className="flex items-center gap-2 rounded-xl border-2 border-gray-300 px-8 py-3 text-sm font-bold text-gray-600 hover:border-primary-400 hover:text-primary-600 transition">
                 ログイン
               </Link>
             </div>
-            <Link href="/journal" className="inline-flex items-center gap-1 text-sm text-primary-600 hover:text-primary-700 transition">
-              マガジンをもっと見る <ChevronRight className="h-3.5 w-3.5" />
+            <Link href="/journal" className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:text-primary-700 transition">
+              マガジンをもっと見る <ChevronRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
