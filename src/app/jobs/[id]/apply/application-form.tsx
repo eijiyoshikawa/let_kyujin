@@ -72,7 +72,7 @@ export function ApplicationForm({ jobId }: { jobId: string }) {
           </Link>
           <Link
             href="/mypage/applications"
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
           >
             応募一覧を見る
           </Link>
@@ -97,7 +97,7 @@ export function ApplicationForm({ jobId }: { jobId: string }) {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="自己PRや志望動機をご記入ください"
-          className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+          className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
         />
         <p className="mt-1 text-xs text-gray-400">
           {message.length} / 2000 文字
@@ -113,7 +113,7 @@ export function ApplicationForm({ jobId }: { jobId: string }) {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="w-full rounded-lg bg-blue-600 px-6 py-3 text-base font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+        className="w-full rounded-lg bg-green-500 px-6 py-3 text-base font-semibold text-white hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {status === "submitting" ? "送信中..." : "応募する"}
       </button>

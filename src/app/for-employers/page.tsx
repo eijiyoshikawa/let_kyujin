@@ -123,12 +123,12 @@ export default function ForEmployersPage() {
   return (
     <div>
       {/* Hero Section - Blue gradient with form */}
-      <section className="relative bg-gradient-to-br from-blue-600 to-blue-700 py-10 sm:py-14">
+      <section className="relative bg-gradient-to-br from-primary-500 to-primary-700 py-10 sm:py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
             {/* Left side - Text + Category links */}
             <div className="flex-1">
-              <p className="text-sm text-blue-200">
+              <p className="text-sm text-primary-200">
                 建設業・設備業など現場で働く人材の採用に特化
               </p>
               <h1 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight">
@@ -140,15 +140,15 @@ export default function ForEmployersPage() {
               {/* Stats row */}
               <div className="mt-6 flex flex-wrap gap-3">
                 <div className="rounded bg-white/10 px-4 py-2">
-                  <p className="text-xs text-blue-200">料金体系</p>
+                  <p className="text-xs text-primary-200">料金体系</p>
                   <p className="text-base font-bold text-white">掲載無料・成果報酬</p>
                 </div>
                 <div className="rounded bg-white/10 px-4 py-2">
-                  <p className="text-xs text-blue-200">成果報酬</p>
+                  <p className="text-xs text-primary-200">成果報酬</p>
                   <p className="text-base font-bold text-white">1人あたり10万円〜</p>
                 </div>
                 <div className="rounded bg-white/10 px-4 py-2">
-                  <p className="text-xs text-blue-200">機能</p>
+                  <p className="text-xs text-primary-200">機能</p>
                   <p className="text-base font-bold text-white">スカウト対応</p>
                 </div>
               </div>
@@ -158,7 +158,7 @@ export default function ForEmployersPage() {
                 {jobCategories.map((cat) => (
                   <div
                     key={cat}
-                    className="flex items-center gap-2 rounded-md bg-white/90 px-3 py-2 text-sm font-medium text-blue-700"
+                    className="flex items-center gap-2 rounded-md bg-white/90 px-3 py-2 text-sm font-medium text-primary-700"
                   >
                     <Search className="h-3.5 w-3.5 shrink-0" />
                     <span className="text-xs">{cat}</span>
@@ -187,7 +187,7 @@ export default function ForEmployersPage() {
                     id="emp-email"
                     type="email"
                     placeholder="example@company.co.jp"
-                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                   />
                 </div>
                 <div>
@@ -196,12 +196,12 @@ export default function ForEmployersPage() {
                     id="emp-company"
                     type="text"
                     placeholder="株式会社○○建設"
-                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                   />
                 </div>
                 <Link
                   href="/company/register"
-                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-bold text-white hover:bg-blue-700 transition"
+                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary-600 px-6 py-3 text-sm font-bold text-white hover:bg-primary-700 transition"
                 >
                   資料請求する
                   <ArrowRight className="h-4 w-4" />
@@ -211,7 +211,7 @@ export default function ForEmployersPage() {
               <div className="mt-4 border-t pt-3 text-center">
                 <p className="text-xs text-gray-500">電話でも受付中</p>
                 <p className="mt-1 flex items-center justify-center gap-1 text-lg font-bold text-gray-900">
-                  <Phone className="h-4 w-4 text-blue-600" />
+                  <Phone className="h-4 w-4 text-primary-600" />
                   03-6845-3624
                 </p>
                 <p className="text-[10px] text-gray-400">平日 10:00〜19:00（土日祝除く）</p>
@@ -224,7 +224,7 @@ export default function ForEmployersPage() {
       <LogoSlider />
 
       {/* About Section */}
-      <section className="bg-blue-50 py-10">
+      <section className="bg-primary-50 py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateOnScroll>
             <div className="flex flex-col items-center gap-8 sm:flex-row">
@@ -235,9 +235,9 @@ export default function ForEmployersPage() {
                   掲載無料・成果報酬型で、建築・土木・設備・解体など幅広い職種の人材採用をサポートします。
                 </p>
               </div>
-              <div className="flex h-36 w-52 shrink-0 flex-col items-center justify-center rounded-xl bg-gradient-to-br from-blue-100 to-blue-200 shadow-sm">
-                <HardHat className="h-14 w-14 text-blue-500" />
-                <p className="mt-2 text-xs font-bold text-blue-600">建設業界特化</p>
+              <div className="flex h-36 w-52 shrink-0 flex-col items-center justify-center rounded-xl bg-gradient-to-br from-primary-100 to-primary-200 shadow-sm">
+                <HardHat className="h-14 w-14 text-primary-500" />
+                <p className="mt-2 text-xs font-bold text-primary-600">建設業界特化</p>
               </div>
             </div>
           </AnimateOnScroll>
@@ -249,7 +249,7 @@ export default function ForEmployersPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateOnScroll>
             <h2 className="text-center text-2xl font-bold text-gray-900">
-              建設求人ポータルが選ばれる<span className="text-blue-600">3つの理由</span>
+              建設求人ポータルが選ばれる<span className="text-primary-600">3つの理由</span>
             </h2>
           </AnimateOnScroll>
           <AnimateOnScroll animation="stagger">
