@@ -157,72 +157,68 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Category Cards - 4x2 grid on PC */}
-      <section className="bg-white pt-8 pb-6">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-lg font-bold text-gray-900">職種から探す</h2>
-          <AnimateOnScroll animation="stagger">
-            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {categoriesWithCounts.map((cat) => {
-                const Icon = cat.icon
-                return (
-                  <Link
-                    key={cat.key}
-                    href={`/jobs?category=${cat.key}`}
-                    className="group overflow-hidden rounded-xl border bg-white shadow-sm hover:shadow-md hover:border-primary-300 transition"
-                  >
-                    <div className="aspect-[4/3] relative overflow-hidden">
-                      <img
-                        src={cat.image}
-                        alt={cat.label}
-                        loading="lazy"
-                        className="h-full w-full object-cover group-hover:scale-105 transition duration-300"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                      <div className="absolute bottom-2 left-2 right-2">
-                        <span className="text-xs font-bold text-white drop-shadow-sm">{cat.label}</span>
-                        <span className="ml-1 text-[10px] font-medium text-primary-200">({cat.count.toLocaleString()})</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 px-3 py-2.5">
-                      <Icon className="h-4 w-4 text-primary-500 shrink-0" />
-                      <p className="text-[11px] text-gray-500 flex-1 truncate">{cat.sub}</p>
-                      <ChevronRight className="h-3.5 w-3.5 text-gray-300 group-hover:text-primary-500 shrink-0 transition" />
-                    </div>
-                  </Link>
-                )
-              })}
-            </div>
-          </AnimateOnScroll>
-        </div>
-      </section>
-
-      {/* Popular Areas */}
-      <section className="border-t bg-warm-50 py-8">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <h2 className="flex items-center gap-1.5 text-base font-bold text-gray-900">
-            <MapPin className="h-4 w-4 text-primary-500" />
-            エリアから探す
-          </h2>
-          <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
-            {popularAreas.map((area) => (
-              <Link key={area.slug} href={`/jobs?prefecture=${area.pref}`} className="rounded-xl border bg-white px-3 py-2 text-center text-sm font-medium text-gray-700 hover:border-primary-300 hover:text-primary-600 transition">
-                {area.pref}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <LogoSlider />
 
       {/* === Main + Sidebar 2-column layout === */}
-      <section className="border-t bg-white py-10">
+      <section className="bg-white py-8">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-8 lg:flex-row">
 
             {/* ===== Main column ===== */}
             <div className="flex-1 min-w-0 space-y-10">
+
+              {/* Category Cards - 4x2 grid on PC (3 cols in main) */}
+              <div>
+                <h2 className="text-lg font-bold text-gray-900">職種から探す</h2>
+                <AnimateOnScroll animation="stagger">
+                  <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-3">
+                    {categoriesWithCounts.map((cat) => {
+                      const Icon = cat.icon
+                      return (
+                        <Link
+                          key={cat.key}
+                          href={`/jobs?category=${cat.key}`}
+                          className="group overflow-hidden rounded-xl border bg-white shadow-sm hover:shadow-md hover:border-primary-300 transition"
+                        >
+                          <div className="aspect-[4/3] relative overflow-hidden">
+                            <img
+                              src={cat.image}
+                              alt={cat.label}
+                              loading="lazy"
+                              className="h-full w-full object-cover group-hover:scale-105 transition duration-300"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                            <div className="absolute bottom-2 left-2 right-2">
+                              <span className="text-xs font-bold text-white drop-shadow-sm">{cat.label}</span>
+                              <span className="ml-1 text-[10px] font-medium text-primary-200">({cat.count.toLocaleString()})</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 px-3 py-2.5">
+                            <Icon className="h-4 w-4 text-primary-500 shrink-0" />
+                            <p className="text-[11px] text-gray-500 flex-1 truncate">{cat.sub}</p>
+                            <ChevronRight className="h-3.5 w-3.5 text-gray-300 group-hover:text-primary-500 shrink-0 transition" />
+                          </div>
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </AnimateOnScroll>
+              </div>
+
+              {/* Popular Areas */}
+              <div>
+                <h2 className="flex items-center gap-1.5 text-base font-bold text-gray-900">
+                  <MapPin className="h-4 w-4 text-primary-500" />
+                  エリアから探す
+                </h2>
+                <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
+                  {popularAreas.map((area) => (
+                    <Link key={area.slug} href={`/jobs?prefecture=${area.pref}`} className="rounded-xl border bg-white px-3 py-2 text-center text-sm font-medium text-gray-700 hover:border-primary-300 hover:text-primary-600 transition">
+                      {area.pref}
+                    </Link>
+                  ))}
+                </div>
+              </div>
 
               {/* Magazine + Interview */}
               <div className="grid gap-8 md:grid-cols-2">
