@@ -35,8 +35,8 @@ export function CompanySidebar({
         {/* Company user info */}
         <div className="border-b p-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100">
-              <Building2 className="h-5 w-5 text-blue-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100">
+              <Building2 className="h-5 w-5 text-primary-600" />
             </div>
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold text-gray-900">
@@ -60,7 +60,7 @@ export function CompanySidebar({
                 href={item.href}
                 className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition ${
                   isActive
-                    ? "bg-blue-50 text-blue-700"
+                    ? "bg-primary-50 text-primary-700"
                     : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                 }`}
               >

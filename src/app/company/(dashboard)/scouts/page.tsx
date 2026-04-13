@@ -93,7 +93,7 @@ export default async function CompanyScoutsPage({
               href={`/company/scouts?tab=sent&status=${opt.value}`}
               className={`rounded-full px-3 py-1 text-sm font-medium ${
                 statusFilter === opt.value
-                  ? "bg-blue-600 text-white"
+                  ? "bg-primary-600 text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
@@ -219,7 +219,7 @@ export default async function CompanyScoutsPage({
         </select>
         <button
           type="submit"
-          className="rounded-md bg-blue-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+          className="rounded-md bg-primary-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-primary-700"
         >
           検索
         </button>
@@ -304,7 +304,7 @@ function TabNav({ tab }: { tab: string }) {
         href="/company/scouts?tab=candidates"
         className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px ${
           tab === "candidates"
-            ? "border-blue-600 text-blue-600"
+            ? "border-primary-600 text-primary-600"
             : "border-transparent text-gray-500 hover:text-gray-700"
         }`}
       >
@@ -314,7 +314,7 @@ function TabNav({ tab }: { tab: string }) {
         href="/company/scouts?tab=sent"
         className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px ${
           tab === "sent"
-            ? "border-blue-600 text-blue-600"
+            ? "border-primary-600 text-primary-600"
             : "border-transparent text-gray-500 hover:text-gray-700"
         }`}
       >
@@ -326,7 +326,7 @@ function TabNav({ tab }: { tab: string }) {
 
 function ScoutStatusBadge({ status }: { status: string }) {
   const config: Record<string, { label: string; className: string }> = {
-    sent: { label: "送信済み", className: "bg-blue-100 text-blue-700" },
+    sent: { label: "送信済み", className: "bg-primary-100 text-primary-700" },
     read: { label: "既読", className: "bg-gray-100 text-gray-600" },
     replied: { label: "返信あり", className: "bg-green-100 text-green-700" },
     declined: { label: "辞退", className: "bg-red-100 text-red-600" },

@@ -152,7 +152,7 @@ export default async function CompanyBillingPage({
               href={`/company/billing?page=${p}`}
               className={`rounded-md px-3 py-1 text-sm ${
                 p === page
-                  ? "bg-blue-600 text-white"
+                  ? "bg-primary-600 text-white"
                   : "bg-white text-gray-600 border hover:bg-gray-50"
               }`}
             >
@@ -168,7 +168,7 @@ export default async function CompanyBillingPage({
 function BillingStatusBadge({ status }: { status: string }) {
   const config: Record<string, { label: string; className: string }> = {
     pending: { label: "処理中", className: "bg-yellow-100 text-yellow-700" },
-    invoiced: { label: "請求済み", className: "bg-blue-100 text-blue-700" },
+    invoiced: { label: "請求済み", className: "bg-primary-100 text-primary-700" },
     paid: { label: "支払い済み", className: "bg-green-100 text-green-700" },
     failed: { label: "失敗", className: "bg-red-100 text-red-600" },
   }
