@@ -258,8 +258,8 @@ export default function ForEmployersPage() {
                 const Icon = r.icon
                 return (
                   <div key={r.title} className="text-center hover-lift rounded-xl">
-                    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue-50">
-                      <Icon className="h-10 w-10 text-blue-600" />
+                    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-primary-50">
+                      <Icon className="h-10 w-10 text-primary-600" />
                     </div>
                     <h3 className="mt-4 text-base font-bold text-gray-900">{r.title}</h3>
                     <p className="mt-2 text-sm text-gray-600 leading-relaxed">{r.description}</p>
@@ -284,7 +284,7 @@ export default function ForEmployersPage() {
               {trackRecordPoints.map((p) => (
                 <div key={p.title} className="flex-1 rounded-xl border bg-white p-5 shadow-sm">
                   <div className="flex items-center gap-2">
-                    <TrendingUp className="h-5 w-5 text-blue-600" />
+                    <TrendingUp className="h-5 w-5 text-primary-600" />
                     <h3 className="font-bold text-gray-900">{p.title}</h3>
                   </div>
                   <p className="mt-2 text-sm text-gray-600">{p.description}</p>
@@ -307,7 +307,7 @@ export default function ForEmployersPage() {
             <div className="mt-8 grid gap-6 sm:grid-cols-3">
               {testimonials.map((t) => (
                 <div key={t.company} className="rounded-xl border bg-white p-5 shadow-sm hover-lift">
-                  <MessageSquareQuote className="h-6 w-6 text-blue-300" />
+                  <MessageSquareQuote className="h-6 w-6 text-primary-300" />
                   <p className="mt-3 text-sm text-gray-600 leading-relaxed">{t.comment}</p>
                   <p className="mt-3 border-t pt-3 text-xs font-bold text-gray-900">{t.company}</p>
                 </div>
@@ -332,18 +332,18 @@ export default function ForEmployersPage() {
               return (
                 <div key={step.label} className="flex items-center gap-3 sm:gap-4">
                   <div className="flex flex-col items-center">
-                    <div className="relative flex h-16 w-16 items-center justify-center rounded-lg border-2 border-blue-600 bg-white shadow-sm">
-                      <span className="absolute -top-2.5 -left-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white shadow-sm">
+                    <div className="relative flex h-16 w-16 items-center justify-center rounded-lg border-2 border-primary-600 bg-white shadow-sm">
+                      <span className="absolute -top-2.5 -left-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-primary-600 text-xs font-bold text-white shadow-sm">
                         {i + 1}
                       </span>
-                      <Icon className="h-7 w-7 text-blue-600" />
+                      <Icon className="h-7 w-7 text-primary-600" />
                     </div>
                     <span className="mt-2 text-center text-xs font-bold text-gray-900 whitespace-pre-line">
                       {step.label}
                     </span>
                   </div>
                   {i < steps.length - 1 && (
-                    <ChevronRight className="h-5 w-5 text-blue-400 shrink-0" />
+                    <ChevronRight className="h-5 w-5 text-primary-400 shrink-0" />
                   )}
                 </div>
               )
@@ -358,7 +358,7 @@ export default function ForEmployersPage() {
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <AnimateOnScroll>
             <h2 className="text-center text-2xl font-bold text-gray-900">
-              他社との<span className="text-blue-600">料金・サービスの比較表</span>
+              他社との<span className="text-primary-600">料金・サービスの比較表</span>
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
               建設求人ポータルは掲載無料、1人あたり10万円〜の成果報酬
@@ -373,13 +373,13 @@ export default function ForEmployersPage() {
               <thead>
                 <tr>
                   <th className="w-28 border border-gray-200 bg-gray-50 p-3"></th>
-                  <th className="border-2 border-blue-600 bg-blue-600 p-3 text-white font-bold text-base">
+                  <th className="border-2 border-primary-600 bg-primary-600 p-3 text-white font-bold text-base">
                     建設求人ポータル
                   </th>
-                  <th className="border border-gray-200 bg-blue-50 p-3 font-bold text-gray-700">
+                  <th className="border border-gray-200 bg-primary-50 p-3 font-bold text-gray-700">
                     大手求人媒体
                   </th>
-                  <th className="border border-gray-200 bg-blue-50 p-3 font-bold text-gray-700">
+                  <th className="border border-gray-200 bg-primary-50 p-3 font-bold text-gray-700">
                     業界専門の<br />求人媒体
                   </th>
                 </tr>
@@ -390,7 +390,7 @@ export default function ForEmployersPage() {
                     <td className="border border-gray-200 bg-gray-50 p-3 text-center font-bold text-gray-700">
                       {row.label}
                     </td>
-                    <td className="border-2 border-blue-600 bg-blue-50/30 p-3 text-center whitespace-pre-line">
+                    <td className="border-2 border-primary-600 bg-primary-50/30 p-3 text-center whitespace-pre-line">
                       <div className="flex items-start justify-center gap-1">
                         <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                         <span className="text-gray-900 font-medium">{row.ours}</span>
@@ -418,19 +418,19 @@ export default function ForEmployersPage() {
       </section>
 
       {/* CTA */}
-      <section className="border-t bg-blue-600 py-12">
+      <section className="border-t bg-primary-600 py-12">
         <AnimateOnScroll animation="fade-up">
           <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-white">
               まずは無料で掲載を始めましょう
             </h2>
-            <p className="mt-2 text-blue-100">
+            <p className="mt-2 text-primary-100">
               掲載料0円・成果報酬型。採用が決まるまで費用はかかりません。
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
               <Link
                 href="/company/register"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-8 py-3.5 text-base font-bold text-blue-600 shadow-lg hover:bg-blue-50 transition"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-8 py-3.5 text-base font-bold text-primary-600 shadow-lg hover:bg-primary-50 transition"
               >
                 無料で企業登録する
                 <ArrowRight className="h-5 w-5" />

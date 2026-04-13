@@ -75,7 +75,7 @@ export default async function ResumePage() {
         <h1 className="text-2xl font-bold text-gray-900">履歴書・職務経歴書</h1>
         <Link
           href="/mypage"
-          className="text-sm font-medium text-blue-600 hover:text-blue-700"
+          className="text-sm font-medium text-primary-600 hover:text-primary-700"
         >
           ← マイページ
         </Link>
@@ -83,7 +83,7 @@ export default async function ResumePage() {
 
       {/* Tab navigation */}
       <div className="mt-6 flex gap-4 border-b">
-        <span className="flex items-center gap-1.5 border-b-2 border-blue-600 px-1 pb-2 text-sm font-medium text-blue-600">
+        <span className="flex items-center gap-1.5 border-b-2 border-primary-600 px-1 pb-2 text-sm font-medium text-primary-600">
           <PenLine className="h-4 w-4" />
           作成する
         </span>
@@ -101,7 +101,7 @@ export default async function ResumePage() {
       {/* File upload section */}
       <div id="upload" className="mt-12 scroll-mt-20">
         <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900 border-b pb-2">
-          <Upload className="h-5 w-5 text-blue-600" />
+          <Upload className="h-5 w-5 text-primary-600" />
           ファイルアップロード
         </h2>
         <p className="mt-2 text-sm text-gray-500">
@@ -115,7 +115,7 @@ export default async function ResumePage() {
             {uploadedFiles.map((f) => (
               <div key={f.id} className="flex items-center justify-between rounded-lg border bg-white p-3">
                 <div className="flex items-center gap-2">
-                  <FileText className="h-5 w-5 text-blue-600" />
+                  <FileText className="h-5 w-5 text-primary-600" />
                   <div>
                     <p className="text-sm font-medium text-gray-900">{f.fileName}</p>
                     <p className="text-xs text-gray-400">
@@ -127,7 +127,7 @@ export default async function ResumePage() {
                   href={f.fileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm font-medium text-blue-600 hover:text-blue-700"
+                  className="text-sm font-medium text-primary-600 hover:text-primary-700"
                 >
                   表示
                 </a>
