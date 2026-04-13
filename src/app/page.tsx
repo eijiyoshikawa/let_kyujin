@@ -84,6 +84,22 @@ export default async function HomePage() {
     }).catch(() => []),
   ])
 
+  // Sidebar data
+  const [popularJobs, recommendedArticles] = await Promise.all([
+    prisma.job.findMany({
+      where: { status: "active" },
+      orderBy: { viewCount: "desc" },
+      take: 5,
+      select: { id: true, title: true, prefecture: true, category: true, viewCount: true },
+    }).catch(() => []),
+    prisma.article.findMany({
+      where: { status: "published" },
+      orderBy: { viewCount: "desc" },
+      take: 5,
+      select: { slug: true, title: true, category: true },
+    }).catch(() => []),
+  ])
+
   const categoriesWithCounts = categories.map((cat) => ({
     ...cat,
     count: categoryCounts.find((c) => c.category === cat.key)?._count ?? 0,
@@ -200,150 +216,227 @@ export default async function HomePage() {
 
       <LogoSlider />
 
-      {/* Magazine + Interview - 2 column layout */}
+      {/* === Main + Sidebar 2-column layout === */}
       <section className="border-t bg-white py-10">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-8 lg:grid-cols-2">
-            {/* Left: Magazine */}
-            <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
-              <div className="flex items-center gap-2 bg-primary-600 px-5 py-3">
-                <BookOpen className="h-5 w-5 text-white" />
-                <h2 className="text-base font-bold text-white">建設求人ポータル・マガジン</h2>
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-8 lg:flex-row">
+
+            {/* ===== Main column ===== */}
+            <div className="flex-1 min-w-0 space-y-10">
+
+              {/* Magazine + Interview */}
+              <div className="grid gap-8 md:grid-cols-2">
+                {/* Magazine */}
+                <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
+                  <div className="flex items-center gap-2 bg-primary-600 px-5 py-3">
+                    <BookOpen className="h-5 w-5 text-white" />
+                    <h2 className="text-base font-bold text-white">マガジン</h2>
+                  </div>
+                  <div className="divide-y">
+                    {magazineArticles.map((a) => (
+                      <Link key={a.slug} href={`/journal/${a.slug}`} className="group flex gap-4 items-center px-5 py-4 hover:bg-primary-50 transition">
+                        {a.imageUrl && (
+                          <div className="w-24 h-16 shrink-0 rounded-lg overflow-hidden shadow-sm">
+                            <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition leading-relaxed">{a.title}</p>
+                          <span className="mt-1.5 inline-block rounded-full bg-primary-50 px-2.5 py-0.5 text-[10px] font-medium text-primary-600">{a.category}</span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Interview / 転職体験談 */}
+                <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
+                  <div className="flex items-center gap-2 bg-stone-700 px-5 py-3">
+                    <MessageCircle className="h-5 w-5 text-white" />
+                    <h2 className="text-base font-bold text-white">転職体験談</h2>
+                  </div>
+                  <div className="divide-y">
+                    {(interviewArticles.length > 0 ? interviewArticles : magazineArticles).map((a, i) => (
+                      <Link key={`interview-${a.slug}-${i}`} href={`/journal/${a.slug}`} className="group flex gap-4 items-center px-5 py-4 hover:bg-primary-50 transition">
+                        {a.imageUrl && (
+                          <div className="w-24 h-16 shrink-0 rounded-lg overflow-hidden shadow-sm">
+                            <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition leading-relaxed">{a.title}</p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <div className="divide-y">
-                {magazineArticles.map((a) => (
-                  <Link key={a.slug} href={`/journal/${a.slug}`} className="group flex gap-4 items-center px-5 py-4 hover:bg-primary-50 transition">
-                    {a.imageUrl && (
-                      <div className="w-24 h-16 shrink-0 rounded-lg overflow-hidden shadow-sm">
-                        <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition leading-relaxed">{a.title}</p>
-                      <span className="mt-1.5 inline-block rounded-full bg-primary-50 px-2.5 py-0.5 text-[10px] font-medium text-primary-600">{a.category}</span>
-                    </div>
+
+              {/* CTA buttons */}
+              <div className="flex flex-col items-center gap-4">
+                <div className="flex gap-3">
+                  <Link href="/register" className="flex items-center gap-2 rounded-xl bg-green-500 px-8 py-3 text-sm font-bold text-white hover:bg-green-600 shadow-md transition">
+                    <User className="h-4 w-4" />
+                    会員登録する
                   </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Right: Interview / 転職体験談 */}
-            <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
-              <div className="flex items-center gap-2 bg-stone-700 px-5 py-3">
-                <MessageCircle className="h-5 w-5 text-white" />
-                <h2 className="text-base font-bold text-white">転職体験談</h2>
-              </div>
-              <div className="divide-y">
-                {(interviewArticles.length > 0 ? interviewArticles : magazineArticles).map((a, i) => (
-                  <Link key={`interview-${a.slug}-${i}`} href={`/journal/${a.slug}`} className="group flex gap-4 items-center px-5 py-4 hover:bg-primary-50 transition">
-                    {a.imageUrl && (
-                      <div className="w-24 h-16 shrink-0 rounded-lg overflow-hidden shadow-sm">
-                        <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition leading-relaxed">{a.title}</p>
-                    </div>
+                  <Link href="/login" className="flex items-center gap-2 rounded-xl border-2 border-gray-300 px-8 py-3 text-sm font-bold text-gray-600 hover:border-primary-400 hover:text-primary-600 transition">
+                    ログイン
                   </Link>
-                ))}
+                </div>
+                <Link href="/journal" className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:text-primary-700 transition">
+                  マガジンをもっと見る <ChevronRight className="h-4 w-4" />
+                </Link>
               </div>
-            </div>
-          </div>
 
-          {/* CTA buttons + Magazine link */}
-          <div className="mt-8 flex flex-col items-center gap-4">
-            <div className="flex gap-3">
-              <Link href="/register" className="flex items-center gap-2 rounded-xl bg-green-500 px-8 py-3 text-sm font-bold text-white hover:bg-green-600 shadow-md transition">
-                <User className="h-4 w-4" />
-                会員登録する
-              </Link>
-              <Link href="/login" className="flex items-center gap-2 rounded-xl border-2 border-gray-300 px-8 py-3 text-sm font-bold text-gray-600 hover:border-primary-400 hover:text-primary-600 transition">
-                ログイン
-              </Link>
-            </div>
-            <Link href="/journal" className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:text-primary-700 transition">
-              マガジンをもっと見る <ChevronRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
+              {/* Service Features */}
+              <div>
+                <h2 className="text-center text-lg font-bold text-gray-900">
+                  建設求人ポータルを活用する<span className="text-primary-600">メリット</span>と3つの特徴
+                </h2>
+                <p className="mt-2 text-center text-xs text-gray-500">
+                  建設業界に特化した求人サイトだからこそ、あなたにぴったりの仕事が見つかります。
+                </p>
+                <div className="mt-6 space-y-4">
+                  {[
+                    { num: "01", title: <>「建築・土木・設備・解体」特化の<span className="text-primary-600">求人サイト</span></>, desc: "建設業界の専門職に絞った求人を掲載しています。総合サイトでは見つけにくい現場の求人を効率的に探せます。ハローワーク求人も掲載中。" },
+                    { num: "02", title: <>おすすめの求人が受け取れるため<span className="text-primary-600">スキマ時間</span>に求人を見つけられる</>, desc: "会員登録で希望の職種・エリアを設定すると、条件に合った新着求人をお知らせします。忙しい方でも効率的に転職活動ができます。" },
+                    { num: "03", title: <>登録すれば<span className="text-primary-600">転職サポート</span>も受けられる</>, desc: "建設業界の経験があるスタッフが、求人選びや面接対策のご相談に応じます。お気軽にお問い合わせください。" },
+                  ].map((f) => (
+                    <div key={f.num} className="rounded-xl bg-warm-50 p-5 border shadow-sm">
+                      <div className="flex items-start gap-4">
+                        <span className="text-2xl font-bold text-primary-500">{f.num}</span>
+                        <div>
+                          <h3 className="text-sm font-bold text-gray-900">{f.title}</h3>
+                          <p className="mt-2 text-xs text-gray-500 leading-relaxed">{f.desc}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-      {/* Service Features - "メリットと3つの特徴" */}
-      <section className="border-t bg-warm-100 py-10">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-lg font-bold text-gray-900">
-            建設求人ポータルを活用する<span className="text-primary-600">メリット</span>と3つの特徴
-          </h2>
-          <p className="mt-2 text-center text-xs text-gray-500">
-            建設業界に特化した求人サイトだからこそ、あなたにぴったりの仕事が見つかります。
-          </p>
-          <div className="mt-8 space-y-5">
-            <AnimateOnScroll>
-              <div className="rounded-xl bg-white p-5 border shadow-sm">
-                <div className="flex items-start gap-4">
-                  <span className="text-2xl font-bold text-primary-500">01</span>
-                  <div>
-                    <h3 className="text-sm font-bold text-gray-900">
-                      「建築・土木・設備・解体」特化の<span className="text-primary-600">求人サイト</span>
+              {/* News */}
+              <div>
+                <h2 className="flex items-center gap-1.5 text-base font-bold text-gray-900">
+                  <Bell className="h-4 w-4 text-primary-500" />
+                  お知らせ
+                </h2>
+                <div className="mt-3 divide-y rounded-xl border bg-white">
+                  {newsItems.map((item, i) => (
+                    <div key={i} className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-center sm:gap-3 text-sm">
+                      <div className="flex items-center gap-2">
+                        <span className="shrink-0 text-xs text-gray-400 tabular-nums">{item.date}</span>
+                        <span className="shrink-0 rounded bg-primary-50 px-2 py-0.5 text-[10px] font-medium text-primary-600">{item.tag}</span>
+                      </div>
+                      <span className="text-gray-700">{item.title}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </div>{/* /Main column */}
+
+            {/* ===== Sidebar (PC only) ===== */}
+            <aside className="hidden lg:block w-72 shrink-0">
+              <div className="sticky top-20 space-y-6">
+
+                {/* 人気求人ランキング */}
+                <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
+                  <div className="bg-primary-600 px-4 py-2.5">
+                    <h3 className="flex items-center gap-1.5 text-sm font-bold text-white">
+                      <Sparkles className="h-4 w-4" />
+                      人気の求人ランキング
                     </h3>
-                    <p className="mt-2 text-xs text-gray-500 leading-relaxed">
-                      建設業界の専門職に絞った求人を掲載しています。総合サイトでは見つけにくい現場の求人を効率的に探せます。ハローワーク求人も掲載中。
-                    </p>
+                  </div>
+                  <div className="divide-y">
+                    {popularJobs.length > 0 ? popularJobs.map((job, i) => (
+                      <Link key={job.id} href={`/jobs/${job.id}`} className="flex items-start gap-3 px-4 py-3 hover:bg-primary-50 transition group">
+                        <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${i === 0 ? "bg-yellow-500" : i === 1 ? "bg-gray-400" : i === 2 ? "bg-amber-700" : "bg-gray-300"}`}>
+                          {i + 1}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-medium text-gray-900 line-clamp-2 group-hover:text-primary-600 transition leading-relaxed">{job.title}</p>
+                          <p className="mt-0.5 text-[10px] text-gray-400">{job.prefecture}</p>
+                        </div>
+                      </Link>
+                    )) : (
+                      <p className="px-4 py-6 text-xs text-gray-400 text-center">求人データを準備中です</p>
+                    )}
                   </div>
                 </div>
-              </div>
-            </AnimateOnScroll>
-            <AnimateOnScroll>
-              <div className="rounded-xl bg-white p-5 border shadow-sm">
-                <div className="flex items-start gap-4">
-                  <span className="text-2xl font-bold text-primary-500">02</span>
-                  <div>
-                    <h3 className="text-sm font-bold text-gray-900">
-                      おすすめの求人が受け取れるため<span className="text-primary-600">スキマ時間</span>に求人を見つけられる
-                    </h3>
-                    <p className="mt-2 text-xs text-gray-500 leading-relaxed">
-                      会員登録で希望の職種・エリアを設定すると、条件に合った新着求人をお知らせします。忙しい方でも効率的に転職活動ができます。
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </AnimateOnScroll>
-            <AnimateOnScroll>
-              <div className="rounded-xl bg-white p-5 border shadow-sm">
-                <div className="flex items-start gap-4">
-                  <span className="text-2xl font-bold text-primary-500">03</span>
-                  <div>
-                    <h3 className="text-sm font-bold text-gray-900">
-                      登録すれば<span className="text-primary-600">転職サポート</span>も受けられる
-                    </h3>
-                    <p className="mt-2 text-xs text-gray-500 leading-relaxed">
-                      建設業界の経験があるスタッフが、求人選びや面接対策のご相談に応じます。お気軽にお問い合わせください。
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </AnimateOnScroll>
-          </div>
-        </div>
-      </section>
 
-      {/* News */}
-      <section className="border-t bg-white py-8">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <h2 className="flex items-center gap-1.5 text-base font-bold text-gray-900">
-            <Bell className="h-4 w-4 text-primary-500" />
-            お知らせ
-          </h2>
-          <div className="mt-3 divide-y">
-            {newsItems.map((item, i) => (
-              <div key={i} className="flex flex-col gap-1 py-3 sm:flex-row sm:items-center sm:gap-3 text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="shrink-0 text-xs text-gray-400 tabular-nums">{item.date}</span>
-                  <span className="shrink-0 rounded bg-primary-50 px-2 py-0.5 text-[10px] font-medium text-primary-600">{item.tag}</span>
+                {/* おすすめ記事 */}
+                <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
+                  <div className="bg-stone-700 px-4 py-2.5">
+                    <h3 className="flex items-center gap-1.5 text-sm font-bold text-white">
+                      <Newspaper className="h-4 w-4" />
+                      おすすめ記事
+                    </h3>
+                  </div>
+                  <div className="divide-y">
+                    {recommendedArticles.map((a, i) => (
+                      <Link key={`rec-${a.slug}-${i}`} href={`/journal/${a.slug}`} className="block px-4 py-3 hover:bg-primary-50 transition group">
+                        <p className="text-xs font-medium text-gray-900 line-clamp-2 group-hover:text-primary-600 transition leading-relaxed">{a.title}</p>
+                        <span className="mt-1 inline-block text-[10px] text-primary-600">{a.category}</span>
+                      </Link>
+                    ))}
+                  </div>
+                  <div className="border-t px-4 py-2.5">
+                    <Link href="/journal" className="flex items-center justify-center gap-1 text-xs font-medium text-primary-600 hover:text-primary-700 transition">
+                      記事をもっと見る <ChevronRight className="h-3 w-3" />
+                    </Link>
+                  </div>
                 </div>
-                <span className="text-gray-700">{item.title}</span>
+
+                {/* SNSバナー */}
+                <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
+                  <div className="bg-gray-800 px-4 py-2.5">
+                    <h3 className="text-sm font-bold text-white">公式SNS</h3>
+                  </div>
+                  <div className="p-4 space-y-3">
+                    <a href="#" className="flex items-center gap-3 rounded-lg bg-red-50 border border-red-100 px-4 py-3 hover:bg-red-100 transition group">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-600 text-white">
+                        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-gray-900">YouTube</p>
+                        <p className="text-[10px] text-gray-500">現場の仕事を動画で紹介</p>
+                      </div>
+                    </a>
+                    <a href="#" className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-purple-50 to-pink-50 border border-pink-100 px-4 py-3 hover:from-purple-100 hover:to-pink-100 transition group">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-pink-500 text-white">
+                        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-gray-900">Instagram</p>
+                        <p className="text-[10px] text-gray-500">施工事例・現場の日常</p>
+                      </div>
+                    </a>
+                    <a href="#" className="flex items-center gap-3 rounded-lg bg-sky-50 border border-sky-100 px-4 py-3 hover:bg-sky-100 transition group">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-black text-white">
+                        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-gray-900">X (Twitter)</p>
+                        <p className="text-[10px] text-gray-500">最新求人・業界ニュース</p>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+
+                {/* 会員登録CTA */}
+                <div className="rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 p-5 text-center shadow-sm">
+                  <p className="text-sm font-bold text-white">無料で会員登録</p>
+                  <p className="mt-1 text-[10px] text-primary-100">希望に合った求人をお届けします</p>
+                  <Link href="/register" className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-white px-5 py-2 text-sm font-bold text-primary-600 hover:bg-primary-50 transition shadow-sm">
+                    <User className="h-4 w-4" />
+                    会員登録（無料）
+                  </Link>
+                </div>
+
               </div>
-            ))}
+            </aside>{/* /Sidebar */}
+
           </div>
         </div>
       </section>
