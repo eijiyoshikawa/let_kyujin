@@ -29,14 +29,14 @@ import { AnimateOnScroll } from "@/components/animate-on-scroll"
 import { LogoSlider } from "@/components/logo-slider"
 
 const categories = [
-  { key: "construction", label: "建築・躯体工事", icon: HardHat, sub: "鳶職・型枠・鉄筋・大工" },
-  { key: "civil", label: "土木工事", icon: Shovel, sub: "土木作業員・重機オペ・舗装" },
-  { key: "electrical", label: "電気・設備工事", icon: Wrench, sub: "電気工事士・配管・空調" },
-  { key: "interior", label: "内装・仕上げ工事", icon: Hammer, sub: "クロス・床・塗装・左官" },
-  { key: "demolition", label: "解体・産廃", icon: Building2, sub: "解体工・産業廃棄物処理" },
-  { key: "driver", label: "ドライバー・重機", icon: Truck, sub: "ダンプ・トレーラー・重機運転" },
-  { key: "management", label: "施工管理", icon: ClipboardCheck, sub: "現場監督・工程管理" },
-  { key: "survey", label: "測量・設計", icon: Ruler, sub: "測量士・CADオペ" },
+  { key: "construction", label: "建築・躯体工事", icon: HardHat, sub: "鳶職・型枠・鉄筋・大工", image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=300&fit=crop" },
+  { key: "civil", label: "土木工事", icon: Shovel, sub: "土木作業員・重機オペ・舗装", image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop" },
+  { key: "electrical", label: "電気・設備工事", icon: Wrench, sub: "電気工事士・配管・空調", image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=300&fit=crop" },
+  { key: "interior", label: "内装・仕上げ工事", icon: Hammer, sub: "クロス・床・塗装・左官", image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400&h=300&fit=crop" },
+  { key: "demolition", label: "解体・産廃", icon: Building2, sub: "解体工・産業廃棄物処理", image: "https://images.unsplash.com/photo-1590496793929-36417d3117de?w=400&h=300&fit=crop" },
+  { key: "driver", label: "ドライバー・重機", icon: Truck, sub: "ダンプ・トレーラー・重機運転", image: "https://images.unsplash.com/photo-1601628828688-632f38a5a7d0?w=400&h=300&fit=crop" },
+  { key: "management", label: "施工管理", icon: ClipboardCheck, sub: "現場監督・工程管理", image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&h=300&fit=crop" },
+  { key: "survey", label: "測量・設計", icon: Ruler, sub: "測量士・CADオペ", image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=300&fit=crop" },
 ]
 
 const popularAreas = [
@@ -141,28 +141,38 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Category List - vertical style like reference */}
+      {/* Category Cards - 4x2 grid on PC */}
       <section className="bg-white pt-8 pb-6">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <h2 className="text-lg font-bold text-gray-900">職種から探す</h2>
           <AnimateOnScroll animation="stagger">
-            <div className="divide-y rounded-xl border overflow-hidden">
+            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {categoriesWithCounts.map((cat) => {
                 const Icon = cat.icon
                 return (
                   <Link
                     key={cat.key}
                     href={`/jobs?category=${cat.key}`}
-                    className="flex items-center gap-4 px-4 py-3.5 hover:bg-primary-50 transition group"
+                    className="group overflow-hidden rounded-xl border bg-white shadow-sm hover:shadow-md hover:border-primary-300 transition"
                   >
-                    <Icon className="h-5 w-5 text-primary-500 shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-baseline gap-1.5">
-                        <span className="text-sm font-semibold text-gray-900">{cat.label}</span>
-                        <span className="text-xs font-medium text-primary-600">({cat.count.toLocaleString()})</span>
+                    <div className="aspect-[4/3] relative overflow-hidden">
+                      <img
+                        src={cat.image}
+                        alt={cat.label}
+                        loading="lazy"
+                        className="h-full w-full object-cover group-hover:scale-105 transition duration-300"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                      <div className="absolute bottom-2 left-2 right-2">
+                        <span className="text-xs font-bold text-white drop-shadow-sm">{cat.label}</span>
+                        <span className="ml-1 text-[10px] font-medium text-primary-200">({cat.count.toLocaleString()})</span>
                       </div>
-                      <p className="text-xs text-gray-400 mt-0.5">{cat.sub}</p>
                     </div>
-                    <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-primary-500 shrink-0 transition" />
+                    <div className="flex items-center gap-2 px-3 py-2.5">
+                      <Icon className="h-4 w-4 text-primary-500 shrink-0" />
+                      <p className="text-[11px] text-gray-500 flex-1 truncate">{cat.sub}</p>
+                      <ChevronRight className="h-3.5 w-3.5 text-gray-300 group-hover:text-primary-500 shrink-0 transition" />
+                    </div>
                   </Link>
                 )
               })}
