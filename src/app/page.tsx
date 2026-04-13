@@ -14,11 +14,15 @@ import {
   ArrowRight,
   ChevronRight,
   MapPin,
-  Smartphone,
-  HeadphonesIcon,
   Newspaper,
   Bell,
   User,
+  SlidersHorizontal,
+  BookOpen,
+  MessageCircle,
+  Sparkles,
+  Clock,
+  HeadphonesIcon,
 } from "lucide-react"
 import { PREFECTURES } from "@/lib/constants"
 import { AnimateOnScroll } from "@/components/animate-on-scroll"
@@ -65,13 +69,20 @@ export default async function HomePage() {
 
   const totalJobs = categoryCounts.reduce((sum, c) => sum + c._count, 0)
 
-  // Latest magazine articles from DB
-  const magazineArticles = await prisma.article.findMany({
-    where: { status: "published" },
-    orderBy: { publishedAt: "desc" },
-    take: 3,
-    select: { slug: true, title: true, category: true, imageUrl: true },
-  }).catch(() => [])
+  const [magazineArticles, interviewArticles] = await Promise.all([
+    prisma.article.findMany({
+      where: { status: "published", category: { not: "interview" } },
+      orderBy: { publishedAt: "desc" },
+      take: 3,
+      select: { slug: true, title: true, category: true, imageUrl: true },
+    }).catch(() => []),
+    prisma.article.findMany({
+      where: { status: "published", category: "interview" },
+      orderBy: { publishedAt: "desc" },
+      take: 3,
+      select: { slug: true, title: true, category: true, imageUrl: true },
+    }).catch(() => []),
+  ])
 
   const categoriesWithCounts = categories.map((cat) => ({
     ...cat,
@@ -80,7 +91,7 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* Hero */}
+      {/* Hero + Search */}
       <section className="relative bg-gradient-to-br from-primary-500 to-primary-700">
         <Image
           src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1920&h=600&fit=crop"
@@ -89,13 +100,16 @@ export default async function HomePage() {
           priority
           className="object-cover opacity-15"
         />
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-          <p className="text-center text-sm text-primary-100">建築・土木・設備・解体に特化</p>
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+          <div className="flex items-center justify-center gap-2 text-primary-100 text-sm">
+            <HardHat className="h-4 w-4" />
+            <span>建築・土木・設備・解体に特化</span>
+          </div>
           <h1 className="mt-2 text-center text-3xl sm:text-4xl font-bold text-white">
             建設求人ポータル
           </h1>
 
-          <form action="/jobs" method="GET" className="relative z-10 mx-auto mt-8 max-w-3xl rounded-xl bg-white p-3 shadow-lg -mb-6">
+          <form action="/jobs" method="GET" className="relative z-10 mx-auto mt-8 max-w-3xl rounded-xl bg-white p-4 shadow-lg">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <div className="flex-1">
                 <label className="sr-only" htmlFor="hero-category">職種</label>
@@ -104,6 +118,7 @@ export default async function HomePage() {
                   {categories.map((c) => <option key={c.key} value={c.key}>{c.label}</option>)}
                 </select>
               </div>
+              <span className="hidden sm:block text-gray-300">×</span>
               <div className="flex-1">
                 <label className="sr-only" htmlFor="hero-prefecture">勤務地</label>
                 <select id="hero-prefecture" name="prefecture" className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-700 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500">
@@ -113,58 +128,59 @@ export default async function HomePage() {
               </div>
               <button type="submit" className="flex items-center justify-center gap-2 rounded-lg bg-primary-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-700 transition">
                 <Search className="h-4 w-4" />
-                検索
+                求人検索
               </button>
+            </div>
+            <div className="mt-2 text-center">
+              <Link href="/jobs" className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-primary-600 transition">
+                <SlidersHorizontal className="h-3 w-3" />
+                条件を指定して探す
+              </Link>
             </div>
           </form>
         </div>
       </section>
 
-      <LogoSlider />
-
-      {/* Categories */}
-      <section className="bg-white pt-10 pb-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-lg font-bold text-gray-900">職種から探す</h2>
+      {/* Category List - vertical style like reference */}
+      <section className="bg-white pt-8 pb-6">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <AnimateOnScroll animation="stagger">
-            <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="divide-y rounded-xl border overflow-hidden">
               {categoriesWithCounts.map((cat) => {
                 const Icon = cat.icon
                 return (
-                  <Link key={cat.key} href={`/jobs?category=${cat.key}`} className="flex items-center gap-3 rounded-xl border px-4 py-3 hover:bg-primary-50 hover:border-primary-300 transition">
+                  <Link
+                    key={cat.key}
+                    href={`/jobs?category=${cat.key}`}
+                    className="flex items-center gap-4 px-4 py-3.5 hover:bg-primary-50 transition group"
+                  >
                     <Icon className="h-5 w-5 text-primary-500 shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <span className="text-sm font-medium text-gray-900">{cat.label}</span>
-                      <span className="ml-1.5 text-xs text-gray-400">({cat.count.toLocaleString()})</span>
-                      <p className="text-xs text-gray-400">{cat.sub}</p>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-sm font-semibold text-gray-900">{cat.label}</span>
+                        <span className="text-xs font-medium text-primary-600">({cat.count.toLocaleString()})</span>
+                      </div>
+                      <p className="text-xs text-gray-400 mt-0.5">{cat.sub}</p>
                     </div>
-                    <ChevronRight className="h-4 w-4 text-gray-300 shrink-0" />
+                    <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-primary-500 shrink-0 transition" />
                   </Link>
                 )
               })}
             </div>
           </AnimateOnScroll>
-          <div className="mt-4 flex gap-2 justify-center">
-            <Link href="/register" className="rounded-lg bg-green-500 px-6 py-2 text-xs font-medium text-white hover:bg-green-600 shadow-sm transition">
-              会員登録（無料）
-            </Link>
-            <Link href="/login" className="rounded-lg border border-gray-300 px-6 py-2 text-xs font-medium text-gray-600 hover:border-primary-300 hover:text-primary-600 transition">
-              ログイン
-            </Link>
-          </div>
         </div>
       </section>
 
       {/* Popular Areas */}
       <section className="border-t bg-warm-50 py-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="flex items-center gap-1.5 text-lg font-bold text-gray-900">
-            <MapPin className="h-5 w-5 text-primary-500" />
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <h2 className="flex items-center gap-1.5 text-base font-bold text-gray-900">
+            <MapPin className="h-4 w-4 text-primary-500" />
             エリアから探す
           </h2>
           <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
             {popularAreas.map((area) => (
-              <Link key={area.slug} href={`/jobs?prefecture=${area.pref}`} className="rounded-xl border bg-white px-3 py-2.5 text-center text-sm font-medium text-gray-700 hover:border-primary-300 hover:text-primary-600 transition">
+              <Link key={area.slug} href={`/jobs?prefecture=${area.pref}`} className="rounded-xl border bg-white px-3 py-2 text-center text-sm font-medium text-gray-700 hover:border-primary-300 hover:text-primary-600 transition">
                 {area.pref}
               </Link>
             ))}
@@ -172,80 +188,164 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Magazine */}
-      {magazineArticles.length > 0 && (
+      <LogoSlider />
+
+      {/* Magazine + Interview - 2 column layout like reference */}
       <section className="border-t bg-white py-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <h2 className="flex items-center gap-1.5 text-lg font-bold text-gray-900">
-              <Newspaper className="h-5 w-5 text-primary-500" />
-              マガジン
-            </h2>
-            <Link href="/journal" className="text-sm text-primary-600 hover:text-primary-700 transition">一覧を見る</Link>
-          </div>
-          <AnimateOnScroll animation="stagger">
-            <div className="mt-3 grid gap-4 sm:grid-cols-3">
-              {magazineArticles.map((a) => (
-                <Link key={a.slug} href={`/journal/${a.slug}`} className="group overflow-hidden rounded-xl border bg-white shadow-sm">
-                  {a.imageUrl && (
-                    <div className="aspect-video relative overflow-hidden">
-                      <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-[1.02] transition duration-300" />
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-6 lg:grid-cols-2">
+            {/* Left: Magazine */}
+            <div>
+              <div className="flex items-center gap-2 border-b border-primary-500 pb-2">
+                <BookOpen className="h-4 w-4 text-primary-500" />
+                <h2 className="text-sm font-bold text-gray-900">建設求人ポータル・マガジン</h2>
+              </div>
+              <div className="mt-3 space-y-3">
+                {magazineArticles.map((a) => (
+                  <Link key={a.slug} href={`/journal/${a.slug}`} className="group flex gap-3 items-start">
+                    {a.imageUrl && (
+                      <div className="w-20 h-14 shrink-0 rounded-lg overflow-hidden">
+                        <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-primary-600 transition leading-snug">{a.title}</p>
+                      <span className="mt-1 inline-block text-[10px] font-medium text-primary-600">{a.category}</span>
                     </div>
-                  )}
-                  <div className="p-3">
-                    <span className="text-[10px] font-medium text-primary-600">{a.category}</span>
-                    <p className="mt-0.5 text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-primary-600 transition">{a.title}</p>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </AnimateOnScroll>
+
+            {/* Right: Interview / 転職体験談 */}
+            <div>
+              <div className="flex items-center gap-2 border-b border-primary-500 pb-2">
+                <MessageCircle className="h-4 w-4 text-primary-500" />
+                <h2 className="text-sm font-bold text-gray-900">転職体験談</h2>
+              </div>
+              <div className="mt-3 space-y-3">
+                {interviewArticles.length > 0 ? (
+                  interviewArticles.map((a) => (
+                    <Link key={a.slug} href={`/journal/${a.slug}`} className="group flex gap-3 items-start">
+                      {a.imageUrl && (
+                        <div className="w-20 h-14 shrink-0 rounded-lg overflow-hidden">
+                          <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-primary-600 transition leading-snug">{a.title}</p>
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  magazineArticles.slice(0, 3).map((a) => (
+                    <Link key={`int-${a.slug}`} href={`/journal/${a.slug}`} className="group flex gap-3 items-start">
+                      {a.imageUrl && (
+                        <div className="w-20 h-14 shrink-0 rounded-lg overflow-hidden">
+                          <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-primary-600 transition leading-snug">{a.title}</p>
+                      </div>
+                    </Link>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* CTA buttons + Magazine link */}
+          <div className="mt-6 flex flex-col items-center gap-3">
+            <div className="flex gap-3">
+              <Link href="/register" className="flex items-center gap-1.5 rounded-lg bg-green-500 px-6 py-2.5 text-sm font-medium text-white hover:bg-green-600 shadow-sm transition">
+                <User className="h-4 w-4" />
+                会員登録する
+              </Link>
+              <Link href="/login" className="rounded-lg border border-gray-300 px-6 py-2.5 text-sm font-medium text-gray-600 hover:border-primary-300 hover:text-primary-600 transition">
+                ログイン
+              </Link>
+            </div>
+            <Link href="/journal" className="inline-flex items-center gap-1 text-sm text-primary-600 hover:text-primary-700 transition">
+              マガジンをもっと見る <ChevronRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
         </div>
       </section>
-      )}
 
-      {/* Service Features */}
+      {/* Service Features - "メリットと3つの特徴" */}
       <section className="border-t bg-warm-100 py-10">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-lg font-bold text-gray-900">当サイトの特徴</h2>
-          <div className="mt-6 space-y-4">
-            <div className="flex gap-4 rounded-xl bg-white p-4 border shadow-sm">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-500 text-white text-sm font-bold">01</div>
-              <div>
-                <h3 className="text-sm font-bold text-gray-900">建設業界に特化した求人のみ掲載</h3>
-                <p className="mt-1 text-xs text-gray-500 leading-relaxed">建築・土木・設備・解体の専門職に絞った求人を掲載しています。総合サイトでは見つけにくい現場の求人を効率的に探せます。</p>
+          <h2 className="text-center text-lg font-bold text-gray-900">
+            建設求人ポータルを活用する<span className="text-primary-600">メリット</span>と3つの特徴
+          </h2>
+          <p className="mt-2 text-center text-xs text-gray-500">
+            建設業界に特化した求人サイトだからこそ、あなたにぴったりの仕事が見つかります。
+          </p>
+          <div className="mt-8 space-y-5">
+            <AnimateOnScroll>
+              <div className="rounded-xl bg-white p-5 border shadow-sm">
+                <div className="flex items-start gap-4">
+                  <span className="text-2xl font-bold text-primary-500">01</span>
+                  <div>
+                    <h3 className="text-sm font-bold text-gray-900">
+                      「建築・土木・設備・解体」特化の<span className="text-primary-600">求人サイト</span>
+                    </h3>
+                    <p className="mt-2 text-xs text-gray-500 leading-relaxed">
+                      建設業界の専門職に絞った求人を掲載しています。総合サイトでは見つけにくい現場の求人を効率的に探せます。ハローワーク求人も掲載中。
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-4 rounded-xl bg-white p-4 border shadow-sm">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-500 text-white text-sm font-bold">02</div>
-              <div>
-                <h3 className="text-sm font-bold text-gray-900">希望条件に合った求人をお届け</h3>
-                <p className="mt-1 text-xs text-gray-500 leading-relaxed">会員登録で希望の職種・エリアを設定すると、条件に合った新着求人をお知らせします。</p>
+            </AnimateOnScroll>
+            <AnimateOnScroll>
+              <div className="rounded-xl bg-white p-5 border shadow-sm">
+                <div className="flex items-start gap-4">
+                  <span className="text-2xl font-bold text-primary-500">02</span>
+                  <div>
+                    <h3 className="text-sm font-bold text-gray-900">
+                      おすすめの求人が受け取れるため<span className="text-primary-600">スキマ時間</span>に求人を見つけられる
+                    </h3>
+                    <p className="mt-2 text-xs text-gray-500 leading-relaxed">
+                      会員登録で希望の職種・エリアを設定すると、条件に合った新着求人をお知らせします。忙しい方でも効率的に転職活動ができます。
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-4 rounded-xl bg-white p-4 border shadow-sm">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-500 text-white text-sm font-bold">03</div>
-              <div>
-                <h3 className="text-sm font-bold text-gray-900">転職相談に対応</h3>
-                <p className="mt-1 text-xs text-gray-500 leading-relaxed">建設業界の経験があるスタッフが、求人選びや面接対策のご相談に応じます。お気軽にお問い合わせください。</p>
+            </AnimateOnScroll>
+            <AnimateOnScroll>
+              <div className="rounded-xl bg-white p-5 border shadow-sm">
+                <div className="flex items-start gap-4">
+                  <span className="text-2xl font-bold text-primary-500">03</span>
+                  <div>
+                    <h3 className="text-sm font-bold text-gray-900">
+                      登録すれば<span className="text-primary-600">転職サポート</span>も受けられる
+                    </h3>
+                    <p className="mt-2 text-xs text-gray-500 leading-relaxed">
+                      建設業界の経験があるスタッフが、求人選びや面接対策のご相談に応じます。お気軽にお問い合わせください。
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
+            </AnimateOnScroll>
           </div>
         </div>
       </section>
 
       {/* News */}
       <section className="border-t bg-white py-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="flex items-center gap-1.5 text-lg font-bold text-gray-900">
-            <Bell className="h-5 w-5 text-primary-500" />
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <h2 className="flex items-center gap-1.5 text-base font-bold text-gray-900">
+            <Bell className="h-4 w-4 text-primary-500" />
             お知らせ
           </h2>
-          <div className="mt-3 divide-y rounded-xl border">
+          <div className="mt-3 divide-y">
             {newsItems.map((item, i) => (
-              <div key={i} className="flex items-center gap-3 px-4 py-3 text-sm">
-                <span className="shrink-0 text-xs text-gray-400 tabular-nums">{item.date}</span>
-                <span className="shrink-0 rounded bg-primary-50 px-2 py-0.5 text-[10px] font-medium text-primary-600">{item.tag}</span>
+              <div key={i} className="flex flex-col gap-1 py-3 sm:flex-row sm:items-center sm:gap-3 text-sm">
+                <div className="flex items-center gap-2">
+                  <span className="shrink-0 text-xs text-gray-400 tabular-nums">{item.date}</span>
+                  <span className="shrink-0 rounded bg-primary-50 px-2 py-0.5 text-[10px] font-medium text-primary-600">{item.tag}</span>
+                </div>
                 <span className="text-gray-700">{item.title}</span>
               </div>
             ))}
