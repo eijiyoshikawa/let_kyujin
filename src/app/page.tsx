@@ -136,20 +136,6 @@ export default async function HomePage() {
             あなたにぴったりの建設業界の仕事が、ここで見つかる
           </p>
 
-          {/* Visual gallery strip (PC only) */}
-          <div className="hidden lg:grid grid-cols-4 gap-2 mt-8 max-w-4xl mx-auto">
-            {[
-              "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=300&h=200&fit=crop&q=80",
-              "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=300&h=200&fit=crop&q=80",
-              "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=300&h=200&fit=crop&q=80",
-              "https://images.unsplash.com/photo-1590496793929-36417d3117de?w=300&h=200&fit=crop&q=80",
-            ].map((src, i) => (
-              <div key={i} className="aspect-[3/2] overflow-hidden rounded-lg ring-2 ring-white/20 shadow-lg">
-                <img src={src} alt="" className="h-full w-full object-cover" loading="lazy" />
-              </div>
-            ))}
-          </div>
-
           <form action="/jobs" method="GET" className="relative z-10 mx-auto mt-8 max-w-3xl rounded-xl bg-white p-4 shadow-2xl ring-1 ring-white/30">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <div className="flex-1">
