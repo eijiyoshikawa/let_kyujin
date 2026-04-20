@@ -107,25 +107,50 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* Hero + Search */}
-      <section className="relative bg-gradient-to-br from-primary-500 to-primary-700">
-        <Image
-          src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1920&h=600&fit=crop"
-          alt=""
-          fill
-          priority
-          className="object-cover opacity-15"
-        />
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-          <div className="flex items-center justify-center gap-2 text-primary-100 text-sm">
-            <HardHat className="h-4 w-4" />
+      {/* Hero + Search with main visual */}
+      <section className="relative overflow-hidden">
+        {/* Background main visual */}
+        <div className="absolute inset-0">
+          <Image
+            src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1920&h=800&fit=crop&q=80"
+            alt="建設現場のメインビジュアル"
+            fill
+            priority
+            className="object-cover"
+          />
+          {/* Dark overlay + primary color gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-900/80 via-primary-700/70 to-stone-900/80" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)]" />
+        </div>
+
+        {/* Content */}
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+          <div className="flex items-center justify-center gap-2 text-primary-100 text-sm font-medium drop-shadow-md">
+            <HardHat className="h-5 w-5" />
             <span>建築・土木・設備・解体に特化</span>
           </div>
-          <h1 className="mt-2 text-center text-3xl sm:text-4xl font-bold text-white">
+          <h1 className="mt-3 text-center text-4xl sm:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg tracking-tight">
             建設求人ポータル
           </h1>
+          <p className="mt-4 text-center text-sm sm:text-base text-primary-100 drop-shadow-md max-w-2xl mx-auto">
+            あなたにぴったりの建設業界の仕事が、ここで見つかる
+          </p>
 
-          <form action="/jobs" method="GET" className="relative z-10 mx-auto mt-8 max-w-3xl rounded-xl bg-white p-4 shadow-lg">
+          {/* Visual gallery strip (PC only) */}
+          <div className="hidden lg:grid grid-cols-4 gap-2 mt-8 max-w-4xl mx-auto">
+            {[
+              "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=300&h=200&fit=crop&q=80",
+              "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=300&h=200&fit=crop&q=80",
+              "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=300&h=200&fit=crop&q=80",
+              "https://images.unsplash.com/photo-1590496793929-36417d3117de?w=300&h=200&fit=crop&q=80",
+            ].map((src, i) => (
+              <div key={i} className="aspect-[3/2] overflow-hidden rounded-lg ring-2 ring-white/20 shadow-lg">
+                <img src={src} alt="" className="h-full w-full object-cover" loading="lazy" />
+              </div>
+            ))}
+          </div>
+
+          <form action="/jobs" method="GET" className="relative z-10 mx-auto mt-8 max-w-3xl rounded-xl bg-white p-4 shadow-2xl ring-1 ring-white/30">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <div className="flex-1">
                 <label className="sr-only" htmlFor="hero-category">職種</label>
