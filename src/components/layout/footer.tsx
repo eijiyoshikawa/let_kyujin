@@ -77,10 +77,10 @@ export function Footer() {
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
             <div className="flex items-center gap-2">
               <span className="text-xs font-medium text-gray-500">公式SNS</span>
-              <a href="#" className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-700 text-gray-300 hover:bg-red-600 hover:text-white transition" aria-label="YouTube">
+              <a href="https://youtube.com/@let-kensetsu" target="_blank" rel="noopener noreferrer" className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-700 text-gray-300 hover:bg-red-600 hover:text-white transition" aria-label="YouTube">
                 <CirclePlay className="h-4 w-4" />
               </a>
-              <a href="#" className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-700 text-gray-300 hover:bg-pink-600 hover:text-white transition" aria-label="Instagram">
+              <a href="https://instagram.com/let_kensetsu" target="_blank" rel="noopener noreferrer" className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-700 text-gray-300 hover:bg-pink-600 hover:text-white transition" aria-label="Instagram">
                 <Camera className="h-4 w-4" />
               </a>
             </div>

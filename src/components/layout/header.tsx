@@ -8,9 +8,7 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <header className="bg-white sticky top-0 z-50 shadow-sm">
-      {/* Orange accent line */}
-      <div className="h-1 bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600" />
+    <header className="bg-white sticky top-0 z-50 border-b">
 
       {/* Main header */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -50,13 +48,13 @@ export function Header() {
             </Link>
             <Link
               href="/register"
-              className="rounded-full bg-green-500 px-5 py-2 text-sm font-medium text-white hover:bg-green-600 shadow-sm transition"
+              className="rounded bg-primary-600 px-5 py-2 text-sm font-medium text-white hover:bg-primary-700 transition"
             >
               会員登録
             </Link>
             <Link
               href="/login"
-              className="flex items-center gap-1.5 rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:border-primary-300 hover:text-primary-600 transition"
+              className="flex items-center gap-1.5 rounded border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
             >
               <User className="h-4 w-4" />
               ログイン
@@ -111,14 +109,14 @@ export function Header() {
               <Link
                 href="/register"
                 onClick={() => setMenuOpen(false)}
-                className="flex-1 rounded-full bg-green-500 py-2.5 text-center text-sm font-medium text-white hover:bg-green-600 shadow-sm"
+                className="flex-1 rounded bg-primary-600 py-2.5 text-center text-sm font-medium text-white hover:bg-primary-700"
               >
                 会員登録
               </Link>
               <Link
                 href="/login"
                 onClick={() => setMenuOpen(false)}
-                className="flex-1 flex items-center justify-center gap-1.5 rounded-full border border-gray-300 py-2.5 text-sm font-medium text-gray-700 hover:border-primary-300"
+                className="flex-1 flex items-center justify-center gap-1.5 rounded border border-gray-300 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
               >
                 <User className="h-4 w-4" />
                 ログイン

@@ -202,7 +202,7 @@ export async function POST(request: NextRequest) {
   // インポートバッチ実行
   // -------------------------------------------------------
   try {
-    console.log(
+    console.info(
       `[admin/hellowork/import] バッチ開始: prefecture=${prefecture}, category=${category ?? "all"}, dryRun=${dryRun}`
     )
 
@@ -212,7 +212,7 @@ export async function POST(request: NextRequest) {
       maxPages ?? 10
     )
 
-    console.log(
+    console.info(
       `[admin/hellowork/import] クロール完了: ${crawlResult.jobs.length} 件取得`
     )
 

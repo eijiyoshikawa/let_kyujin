@@ -21,10 +21,9 @@ export function JobCard({ job }: { job: JobCardProps }) {
   return (
     <Link
       href={`/jobs/${job.id}`}
-      className="group flex gap-4 rounded-xl border bg-white p-4 shadow-sm transition hover:shadow-md hover:border-primary-300"
+      className="group flex gap-4 rounded-lg border bg-white p-4 transition hover:border-primary-400"
     >
-      {/* Left: category icon */}
-      <div className="hidden sm:flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary-50 group-hover:bg-primary-100 transition">
+      <div className="hidden sm:flex h-10 w-10 shrink-0 items-center justify-center rounded bg-gray-100 group-hover:bg-primary-50 transition">
         <HardHat className="h-6 w-6 text-primary-500" />
       </div>
 

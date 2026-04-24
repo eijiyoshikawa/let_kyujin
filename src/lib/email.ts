@@ -50,7 +50,7 @@ export async function sendEmail({ to, subject, html }: SendEmailParams) {
 
 /** パスワードリセットメール送信 */
 export async function sendPasswordResetEmail(email: string, token: string) {
-  const baseUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000"
+  const baseUrl = process.env.NEXTAUTH_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
   const resetUrl = `${baseUrl}/reset-password?token=${token}`
 
   await sendEmail({
@@ -98,7 +98,7 @@ export async function sendScoutNotificationEmail(
   email: string,
   companyName: string
 ) {
-  const baseUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000"
+  const baseUrl = process.env.NEXTAUTH_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
 
   await sendEmail({
     to: email,

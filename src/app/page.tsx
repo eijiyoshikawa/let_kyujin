@@ -105,38 +105,48 @@ export default async function HomePage() {
     count: categoryCounts.find((c) => c.category === cat.key)?._count ?? 0,
   }))
 
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "株式会社LET",
+    url: "https://let-kyujin.vercel.app",
+    logo: "https://let-kyujin.vercel.app/icon.png",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "大阪市中央区",
+      addressRegion: "大阪府",
+      addressCountry: "JP",
+    },
+    contactPoint: { "@type": "ContactPoint", telephone: "06-6786-8320", contactType: "customer service" },
+  }
+
   return (
     <div>
-      {/* Hero + Search with main visual */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+
+      {/* Hero */}
       <section className="relative overflow-hidden">
-        {/* Background main visual */}
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1920&h=800&fit=crop&q=80"
-            alt="建設現場のメインビジュアル"
+            alt="建設現場"
             fill
             priority
             className="object-cover"
           />
-          {/* Dark overlay + primary color gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary-900/80 via-primary-700/70 to-stone-900/80" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
         </div>
 
-        {/* Content */}
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-          <div className="flex items-center justify-center gap-2 text-primary-100 text-sm font-medium drop-shadow-md">
-            <HardHat className="h-5 w-5" />
-            <span>建築・土木・設備・解体に特化</span>
-          </div>
-          <h1 className="mt-3 text-center text-4xl sm:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg tracking-tight">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+          <p className="text-center text-sm text-white/80">建築・土木・設備・解体に特化した求人サイト</p>
+          <h1 className="mt-2 text-center text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight">
             建設求人ポータル
           </h1>
-          <p className="mt-4 text-center text-sm sm:text-base text-primary-100 drop-shadow-md max-w-2xl mx-auto">
-            あなたにぴったりの建設業界の仕事が、ここで見つかる
+          <p className="mt-3 text-center text-sm text-white/70 max-w-lg mx-auto">
+            あなたにぴったりの建設業界の仕事が見つかる
           </p>
 
-          <form action="/jobs" method="GET" className="relative z-10 mx-auto mt-8 max-w-3xl rounded-xl bg-white p-4 shadow-2xl ring-1 ring-white/30">
+          <form action="/jobs" method="GET" className="relative z-10 mx-auto mt-8 max-w-3xl rounded-lg bg-white p-4 shadow-xl">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <div className="flex-1">
                 <label className="sr-only" htmlFor="hero-category">職種</label>
@@ -189,14 +199,14 @@ export default async function HomePage() {
                         <Link
                           key={cat.key}
                           href={`/jobs?category=${cat.key}`}
-                          className="group overflow-hidden rounded-xl border bg-white shadow-sm hover:shadow-md hover:border-primary-300 transition"
+                          className="group overflow-hidden rounded-lg border bg-white hover:border-primary-400 transition"
                         >
                           <div className="aspect-[4/3] relative overflow-hidden">
                             <img
                               src={cat.image}
                               alt={cat.label}
                               loading="lazy"
-                              className="h-full w-full object-cover group-hover:scale-105 transition duration-300"
+                              className="h-full w-full object-cover group-hover:brightness-110 transition duration-200"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                             <div className="absolute bottom-2 left-2 right-2">
@@ -224,7 +234,7 @@ export default async function HomePage() {
                 </h2>
                 <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
                   {popularAreas.map((area) => (
-                    <Link key={area.slug} href={`/jobs?prefecture=${area.pref}`} className="rounded-xl border bg-white px-3 py-2 text-center text-sm font-medium text-gray-700 hover:border-primary-300 hover:text-primary-600 transition">
+                    <Link key={area.slug} href={`/jobs?prefecture=${area.pref}`} className="rounded border bg-white px-3 py-2 text-center text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition">
                       {area.pref}
                     </Link>
                   ))}
@@ -234,22 +244,23 @@ export default async function HomePage() {
               {/* Magazine + Interview */}
               <div className="grid gap-8 md:grid-cols-2">
                 {/* Magazine */}
-                <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
-                  <div className="flex items-center gap-2 bg-primary-600 px-5 py-3">
-                    <BookOpen className="h-5 w-5 text-white" />
-                    <h2 className="text-base font-bold text-white">マガジン</h2>
+                <div className="rounded-lg border bg-white overflow-hidden">
+                  <div className="flex items-center gap-2 border-b px-4 py-3">
+                    <BookOpen className="h-4 w-4 text-primary-600" />
+                    <h2 className="text-sm font-bold text-gray-900">マガジン</h2>
+                    <Link href="/journal" className="ml-auto text-xs text-primary-600 hover:text-primary-700">一覧 →</Link>
                   </div>
                   <div className="divide-y">
                     {magazineArticles.map((a) => (
-                      <Link key={a.slug} href={`/journal/${a.slug}`} className="group flex gap-4 items-center px-5 py-4 hover:bg-primary-50 transition">
+                      <Link key={a.slug} href={`/journal/${a.slug}`} className="group flex gap-3 items-center px-4 py-3 hover:bg-gray-50 transition">
                         {a.imageUrl && (
-                          <div className="w-24 h-16 shrink-0 rounded-lg overflow-hidden shadow-sm">
-                            <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
+                          <div className="w-20 h-14 shrink-0 rounded overflow-hidden">
+                            <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover" />
                           </div>
                         )}
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition leading-relaxed">{a.title}</p>
-                          <span className="mt-1.5 inline-block rounded-full bg-primary-50 px-2.5 py-0.5 text-[10px] font-medium text-primary-600">{a.category}</span>
+                          <p className="text-sm text-gray-900 line-clamp-2 group-hover:text-primary-600 transition">{a.title}</p>
+                          <span className="mt-1 inline-block text-[10px] text-gray-400">{a.category}</span>
                         </div>
                       </Link>
                     ))}
@@ -257,21 +268,21 @@ export default async function HomePage() {
                 </div>
 
                 {/* Interview / 転職体験談 */}
-                <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
-                  <div className="flex items-center gap-2 bg-stone-700 px-5 py-3">
-                    <MessageCircle className="h-5 w-5 text-white" />
-                    <h2 className="text-base font-bold text-white">転職体験談</h2>
+                <div className="rounded-lg border bg-white overflow-hidden">
+                  <div className="flex items-center gap-2 border-b px-4 py-3">
+                    <MessageCircle className="h-4 w-4 text-stone-600" />
+                    <h2 className="text-sm font-bold text-gray-900">転職体験談</h2>
                   </div>
                   <div className="divide-y">
                     {(interviewArticles.length > 0 ? interviewArticles : magazineArticles).map((a, i) => (
-                      <Link key={`interview-${a.slug}-${i}`} href={`/journal/${a.slug}`} className="group flex gap-4 items-center px-5 py-4 hover:bg-primary-50 transition">
+                      <Link key={`interview-${a.slug}-${i}`} href={`/journal/${a.slug}`} className="group flex gap-3 items-center px-4 py-3 hover:bg-gray-50 transition">
                         {a.imageUrl && (
-                          <div className="w-24 h-16 shrink-0 rounded-lg overflow-hidden shadow-sm">
-                            <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
+                          <div className="w-20 h-14 shrink-0 rounded overflow-hidden">
+                            <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover" />
                           </div>
                         )}
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition leading-relaxed">{a.title}</p>
+                          <p className="text-sm text-gray-900 line-clamp-2 group-hover:text-primary-600 transition">{a.title}</p>
                         </div>
                       </Link>
                     ))}
@@ -279,43 +290,30 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              {/* CTA buttons */}
-              <div className="flex flex-col items-center gap-4">
-                <div className="flex gap-3">
-                  <Link href="/register" className="flex items-center gap-2 rounded-xl bg-green-500 px-8 py-3 text-sm font-bold text-white hover:bg-green-600 shadow-md transition">
-                    <User className="h-4 w-4" />
-                    会員登録する
-                  </Link>
-                  <Link href="/login" className="flex items-center gap-2 rounded-xl border-2 border-gray-300 px-8 py-3 text-sm font-bold text-gray-600 hover:border-primary-400 hover:text-primary-600 transition">
-                    ログイン
-                  </Link>
-                </div>
-                <Link href="/journal" className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:text-primary-700 transition">
-                  マガジンをもっと見る <ChevronRight className="h-4 w-4" />
+              {/* CTA */}
+              <div className="flex items-center justify-center gap-3">
+                <Link href="/register" className="rounded-lg bg-primary-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-700 transition">
+                  会員登録（無料）
+                </Link>
+                <Link href="/login" className="rounded-lg border border-gray-300 px-6 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 transition">
+                  ログイン
                 </Link>
               </div>
 
               {/* Service Features */}
               <div>
-                <h2 className="text-center text-lg font-bold text-gray-900">
-                  建設求人ポータルを活用する<span className="text-primary-600">メリット</span>と3つの特徴
-                </h2>
-                <p className="mt-2 text-center text-xs text-gray-500">
-                  建設業界に特化した求人サイトだからこそ、あなたにぴったりの仕事が見つかります。
-                </p>
-                <div className="mt-6 space-y-4">
+                <h2 className="text-lg font-bold text-gray-900">当サイトの3つの特徴</h2>
+                <div className="mt-4 space-y-3">
                   {[
-                    { num: "01", title: <>「建築・土木・設備・解体」特化の<span className="text-primary-600">求人サイト</span></>, desc: "建設業界の専門職に絞った求人を掲載しています。総合サイトでは見つけにくい現場の求人を効率的に探せます。ハローワーク求人も掲載中。" },
-                    { num: "02", title: <>おすすめの求人が受け取れるため<span className="text-primary-600">スキマ時間</span>に求人を見つけられる</>, desc: "会員登録で希望の職種・エリアを設定すると、条件に合った新着求人をお知らせします。忙しい方でも効率的に転職活動ができます。" },
-                    { num: "03", title: <>登録すれば<span className="text-primary-600">転職サポート</span>も受けられる</>, desc: "建設業界の経験があるスタッフが、求人選びや面接対策のご相談に応じます。お気軽にお問い合わせください。" },
+                    { num: "01", title: "建設業界に特化した求人のみ掲載", desc: "建築・土木・設備・解体の専門職に絞った求人を掲載。総合サイトでは見つけにくい現場の求人を効率的に探せます。" },
+                    { num: "02", title: "希望に合った求人をスキマ時間でチェック", desc: "会員登録で希望の職種・エリアを設定すると、条件に合った新着求人をお知らせします。" },
+                    { num: "03", title: "転職サポートも無料で利用可能", desc: "建設業界経験のあるスタッフが、求人選びや面接対策のご相談に応じます。" },
                   ].map((f) => (
-                    <div key={f.num} className="rounded-xl bg-warm-50 p-5 border shadow-sm">
-                      <div className="flex items-start gap-4">
-                        <span className="text-2xl font-bold text-primary-500">{f.num}</span>
-                        <div>
-                          <h3 className="text-sm font-bold text-gray-900">{f.title}</h3>
-                          <p className="mt-2 text-xs text-gray-500 leading-relaxed">{f.desc}</p>
-                        </div>
+                    <div key={f.num} className="flex items-start gap-4 rounded-lg border bg-white p-4">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-primary-600 text-xs font-bold text-white">{f.num}</span>
+                      <div>
+                        <h3 className="text-sm font-bold text-gray-900">{f.title}</h3>
+                        <p className="mt-1 text-xs text-gray-500 leading-relaxed">{f.desc}</p>
                       </div>
                     </div>
                   ))}
@@ -328,12 +326,12 @@ export default async function HomePage() {
                   <Bell className="h-4 w-4 text-primary-500" />
                   お知らせ
                 </h2>
-                <div className="mt-3 divide-y rounded-xl border bg-white">
+                <div className="mt-3 divide-y rounded-lg border bg-white">
                   {newsItems.map((item, i) => (
                     <div key={i} className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-center sm:gap-3 text-sm">
                       <div className="flex items-center gap-2">
                         <span className="shrink-0 text-xs text-gray-400 tabular-nums">{item.date}</span>
-                        <span className="shrink-0 rounded bg-primary-50 px-2 py-0.5 text-[10px] font-medium text-primary-600">{item.tag}</span>
+                        <span className="shrink-0 rounded border border-primary-200 bg-white px-2 py-0.5 text-[10px] font-medium text-primary-600">{item.tag}</span>
                       </div>
                       <span className="text-gray-700">{item.title}</span>
                     </div>
@@ -348,17 +346,15 @@ export default async function HomePage() {
               <div className="sticky top-20 space-y-6">
 
                 {/* 人気求人ランキング */}
-                <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
-                  <div className="bg-primary-600 px-4 py-2.5">
-                    <h3 className="flex items-center gap-1.5 text-sm font-bold text-white">
-                      <Sparkles className="h-4 w-4" />
-                      人気の求人ランキング
-                    </h3>
+                <div className="rounded-lg border bg-white overflow-hidden">
+                  <div className="flex items-center gap-1.5 border-b px-4 py-2.5">
+                    <Sparkles className="h-4 w-4 text-primary-600" />
+                    <h3 className="text-sm font-bold text-gray-900">人気の求人</h3>
                   </div>
                   <div className="divide-y">
                     {popularJobs.length > 0 ? popularJobs.map((job, i) => (
-                      <Link key={job.id} href={`/jobs/${job.id}`} className="flex items-start gap-3 px-4 py-3 hover:bg-primary-50 transition group">
-                        <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${i === 0 ? "bg-yellow-500" : i === 1 ? "bg-gray-400" : i === 2 ? "bg-amber-700" : "bg-gray-300"}`}>
+                      <Link key={job.id} href={`/jobs/${job.id}`} className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition group">
+                        <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded text-[10px] font-bold ${i < 3 ? "bg-primary-600 text-white" : "bg-gray-100 text-gray-500"}`}>
                           {i + 1}
                         </span>
                         <div className="flex-1 min-w-0">
@@ -373,16 +369,14 @@ export default async function HomePage() {
                 </div>
 
                 {/* おすすめ記事 */}
-                <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
-                  <div className="bg-stone-700 px-4 py-2.5">
-                    <h3 className="flex items-center gap-1.5 text-sm font-bold text-white">
-                      <Newspaper className="h-4 w-4" />
-                      おすすめ記事
-                    </h3>
+                <div className="rounded-lg border bg-white overflow-hidden">
+                  <div className="flex items-center gap-1.5 border-b px-4 py-2.5">
+                    <Newspaper className="h-4 w-4 text-gray-600" />
+                    <h3 className="text-sm font-bold text-gray-900">おすすめ記事</h3>
                   </div>
                   <div className="divide-y">
                     {recommendedArticles.map((a, i) => (
-                      <Link key={`rec-${a.slug}-${i}`} href={`/journal/${a.slug}`} className="block px-4 py-3 hover:bg-primary-50 transition group">
+                      <Link key={`rec-${a.slug}-${i}`} href={`/journal/${a.slug}`} className="block px-4 py-3 hover:bg-gray-50 transition group">
                         <p className="text-xs font-medium text-gray-900 line-clamp-2 group-hover:text-primary-600 transition leading-relaxed">{a.title}</p>
                         <span className="mt-1 inline-block text-[10px] text-primary-600">{a.category}</span>
                       </Link>
@@ -395,49 +389,48 @@ export default async function HomePage() {
                   </div>
                 </div>
 
-                {/* SNSバナー */}
-                <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
-                  <div className="bg-gray-800 px-4 py-2.5">
-                    <h3 className="text-sm font-bold text-white">公式SNS</h3>
+                {/* 公式SNS */}
+                <div className="rounded-lg border bg-white overflow-hidden">
+                  <div className="flex items-center gap-1.5 border-b px-4 py-2.5">
+                    <h3 className="text-sm font-bold text-gray-900">公式SNS</h3>
                   </div>
-                  <div className="p-4 space-y-3">
-                    <a href="#" className="flex items-center gap-3 rounded-lg bg-red-50 border border-red-100 px-4 py-3 hover:bg-red-100 transition group">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-600 text-white">
-                        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                  <div className="p-3 space-y-2">
+                    <a href="https://youtube.com/@let-kensetsu" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded border px-3 py-2.5 hover:bg-gray-50 transition">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-red-600 text-white">
+                        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                       </div>
                       <div>
                         <p className="text-xs font-bold text-gray-900">YouTube</p>
-                        <p className="text-[10px] text-gray-500">現場の仕事を動画で紹介</p>
+                        <p className="text-[10px] text-gray-400">現場の仕事紹介</p>
                       </div>
                     </a>
-                    <a href="#" className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-purple-50 to-pink-50 border border-pink-100 px-4 py-3 hover:from-purple-100 hover:to-pink-100 transition group">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-pink-500 text-white">
-                        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+                    <a href="https://instagram.com/let_kensetsu" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded border px-3 py-2.5 hover:bg-gray-50 transition">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-gradient-to-br from-purple-600 to-pink-500 text-white">
+                        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
                       </div>
                       <div>
                         <p className="text-xs font-bold text-gray-900">Instagram</p>
-                        <p className="text-[10px] text-gray-500">施工事例・現場の日常</p>
+                        <p className="text-[10px] text-gray-400">施工事例・日常</p>
                       </div>
                     </a>
-                    <a href="#" className="flex items-center gap-3 rounded-lg bg-sky-50 border border-sky-100 px-4 py-3 hover:bg-sky-100 transition group">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-black text-white">
-                        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    <a href="https://x.com/let_kensetsu" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded border px-3 py-2.5 hover:bg-gray-50 transition">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-black text-white">
+                        <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                       </div>
                       <div>
                         <p className="text-xs font-bold text-gray-900">X (Twitter)</p>
-                        <p className="text-[10px] text-gray-500">最新求人・業界ニュース</p>
+                        <p className="text-[10px] text-gray-400">最新情報</p>
                       </div>
                     </a>
                   </div>
                 </div>
 
-                {/* 会員登録CTA */}
-                <div className="rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 p-5 text-center shadow-sm">
-                  <p className="text-sm font-bold text-white">無料で会員登録</p>
-                  <p className="mt-1 text-[10px] text-primary-100">希望に合った求人をお届けします</p>
-                  <Link href="/register" className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-white px-5 py-2 text-sm font-bold text-primary-600 hover:bg-primary-50 transition shadow-sm">
-                    <User className="h-4 w-4" />
-                    会員登録（無料）
+                {/* 会員登録 */}
+                <div className="rounded-lg border bg-primary-600 p-4 text-center">
+                  <p className="text-sm font-bold text-white">会員登録（無料）</p>
+                  <p className="mt-1 text-[10px] text-primary-200">希望に合った求人をお届け</p>
+                  <Link href="/register" className="mt-3 inline-block rounded bg-white px-5 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 transition">
+                    登録する
                   </Link>
                 </div>
 
@@ -450,9 +443,9 @@ export default async function HomePage() {
 
       {/* Stats */}
       {totalJobs > 0 && (
-        <section className="border-t bg-gradient-to-r from-primary-500 to-primary-600 py-8">
+        <section className="border-t bg-primary-700 py-8">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-            <p className="text-sm text-primary-100">現在の掲載求人数</p>
+            <p className="text-sm text-white/70">現在の掲載求人数</p>
             <p className="mt-1 text-4xl font-bold text-white">{totalJobs.toLocaleString()}<span className="text-lg ml-1">件</span></p>
           </div>
         </section>

@@ -68,7 +68,7 @@ export default async function JobsPage({ searchParams }: Props) {
   return (
     <div>
       {/* Search header */}
-      <div className="bg-gradient-to-br from-primary-500 to-primary-700">
+      <div className="bg-primary-700">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
           <h1 className="text-xl font-bold text-white">求人検索</h1>
           <form action="/jobs" className="mt-4">
