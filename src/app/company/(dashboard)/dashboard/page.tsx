@@ -56,7 +56,7 @@ export default async function CompanyDashboard() {
         </h1>
         <Link
           href="/company/jobs/new"
-          className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          className="inline-flex items-center gap-2 rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
         >
           <Plus className="h-4 w-4" />
           新規求人作成
@@ -67,8 +67,8 @@ export default async function CompanyDashboard() {
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
         <div className="rounded-lg border bg-white p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-              <Briefcase className="h-5 w-5 text-blue-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+              <Briefcase className="h-5 w-5 text-primary-600" />
             </div>
             <div>
               <p className="text-sm text-gray-500">掲載中の求人</p>
@@ -117,7 +117,7 @@ export default async function CompanyDashboard() {
           <h2 className="text-lg font-semibold text-gray-900">最近の応募</h2>
           <Link
             href="/company/applications"
-            className="text-sm font-medium text-blue-600 hover:text-blue-700"
+            className="text-sm font-medium text-primary-600 hover:text-primary-700"
           >
             すべて見る →
           </Link>
@@ -172,7 +172,7 @@ export default async function CompanyDashboard() {
 
 function ApplicationStatusBadge({ status }: { status: string }) {
   const config: Record<string, { label: string; className: string }> = {
-    applied: { label: "応募済み", className: "bg-blue-100 text-blue-700" },
+    applied: { label: "応募済み", className: "bg-primary-100 text-primary-700" },
     reviewing: { label: "選考中", className: "bg-yellow-100 text-yellow-700" },
     interview: { label: "面接", className: "bg-purple-100 text-purple-700" },
     offered: { label: "内定", className: "bg-green-100 text-green-700" },

@@ -29,7 +29,7 @@ export function LogoSlider() {
               key={`${company}-${i}`}
               className="flex shrink-0 items-center gap-1.5 px-4"
             >
-              <Building2 className="h-4 w-4 text-gray-300" />
+              <Building2 className="h-4 w-4 text-primary-200" />
               <span className="whitespace-nowrap text-xs text-gray-400">
                 {company}
               </span>

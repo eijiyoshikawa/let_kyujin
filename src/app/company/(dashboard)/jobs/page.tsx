@@ -59,7 +59,7 @@ export default async function CompanyJobsPage({
         <h1 className="text-2xl font-bold text-gray-900">求人管理</h1>
         <Link
           href="/company/jobs/new"
-          className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          className="inline-flex items-center gap-2 rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
         >
           <Plus className="h-4 w-4" />
           新規作成
@@ -79,7 +79,7 @@ export default async function CompanyJobsPage({
             href={`/company/jobs?status=${opt.value}`}
             className={`rounded-full px-3 py-1 text-sm font-medium ${
               statusFilter === opt.value
-                ? "bg-blue-600 text-white"
+                ? "bg-primary-600 text-white"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
@@ -94,7 +94,7 @@ export default async function CompanyJobsPage({
           <p className="text-gray-500">求人がありません。</p>
           <Link
             href="/company/jobs/new"
-            className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700"
+            className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary-600 hover:text-primary-700"
           >
             <Plus className="h-4 w-4" />
             最初の求人を作成する
@@ -147,7 +147,7 @@ export default async function CompanyJobsPage({
                   <td className="px-4 py-3 text-right">
                     <Link
                       href={`/company/jobs/${job.id}/edit`}
-                      className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700"
+                      className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:text-primary-700"
                     >
                       <Pencil className="h-3.5 w-3.5" />
                       編集

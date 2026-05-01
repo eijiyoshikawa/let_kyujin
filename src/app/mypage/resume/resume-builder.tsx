@@ -99,7 +99,7 @@ export function ResumeBuilder({ initialData }: { initialData: ResumeData }) {
           onClick={() => setActiveTab("resume")}
           className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition ${
             activeTab === "resume"
-              ? "bg-blue-600 text-white"
+              ? "bg-primary-600 text-white"
               : "bg-gray-100 text-gray-600 hover:bg-gray-200"
           }`}
         >
@@ -110,7 +110,7 @@ export function ResumeBuilder({ initialData }: { initialData: ResumeData }) {
           onClick={() => setActiveTab("career")}
           className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition ${
             activeTab === "career"
-              ? "bg-blue-600 text-white"
+              ? "bg-primary-600 text-white"
               : "bg-gray-100 text-gray-600 hover:bg-gray-200"
           }`}
         >
@@ -243,7 +243,7 @@ export function ResumeBuilder({ initialData }: { initialData: ResumeData }) {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-primary-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-700 transition disabled:opacity-50"
           >
             <Save className="h-4 w-4" />
             {saving ? "保存中..." : "保存する"}
@@ -293,7 +293,7 @@ function Input({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
       />
     </div>
   )
@@ -322,7 +322,7 @@ function HistoryList({
           <button onClick={() => remove(i)} className="p-1.5 text-gray-400 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
         </div>
       ))}
-      <button onClick={add} className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700">
+      <button onClick={add} className="flex items-center gap-1 text-sm text-primary-600 hover:text-primary-700">
         <Plus className="h-4 w-4" /> 追加
       </button>
     </div>
@@ -359,7 +359,7 @@ function LicenseList({ entries, onChange }: { entries: LicenseEntry[]; onChange:
           <button onClick={() => remove(i)} className="p-1.5 text-gray-400 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
         </div>
       ))}
-      <button onClick={add} className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700">
+      <button onClick={add} className="flex items-center gap-1 text-sm text-primary-600 hover:text-primary-700">
         <Plus className="h-4 w-4" /> 追加
       </button>
     </div>
@@ -388,7 +388,7 @@ function CareerDetailList({ entries, onChange }: { entries: CareerEntry[]; onCha
           <textarea value={entry.description} onChange={(e) => update(i, "description", e.target.value)} placeholder="業務内容" rows={3} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm" />
         </div>
       ))}
-      <button onClick={add} className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700">
+      <button onClick={add} className="flex items-center gap-1 text-sm text-primary-600 hover:text-primary-700">
         <Plus className="h-4 w-4" /> 職歴を追加
       </button>
     </div>
@@ -412,9 +412,9 @@ function TagInput({ tags, onChange, placeholder, suggestions }: {
     <div>
       <div className="flex flex-wrap gap-2 mb-2">
         {tags.map((tag) => (
-          <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
+          <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-3 py-1 text-xs font-medium text-primary-700">
             {tag}
-            <button onClick={() => onChange(tags.filter((t) => t !== tag))} className="text-blue-400 hover:text-blue-600">&times;</button>
+            <button onClick={() => onChange(tags.filter((t) => t !== tag))} className="text-primary-400 hover:text-primary-600">&times;</button>
           </span>
         ))}
       </div>

@@ -21,11 +21,13 @@ export const metadata: Metadata = {
     title: "建設求人ポータル | 建設業界特化の求人サイト",
     description: "建築・土木・設備・解体に特化した求人サイト。ハローワーク求人も掲載。",
     url: siteUrl,
+    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "建設求人ポータル",
     description: "建築・土木・設備・解体に特化した求人サイト",
+    images: ["/opengraph-image"],
   },
   robots: {
     index: true,
@@ -43,7 +45,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" className="h-full antialiased">
-      <body className="min-h-full flex flex-col font-sans bg-gray-50">
+      <body className="min-h-full flex flex-col font-sans bg-warm-50">
         <GoogleAnalytics />
         <Header />
         <main className="flex-1">{children}</main>

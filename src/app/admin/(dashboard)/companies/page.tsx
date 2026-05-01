@@ -64,7 +64,7 @@ export default async function AdminCompaniesPage({
         />
         <button
           type="submit"
-          className="rounded-md bg-blue-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+          className="rounded-md bg-primary-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-primary-700"
         >
           検索
         </button>

@@ -77,7 +77,7 @@ export default async function CompanyApplicationsPage({
             href={`/company/applications?status=${opt.value}`}
             className={`rounded-full px-3 py-1 text-sm font-medium ${
               statusFilter === opt.value
-                ? "bg-blue-600 text-white"
+                ? "bg-primary-600 text-white"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
