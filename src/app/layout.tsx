@@ -4,28 +4,28 @@ import { Footer } from "@/components/layout/footer";
 import { GoogleAnalytics } from "@/components/analytics";
 import "./globals.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://let-kyujin.vercel.app";
+const siteUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "https://genbacareer.jp";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "建設求人ポータル | 建設業界特化の求人サイト",
-    template: "%s | 建設求人ポータル",
+    default: "現場キャリア | ノンデスク産業特化の求人サイト",
+    template: "%s | 現場キャリア",
   },
   description:
     "建築・土木・設備・解体に特化した求人サイト。ハローワーク求人も掲載。株式会社LET運営。",
-  metadataBase: new URL(siteUrl),
   openGraph: {
     type: "website",
     locale: "ja_JP",
-    siteName: "建設求人ポータル",
-    title: "建設求人ポータル | 建設業界特化の求人サイト",
+    siteName: "現場キャリア",
+    title: "現場キャリア | ノンデスク産業特化の求人サイト",
     description: "建築・土木・設備・解体に特化した求人サイト。ハローワーク求人も掲載。",
     url: siteUrl,
     images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "建設求人ポータル",
+    title: "現場キャリア",
     description: "建築・土木・設備・解体に特化した求人サイト",
     images: ["/opengraph-image"],
   },

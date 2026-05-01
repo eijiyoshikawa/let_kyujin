@@ -10,7 +10,7 @@ export function Footer() {
           <div>
             <Link href="/" className="flex items-center gap-2">
               <HardHat className="h-6 w-6 text-primary-400" />
-              <span className="text-lg font-bold text-white">建設求人ポータル</span>
+              <span className="text-lg font-bold text-white">現場キャリア</span>
             </Link>
             <p className="mt-2 text-xs text-gray-400 max-w-xs leading-relaxed">
               建築・土木・設備・解体に特化した建設業界専門の求人サイトです。
@@ -89,7 +89,7 @@ export function Footer() {
                 有料職業紹介事業許可番号 27-ユ-304693 | ハローワーク求人はハローワークインターネットサービスより転載
               </p>
               <p className="mt-1 text-xs text-gray-500">
-                &copy; {new Date().getFullYear()} 株式会社LET. All rights reserved.
+                &copy; {new Date().getFullYear()} 現場キャリア. All rights reserved.
               </p>
             </div>
           </div>

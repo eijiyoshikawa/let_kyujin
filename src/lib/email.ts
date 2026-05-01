@@ -31,8 +31,8 @@ export async function sendEmail({ to, subject, html }: SendEmailParams) {
     body: JSON.stringify({
       personalizations: [{ to: [{ email: to }] }],
       from: {
-        email: process.env.EMAIL_FROM ?? "noreply@example.com",
-        name: "求人ポータル",
+        email: process.env.EMAIL_FROM ?? "noreply@genbacareer.jp",
+        name: "現場キャリア",
       },
       subject,
       content: [{ type: "text/html", value: html }],
@@ -55,7 +55,7 @@ export async function sendPasswordResetEmail(email: string, token: string) {
 
   await sendEmail({
     to: email,
-    subject: "パスワードリセットのご案内 — 求人ポータル",
+    subject: "パスワードリセットのご案内 — 現場キャリア",
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
         <h2>パスワードリセット</h2>
@@ -87,7 +87,7 @@ export async function sendApplicationConfirmEmail(
         <h2>応募が完了しました</h2>
         <p><strong>${companyName}</strong> の <strong>${jobTitle}</strong> に応募が完了しました。</p>
         <p>企業からの返信をお待ちください。</p>
-        <p style="color: #6b7280; font-size: 14px;">求人ポータル</p>
+        <p style="color: #6b7280; font-size: 14px;">現場キャリア</p>
       </div>
     `,
   })
@@ -112,7 +112,7 @@ export async function sendScoutNotificationEmail(
             スカウトを確認する
           </a>
         </p>
-        <p style="color: #6b7280; font-size: 14px;">求人ポータル</p>
+        <p style="color: #6b7280; font-size: 14px;">現場キャリア</p>
       </div>
     `,
   })
