@@ -23,6 +23,8 @@ import {
 import { PREFECTURES } from "@/lib/constants"
 import { AnimateOnScroll } from "@/components/animate-on-scroll"
 import { LogoSlider } from "@/components/logo-slider"
+import { HwJobsLatest } from "@/components/hw-jobs/hw-jobs-latest"
+import { HwMetaSummary } from "@/components/hw-jobs/hw-meta-summary"
 
 const categories = [
   { key: "construction", label: "建築・躯体工事", icon: HardHat, sub: "鳶職・型枠・鉄筋・大工" },
@@ -121,6 +123,12 @@ export default async function HomePage() {
       </section>
 
       <LogoSlider />
+
+      {/* HW count + prefecture quick links */}
+      <HwMetaSummary />
+
+      {/* HW latest 6 jobs */}
+      <HwJobsLatest limit={6} />
 
       {/* Categories */}
       <section className="bg-white pt-10 pb-8">

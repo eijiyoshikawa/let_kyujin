@@ -1,3 +1,4 @@
+import Link from "next/link"
 import type { Metadata } from "next"
 import { listHwJobs } from "@/lib/jobs-api"
 import { safeFetch } from "@/lib/jobs-api/safe-fetch"
@@ -53,11 +54,19 @@ export default async function HwJobsPage({ searchParams }: PageProps) {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-      <header className="flex items-baseline gap-2">
-        <h1 className="text-2xl font-bold text-gray-900">ハローワーク求人</h1>
-        {result.ok && (
-          <p className="text-sm text-gray-500">全 {result.data.pagination.total.toLocaleString()} 件</p>
-        )}
+      <header className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-baseline gap-2">
+          <h1 className="text-2xl font-bold text-gray-900">ハローワーク求人</h1>
+          {result.ok && (
+            <p className="text-sm text-gray-500">全 {result.data.pagination.total.toLocaleString()} 件</p>
+          )}
+        </div>
+        <Link
+          href="/jobs"
+          className="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-white px-3 py-1 text-xs font-medium text-blue-700 hover:bg-blue-50"
+        >
+          自社掲載求人を見る
+        </Link>
       </header>
       <p className="mt-1 text-xs text-gray-500">
         ハローワークインターネットサービスより転載しています。原文を改変せず掲載しています。

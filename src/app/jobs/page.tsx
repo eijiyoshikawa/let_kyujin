@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db"
 import { JobCard } from "@/components/jobs/job-card"
-import { Search, SlidersHorizontal } from "lucide-react"
+import { Briefcase, Search, SlidersHorizontal } from "lucide-react"
 import Link from "next/link"
 import { Pagination } from "@/components/pagination"
 import { PREFECTURES } from "@/lib/constants"
@@ -18,9 +18,25 @@ const EMPLOYMENT_TYPES = [
   { value: "contract", label: "契約社員" },
 ] as const
 
+const SORT_OPTIONS = [
+  { value: "newest", label: "新着順" },
+  { value: "salary_high", label: "給与が高い順" },
+  { value: "salary_low", label: "給与が低い順" },
+  { value: "popular", label: "閲覧数が多い順" },
+] as const
+
+const DATE_WITHIN_OPTIONS = [
+  { value: "3", label: "3日以内" },
+  { value: "7", label: "1週間以内" },
+  { value: "14", label: "2週間以内" },
+  { value: "30", label: "1ヶ月以内" },
+] as const
+
+const MAN_YEN = 10_000
+
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const params = await searchParams
-  const parts = []
+  const parts: string[] = []
   if (params.prefecture) parts.push(params.prefecture)
   if (params.city) parts.push(params.city)
   if (params.category) parts.push(getCategoryLabel(params.category))
@@ -33,13 +49,21 @@ export default async function JobsPage({ searchParams }: Props) {
   const page = Math.max(1, Number(params.page ?? "1"))
   const limit = 20
 
+  const salaryMinYen = parseManYenToYen(params.salary_min)
+  const salaryMaxYen = parseManYenToYen(params.salary_max)
+  const dateWithinDays = parseDateWithin(params.date_within)
+  const dateWithinThreshold = computeDateWithinThreshold(dateWithinDays)
+  const sort = (params.sort && SORT_OPTIONS.find((s) => s.value === params.sort)?.value) ?? "newest"
+
   const where = {
     status: "active" as const,
     ...(params.prefecture && { prefecture: params.prefecture }),
     ...(params.city && { city: params.city }),
     ...(params.category && { category: params.category }),
     ...(params.employment_type && { employmentType: params.employment_type }),
-    ...(params.salary_min && { salaryMin: { gte: Number(params.salary_min) } }),
+    ...(salaryMinYen !== null && { salaryMin: { gte: salaryMinYen } }),
+    ...(salaryMaxYen !== null && { salaryMax: { lte: salaryMaxYen } }),
+    ...(dateWithinThreshold && { publishedAt: { gte: dateWithinThreshold } }),
     ...(params.q && {
       OR: [
         { title: { contains: params.q, mode: "insensitive" as const } },
@@ -48,10 +72,12 @@ export default async function JobsPage({ searchParams }: Props) {
     }),
   }
 
+  const orderBy = buildOrderBy(sort)
+
   const [jobs, total] = await Promise.all([
     prisma.job.findMany({
       where,
-      orderBy: { publishedAt: "desc" },
+      orderBy,
       skip: (page - 1) * limit,
       take: limit,
       include: {
@@ -62,15 +88,33 @@ export default async function JobsPage({ searchParams }: Props) {
   ])
 
   const totalPages = Math.ceil(total / limit)
-  const cities = params.prefecture ? (AREAS[params.prefecture] ?? []) : []
-  const hasFilters = !!(params.prefecture || params.city || params.category || params.employment_type || params.salary_min || params.q)
+  const cities = params.prefecture ? AREAS[params.prefecture] ?? [] : []
+  const hasFilters = !!(
+    params.prefecture ||
+    params.city ||
+    params.category ||
+    params.employment_type ||
+    params.salary_min ||
+    params.salary_max ||
+    params.date_within ||
+    params.q
+  )
 
   return (
     <div>
       {/* Blue search header */}
       <div className="bg-blue-700">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="text-xl font-bold text-white">求人検索</h1>
+          <div className="flex items-center justify-between">
+            <h1 className="text-xl font-bold text-white">求人検索</h1>
+            <Link
+              href="/hw-jobs"
+              className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-xs text-blue-50 hover:bg-white/20 transition"
+            >
+              <Briefcase className="h-3.5 w-3.5" />
+              ハローワーク求人を見る
+            </Link>
+          </div>
           <form action="/jobs" className="mt-4">
             <div className="flex gap-2">
               <div className="relative flex-1">
@@ -102,6 +146,9 @@ export default async function JobsPage({ searchParams }: Props) {
             <form action="/jobs">
               {/* Preserve keyword if set */}
               {params.q && <input type="hidden" name="q" value={params.q} />}
+              {params.sort && params.sort !== "newest" && (
+                <input type="hidden" name="sort" value={params.sort} />
+              )}
 
               <div className="rounded-lg border bg-white shadow-sm">
                 <div className="flex items-center gap-2 border-b px-4 py-3">
@@ -110,7 +157,6 @@ export default async function JobsPage({ searchParams }: Props) {
                 </div>
 
                 <div className="divide-y p-4 space-y-0">
-                  {/* Prefecture */}
                   <FilterSelect
                     id="prefecture"
                     label="都道府県"
@@ -119,7 +165,6 @@ export default async function JobsPage({ searchParams }: Props) {
                     options={PREFECTURES.map((p) => ({ value: p, label: p }))}
                   />
 
-                  {/* City */}
                   {params.prefecture && cities.length > 0 && (
                     <FilterSelect
                       id="city"
@@ -130,7 +175,6 @@ export default async function JobsPage({ searchParams }: Props) {
                     />
                   )}
 
-                  {/* Category */}
                   <FilterSelect
                     id="category"
                     label="職種カテゴリ"
@@ -139,7 +183,6 @@ export default async function JobsPage({ searchParams }: Props) {
                     options={CATEGORIES.map((c) => ({ value: c.value, label: c.label }))}
                   />
 
-                  {/* Employment Type */}
                   <FilterSelect
                     id="employment_type"
                     label="雇用形態"
@@ -148,20 +191,37 @@ export default async function JobsPage({ searchParams }: Props) {
                     options={EMPLOYMENT_TYPES.map((e) => ({ value: e.value, label: e.label }))}
                   />
 
-                  {/* Salary */}
+                  <FilterSelect
+                    id="date_within"
+                    label="掲載期間"
+                    name="date_within"
+                    defaultValue={params.date_within ?? ""}
+                    options={DATE_WITHIN_OPTIONS as readonly { value: string; label: string }[]}
+                  />
+
                   <div className="pt-3">
-                    <label htmlFor="salary_min" className="block text-xs font-medium text-gray-600">
-                      最低月給（万円）
-                    </label>
-                    <input
-                      type="number"
-                      id="salary_min"
-                      name="salary_min"
-                      defaultValue={params.salary_min ?? ""}
-                      placeholder="例: 25"
-                      min={0}
-                      className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    />
+                    <span className="block text-xs font-medium text-gray-600">月給（万円）</span>
+                    <div className="mt-1 flex items-center gap-2">
+                      <input
+                        type="number"
+                        id="salary_min"
+                        name="salary_min"
+                        defaultValue={params.salary_min ?? ""}
+                        placeholder="下限"
+                        min={0}
+                        className="w-full rounded-lg border border-gray-300 px-2.5 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                      <span className="text-xs text-gray-400">〜</span>
+                      <input
+                        type="number"
+                        id="salary_max"
+                        name="salary_max"
+                        defaultValue={params.salary_max ?? ""}
+                        placeholder="上限"
+                        min={0}
+                        className="w-full rounded-lg border border-gray-300 px-2.5 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -187,7 +247,7 @@ export default async function JobsPage({ searchParams }: Props) {
 
           {/* Main content */}
           <div className="flex-1 min-w-0">
-            {/* Active filters + result count */}
+            {/* Active filters + result count + sort */}
             <div className="flex flex-wrap items-center gap-2">
               {params.prefecture && (
                 <FilterBadge label={params.prefecture} paramName="prefecture" params={params} />
@@ -199,11 +259,30 @@ export default async function JobsPage({ searchParams }: Props) {
                 <FilterBadge label={getCategoryLabel(params.category)} paramName="category" params={params} />
               )}
               {params.employment_type && (
-                <FilterBadge label={employmentTypeLabel(params.employment_type)} paramName="employment_type" params={params} />
+                <FilterBadge
+                  label={employmentTypeLabel(params.employment_type)}
+                  paramName="employment_type"
+                  params={params}
+                />
+              )}
+              {params.date_within && (
+                <FilterBadge
+                  label={dateWithinLabel(params.date_within)}
+                  paramName="date_within"
+                  params={params}
+                />
+              )}
+              {(params.salary_min || params.salary_max) && (
+                <FilterBadge
+                  label={salaryRangeLabel(params.salary_min, params.salary_max)}
+                  paramName="salary_min,salary_max"
+                  params={params}
+                />
               )}
               <span className="ml-auto text-sm text-gray-500">
                 <span className="font-bold text-blue-600">{total.toLocaleString()}</span> 件
               </span>
+              <SortLink params={params} sort={sort} />
             </div>
 
             {/* Job list */}
@@ -218,6 +297,13 @@ export default async function JobsPage({ searchParams }: Props) {
                   >
                     条件を変更して再検索 →
                   </Link>
+                  <p className="mt-4 text-xs text-gray-400">
+                    ハローワーク求人もあわせて{" "}
+                    <Link href="/hw-jobs" className="text-blue-600 hover:underline">
+                      こちら
+                    </Link>{" "}
+                    から検索できます。
+                  </p>
                 </div>
               ) : (
                 jobs.map((job) => <JobCard key={job.id} job={job} />)
@@ -240,11 +326,52 @@ export default async function JobsPage({ searchParams }: Props) {
   )
 }
 
+// ---------------- helpers ----------------
+
+function buildOrderBy(sort: string) {
+  switch (sort) {
+    case "salary_high":
+      return [{ salaryMin: "desc" as const }, { publishedAt: "desc" as const }]
+    case "salary_low":
+      return [{ salaryMin: "asc" as const }, { publishedAt: "desc" as const }]
+    case "popular":
+      return [{ viewCount: "desc" as const }, { publishedAt: "desc" as const }]
+    case "newest":
+    default:
+      return { publishedAt: "desc" as const }
+  }
+}
+
+function parseManYenToYen(raw: string | undefined): number | null {
+  if (!raw) return null
+  const n = Number(raw)
+  if (!Number.isFinite(n) || n <= 0) return null
+  return Math.floor(n * MAN_YEN)
+}
+
+function computeDateWithinThreshold(days: number | null): Date | null {
+  if (days === null) return null
+  // eslint-disable-next-line react-hooks/purity
+  const now = Date.now()
+  return new Date(now - days * 86_400_000)
+}
+
+function parseDateWithin(raw: string | undefined): number | null {
+  if (!raw) return null
+  const allowed: string[] = DATE_WITHIN_OPTIONS.map((o) => o.value)
+  if (!allowed.includes(raw)) return null
+  const n = Number(raw)
+  return Number.isFinite(n) && n > 0 ? n : null
+}
+
 function FilterSelect({
   id, label, name, defaultValue, options,
 }: {
-  id: string; label: string; name: string; defaultValue: string
-  options: { value: string; label: string }[]
+  id: string
+  label: string
+  name: string
+  defaultValue: string
+  options: readonly { value: string; label: string }[]
 }) {
   return (
     <div className="pt-3 first:pt-0">
@@ -269,16 +396,23 @@ function FilterSelect({
 function FilterBadge({
   label, paramName, params,
 }: {
-  label: string; paramName: string; params: Record<string, string | undefined>
+  label: string
+  paramName: string
+  params: Record<string, string | undefined>
 }) {
+  const removeKeys = paramName.split(",")
   const newParams = new URLSearchParams()
   for (const [k, v] of Object.entries(params)) {
-    if (k !== paramName && v) newParams.set(k, v)
+    if (!v) continue
+    if (removeKeys.includes(k)) continue
+    newParams.set(k, v)
   }
-  if (paramName === "prefecture") newParams.delete("city")
+  if (removeKeys.includes("prefecture")) newParams.delete("city")
+  newParams.delete("page")
+  const href = newParams.toString() ? `/jobs?${newParams.toString()}` : "/jobs"
   return (
     <a
-      href={`/jobs?${newParams.toString()}`}
+      href={href}
       className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 hover:bg-blue-200 transition"
     >
       {label}
@@ -287,7 +421,53 @@ function FilterBadge({
   )
 }
 
+function SortLink({
+  params, sort,
+}: {
+  params: Record<string, string | undefined>
+  sort: string
+}) {
+  const buildHref = (next: string) => {
+    const sp = new URLSearchParams()
+    for (const [k, v] of Object.entries(params)) {
+      if (k === "sort" || k === "page") continue
+      if (v) sp.set(k, v)
+    }
+    if (next !== "newest") sp.set("sort", next)
+    return sp.toString() ? `/jobs?${sp.toString()}` : "/jobs"
+  }
+  return (
+    <div className="flex items-center gap-1 text-xs">
+      <span className="text-gray-400">並び順:</span>
+      {SORT_OPTIONS.map((opt) => (
+        <a
+          key={opt.value}
+          href={buildHref(opt.value)}
+          className={`rounded px-2 py-0.5 ${
+            opt.value === sort
+              ? "bg-blue-600 text-white"
+              : "text-gray-600 hover:bg-gray-100"
+          }`}
+        >
+          {opt.label}
+        </a>
+      ))}
+    </div>
+  )
+}
+
 function employmentTypeLabel(type: string): string {
   const labels: Record<string, string> = { full_time: "正社員", part_time: "パート", contract: "契約社員" }
   return labels[type] ?? type
+}
+
+function dateWithinLabel(value: string): string {
+  return DATE_WITHIN_OPTIONS.find((o) => o.value === value)?.label ?? `${value}日以内`
+}
+
+function salaryRangeLabel(min: string | undefined, max: string | undefined): string {
+  if (min && max) return `月給 ${min}〜${max}万円`
+  if (min) return `月給 ${min}万円〜`
+  if (max) return `月給 〜${max}万円`
+  return "月給"
 }
