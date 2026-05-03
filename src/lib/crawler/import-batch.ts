@@ -181,7 +181,7 @@ function inferCategory(title: string, description: string | null): string {
  *
  * const result = await fetchHelloworkJobs({ prefecture: "13" });
  * const stats = await importHelloworkJobs(result.jobs);
- * console.log(`新規: ${stats.created}, 更新: ${stats.updated}, 終了: ${stats.closed}`);
+ * console.info(`新規: ${stats.created}, 更新: ${stats.updated}, 終了: ${stats.closed}`);
  * ```
  */
 export async function importHelloworkJobs(
@@ -200,7 +200,7 @@ export async function importHelloworkJobs(
   // 今回バッチで処理された hellowork_id のセット
   const processedIds = new Set<string>()
 
-  console.log(
+  console.info(
     `[import-batch] インポート開始: ${jobs.length} 件の求人を処理します`
   )
 
@@ -288,7 +288,7 @@ export async function importHelloworkJobs(
       closed = result.count
 
       if (closed > 0) {
-        console.log(
+        console.info(
           `[import-batch] ${closed} 件のハローワーク求人を closed に変更しました`
         )
       }
@@ -318,17 +318,17 @@ export async function importHelloworkJobs(
     durationMs,
   }
 
-  console.log(`[import-batch] インポート完了:`)
-  console.log(`  新規追加: ${stats.created} 件`)
-  console.log(`  更新: ${stats.updated} 件`)
-  console.log(`  終了 (closed): ${stats.closed} 件`)
-  console.log(`  エラー: ${stats.errors} 件`)
-  console.log(`  処理時間: ${stats.durationMs}ms`)
+  console.info(`[import-batch] インポート完了:`)
+  console.info(`  新規追加: ${stats.created} 件`)
+  console.info(`  更新: ${stats.updated} 件`)
+  console.info(`  終了 (closed): ${stats.closed} 件`)
+  console.info(`  エラー: ${stats.errors} 件`)
+  console.info(`  処理時間: ${stats.durationMs}ms`)
 
   if (importErrors.length > 0) {
-    console.log(`[import-batch] エラー詳細:`)
+    console.info(`[import-batch] エラー詳細:`)
     for (const err of importErrors) {
-      console.log(`  - ${err.helloworkId}: ${err.message}`)
+      console.info(`  - ${err.helloworkId}: ${err.message}`)
     }
   }
 

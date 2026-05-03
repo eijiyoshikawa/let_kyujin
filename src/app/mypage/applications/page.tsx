@@ -17,7 +17,7 @@ type Props = {
 const statusConfig: Record<string, { label: string; className: string }> = {
   applied: {
     label: "応募済み",
-    className: "bg-blue-100 text-blue-700",
+    className: "bg-primary-100 text-primary-700",
   },
   reviewing: {
     label: "選考中",
@@ -96,7 +96,7 @@ export default async function ApplicationsPage({ searchParams }: Props) {
           <p className="text-gray-500">まだ応募がありません。</p>
           <Link
             href="/jobs"
-            className="mt-4 inline-block rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            className="mt-4 inline-block rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
           >
             求人を探す
           </Link>

@@ -85,8 +85,8 @@ export default function AdminCrawlerPage() {
 
       <div className="mt-6 rounded-lg border bg-white p-6 shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-            <Bot className="h-5 w-5 text-blue-600" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+            <Bot className="h-5 w-5 text-primary-600" />
           </div>
           <div>
             <h2 className="text-lg font-semibold text-gray-900">
@@ -153,7 +153,7 @@ export default function AdminCrawlerPage() {
                 type="checkbox"
                 checked={dryRun}
                 onChange={(e) => setDryRun(e.target.checked)}
-                className="h-4 w-4 rounded border-gray-300 text-blue-600"
+                className="h-4 w-4 rounded border-gray-300 text-primary-600"
               />
               <span className="text-sm text-gray-700">
                 ドライラン（DB変更なし）
@@ -166,7 +166,7 @@ export default function AdminCrawlerPage() {
           <button
             onClick={handleRun}
             disabled={loading}
-            className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-md bg-primary-600 px-6 py-2 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
           >
             {loading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -197,8 +197,8 @@ export default function AdminCrawlerPage() {
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-blue-600">更新</dt>
-                    <dd className="text-lg font-bold text-blue-800">
+                    <dt className="text-primary-600">更新</dt>
+                    <dd className="text-lg font-bold text-primary-800">
                       {result.stats.updated} 件
                     </dd>
                   </div>

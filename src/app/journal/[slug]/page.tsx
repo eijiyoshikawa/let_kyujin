@@ -55,11 +55,11 @@ export default async function ArticlePage({ params }: Props) {
       <div className="border-b">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-3">
           <nav className="flex items-center gap-1 text-xs text-gray-500">
-            <Link href="/" className="hover:text-blue-600">トップ</Link>
+            <Link href="/" className="hover:text-primary-600">トップ</Link>
             <ChevronRight className="h-3 w-3" />
-            <Link href="/journal" className="hover:text-blue-600">マガジン</Link>
+            <Link href="/journal" className="hover:text-primary-600">マガジン</Link>
             <ChevronRight className="h-3 w-3" />
-            <Link href={`/journal?category=${article.category}`} className="hover:text-blue-600">
+            <Link href={`/journal?category=${article.category}`} className="hover:text-primary-600">
               {categoryLabels[article.category] ?? article.category}
             </Link>
           </nav>
@@ -69,7 +69,7 @@ export default async function ArticlePage({ params }: Props) {
       <article className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex items-center gap-2">
-          <span className="rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+          <span className="rounded bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700">
             {categoryLabels[article.category] ?? article.category}
           </span>
           {article.publishedAt && (
@@ -115,13 +115,13 @@ export default async function ArticlePage({ params }: Props) {
         )}
 
         {/* Bottom CTA */}
-        <div className="mt-10 rounded-lg bg-blue-50 border border-blue-100 p-6 text-center">
+        <div className="mt-10 rounded-lg bg-primary-50 border border-primary-100 p-6 text-center">
           <p className="font-bold text-gray-900">建設業界の求人を探す</p>
           <p className="mt-1 text-sm text-gray-600">
             建設求人ポータルで、あなたに合った求人を見つけましょう。
           </p>
           <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-center">
-            <Link href="/jobs" className="rounded bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700">
+            <Link href="/jobs" className="rounded bg-primary-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-700">
               求人を検索する
             </Link>
             <Link href="/register" className="rounded border border-gray-300 px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
@@ -137,7 +137,7 @@ export default async function ArticlePage({ params }: Props) {
             <ul className="mt-3 space-y-2">
               {related.map((r) => (
                 <li key={r.slug}>
-                  <Link href={`/journal/${r.slug}`} className="flex items-start gap-2 text-sm text-gray-700 hover:text-blue-600">
+                  <Link href={`/journal/${r.slug}`} className="flex items-start gap-2 text-sm text-gray-700 hover:text-primary-600">
                     <ChevronRight className="h-4 w-4 shrink-0 mt-0.5 text-gray-300" />
                     {r.title}
                   </Link>
@@ -148,7 +148,7 @@ export default async function ArticlePage({ params }: Props) {
         )}
 
         <div className="mt-8 text-center">
-          <Link href="/journal" className="text-sm text-blue-600 hover:underline">
+          <Link href="/journal" className="text-sm text-primary-600 hover:underline">
             ← マガジン一覧に戻る
           </Link>
         </div>

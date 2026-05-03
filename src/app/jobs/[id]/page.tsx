@@ -88,7 +88,7 @@ export default async function JobDetailPage({ params }: Props) {
   })
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-warm-50 min-h-screen">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -98,11 +98,11 @@ export default async function JobDetailPage({ params }: Props) {
       <div className="border-b bg-white">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-3">
           <nav className="flex items-center gap-1 text-xs text-gray-500">
-            <Link href="/" className="hover:text-blue-600">トップ</Link>
+            <Link href="/" className="hover:text-primary-600">トップ</Link>
             <ChevronRight className="h-3 w-3" />
-            <Link href="/jobs" className="hover:text-blue-600">求人検索</Link>
+            <Link href="/jobs" className="hover:text-primary-600">求人検索</Link>
             <ChevronRight className="h-3 w-3" />
-            <Link href={`/jobs?category=${job.category}`} className="hover:text-blue-600">
+            <Link href={`/jobs?category=${job.category}`} className="hover:text-primary-600">
               {getCategoryLabel(job.category)}
             </Link>
             <ChevronRight className="h-3 w-3" />
@@ -116,9 +116,9 @@ export default async function JobDetailPage({ params }: Props) {
           {/* Main content */}
           <div className="flex-1 min-w-0 space-y-6">
             {/* Header card */}
-            <div className="rounded-xl border bg-white p-6 shadow-sm">
+            <div className="rounded-lg border bg-white p-6 shadow-sm">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="inline-flex items-center gap-1 rounded-lg bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-700">
+                <span className="inline-flex items-center gap-1 rounded-lg bg-primary-100 px-2.5 py-1 text-xs font-medium text-primary-700">
                   <HardHat className="h-3 w-3" />
                   {getCategoryLabel(job.category)}
                 </span>
@@ -148,7 +148,7 @@ export default async function JobDetailPage({ params }: Props) {
               {/* Key info grid */}
               <div className="mt-5 grid gap-3 sm:grid-cols-3">
                 <div className="flex items-center gap-3 rounded-lg bg-gray-50 p-3">
-                  <MapPin className="h-5 w-5 text-blue-500 shrink-0" />
+                  <MapPin className="h-5 w-5 text-primary-500 shrink-0" />
                   <div>
                     <p className="text-[10px] font-medium text-gray-400 uppercase">勤務地</p>
                     <p className="text-sm font-medium text-gray-900">
@@ -157,11 +157,11 @@ export default async function JobDetailPage({ params }: Props) {
                   </div>
                 </div>
                 {job.salaryMin && (
-                  <div className="flex items-center gap-3 rounded-lg bg-blue-50 p-3">
-                    <Banknote className="h-5 w-5 text-blue-600 shrink-0" />
+                  <div className="flex items-center gap-3 rounded-lg bg-primary-50 p-3">
+                    <Banknote className="h-5 w-5 text-primary-600 shrink-0" />
                     <div>
                       <p className="text-[10px] font-medium text-gray-400 uppercase">給与</p>
-                      <p className="text-sm font-bold text-blue-700">
+                      <p className="text-sm font-bold text-primary-700">
                         {formatSalary(job.salaryMin, job.salaryMax, job.salaryType)}
                       </p>
                     </div>
@@ -169,7 +169,7 @@ export default async function JobDetailPage({ params }: Props) {
                 )}
                 {job.employmentType && (
                   <div className="flex items-center gap-3 rounded-lg bg-gray-50 p-3">
-                    <Clock className="h-5 w-5 text-blue-500 shrink-0" />
+                    <Clock className="h-5 w-5 text-primary-500 shrink-0" />
                     <div>
                       <p className="text-[10px] font-medium text-gray-400 uppercase">雇用形態</p>
                       <p className="text-sm font-medium text-gray-900">
@@ -183,9 +183,9 @@ export default async function JobDetailPage({ params }: Props) {
 
             {/* Description */}
             {job.description && (
-              <div className="rounded-xl border bg-white p-6 shadow-sm">
+              <div className="rounded-lg border bg-white p-6 shadow-sm">
                 <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900 border-b pb-3">
-                  <Briefcase className="h-5 w-5 text-blue-600" />
+                  <Briefcase className="h-5 w-5 text-primary-500" />
                   仕事内容
                 </h2>
                 <p className="mt-4 whitespace-pre-wrap text-sm text-gray-700 leading-relaxed">
@@ -196,9 +196,9 @@ export default async function JobDetailPage({ params }: Props) {
 
             {/* Requirements */}
             {job.requirements && (
-              <div className="rounded-xl border bg-white p-6 shadow-sm">
+              <div className="rounded-lg border bg-white p-6 shadow-sm">
                 <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900 border-b pb-3">
-                  <CheckCircle className="h-5 w-5 text-blue-600" />
+                  <CheckCircle className="h-5 w-5 text-primary-500" />
                   応募条件
                 </h2>
                 <p className="mt-4 whitespace-pre-wrap text-sm text-gray-700 leading-relaxed">
@@ -209,7 +209,7 @@ export default async function JobDetailPage({ params }: Props) {
 
             {/* Benefits */}
             {job.benefits.length > 0 && (
-              <div className="rounded-xl border bg-white p-6 shadow-sm">
+              <div className="rounded-lg border bg-white p-6 shadow-sm">
                 <h2 className="text-lg font-bold text-gray-900 border-b pb-3">
                   福利厚生
                 </h2>
@@ -240,9 +240,9 @@ export default async function JobDetailPage({ params }: Props) {
 
             {/* Company Info */}
             {job.company && (
-              <div className="rounded-xl border bg-white p-6 shadow-sm">
+              <div className="rounded-lg border bg-white p-6 shadow-sm">
                 <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900 border-b pb-3">
-                  <Building2 className="h-5 w-5 text-blue-600" />
+                  <Building2 className="h-5 w-5 text-primary-500" />
                   企業情報
                 </h2>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -280,13 +280,13 @@ export default async function JobDetailPage({ params }: Props) {
           <aside className="w-full shrink-0 lg:w-72">
             <div className="sticky top-20 space-y-4">
               {/* Apply CTA card */}
-              <div className="rounded-xl border bg-white p-5 shadow-sm">
+              <div className="rounded-lg border bg-white p-5 shadow-sm">
                 <p className="text-center text-sm font-medium text-gray-600">
                   この求人に興味がありますか？
                 </p>
                 <Link
                   href={`/jobs/${job.id}/apply`}
-                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-3 text-base font-bold text-white hover:bg-blue-700 transition shadow-sm"
+                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-green-500 py-3 text-base font-bold text-white hover:bg-green-600 transition shadow-sm"
                 >
                   応募する
                 </Link>
@@ -296,7 +296,7 @@ export default async function JobDetailPage({ params }: Props) {
               </div>
 
               {/* Quick info */}
-              <div className="rounded-xl border bg-white p-4 shadow-sm text-sm">
+              <div className="rounded-lg border bg-white p-4 shadow-sm text-sm">
                 <h3 className="font-bold text-gray-900 border-b pb-2 mb-3">求人概要</h3>
                 <dl className="space-y-2.5">
                   <div className="flex justify-between">
@@ -316,7 +316,7 @@ export default async function JobDetailPage({ params }: Props) {
                   {job.salaryMin && (
                     <div className="flex justify-between">
                       <dt className="text-gray-500">給与</dt>
-                      <dd className="font-medium text-blue-600">{formatSalary(job.salaryMin, job.salaryMax, job.salaryType)}</dd>
+                      <dd className="font-medium text-primary-600">{formatSalary(job.salaryMin, job.salaryMax, job.salaryType)}</dd>
                     </div>
                   )}
                   {job.publishedAt && (
@@ -353,7 +353,7 @@ function DlItem({ label, value, icon, isLink }: { label: string; value: string; 
       </dt>
       <dd className="mt-0.5 text-sm text-gray-900">
         {isLink ? (
-          <a href={value} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline truncate block">
+          <a href={value} target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline truncate block">
             {value}
           </a>
         ) : (

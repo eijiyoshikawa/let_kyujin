@@ -57,7 +57,7 @@ function ResetPasswordForm() {
         <p className="text-red-600">無効なリセットリンクです。</p>
         <Link
           href="/forgot-password"
-          className="mt-4 inline-block text-sm font-medium text-blue-600"
+          className="mt-4 inline-block text-sm font-medium text-primary-600"
         >
           パスワードリセットを再リクエスト
         </Link>
@@ -73,7 +73,7 @@ function ResetPasswordForm() {
         </p>
         <Link
           href="/login"
-          className="mt-4 inline-block rounded-md bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          className="mt-4 inline-block rounded-md bg-primary-600 px-6 py-2 text-sm font-medium text-white hover:bg-primary-700"
         >
           ログインする
         </Link>
@@ -120,7 +120,7 @@ function ResetPasswordForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+        className="w-full rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
       >
         {loading ? "リセット中..." : "パスワードをリセット"}
       </button>

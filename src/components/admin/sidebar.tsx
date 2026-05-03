@@ -8,11 +8,13 @@ import {
   CreditCard,
   Bot,
   Shield,
+  FileText,
 } from "lucide-react"
 
 const navItems = [
   { href: "/admin", label: "ダッシュボード", icon: LayoutDashboard, exact: true },
   { href: "/admin/companies", label: "企業管理", icon: Building2 },
+  { href: "/admin/articles", label: "記事管理", icon: FileText },
   { href: "/admin/billing", label: "課金管理", icon: CreditCard },
   { href: "/admin/crawler", label: "クローラー", icon: Bot },
 ]

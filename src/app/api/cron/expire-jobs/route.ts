@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     data: { status: "closed" },
   })
 
-  console.log(`[cron/expire-jobs] Closed ${result.count} expired jobs`)
+  console.info(`[cron/expire-jobs] Closed ${result.count} expired jobs`)
 
   return Response.json({
     closed: result.count,

@@ -145,7 +145,7 @@ export function JobForm({
             maxLength={200}
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
-            className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"
             placeholder="例: 大型トラックドライバー（長距離）"
           />
         </div>
@@ -357,7 +357,7 @@ export function JobForm({
           name="status"
           disabled={loading}
           onClick={() => setForm({ ...form, status: "active" })}
-          className="rounded-md bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+          className="rounded-md bg-primary-600 px-6 py-2 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
         >
           {loading ? "保存中..." : isEditing ? "更新して公開" : "公開する"}
         </button>

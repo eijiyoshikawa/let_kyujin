@@ -64,13 +64,13 @@ export default async function JournalPage({ searchParams }: Props) {
   return (
     <div>
       {/* Header */}
-      <div className="bg-blue-700 text-white">
+      <div className="bg-primary-700 text-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5">
           <h1 className="flex items-center gap-2 text-xl font-bold">
             <Newspaper className="h-6 w-6" />
             建設求人マガジン
           </h1>
-          <p className="mt-1 text-sm text-blue-200">建設業界で働く方に役立つ情報を発信</p>
+          <p className="mt-1 text-sm text-primary-200">建設業界で働く方に役立つ情報を発信</p>
         </div>
       </div>
 
@@ -81,7 +81,7 @@ export default async function JournalPage({ searchParams }: Props) {
             <Link
               href="/journal"
               className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition ${
-                !categoryFilter ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-blue-50"
+                !categoryFilter ? "bg-primary-600 text-white" : "text-gray-600 hover:bg-primary-50"
               }`}
             >
               すべて
@@ -91,7 +91,7 @@ export default async function JournalPage({ searchParams }: Props) {
                 key={key}
                 href={`/journal?category=${key}`}
                 className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition ${
-                  categoryFilter === key ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-blue-50"
+                  categoryFilter === key ? "bg-primary-600 text-white" : "text-gray-600 hover:bg-primary-50"
                 }`}
               >
                 {label}
@@ -111,7 +111,7 @@ export default async function JournalPage({ searchParams }: Props) {
                   <div className="aspect-video relative overflow-hidden">
                     <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-[1.02] transition duration-300" />
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-3 pt-8">
-                      <span className="rounded bg-blue-600 px-2 py-0.5 text-xs font-medium text-white">
+                      <span className="rounded bg-primary-600 px-2 py-0.5 text-xs font-medium text-white">
                         {CATEGORY_LABELS[a.category] ?? a.category}
                       </span>
                       <p className="mt-1 text-sm font-bold text-white line-clamp-2">{a.title}</p>
@@ -120,8 +120,8 @@ export default async function JournalPage({ searchParams }: Props) {
                 )}
                 {!a.imageUrl && (
                   <div className="p-4">
-                    <span className="text-[10px] font-medium text-blue-600">{CATEGORY_LABELS[a.category] ?? a.category}</span>
-                    <p className="mt-1 text-sm font-medium text-gray-900 group-hover:text-blue-600">{a.title}</p>
+                    <span className="text-[10px] font-medium text-primary-600">{CATEGORY_LABELS[a.category] ?? a.category}</span>
+                    <p className="mt-1 text-sm font-medium text-gray-900 group-hover:text-primary-600">{a.title}</p>
                   </div>
                 )}
               </Link>
@@ -135,7 +135,7 @@ export default async function JournalPage({ searchParams }: Props) {
             <p className="text-sm text-gray-500 mb-4">
               {categoryFilter && <span className="font-medium text-gray-900">{CATEGORY_LABELS[categoryFilter] ?? categoryFilter}</span>}
               {categoryFilter && " の記事 "}
-              <span className="font-medium text-blue-600">{total}</span> 件
+              <span className="font-medium text-primary-600">{total}</span> 件
             </p>
 
             {articles.length === 0 ? (
@@ -145,7 +145,7 @@ export default async function JournalPage({ searchParams }: Props) {
             ) : (
               <div className="space-y-3">
                 {articles.map((a) => (
-                  <Link key={a.slug} href={`/journal/${a.slug}`} className="group flex gap-4 rounded-lg border bg-white p-3 hover:border-blue-200 transition">
+                  <Link key={a.slug} href={`/journal/${a.slug}`} className="group flex gap-4 rounded-lg border bg-white p-3 hover:border-primary-200 transition">
                     {a.imageUrl && (
                       <div className="h-20 w-32 shrink-0 rounded overflow-hidden sm:h-24 sm:w-40">
                         <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover" />
@@ -153,14 +153,14 @@ export default async function JournalPage({ searchParams }: Props) {
                     )}
                     <div className="flex-1 min-w-0 py-0.5">
                       <div className="flex items-center gap-2">
-                        <span className="rounded bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-600">
+                        <span className="rounded bg-primary-50 px-2 py-0.5 text-[10px] font-medium text-primary-600">
                           {CATEGORY_LABELS[a.category] ?? a.category}
                         </span>
                         {a.publishedAt && (
                           <time className="text-xs text-gray-400">{a.publishedAt.toLocaleDateString("ja-JP")}</time>
                         )}
                       </div>
-                      <h3 className="mt-1 text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-blue-600 transition">
+                      <h3 className="mt-1 text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-primary-600 transition">
                         {a.title}
                       </h3>
                       {a.excerpt && (
@@ -184,10 +184,10 @@ export default async function JournalPage({ searchParams }: Props) {
 
           {/* Sidebar */}
           <aside className="w-full shrink-0 lg:w-64 space-y-6">
-            <div className="rounded-lg bg-blue-600 p-5 text-center text-white">
+            <div className="rounded-lg bg-primary-600 p-5 text-center text-white">
               <p className="font-bold">求人を探す</p>
-              <p className="mt-1 text-xs text-blue-200">建設業界の求人を検索</p>
-              <Link href="/jobs" className="mt-3 inline-flex items-center gap-1 rounded bg-white px-5 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50">
+              <p className="mt-1 text-xs text-primary-200">建設業界の求人を検索</p>
+              <Link href="/jobs" className="mt-3 inline-flex items-center gap-1 rounded bg-white px-5 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50">
                 <Search className="h-3.5 w-3.5" />
                 求人検索
               </Link>
@@ -198,7 +198,7 @@ export default async function JournalPage({ searchParams }: Props) {
               <ul className="mt-2 divide-y">
                 {categories.map((c) => (
                   <li key={c.category}>
-                    <Link href={`/journal?category=${c.category}`} className="flex items-center justify-between py-2 text-sm text-gray-600 hover:text-blue-600 transition">
+                    <Link href={`/journal?category=${c.category}`} className="flex items-center justify-between py-2 text-sm text-gray-600 hover:text-primary-600 transition">
                       <span>{CATEGORY_LABELS[c.category] ?? c.category}</span>
                       <span className="flex items-center gap-1 text-xs text-gray-400">
                         ({c._count})
