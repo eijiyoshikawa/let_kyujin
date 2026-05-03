@@ -39,6 +39,7 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-white">求職者の方へ</h3>
             <ul className="mt-3 space-y-2">
               <li><Link href="/jobs" className="text-xs text-gray-400 hover:text-white transition">求人検索</Link></li>
+              <li><Link href="/hw-jobs" className="text-xs text-gray-400 hover:text-white transition">ハローワーク求人</Link></li>
               <li><Link href="/register" className="text-xs text-gray-400 hover:text-white transition">会員登録</Link></li>
               <li><Link href="/login" className="text-xs text-gray-400 hover:text-white transition">ログイン</Link></li>
             </ul>

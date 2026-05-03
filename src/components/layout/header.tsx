@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { HardHat, Search, User, Menu, X, Newspaper, Building2, Info } from "lucide-react"
+import { HardHat, Search, User, Menu, X, Newspaper, Building2, Info, Briefcase } from "lucide-react"
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -42,6 +42,13 @@ export function Header() {
             >
               <Search className="h-4 w-4" />
               求人検索
+            </Link>
+            <Link
+              href="/hw-jobs"
+              className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+            >
+              <Briefcase className="h-4 w-4" />
+              ハローワーク求人
             </Link>
             <Link
               href="/journal"
@@ -86,6 +93,14 @@ export function Header() {
             >
               <Search className="h-4 w-4 text-blue-600" />
               求人検索
+            </Link>
+            <Link
+              href="/hw-jobs"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
+            >
+              <Briefcase className="h-4 w-4 text-blue-600" />
+              ハローワーク求人
             </Link>
             <Link
               href="/journal"
