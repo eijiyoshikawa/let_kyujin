@@ -9,23 +9,23 @@ const siteUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "https://genbacareer.jp";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "現場キャリア | ノンデスク産業特化の求人サイト",
-    template: "%s | 現場キャリア",
+    default: "ゲンバキャリア | ノンデスク産業特化の求人サイト",
+    template: "%s | ゲンバキャリア",
   },
   description:
     "建築・土木・設備・解体に特化した求人サイト。ハローワーク求人も掲載。株式会社LET運営。",
   openGraph: {
     type: "website",
     locale: "ja_JP",
-    siteName: "現場キャリア",
-    title: "現場キャリア | ノンデスク産業特化の求人サイト",
+    siteName: "ゲンバキャリア",
+    title: "ゲンバキャリア | ノンデスク産業特化の求人サイト",
     description: "建築・土木・設備・解体に特化した求人サイト。ハローワーク求人も掲載。",
     url: siteUrl,
     images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "現場キャリア",
+    title: "ゲンバキャリア",
     description: "建築・土木・設備・解体に特化した求人サイト",
     images: ["/opengraph-image"],
   },

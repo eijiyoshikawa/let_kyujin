@@ -1,5 +1,9 @@
 # 求人ポータル — ノンデスク産業特化型求人サイト
 
+## ブランド
+- 名称: **ゲンバキャリア**（カタカナ表記。ロゴ・タイトル・本文すべてこの表記で統一）
+- ドメイン: `genbacareer.jp`
+
 ## 技術スタック
 - Next.js 15 (App Router) + TypeScript (strict mode)
 - Tailwind CSS v4
