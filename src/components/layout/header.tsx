@@ -55,13 +55,13 @@ export function Header() {
             </Link>
             <Link
               href="/register"
-              className="rounded bg-primary-600 px-5 py-2 text-sm font-medium text-white hover:bg-primary-700 transition"
+              className="rounded-full bg-primary-500 px-5 py-2 text-sm font-bold text-white shadow-sm hover:bg-primary-600 transition"
             >
               会員登録
             </Link>
             <Link
               href="/login"
-              className="flex items-center gap-1.5 rounded border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
+              className="flex items-center gap-1.5 rounded-full border border-ink-900 bg-white px-4 py-2 text-sm font-bold text-ink-900 hover:bg-ink-900 hover:text-white transition"
             >
               <User className="h-4 w-4" />
               ログイン
@@ -96,7 +96,7 @@ export function Header() {
               onClick={() => setMenuOpen(false)}
               className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
             >
-              <Briefcase className="h-4 w-4 text-blue-600" />
+              <Briefcase className="h-4 w-4 text-primary-500" />
               ハローワーク求人
             </Link>
             <Link
@@ -124,14 +124,14 @@ export function Header() {
               <Link
                 href="/register"
                 onClick={() => setMenuOpen(false)}
-                className="flex-1 rounded bg-primary-600 py-2.5 text-center text-sm font-medium text-white hover:bg-primary-700"
+                className="flex-1 rounded-full bg-primary-500 py-2.5 text-center text-sm font-bold text-white hover:bg-primary-600"
               >
                 会員登録
               </Link>
               <Link
                 href="/login"
                 onClick={() => setMenuOpen(false)}
-                className="flex-1 flex items-center justify-center gap-1.5 rounded border border-gray-300 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="flex-1 flex items-center justify-center gap-1.5 rounded-full border border-ink-900 py-2.5 text-sm font-bold text-ink-900 hover:bg-ink-900 hover:text-white"
               >
                 <User className="h-4 w-4" />
                 ログイン
