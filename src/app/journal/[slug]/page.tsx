@@ -115,7 +115,7 @@ export default async function ArticlePage({ params }: Props) {
         )}
 
         {/* Bottom CTA */}
-        <div className="mt-10 rounded-lg bg-primary-50 border border-primary-100 p-6 text-center">
+        <div className="mt-10  bg-primary-50 border border-primary-100 p-6 text-center">
           <p className="font-bold text-gray-900">建設業界の求人を探す</p>
           <p className="mt-1 text-sm text-gray-600">
             建設求人ポータルで、あなたに合った求人を見つけましょう。

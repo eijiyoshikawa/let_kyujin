@@ -38,7 +38,7 @@ export default async function MyPage() {
       <h1 className="text-2xl font-bold text-gray-900">マイページ</h1>
 
       {/* User Info */}
-      <div className="mt-6 rounded-lg border bg-white p-6 shadow-sm">
+      <div className="mt-6  border bg-white p-6 shadow-sm">
         <div className="flex items-center gap-4">
           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-100">
             <User className="h-7 w-7 text-primary-600" />
@@ -71,9 +71,9 @@ export default async function MyPage() {
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         <Link
           href="/mypage/applications"
-          className="flex items-center gap-4 rounded-lg border bg-white p-5 shadow-sm transition hover:shadow-md"
+          className="flex items-center gap-4  border bg-white p-5 shadow-sm transition hover:shadow-md"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+          <div className="flex h-10 w-10 items-center justify-center  bg-primary-100">
             <FileText className="h-5 w-5 text-primary-600" />
           </div>
           <div>
@@ -86,9 +86,9 @@ export default async function MyPage() {
 
         <Link
           href="/mypage/scouts"
-          className="flex items-center gap-4 rounded-lg border bg-white p-5 shadow-sm transition hover:shadow-md"
+          className="flex items-center gap-4  border bg-white p-5 shadow-sm transition hover:shadow-md"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
+          <div className="flex h-10 w-10 items-center justify-center  bg-purple-100">
             <Mail className="h-5 w-5 text-purple-600" />
           </div>
           <div>
@@ -101,9 +101,9 @@ export default async function MyPage() {
 
         <Link
           href="/mypage/profile"
-          className="flex items-center gap-4 rounded-lg border bg-white p-5 shadow-sm transition hover:shadow-md"
+          className="flex items-center gap-4  border bg-white p-5 shadow-sm transition hover:shadow-md"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
+          <div className="flex h-10 w-10 items-center justify-center  bg-green-100">
             <Pencil className="h-5 w-5 text-green-600" />
           </div>
           <div>
@@ -114,9 +114,9 @@ export default async function MyPage() {
 
         <Link
           href="/mypage/resume"
-          className="flex items-center gap-4 rounded-lg border bg-white p-5 shadow-sm transition hover:shadow-md"
+          className="flex items-center gap-4  border bg-white p-5 shadow-sm transition hover:shadow-md"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100">
+          <div className="flex h-10 w-10 items-center justify-center  bg-amber-100">
             <FileText className="h-5 w-5 text-amber-600" />
           </div>
           <div>
@@ -127,9 +127,9 @@ export default async function MyPage() {
 
         <Link
           href="/jobs"
-          className="flex items-center gap-4 rounded-lg border bg-white p-5 shadow-sm transition hover:shadow-md"
+          className="flex items-center gap-4  border bg-white p-5 shadow-sm transition hover:shadow-md"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+          <div className="flex h-10 w-10 items-center justify-center  bg-primary-100">
             <svg
               className="h-5 w-5 text-primary-600"
               fill="none"

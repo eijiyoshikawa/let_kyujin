@@ -27,6 +27,7 @@ import {
 import { PREFECTURES } from "@/lib/constants"
 import { AnimateOnScroll } from "@/components/animate-on-scroll"
 import { LogoSlider } from "@/components/logo-slider"
+import { CATEGORY_LABELS } from "@/lib/article-categories"
 
 const categories = [
   { key: "construction", label: "建築・躯体工事", icon: HardHat, sub: "鳶職・型枠・鉄筋・大工", image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=300&fit=crop" },
@@ -80,32 +81,32 @@ const themeCards = [
   { label: "寮・社宅完備の会社", image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=300&fit=crop" },
   { label: "移住支援を行っている会社", image: "https://images.unsplash.com/photo-1530538987395-032d1800fdd4?w=400&h=300&fit=crop" },
   { label: "土日休みの会社", image: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=400&h=300&fit=crop" },
-  { label: "週休2日（平日＋週末など）の会社", image: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=400&h=300&fit=crop" },
+  { label: "週休2日（平日＋週末など）の会社", image: "https://images.unsplash.com/photo-1488998427799-e3362cec87c3?w=400&h=300&fit=crop" },
   { label: "年間休日120日以上の会社", image: "https://images.unsplash.com/photo-1493612276216-ee3925520721?w=400&h=300&fit=crop" },
   { label: "大手企業の現場を持つ安定している会社", image: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&h=300&fit=crop" },
   { label: "未経験でも安心！研修制度が整った会社", image: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=400&h=300&fit=crop" },
   { label: "ガッツリ稼げる会社", image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop" },
-  { label: "インセンティブ（報奨金）がある会社", image: "https://images.unsplash.com/photo-1554224154-26032ffc0d07?w=400&h=300&fit=crop" },
+  { label: "インセンティブ（報奨金）がある会社", image: "https://images.unsplash.com/photo-1579621970795-87facc2f976d?w=400&h=300&fit=crop" },
   { label: "福利厚生が充実している会社", image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=300&fit=crop" },
   { label: "服装・髪型が自由な会社", image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=400&h=300&fit=crop" },
   { label: "オンライン面接可能な会社", image: "https://images.unsplash.com/photo-1587560699334-cc4ff634909a?w=400&h=300&fit=crop" },
   { label: "会社見学ができる会社", image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400&h=300&fit=crop" },
   { label: "面接1回のみの会社", image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=300&fit=crop" },
-  { label: "履歴書不要！の会社", image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=300&fit=crop" },
+  { label: "履歴書不要！の会社", image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=300&fit=crop" },
   { label: "定時で帰れる！残業がほとんどない会社", image: "https://images.unsplash.com/photo-1495364141860-b0d03eccd065?w=400&h=300&fit=crop" },
   { label: "20代が多い！若い会社", image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&h=300&fit=crop" },
-  { label: "経験者優遇", image: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=400&h=300&fit=crop" },
-  { label: "出張・転勤がない会社", image: "https://images.unsplash.com/photo-1556761175-129418cb2dfe?w=400&h=300&fit=crop" },
+  { label: "経験者優遇", image: "https://images.unsplash.com/photo-1559523182-a284c3fb7cff?w=400&h=300&fit=crop" },
+  { label: "出張・転勤がない会社", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop" },
   { label: "設立10年以上の歴史のある会社", image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop" },
   { label: "資格取得の支援や補助が充実している会社", image: "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=400&h=300&fit=crop" },
   { label: "勤続年数が長い、安定して働ける会社", image: "https://images.unsplash.com/photo-1566751311-c3aaa7c4aef2?w=400&h=300&fit=crop" },
-  { label: "ニッチな職種", image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop" },
+  { label: "ニッチな職種", image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&h=300&fit=crop" },
 ]
 
 const newsItems = [
   { date: "2026.04.01", title: "サイトデザインをリニューアルしました", tag: "お知らせ" },
   { date: "2026.03.15", title: "求人掲載数が5,000件を突破しました", tag: "実績" },
-  { date: "2026.03.01", title: "ハローワーク求人の掲載を開始しました", tag: "機能追加" },
+  { date: "2026.03.01", title: "建設業特集の新コーナーを公開しました", tag: "機能追加" },
 ]
 
 const featureBanners = [
@@ -200,22 +201,19 @@ export default async function HomePage() {
         <div className="relative mx-auto max-w-7xl">
           <div className="relative h-[420px] sm:h-[480px] lg:h-[520px] overflow-hidden">
             <Image
-              src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=1920&h=900&fit=crop&q=85"
+              src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1920&h=900&fit=crop&q=85"
               alt="建設現場で働く作業員"
               fill
               priority
-              className="object-cover object-left"
+              className="object-cover object-center"
               sizes="100vw"
             />
             {/* Diagonal black overlay (right side) */}
             <div className="hero-diagonal" />
 
             {/* Update badge (top-right) */}
-            <div className="absolute right-6 top-6 z-10 flex h-20 w-20 items-center justify-center rounded-full bg-white text-center shadow-lg sm:right-10 sm:top-10 sm:h-24 sm:w-24">
-              <div>
-                <p className="text-[10px] font-bold text-ink-900">{updateLabel} 更新!</p>
-                <p className="mt-0.5 text-[9px] text-gray-500">毎週金曜更新</p>
-              </div>
+            <div className="absolute right-6 top-6 z-10 flex h-20 w-20 items-center justify-center rounded-full bg-brand-yellow-500 text-center shadow-lg sm:right-10 sm:top-10 sm:h-24 sm:w-24">
+              <p className="text-[11px] font-black text-ink-900 leading-tight">毎週金曜<br/>更新！</p>
             </div>
 
             {/* Hero content (right side over black) */}
@@ -361,7 +359,7 @@ export default async function HomePage() {
       <LogoSlider />
 
       {/* ===== Featured carousel ===== */}
-      <section className="bg-warm-50 py-10 industry-watermark">
+      <section className="bg-warm-50 py-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-baseline justify-between">
             <h2 className="text-xl font-black text-ink-900 tracking-tight">特集</h2>
@@ -404,7 +402,7 @@ export default async function HomePage() {
       </section>
 
       {/* ===== Latest jobs ===== */}
-      <section className="bg-warm-50 pb-10 industry-watermark">
+      <section className="bg-warm-50 pb-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-baseline gap-3">
             <h2 className="text-xl font-black text-ink-900 tracking-tight">今週の新着求人</h2>
@@ -445,7 +443,7 @@ export default async function HomePage() {
       </section>
 
       {/* ===== Theme grid (yellow band) ===== */}
-      <section className="relative theme-band-yellow py-12 sm:py-16 industry-watermark">
+      <section className="relative theme-band-yellow py-12 sm:py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-black text-ink-900 tracking-tight">テーマから探す</h2>
           <AnimateOnScroll animation="stagger">
@@ -466,7 +464,7 @@ export default async function HomePage() {
       </section>
 
       {/* ===== Categories (occupations) ===== */}
-      <section className="bg-warm-50 py-10 industry-watermark">
+      <section className="bg-warm-50 py-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-black text-ink-900 tracking-tight">職種から探す</h2>
           <AnimateOnScroll animation="stagger">
@@ -522,7 +520,7 @@ export default async function HomePage() {
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-ink-900 line-clamp-2 group-hover:text-primary-600 transition">{a.title}</p>
-                      <span className="mt-1 inline-block text-[10px] text-gray-400">{a.category}</span>
+                      <span className="mt-1 inline-block text-[10px] text-gray-400">{CATEGORY_LABELS[a.category] ?? a.category}</span>
                     </div>
                   </Link>
                 ))}
@@ -555,7 +553,7 @@ export default async function HomePage() {
       </section>
 
       {/* ===== Trust section (yellow + 3 white cards) ===== */}
-      <section className="relative theme-band-yellow py-14 industry-watermark">
+      <section className="relative theme-band-yellow py-14">
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-sm font-bold text-ink-900">ゲンバキャリアなら</p>
           <h2 className="mt-1 text-2xl font-black text-ink-900 tracking-tight sm:text-4xl">希望の求人がきっと見つかる！</h2>
@@ -627,7 +625,7 @@ export default async function HomePage() {
                 {recommendedArticles.slice(0, 4).map((a, i) => (
                   <Link key={`rec-${a.slug}-${i}`} href={`/journal/${a.slug}`} className="block px-4 py-3 hover:bg-warm-50 transition group">
                     <p className="text-xs font-medium text-ink-900 line-clamp-2 group-hover:text-primary-600 transition leading-relaxed">{a.title}</p>
-                    <span className="mt-1 inline-block text-[10px] text-primary-600">{a.category}</span>
+                    <span className="mt-1 inline-block text-[10px] text-primary-600">{CATEGORY_LABELS[a.category] ?? a.category}</span>
                   </Link>
                 ))}
               </div>

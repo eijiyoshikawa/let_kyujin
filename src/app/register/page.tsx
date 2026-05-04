@@ -74,13 +74,13 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-[calc(100vh-200px)] items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        <div className="rounded-xl bg-white p-8 shadow-lg">
+        <div className=" bg-white p-8 shadow-lg">
           <h1 className="mb-6 text-center text-2xl font-bold text-gray-900">
             求職者 新規登録
           </h1>
 
           {error && (
-            <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+            <div className="mb-4  bg-red-50 p-3 text-sm text-red-600">
               {error}
             </div>
           )}
@@ -99,7 +99,7 @@ export default function RegisterPage() {
                 required
                 value={form.name}
                 onChange={(e) => updateField("name", e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="mt-1 block w-full  border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                 placeholder="山田 太郎"
               />
             </div>
@@ -117,7 +117,7 @@ export default function RegisterPage() {
                 required
                 value={form.email}
                 onChange={(e) => updateField("email", e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="mt-1 block w-full  border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                 placeholder="example@mail.com"
               />
             </div>
@@ -136,7 +136,7 @@ export default function RegisterPage() {
                 minLength={8}
                 value={form.password}
                 onChange={(e) => updateField("password", e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="mt-1 block w-full  border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                 placeholder="8文字以上"
               />
             </div>
@@ -155,7 +155,7 @@ export default function RegisterPage() {
                 minLength={8}
                 value={form.passwordConfirm}
                 onChange={(e) => updateField("passwordConfirm", e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="mt-1 block w-full  border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                 placeholder="もう一度入力"
               />
             </div>
@@ -172,7 +172,7 @@ export default function RegisterPage() {
                 required
                 value={form.prefecture}
                 onChange={(e) => updateField("prefecture", e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="mt-1 block w-full  border border-gray-300 px-3 py-2 text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               >
                 <option value="">選択してください</option>
                 {PREFECTURES.map((pref) => (
@@ -186,7 +186,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-green-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full  bg-green-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? "登録中..." : "登録する"}
             </button>

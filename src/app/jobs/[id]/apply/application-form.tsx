@@ -66,13 +66,13 @@ export function ApplicationForm({ jobId }: { jobId: string }) {
         <div className="mt-6 flex justify-center gap-3">
           <Link
             href={`/jobs/${jobId}`}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className=" border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             求人詳細に戻る
           </Link>
           <Link
             href="/mypage/applications"
-            className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
+            className=" bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
           >
             応募一覧を見る
           </Link>
@@ -97,7 +97,7 @@ export function ApplicationForm({ jobId }: { jobId: string }) {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="自己PRや志望動機をご記入ください"
-          className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+          className="mt-1 block w-full  border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
         />
         <p className="mt-1 text-xs text-gray-400">
           {message.length} / 2000 文字
@@ -105,7 +105,7 @@ export function ApplicationForm({ jobId }: { jobId: string }) {
       </div>
 
       {status === "error" && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div className=" border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           {errorMessage}
         </div>
       )}
@@ -113,7 +113,7 @@ export function ApplicationForm({ jobId }: { jobId: string }) {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="w-full rounded-lg bg-green-500 px-6 py-3 text-base font-semibold text-white hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
+        className="w-full  bg-green-500 px-6 py-3 text-base font-semibold text-white hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {status === "submitting" ? "送信中..." : "応募する"}
       </button>

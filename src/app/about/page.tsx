@@ -34,7 +34,7 @@ export default function AboutPage() {
 
         <section>
           <h2 className="text-lg font-semibold text-gray-900">運営事業者情報</h2>
-          <div className="mt-3 overflow-hidden rounded-lg border border-gray-200">
+          <div className="mt-3 overflow-hidden  border border-gray-200">
             <table className="w-full text-sm">
               <tbody className="divide-y divide-gray-200">
                 <tr>
