@@ -253,6 +253,7 @@ model Article {
   excerpt         String?   @db.VarChar(500)
   body            String    // HTML本文
   category        String    @db.VarChar(50) // career, salary, license, job-type, industry, interview
+  subcategory     String?   @db.VarChar(50) // construction: civil | building | equipment | electrical | plumbing | demolition | interior | exterior | reinforcing | heavy_equipment | surveying | safety | tips
   tags            String[]  @default([])
   imageUrl        String?   @map("image_url") @db.VarChar(500)
   metaDescription String?   @map("meta_description") @db.VarChar(300)
