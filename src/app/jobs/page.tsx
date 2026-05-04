@@ -109,7 +109,7 @@ export default async function JobsPage({ searchParams }: Props) {
             <h1 className="text-xl font-bold text-white">求人検索</h1>
             <Link
               href="/hw-jobs"
-              className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-xs text-blue-50 hover:bg-white/20 transition"
+              className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-xs text-white/90 hover:bg-white/20 transition"
             >
               <Briefcase className="h-3.5 w-3.5" />
               ハローワーク求人を見る
@@ -299,7 +299,7 @@ export default async function JobsPage({ searchParams }: Props) {
                   </Link>
                   <p className="mt-4 text-xs text-gray-400">
                     ハローワーク求人もあわせて{" "}
-                    <Link href="/hw-jobs" className="text-blue-600 hover:underline">
+                    <Link href="/hw-jobs" className="text-primary-600 hover:underline">
                       こちら
                     </Link>{" "}
                     から検索できます。
@@ -445,7 +445,7 @@ function SortLink({
           href={buildHref(opt.value)}
           className={`rounded px-2 py-0.5 ${
             opt.value === sort
-              ? "bg-blue-600 text-white"
+              ? "bg-primary-500 text-white"
               : "text-gray-600 hover:bg-gray-100"
           }`}
         >
