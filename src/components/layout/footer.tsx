@@ -87,7 +87,7 @@ export function Footer() {
             </div>
             <div className="text-center sm:text-right">
               <p className="text-xs text-gray-500">
-                有料職業紹介事業許可番号 27-ユ-304693 | ハローワーク求人はハローワークインターネットサービスより転載
+                有料職業紹介事業許可番号 27-ユ-304693
               </p>
               <p className="mt-1 text-xs text-gray-500">
                 &copy; {new Date().getFullYear()} ゲンバキャリア. All rights reserved.

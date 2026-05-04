@@ -35,21 +35,21 @@ export function Header() {
             <span className="mx-1 h-4 w-px bg-gray-200" />
             <Link
               href="/jobs"
-              className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-primary-50 transition"
+              className="flex items-center gap-1.5  px-3 py-2 text-sm font-medium text-gray-700 hover:bg-primary-50 transition"
             >
               <Search className="h-4 w-4" />
               求人検索
             </Link>
             <Link
               href="/hw-jobs"
-              className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+              className="flex items-center gap-1.5  px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
             >
               <Briefcase className="h-4 w-4" />
               ハローワーク求人
             </Link>
             <Link
               href="/journal"
-              className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-primary-50 transition"
+              className="flex items-center gap-1.5  px-3 py-2 text-sm font-medium text-gray-700 hover:bg-primary-50 transition"
             >
               <Newspaper className="h-4 w-4" /> マガジン
             </Link>
@@ -71,7 +71,7 @@ export function Header() {
           {/* Mobile menu button */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="flex md:hidden items-center justify-center rounded-md p-2 text-gray-600 hover:bg-primary-50"
+            className="flex md:hidden items-center justify-center  p-2 text-gray-600 hover:bg-primary-50"
             aria-label="メニューを開く"
           >
             {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -86,7 +86,7 @@ export function Header() {
             <Link
               href="/jobs"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary-50"
+              className="flex items-center gap-3  px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary-50"
             >
               <Search className="h-4 w-4 text-primary-500" />
               求人検索
@@ -94,7 +94,7 @@ export function Header() {
             <Link
               href="/hw-jobs"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
+              className="flex items-center gap-3  px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
             >
               <Briefcase className="h-4 w-4 text-primary-500" />
               ハローワーク求人
@@ -102,21 +102,21 @@ export function Header() {
             <Link
               href="/journal"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary-50"
+              className="flex items-center gap-3  px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary-50"
             >
               <Newspaper className="h-4 w-4 text-primary-500" /> マガジン
             </Link>
             <Link
               href="/for-employers"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary-50"
+              className="flex items-center gap-3  px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary-50"
             >
               <Building2 className="h-4 w-4 text-primary-500" /> 企業の方へ
             </Link>
             <Link
               href="/about"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary-50"
+              className="flex items-center gap-3  px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary-50"
             >
               <Info className="h-4 w-4 text-primary-500" /> サイトについて
             </Link>

@@ -12,20 +12,20 @@ export function HwJobCard({ job }: { job: HwJob }) {
   return (
     <Link
       href={`/hw-jobs/${encodeURIComponent(job.kjno)}`}
-      className="group flex gap-4 rounded-lg border border-warm-200 bg-white p-4 shadow-sm transition hover:shadow-md hover:border-primary-300"
+      className="group flex gap-4  border border-warm-200 bg-white p-4 shadow-sm transition hover:shadow-md hover:border-primary-300"
     >
       <div className="flex-1 min-w-0">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded bg-brand-yellow-500 px-2 py-0.5 text-xs font-bold text-ink-900">
+          <span className=" bg-brand-yellow-500 px-2 py-0.5 text-xs font-bold text-ink-900">
             ハローワーク
           </span>
           {job.jobType && (
-            <span className="rounded bg-warm-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+            <span className=" bg-warm-100 px-2 py-0.5 text-xs font-medium text-gray-600">
               {job.jobType}
             </span>
           )}
           {job.employmentType && (
-            <span className="rounded bg-warm-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+            <span className=" bg-warm-100 px-2 py-0.5 text-xs font-medium text-gray-600">
               {job.employmentType}
             </span>
           )}

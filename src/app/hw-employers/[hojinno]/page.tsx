@@ -61,7 +61,7 @@ export default async function HwEmployerPage({ params, searchParams }: PageProps
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
       <BackLink />
 
-      <header className="mt-4 rounded-lg border bg-white p-5 shadow-sm">
+      <header className="mt-4  border bg-white p-5 shadow-sm">
         <p className="flex items-center gap-1 text-xs text-gray-500">
           <Building2 className="h-3.5 w-3.5" />
           事業所

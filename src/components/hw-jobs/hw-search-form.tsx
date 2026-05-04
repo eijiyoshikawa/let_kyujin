@@ -18,7 +18,7 @@ export function HwSearchForm({ values }: HwSearchFormProps) {
     <form
       method="get"
       action="/hw-jobs"
-      className="rounded-lg bg-brand-yellow-500 p-4 shadow-sm sm:p-5"
+      className=" bg-brand-yellow-500 p-4 shadow-sm sm:p-5"
     >
       <div className="flex items-center gap-2 text-sm font-bold text-ink-900">
         <SlidersHorizontal className="h-4 w-4" />
@@ -31,7 +31,7 @@ export function HwSearchForm({ values }: HwSearchFormProps) {
           <select
             name="prefecture"
             defaultValue={values.prefecture ?? ""}
-            className="mt-1 w-full rounded-lg border border-warm-200 bg-white px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className="mt-1 w-full  border border-warm-200 bg-white px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           >
             <option value="">指定なし</option>
             {PREFECTURES.map((p) => (
@@ -47,7 +47,7 @@ export function HwSearchForm({ values }: HwSearchFormProps) {
           <select
             name="jobType"
             defaultValue={values.jobType ?? ""}
-            className="mt-1 w-full rounded-lg border border-warm-200 bg-white px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className="mt-1 w-full  border border-warm-200 bg-white px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           >
             <option value="">指定なし</option>
             {HW_JOB_TYPES.map((t) => (
@@ -67,7 +67,7 @@ export function HwSearchForm({ values }: HwSearchFormProps) {
             step={10000}
             defaultValue={values.minSalary ?? ""}
             placeholder="例: 200000"
-            className="mt-1 w-full rounded-lg border border-warm-200 bg-white px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className="mt-1 w-full  border border-warm-200 bg-white px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           />
         </label>
 
@@ -79,7 +79,7 @@ export function HwSearchForm({ values }: HwSearchFormProps) {
             maxLength={100}
             defaultValue={values.q ?? ""}
             placeholder="職種・仕事内容・事業所名"
-            className="mt-1 w-full rounded-lg border border-warm-200 bg-white px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className="mt-1 w-full  border border-warm-200 bg-white px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           />
         </label>
       </div>

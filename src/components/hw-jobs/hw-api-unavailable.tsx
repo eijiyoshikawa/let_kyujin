@@ -16,7 +16,7 @@ export function HwApiUnavailable({ reason, message }: HwApiUnavailableProps) {
       : "しばらく時間をおいてから再度アクセスしてください。"
 
   return (
-    <div className="rounded-lg border border-amber-200 bg-amber-50 p-6">
+    <div className=" border border-amber-200 bg-amber-50 p-6">
       <div className="flex items-start gap-3">
         <AlertTriangle className="mt-0.5 h-5 w-5 text-amber-600" />
         <div>

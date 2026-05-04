@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
+import { Noto_Sans_JP } from "next/font/google";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { GoogleAnalytics } from "@/components/analytics";
 import "./globals.css";
+
+const notoSansJP = Noto_Sans_JP({
+  subsets: ["latin"],
+  weight: ["400", "500", "700", "900"],
+  display: "swap",
+  variable: "--font-noto-jp",
+});
 
 const siteUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "https://genbacareer.jp";
 
@@ -44,7 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" className="h-full antialiased">
+    <html lang="ja" className={`h-full antialiased ${notoSansJP.variable}`}>
       <body className="min-h-full flex flex-col font-sans bg-warm-50">
         <GoogleAnalytics />
         <Header />

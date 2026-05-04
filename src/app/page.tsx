@@ -221,7 +221,7 @@ export default async function HomePage() {
             {/* Hero content (right side over black) */}
             <div className="absolute inset-0 z-10 flex flex-col items-end justify-center px-6 sm:px-12 lg:px-16">
               <div className="max-w-md text-right">
-                <div className="inline-flex items-center gap-1.5 rounded-md bg-white px-2.5 py-1 text-[11px] font-bold text-ink-900 shadow-sm">
+                <div className="inline-flex items-center gap-1.5  bg-white px-2.5 py-1 text-[11px] font-bold text-ink-900 shadow-sm">
                   <Sparkles className="h-3 w-3 text-primary-500" />
                   企業からスカウトが届く！
                 </div>
@@ -255,14 +255,14 @@ export default async function HomePage() {
 
         {/* ===== Yellow search box (overlapping bottom of hero) ===== */}
         <div className="relative -mt-8 sm:-mt-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-lg bg-brand-yellow-500 p-4 shadow-lg sm:p-6">
+          <div className=" bg-brand-yellow-500 p-4 shadow-lg sm:p-6">
             <div className="flex items-baseline gap-3">
               <h2 className="text-base font-bold text-ink-900 sm:text-lg">求人検索</h2>
               <p className="text-xs text-ink-900/70 sm:text-sm">全国・87職種から条件を入力して探せます！</p>
             </div>
             <form action="/jobs" method="GET" className="mt-3">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                <div className="flex-1 rounded-lg bg-white px-3 py-3">
+                <div className="flex-1  bg-white px-3 py-3">
                   <label className="flex items-center gap-2 text-sm text-ink-900" htmlFor="hero-category">
                     <HardHat className="h-4 w-4 shrink-0 text-ink-900" />
                     <select id="hero-category" name="category" className="flex-1 bg-transparent text-sm text-ink-900 focus:outline-none">
@@ -271,7 +271,7 @@ export default async function HomePage() {
                     </select>
                   </label>
                 </div>
-                <div className="flex-1 rounded-lg bg-white px-3 py-3">
+                <div className="flex-1  bg-white px-3 py-3">
                   <label className="flex items-center gap-2 text-sm text-ink-900" htmlFor="hero-prefecture">
                     <MapPin className="h-4 w-4 shrink-0 text-ink-900" />
                     <select id="hero-prefecture" name="prefecture" className="flex-1 bg-transparent text-sm text-ink-900 focus:outline-none">
@@ -280,7 +280,7 @@ export default async function HomePage() {
                     </select>
                   </label>
                 </div>
-                <button type="submit" className="flex items-center justify-center gap-3 rounded-lg bg-primary-500 px-6 py-3 text-sm font-bold text-white shadow-sm hover:bg-primary-600 transition sm:min-w-[180px]">
+                <button type="submit" className="flex items-center justify-center gap-3  bg-primary-500 px-6 py-3 text-sm font-bold text-white shadow-sm hover:bg-primary-600 transition sm:min-w-[180px]">
                   <span className="text-xs tabular-nums">{totalJobs.toLocaleString()} 件</span>
                   <span className="h-4 w-px bg-white/40" />
                   <span className="flex items-center gap-1.5">
@@ -294,7 +294,7 @@ export default async function HomePage() {
               <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm text-ink-900">
                 {filterChips.slice(0, 4).map((f) => (
                   <label key={f.key} className="flex items-center gap-1.5 cursor-pointer">
-                    <input type="checkbox" name={f.key} className="h-4 w-4 rounded border-ink-900 accent-ink-900" />
+                    <input type="checkbox" name={f.key} className="h-4 w-4  border-ink-900 accent-ink-900" />
                     {f.label}
                   </label>
                 ))}
@@ -303,7 +303,7 @@ export default async function HomePage() {
           </div>
 
           {/* Easy search panel - black header */}
-          <details className="mt-3 group rounded-lg overflow-hidden shadow-lg" open>
+          <details className="mt-3 group  overflow-hidden shadow-lg" open>
             <summary className="flex cursor-pointer items-center justify-between bg-ink-900 px-5 py-3.5 text-white">
               <span className="flex items-baseline gap-3">
                 <span className="text-base font-bold">かんたん検索</span>
@@ -364,12 +364,12 @@ export default async function HomePage() {
       <section className="bg-warm-50 py-10 industry-watermark">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-baseline justify-between">
-            <h2 className="text-xl font-bold text-ink-900">特集</h2>
+            <h2 className="text-xl font-black text-ink-900 tracking-tight">特集</h2>
             <Link href="/jobs" className="text-sm text-primary-600 hover:text-primary-700">すべて見る ›</Link>
           </div>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {featureBanners.map((b, i) => (
-              <Link key={i} href="/jobs" className={`relative h-32 overflow-hidden rounded-lg bg-gradient-to-r ${b.color} p-5 text-white shadow-md hover:shadow-lg transition`}>
+              <Link key={i} href="/jobs" className={`relative h-32 overflow-hidden  bg-gradient-to-r ${b.color} p-5 text-white shadow-md hover:shadow-lg transition`}>
                 <p className="text-xs font-medium opacity-90 leading-relaxed">{b.title}</p>
                 <p className="mt-2 text-base font-bold leading-tight">{b.subtitle}</p>
               </Link>
@@ -381,10 +381,10 @@ export default async function HomePage() {
       {/* ===== Hyakumeisha banner ===== */}
       <section className="bg-warm-50 pb-8">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <Link href="/jobs?hyakumeisha=1" className="block rounded-lg bg-warm-100 p-5 hover:bg-warm-200 transition">
+          <Link href="/jobs?hyakumeisha=1" className="block  bg-warm-100 p-5 hover:bg-warm-200 transition">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-4">
-                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-md border-2 border-ink-900 bg-white">
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center  border-2 border-ink-900 bg-white">
                   <span className="text-xs font-black text-ink-900">百名社<br/>2026</span>
                 </div>
                 <div>
@@ -407,13 +407,13 @@ export default async function HomePage() {
       <section className="bg-warm-50 pb-10 industry-watermark">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-baseline gap-3">
-            <h2 className="text-xl font-bold text-ink-900">今週の新着求人</h2>
-            <span className="rounded bg-brand-yellow-500 px-2 py-0.5 text-xs font-bold text-ink-900">{updateLabel} UP</span>
+            <h2 className="text-xl font-black text-ink-900 tracking-tight">今週の新着求人</h2>
+            <span className=" bg-brand-yellow-500 px-2 py-0.5 text-xs font-bold text-ink-900">{updateLabel} UP</span>
             <Link href="/jobs?sort=newest" className="ml-auto text-sm text-primary-600 hover:text-primary-700">すべて見る ›</Link>
           </div>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {latestJobs.length > 0 ? latestJobs.map((j) => (
-              <Link key={j.id} href={`/jobs/${j.id}`} className="group overflow-hidden rounded-lg border border-warm-200 bg-white hover:border-primary-300 hover:shadow-md transition">
+              <Link key={j.id} href={`/jobs/${j.id}`} className="group overflow-hidden  border border-warm-200 bg-white hover:border-primary-300 hover:shadow-md transition">
                 <div className="aspect-[4/3] relative overflow-hidden bg-gradient-to-br from-warm-100 to-warm-200">
                   <div className="flex h-full w-full items-center justify-center text-warm-200">
                     <HardHat className="h-16 w-16 text-primary-300" />
@@ -447,11 +447,11 @@ export default async function HomePage() {
       {/* ===== Theme grid (yellow band) ===== */}
       <section className="relative theme-band-yellow py-12 sm:py-16 industry-watermark">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-ink-900">テーマから探す</h2>
+          <h2 className="text-2xl font-black text-ink-900 tracking-tight">テーマから探す</h2>
           <AnimateOnScroll animation="stagger">
             <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
               {themeCards.map((c, i) => (
-                <Link key={i} href={`/jobs?theme=${encodeURIComponent(c.label)}`} className="group relative aspect-[4/3] overflow-hidden rounded-md bg-white shadow-sm hover:shadow-md transition">
+                <Link key={i} href={`/jobs?theme=${encodeURIComponent(c.label)}`} className="group relative aspect-[4/3] overflow-hidden  bg-white shadow-sm hover:shadow-md transition">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={c.image} alt={c.label} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -468,7 +468,7 @@ export default async function HomePage() {
       {/* ===== Categories (occupations) ===== */}
       <section className="bg-warm-50 py-10 industry-watermark">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-xl font-bold text-ink-900">職種から探す</h2>
+          <h2 className="text-xl font-black text-ink-900 tracking-tight">職種から探す</h2>
           <AnimateOnScroll animation="stagger">
             <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
               {categoriesWithCounts.map((cat) => {
@@ -477,7 +477,7 @@ export default async function HomePage() {
                   <Link
                     key={cat.key}
                     href={`/jobs?category=${cat.key}`}
-                    className="group overflow-hidden rounded-lg border border-warm-200 bg-white hover:border-primary-400 hover:shadow-md transition"
+                    className="group overflow-hidden  border border-warm-200 bg-white hover:border-primary-400 hover:shadow-md transition"
                   >
                     <div className="aspect-[4/3] relative overflow-hidden">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -505,7 +505,7 @@ export default async function HomePage() {
       <section className="bg-warm-50 pb-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-6 md:grid-cols-2">
-            <div className="rounded-lg border border-warm-200 bg-white overflow-hidden">
+            <div className=" border border-warm-200 bg-white overflow-hidden">
               <div className="flex items-center gap-2 border-b border-warm-200 px-4 py-3">
                 <BookOpen className="h-4 w-4 text-primary-600" />
                 <h2 className="text-sm font-bold text-ink-900">マガジン</h2>
@@ -515,7 +515,7 @@ export default async function HomePage() {
                 {magazineArticles.map((a) => (
                   <Link key={a.slug} href={`/journal/${a.slug}`} className="group flex gap-3 items-center px-4 py-3 hover:bg-warm-50 transition">
                     {a.imageUrl && (
-                      <div className="w-20 h-14 shrink-0 rounded overflow-hidden">
+                      <div className="w-20 h-14 shrink-0  overflow-hidden">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover" />
                       </div>
@@ -529,7 +529,7 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="rounded-lg border border-warm-200 bg-white overflow-hidden">
+            <div className=" border border-warm-200 bg-white overflow-hidden">
               <div className="flex items-center gap-2 border-b border-warm-200 px-4 py-3">
                 <MessageCircle className="h-4 w-4 text-stone-600" />
                 <h2 className="text-sm font-bold text-ink-900">転職体験談</h2>
@@ -538,7 +538,7 @@ export default async function HomePage() {
                 {(interviewArticles.length > 0 ? interviewArticles : magazineArticles).map((a, i) => (
                   <Link key={`interview-${a.slug}-${i}`} href={`/journal/${a.slug}`} className="group flex gap-3 items-center px-4 py-3 hover:bg-warm-50 transition">
                     {a.imageUrl && (
-                      <div className="w-20 h-14 shrink-0 rounded overflow-hidden">
+                      <div className="w-20 h-14 shrink-0  overflow-hidden">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover" />
                       </div>
@@ -558,7 +558,7 @@ export default async function HomePage() {
       <section className="relative theme-band-yellow py-14 industry-watermark">
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-sm font-bold text-ink-900">ゲンバキャリアなら</p>
-          <h2 className="mt-1 text-2xl font-bold text-ink-900 sm:text-3xl">希望の求人がきっと見つかる！</h2>
+          <h2 className="mt-1 text-2xl font-black text-ink-900 tracking-tight sm:text-4xl">希望の求人がきっと見つかる！</h2>
 
           <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
             {[
@@ -568,8 +568,8 @@ export default async function HomePage() {
             ].map((f, i) => {
               const Icon = f.icon
               return (
-                <div key={i} className="flex items-center gap-4 rounded-md bg-white p-5 shadow-sm">
-                  <div className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-md ${f.color}`}>
+                <div key={i} className="flex items-center gap-4  bg-white p-5 shadow-sm">
+                  <div className={`flex h-16 w-16 shrink-0 items-center justify-center  ${f.color}`}>
                     <Icon className="h-8 w-8 text-ink-900" />
                   </div>
                   <p className="text-sm font-bold text-ink-900 text-left leading-snug">{f.title}</p>
@@ -595,7 +595,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-6 lg:grid-cols-3">
             {/* Popular jobs */}
-            <div className="rounded-lg border border-warm-200 bg-white overflow-hidden">
+            <div className=" border border-warm-200 bg-white overflow-hidden">
               <div className="flex items-center gap-1.5 border-b border-warm-200 px-4 py-3">
                 <Star className="h-4 w-4 text-primary-600" />
                 <h3 className="text-sm font-bold text-ink-900">人気の求人</h3>
@@ -603,7 +603,7 @@ export default async function HomePage() {
               <div className="divide-y divide-warm-200">
                 {popularJobs.length > 0 ? popularJobs.slice(0, 4).map((job, i) => (
                   <Link key={job.id} href={`/jobs/${job.id}`} className="flex items-start gap-3 px-4 py-3 hover:bg-warm-50 transition group">
-                    <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded text-xs font-bold ${i < 3 ? "bg-primary-500 text-white" : "bg-warm-100 text-gray-500"}`}>
+                    <span className={`flex h-6 w-6 shrink-0 items-center justify-center  text-xs font-bold ${i < 3 ? "bg-primary-500 text-white" : "bg-warm-100 text-gray-500"}`}>
                       {i + 1}
                     </span>
                     <div className="flex-1 min-w-0">
@@ -618,7 +618,7 @@ export default async function HomePage() {
             </div>
 
             {/* Recommended articles */}
-            <div className="rounded-lg border border-warm-200 bg-white overflow-hidden">
+            <div className=" border border-warm-200 bg-white overflow-hidden">
               <div className="flex items-center gap-1.5 border-b border-warm-200 px-4 py-3">
                 <Newspaper className="h-4 w-4 text-stone-600" />
                 <h3 className="text-sm font-bold text-ink-900">おすすめ記事</h3>
@@ -639,7 +639,7 @@ export default async function HomePage() {
             </div>
 
             {/* News */}
-            <div className="rounded-lg border border-warm-200 bg-white overflow-hidden">
+            <div className=" border border-warm-200 bg-white overflow-hidden">
               <div className="flex items-center gap-1.5 border-b border-warm-200 px-4 py-3">
                 <Bell className="h-4 w-4 text-primary-500" />
                 <h3 className="text-sm font-bold text-ink-900">お知らせ</h3>
@@ -649,7 +649,7 @@ export default async function HomePage() {
                   <div key={i} className="flex flex-col gap-1 px-4 py-3 text-sm">
                     <div className="flex items-center gap-2">
                       <span className="shrink-0 text-xs text-gray-400 tabular-nums">{item.date}</span>
-                      <span className="shrink-0 rounded border border-primary-200 bg-white px-2 py-0.5 text-[10px] font-medium text-primary-600">{item.tag}</span>
+                      <span className="shrink-0  border border-primary-200 bg-white px-2 py-0.5 text-[10px] font-medium text-primary-600">{item.tag}</span>
                     </div>
                     <span className="text-xs text-gray-700 leading-relaxed">{item.title}</span>
                   </div>
@@ -680,13 +680,13 @@ export default async function HomePage() {
             {/* App download */}
             <div>
               <div className="flex items-start gap-5">
-                <div className="hidden h-32 w-20 shrink-0 rounded-2xl bg-brand-yellow-500 p-1 sm:block">
-                  <div className="flex h-full w-full items-center justify-center rounded-xl bg-white">
+                <div className="hidden h-32 w-20 shrink-0  bg-brand-yellow-500 p-1 sm:block">
+                  <div className="flex h-full w-full items-center justify-center  bg-white">
                     <Smartphone className="h-8 w-8 text-ink-900" />
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white">ゲンバキャリアアプリをダウンロード！</h3>
+                  <h3 className="text-xl font-black text-white tracking-tight">ゲンバキャリアアプリをダウンロード！</h3>
                   <ul className="mt-3 space-y-2 text-sm text-white/90">
                     <li className="flex items-start gap-2">
                       <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-yellow-500" />
@@ -698,7 +698,7 @@ export default async function HomePage() {
                     </li>
                   </ul>
                   <div className="mt-4 flex flex-wrap gap-2">
-                    <span className="inline-flex items-center gap-2 rounded-md bg-white/10 px-4 py-2 text-xs text-white/70">
+                    <span className="inline-flex items-center gap-2  bg-white/10 px-4 py-2 text-xs text-white/70">
                       App Store / Google Play 準備中
                     </span>
                   </div>
@@ -713,7 +713,7 @@ export default async function HomePage() {
                   <Search className="h-10 w-10 text-ink-900" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white">求人を掲載しませんか？</h3>
+                  <h3 className="text-xl font-black text-white tracking-tight">求人を掲載しませんか？</h3>
                   <ul className="mt-3 space-y-2 text-sm text-white/90">
                     <li className="flex items-start gap-2">
                       <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-yellow-500" />
