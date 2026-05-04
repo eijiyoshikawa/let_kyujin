@@ -199,7 +199,7 @@ export default async function HomePage() {
       {/* ===== Hero ===== */}
       <section className="relative bg-white">
         <div className="relative mx-auto max-w-7xl">
-          <div className="relative h-[440px] sm:h-[500px] lg:h-[560px] overflow-hidden">
+          <div className="relative h-[520px] sm:h-[500px] lg:h-[560px] overflow-hidden">
             <Image
               src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1920&h=900&fit=crop&q=85"
               alt="建設現場で働く作業員"
@@ -208,40 +208,42 @@ export default async function HomePage() {
               className="object-cover object-center"
               sizes="100vw"
             />
-            {/* Soft diagonal gradient (replaces hard triangle clip) */}
-            <div className="hero-overlay" />
+            {/* Mobile: full dark overlay for legibility */}
+            <div className="absolute inset-0 bg-ink-900/70 sm:hidden" />
+            {/* Desktop: soft diagonal gradient (replaces hard triangle clip) */}
+            <div className="hidden sm:block hero-overlay" />
             {/* Yellow accent stripes */}
             <div className="hero-stripe-top" />
             <div className="hero-stripe-bottom" />
 
-            {/* Update badge (top-right, flat tag) */}
-            <div className="absolute right-0 top-12 z-10 flex items-center gap-2 bg-brand-yellow-500 pl-4 pr-6 py-2 shadow-lg sm:top-16">
+            {/* Update badge - mobile: top center; desktop: right tag */}
+            <div className="absolute left-1/2 -translate-x-1/2 top-10 z-10 flex items-center gap-2 bg-brand-yellow-500 px-5 py-2 shadow-lg sm:left-auto sm:translate-x-0 sm:right-0 sm:top-16 sm:pl-4 sm:pr-6">
               <span className="block h-2 w-2 rounded-full bg-ink-900" />
               <p className="text-xs font-black text-ink-900 tracking-tight">毎週金曜更新！</p>
             </div>
 
-            {/* Hero content (right side over black) */}
-            <div className="absolute inset-0 z-10 flex flex-col items-end justify-center px-6 sm:px-12 lg:px-16">
-              <div className="max-w-md text-right">
-                <div className="inline-flex items-center gap-1.5  bg-white px-2.5 py-1 text-[11px] font-bold text-ink-900 shadow-sm">
+            {/* Hero content - mobile: centered; desktop: right aligned */}
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center sm:items-end sm:text-right sm:px-12 lg:px-16">
+              <div className="max-w-md">
+                <div className="inline-flex items-center gap-1.5 bg-white px-3 py-1 text-[11px] font-bold text-ink-900 shadow-sm">
                   <Sparkles className="h-3 w-3 text-primary-500" />
                   企業からスカウトが届く！
                 </div>
                 <p className="mt-3 text-sm font-medium text-white sm:text-base">建設業の求人を探すなら</p>
-                <h1 className="mt-1 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
+                <h1 className="mt-1 text-4xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
                   ゲンバキャリア
                 </h1>
 
-                <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+                <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-end">
                   <Link
                     href="/register"
-                    className="inline-flex items-center justify-center rounded-full bg-primary-500 px-7 py-3 text-sm font-bold text-white shadow-md hover:bg-primary-600 transition"
+                    className="inline-flex items-center justify-center rounded-full bg-primary-500 px-8 py-3 text-sm font-bold text-white shadow-md hover:bg-primary-600 transition"
                   >
                     簡単！会員登録（無料）
                   </Link>
                   <Link
                     href="/login"
-                    className="inline-flex items-center justify-center rounded-full bg-white px-7 py-3 text-sm font-bold text-ink-900 shadow-md hover:bg-gray-100 transition"
+                    className="inline-flex items-center justify-center rounded-full bg-white px-8 py-3 text-sm font-bold text-ink-900 shadow-md hover:bg-gray-100 transition"
                   >
                     ログインはこちら
                   </Link>
