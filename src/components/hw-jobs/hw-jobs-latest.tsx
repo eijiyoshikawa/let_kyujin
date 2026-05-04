@@ -20,12 +20,12 @@ export async function HwJobsLatest({ limit = 6 }: { limit?: number }) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <h2 className="flex items-center gap-1.5 text-lg font-bold text-gray-900">
-            <Briefcase className="h-5 w-5 text-blue-600" />
+            <Briefcase className="h-5 w-5 text-primary-600" />
             ハローワーク 新着求人
           </h2>
           <Link
             href="/hw-jobs"
-            className="flex items-center gap-1 text-sm text-blue-600 hover:underline"
+            className="flex items-center gap-1 text-sm text-primary-600 hover:underline"
           >
             一覧を見る
             <ArrowRight className="h-3.5 w-3.5" />
@@ -39,10 +39,10 @@ export async function HwJobsLatest({ limit = 6 }: { limit?: number }) {
               <Link
                 key={job.kjno}
                 href={`/hw-jobs/${encodeURIComponent(job.kjno)}`}
-                className="group rounded-lg border bg-white p-4 shadow-sm transition hover:border-blue-300 hover:shadow-md"
+                className="group rounded-lg border bg-white p-4 shadow-sm transition hover:border-primary-300 hover:shadow-md"
               >
                 <div className="flex flex-wrap items-center gap-1.5 text-[10px]">
-                  <span className="rounded bg-green-100 px-1.5 py-0.5 font-medium text-green-700">
+                  <span className="rounded bg-brand-yellow-500 px-1.5 py-0.5 font-bold text-ink-900">
                     HW
                   </span>
                   {job.jobType && (
@@ -51,7 +51,7 @@ export async function HwJobsLatest({ limit = 6 }: { limit?: number }) {
                     </span>
                   )}
                 </div>
-                <p className="mt-1.5 line-clamp-2 text-sm font-semibold text-gray-900 group-hover:text-blue-600 transition">
+                <p className="mt-1.5 line-clamp-2 text-sm font-semibold text-gray-900 group-hover:text-primary-600 transition">
                   {job.title ?? job.occupation ?? "（タイトル無し）"}
                 </p>
                 {job.company.name && (
@@ -65,7 +65,7 @@ export async function HwJobsLatest({ limit = 6 }: { limit?: number }) {
                     </span>
                   )}
                   {salary && (
-                    <span className="flex items-center gap-1 font-medium text-blue-600">
+                    <span className="flex items-center gap-1 font-medium text-primary-600">
                       <Banknote className="h-3 w-3" />
                       {salary}
                     </span>

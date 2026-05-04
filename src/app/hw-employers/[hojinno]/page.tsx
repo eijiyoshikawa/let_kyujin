@@ -80,7 +80,7 @@ export default async function HwEmployerPage({ params, searchParams }: PageProps
                 href={employer.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-blue-700 hover:underline"
+                className="inline-flex items-center gap-1 text-primary-600 hover:underline"
               >
                 <Globe className="h-3.5 w-3.5" />
                 公式サイト
@@ -141,7 +141,7 @@ function BackLink() {
   return (
     <Link
       href="/hw-jobs"
-      className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-blue-600"
+      className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-primary-600"
     >
       <ChevronLeft className="h-4 w-4" />
       求人一覧に戻る

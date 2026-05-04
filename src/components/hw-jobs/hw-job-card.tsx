@@ -12,26 +12,26 @@ export function HwJobCard({ job }: { job: HwJob }) {
   return (
     <Link
       href={`/hw-jobs/${encodeURIComponent(job.kjno)}`}
-      className="group flex gap-4 rounded-lg border bg-white p-4 shadow-sm transition hover:shadow-md hover:border-blue-300"
+      className="group flex gap-4 rounded-lg border border-warm-200 bg-white p-4 shadow-sm transition hover:shadow-md hover:border-primary-300"
     >
       <div className="flex-1 min-w-0">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+          <span className="rounded bg-brand-yellow-500 px-2 py-0.5 text-xs font-bold text-ink-900">
             ハローワーク
           </span>
           {job.jobType && (
-            <span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+            <span className="rounded bg-warm-100 px-2 py-0.5 text-xs font-medium text-gray-600">
               {job.jobType}
             </span>
           )}
           {job.employmentType && (
-            <span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+            <span className="rounded bg-warm-100 px-2 py-0.5 text-xs font-medium text-gray-600">
               {job.employmentType}
             </span>
           )}
         </div>
 
-        <h3 className="mt-1.5 text-base font-semibold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition">
+        <h3 className="mt-1.5 text-base font-bold text-ink-900 line-clamp-2 group-hover:text-primary-600 transition">
           {job.title ?? "（タイトル無し）"}
         </h3>
 
@@ -53,7 +53,7 @@ export function HwJobCard({ job }: { job: HwJob }) {
             </span>
           )}
           {salary && (
-            <span className="flex items-center gap-1 font-medium text-blue-600">
+            <span className="flex items-center gap-1 font-bold text-primary-600">
               <Banknote className="h-3.5 w-3.5" />
               {salary}
             </span>
@@ -61,7 +61,7 @@ export function HwJobCard({ job }: { job: HwJob }) {
         </div>
       </div>
 
-      <ChevronRight className="hidden sm:block h-5 w-5 self-center text-gray-300 group-hover:text-blue-500 transition" />
+      <ChevronRight className="hidden sm:block h-5 w-5 self-center text-gray-300 group-hover:text-primary-500 transition" />
     </Link>
   )
 }

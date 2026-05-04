@@ -12,7 +12,7 @@ export default function HwJobNotFound() {
       </p>
       <Link
         href="/hw-jobs"
-        className="mt-6 inline-flex items-center gap-1 rounded bg-blue-600 px-5 py-2 text-sm font-medium text-white hover:bg-blue-700"
+        className="mt-6 inline-flex items-center gap-1 rounded bg-primary-500 px-5 py-2 text-sm font-medium text-white hover:bg-primary-600"
       >
         <ArrowLeft className="h-4 w-4" />
         求人一覧へ戻る

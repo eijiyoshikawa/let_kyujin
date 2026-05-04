@@ -35,7 +35,7 @@ export function HwPagination({ basePath, baseQuery, offset, limit, total }: HwPa
       {hasPrev ? (
         <Link
           href={buildHref(prevOffset)}
-          className="inline-flex items-center gap-1 rounded border px-3 py-1.5 text-gray-700 hover:bg-gray-50"
+          className="inline-flex items-center gap-1 rounded-full border border-primary-500 bg-white px-4 py-1.5 text-xs font-bold text-primary-600 hover:bg-primary-50 transition"
         >
           <ChevronLeft className="h-4 w-4" />
           前へ
@@ -51,7 +51,7 @@ export function HwPagination({ basePath, baseQuery, offset, limit, total }: HwPa
       {hasNext ? (
         <Link
           href={buildHref(nextOffset)}
-          className="inline-flex items-center gap-1 rounded border px-3 py-1.5 text-gray-700 hover:bg-gray-50"
+          className="inline-flex items-center gap-1 rounded-full border border-primary-500 bg-white px-4 py-1.5 text-xs font-bold text-primary-600 hover:bg-primary-50 transition"
         >
           次へ
           <ChevronRight className="h-4 w-4" />

@@ -9,7 +9,7 @@ export function HwEmptyState() {
       <p className="mt-1 text-xs text-gray-500">条件を変えて再度検索してください。</p>
       <Link
         href="/hw-jobs"
-        className="mt-4 inline-block rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+        className="mt-4 inline-block rounded bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600"
       >
         条件をリセット
       </Link>

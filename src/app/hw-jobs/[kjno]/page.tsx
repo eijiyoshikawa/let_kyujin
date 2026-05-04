@@ -66,7 +66,7 @@ export default async function HwJobDetailPage({ params }: PageProps) {
 
       <header className="mt-4">
         <div className="flex flex-wrap items-center gap-2 text-xs">
-          <span className="rounded bg-green-100 px-2 py-0.5 font-medium text-green-700">
+          <span className="rounded bg-brand-yellow-500 px-2 py-0.5 font-bold text-ink-900">
             ハローワーク
           </span>
           {job.jobType && (
@@ -90,7 +90,7 @@ export default async function HwJobDetailPage({ params }: PageProps) {
                 ? `/hw-employers/${encodeURIComponent(job.company.hojinno)}`
                 : "#"
             }
-            className="mt-2 inline-flex items-center gap-1 text-sm text-blue-700 hover:underline"
+            className="mt-2 inline-flex items-center gap-1 text-sm text-primary-600 hover:underline"
           >
             <Building2 className="h-4 w-4" />
             {job.company.name}
@@ -159,7 +159,7 @@ export default async function HwJobDetailPage({ params }: PageProps) {
               label: "メール",
               value: job.contact.email,
               renderValue: (val) => (
-                <a className="text-blue-700 hover:underline" href={`mailto:${val}`}>
+                <a className="text-primary-600 hover:underline" href={`mailto:${val}`}>
                   <Mail className="mr-1 inline h-3.5 w-3.5" />
                   {val}
                 </a>
@@ -191,7 +191,7 @@ function BackLink() {
   return (
     <Link
       href="/hw-jobs"
-      className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-blue-600"
+      className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-primary-600"
     >
       <ChevronLeft className="h-4 w-4" />
       求人一覧に戻る
