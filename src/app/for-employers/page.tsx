@@ -122,9 +122,15 @@ const comparisonRows = [
 export default function ForEmployersPage() {
   return (
     <div>
-      {/* Hero Section - Black with yellow accents */}
-      <section className="relative bg-ink-900 py-10 sm:py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* Hero Section - Black with yellow accent stripes */}
+      <section className="relative bg-ink-900 py-12 sm:py-16">
+        <div className="hero-stripe-top" />
+        <div className="hero-stripe-bottom" />
+        <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: "radial-gradient(rgba(245, 180, 0, 0.08) 1.5px, transparent 1.5px)",
+          backgroundSize: "22px 22px",
+        }} />
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
             {/* Left side - Text + Category links */}
             <div className="flex-1">

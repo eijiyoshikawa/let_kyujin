@@ -193,13 +193,13 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="bg-warm-50">
+    <div className="bg-white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
 
-      {/* ===== Hero with diagonal black overlay ===== */}
-      <section className="relative bg-warm-50">
+      {/* ===== Hero ===== */}
+      <section className="relative bg-white">
         <div className="relative mx-auto max-w-7xl">
-          <div className="relative h-[420px] sm:h-[480px] lg:h-[520px] overflow-hidden">
+          <div className="relative h-[440px] sm:h-[500px] lg:h-[560px] overflow-hidden">
             <Image
               src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1920&h=900&fit=crop&q=85"
               alt="建設現場で働く作業員"
@@ -208,12 +208,16 @@ export default async function HomePage() {
               className="object-cover object-center"
               sizes="100vw"
             />
-            {/* Diagonal black overlay (right side) */}
-            <div className="hero-diagonal" />
+            {/* Soft diagonal gradient (replaces hard triangle clip) */}
+            <div className="hero-overlay" />
+            {/* Yellow accent stripes */}
+            <div className="hero-stripe-top" />
+            <div className="hero-stripe-bottom" />
 
-            {/* Update badge (top-right) */}
-            <div className="absolute right-6 top-6 z-10 flex h-20 w-20 items-center justify-center rounded-full bg-brand-yellow-500 text-center shadow-lg sm:right-10 sm:top-10 sm:h-24 sm:w-24">
-              <p className="text-[11px] font-black text-ink-900 leading-tight">毎週金曜<br/>更新！</p>
+            {/* Update badge (top-right, flat tag) */}
+            <div className="absolute right-0 top-12 z-10 flex items-center gap-2 bg-brand-yellow-500 pl-4 pr-6 py-2 shadow-lg sm:top-16">
+              <span className="block h-2 w-2 rounded-full bg-ink-900" />
+              <p className="text-xs font-black text-ink-900 tracking-tight">毎週金曜更新！</p>
             </div>
 
             {/* Hero content (right side over black) */}
@@ -359,7 +363,7 @@ export default async function HomePage() {
       <LogoSlider />
 
       {/* ===== Featured carousel ===== */}
-      <section className="bg-warm-50 py-10">
+      <section className="bg-white py-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-baseline justify-between">
             <h2 className="text-xl font-black text-ink-900 tracking-tight">特集</h2>
@@ -377,7 +381,7 @@ export default async function HomePage() {
       </section>
 
       {/* ===== Hyakumeisha banner ===== */}
-      <section className="bg-warm-50 pb-8">
+      <section className="section-warm pb-8 pt-2">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <Link href="/jobs?hyakumeisha=1" className="block  bg-warm-100 p-5 hover:bg-warm-200 transition">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -402,7 +406,7 @@ export default async function HomePage() {
       </section>
 
       {/* ===== Latest jobs ===== */}
-      <section className="bg-warm-50 pb-10">
+      <section className="bg-white pb-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-baseline gap-3">
             <h2 className="text-xl font-black text-ink-900 tracking-tight">今週の新着求人</h2>
@@ -464,7 +468,7 @@ export default async function HomePage() {
       </section>
 
       {/* ===== Categories (occupations) ===== */}
-      <section className="bg-warm-50 py-10">
+      <section className="section-warm py-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-black text-ink-900 tracking-tight">職種から探す</h2>
           <AnimateOnScroll animation="stagger">
@@ -500,7 +504,7 @@ export default async function HomePage() {
       </section>
 
       {/* ===== Magazine + Interview ===== */}
-      <section className="bg-warm-50 pb-10">
+      <section className="bg-white pb-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-6 md:grid-cols-2">
             <div className=" border border-warm-200 bg-white overflow-hidden">
@@ -589,7 +593,7 @@ export default async function HomePage() {
       </section>
 
       {/* ===== Sidebar content + News (compact) ===== */}
-      <section className="bg-warm-50 py-10">
+      <section className="section-warm py-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-6 lg:grid-cols-3">
             {/* Popular jobs */}

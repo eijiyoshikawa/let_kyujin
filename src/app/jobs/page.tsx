@@ -103,7 +103,9 @@ export default async function JobsPage({ searchParams }: Props) {
   return (
     <div>
       {/* Search header */}
-      <div className="bg-primary-700">
+      <div className="relative bg-ink-900">
+        <div className="hero-stripe-top" />
+        <div className="hero-stripe-bottom" />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-bold text-white">求人検索</h1>
@@ -129,7 +131,7 @@ export default async function JobsPage({ searchParams }: Props) {
               </div>
               <button
                 type="submit"
-                className="flex items-center gap-1.5  bg-white px-5 py-2.5 text-sm font-semibold text-primary-700 shadow-sm hover:bg-primary-50 transition"
+                className="flex items-center gap-1.5 rounded-full bg-primary-500 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-primary-600 transition"
               >
                 <Search className="h-4 w-4" />
                 検索

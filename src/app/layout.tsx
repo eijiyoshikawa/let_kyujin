@@ -53,7 +53,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" className={`h-full antialiased ${notoSansJP.variable}`}>
-      <body className="min-h-full flex flex-col font-sans bg-warm-50">
+      <body className="min-h-full flex flex-col font-sans bg-white">
         <GoogleAnalytics />
         <Header />
         <main className="flex-1">{children}</main>
