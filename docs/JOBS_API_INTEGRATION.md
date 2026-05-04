@@ -202,7 +202,22 @@ git remote add origin https://github.com/eijiyoshikawa/hellowork-api-connector.g
 git push -u origin main
 ```
 
-### ステップ D: 媒体側 Vercel に `JOBS_API_*` 設定 ⏭ **次のタスク**
+### ステップ D: 媒体側 Vercel に `JOBS_API_*` 設定 ✅
+
+- `JOBS_API_BASE_URL` / `JOBS_API_KEY` を Vercel ダッシュボードに登録
+- Production Branch を `claude/update-website-design-Cu8LX` → **`submain`** に変更
+  - 以降は submain への push が自動で `genbacareer.jp` に反映される
+- 設定反映 Redeploy 実行
+
+### ステップ E: デザインリブランド ✅
+
+参考デザイン（助太刀社員）を元に Phase 4〜6 を実施:
+- 3軸トリコロール（brand-yellow / primary-orange / ink-black）に統合
+- ヒーロー: 黒斜めオーバーレイ + 大ロゴ + 更新バッジ + CTA 2 本
+- 黄色求人検索ボックス + 黒ヘッダーかんたん検索 + ピル型ボタン
+- 特集 / 百名社風バナー / 今週の新着求人 / テーマグリッド / 信頼セクション
+- 黒帯フッター（アプリ案内 + 求人掲載 CTA）
+- 角丸全面削除 + Noto Sans JP (Black 900) 字体導入
 
 ---
 
