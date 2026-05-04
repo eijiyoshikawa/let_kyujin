@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
           where: { id: billingEventId },
           data: { status: "paid" },
         })
-        console.log(`[stripe-webhook] BillingEvent ${billingEventId} marked as paid`)
+        console.info(`[stripe-webhook] BillingEvent ${billingEventId} marked as paid`)
       }
       break
     }
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
           where: { id: billingEventId },
           data: { status: "invoiced" },
         })
-        console.log(`[stripe-webhook] BillingEvent ${billingEventId} status → invoiced (${event.type})`)
+        console.info(`[stripe-webhook] BillingEvent ${billingEventId} status → invoiced (${event.type})`)
       }
       break
     }

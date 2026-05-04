@@ -82,15 +82,16 @@ export default function ContactPage() {
   return (
     <div>
       {/* Header */}
-      <div className="bg-gradient-to-br from-blue-800 via-blue-700 to-blue-600 text-white">
+      <div className="bg-gradient-to-br from-primary-700 via-primary-600 to-primary-500 text-white">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8">
           <h1 className="flex items-center gap-2 text-2xl font-bold">
             <HelpCircle className="h-7 w-7" />
             ヘルプ・お問い合わせ
           </h1>
-          <p className="mt-2 text-blue-200">
+          <p className="mt-2 text-primary-200">
             ご不明な点がございましたら、お気軽にお問い合わせください。
           </p>
+
         </div>
       </div>
 
@@ -99,11 +100,11 @@ export default function ContactPage() {
         <AnimateOnScroll animation="stagger">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <div className="hover-lift rounded-xl border bg-white p-6 shadow-sm">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-              <Phone className="h-5 w-5 text-blue-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+              <Phone className="h-5 w-5 text-primary-600" />
             </div>
             <h3 className="mt-3 font-bold text-gray-900">お電話</h3>
-            <p className="mt-1 text-lg font-bold text-blue-600">06-6786-8320</p>
+            <p className="mt-1 text-lg font-bold text-primary-600">06-6786-8320</p>
             <div className="mt-2 flex items-center gap-1.5 text-xs text-gray-500">
               <Clock className="h-3.5 w-3.5" />
               平日 10:00〜19:00（土日祝除く）
@@ -111,19 +112,19 @@ export default function ContactPage() {
           </div>
 
           <div className="hover-lift rounded-xl border bg-white p-6 shadow-sm">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-              <Mail className="h-5 w-5 text-blue-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+              <Mail className="h-5 w-5 text-primary-600" />
             </div>
             <h3 className="mt-3 font-bold text-gray-900">メール</h3>
-            <p className="mt-1 text-sm text-blue-600">info@let-group.co.jp</p>
+            <p className="mt-1 text-sm text-primary-600">info@let-group.co.jp</p>
             <p className="mt-2 text-xs text-gray-500">
               通常1〜2営業日以内にご返信いたします。
             </p>
           </div>
 
           <div className="hover-lift rounded-xl border bg-white p-6 shadow-sm sm:col-span-2 lg:col-span-1">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-              <MapPin className="h-5 w-5 text-blue-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+              <MapPin className="h-5 w-5 text-primary-600" />
             </div>
             <h3 className="mt-3 font-bold text-gray-900">所在地</h3>
             <p className="mt-1 text-sm text-gray-700">
@@ -139,7 +140,7 @@ export default function ContactPage() {
         {/* Support categories */}
         <AnimateOnScroll>
         <h2 className="mt-12 flex items-center gap-2 text-xl font-bold text-gray-900">
-          <MessageSquare className="h-5 w-5 text-blue-600" />
+          <MessageSquare className="h-5 w-5 text-primary-600" />
           サポート情報
         </h2>
         </AnimateOnScroll>
@@ -150,7 +151,7 @@ export default function ContactPage() {
             return (
               <div key={section.title} className="hover-lift rounded-xl border bg-white p-5 shadow-sm">
                 <div className="flex items-center gap-2">
-                  <Icon className="h-5 w-5 text-blue-600" />
+                  <Icon className="h-5 w-5 text-primary-600" />
                   <h3 className="font-bold text-gray-900">{section.title}</h3>
                 </div>
                 <p className="mt-2 text-xs text-gray-500">{section.description}</p>
@@ -159,7 +160,7 @@ export default function ContactPage() {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 hover:underline"
+                        className="flex items-center gap-1 text-sm text-primary-600 hover:text-primary-700 hover:underline"
                       >
                         <ChevronRight className="h-3.5 w-3.5" />
                         {link.label}
@@ -176,7 +177,7 @@ export default function ContactPage() {
         {/* FAQ */}
         <AnimateOnScroll>
         <h2 className="mt-12 flex items-center gap-2 text-xl font-bold text-gray-900">
-          <HelpCircle className="h-5 w-5 text-blue-600" />
+          <HelpCircle className="h-5 w-5 text-primary-600" />
           よくある質問
         </h2>
         </AnimateOnScroll>
@@ -185,7 +186,7 @@ export default function ContactPage() {
           {faqs.map((faq) => (
             <div key={faq.q} className="hover-lift rounded-xl border bg-white p-5 shadow-sm">
               <h3 className="flex items-start gap-2 font-bold text-gray-900">
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-600 text-[10px] font-bold text-white">
                   Q
                 </span>
                 {faq.q}
@@ -200,7 +201,7 @@ export default function ContactPage() {
 
         {/* CTA */}
         <AnimateOnScroll animation="fade-up">
-        <div className="mt-12 rounded-2xl bg-blue-50 border border-blue-100 p-8 text-center">
+        <div className="mt-12 rounded-2xl bg-primary-50 border border-primary-100 p-8 text-center">
           <h3 className="text-lg font-bold text-gray-900">
             解決しない場合は
           </h3>
@@ -210,7 +211,7 @@ export default function ContactPage() {
           <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <a
               href="tel:06-6786-8320"
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-bold text-white hover:bg-blue-700 transition"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary-600 px-6 py-3 text-sm font-bold text-white hover:bg-primary-700 transition"
             >
               <Phone className="h-4 w-4" />
               06-6786-8320

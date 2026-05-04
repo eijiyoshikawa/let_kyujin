@@ -50,7 +50,7 @@ export default function ForgotPasswordPage() {
           </p>
           <Link
             href="/login"
-            className="mt-4 inline-block text-sm font-medium text-blue-600 hover:text-blue-700"
+            className="mt-4 inline-block text-sm font-medium text-primary-600 hover:text-primary-700"
           >
             ログインページへ戻る
           </Link>
@@ -84,13 +84,13 @@ export default function ForgotPasswordPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+            className="w-full rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
           >
             {loading ? "送信中..." : "リセットリンクを送信"}
           </button>
 
           <p className="text-center text-sm text-gray-500">
-            <Link href="/login" className="text-blue-600 hover:text-blue-700">
+            <Link href="/login" className="text-primary-600 hover:text-primary-700">
               ログインページへ戻る
             </Link>
           </p>

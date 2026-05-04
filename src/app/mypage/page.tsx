@@ -40,8 +40,8 @@ export default async function MyPage() {
       {/* User Info */}
       <div className="mt-6 rounded-lg border bg-white p-6 shadow-sm">
         <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-100">
-            <User className="h-7 w-7 text-blue-600" />
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-100">
+            <User className="h-7 w-7 text-primary-600" />
           </div>
           <div>
             <p className="text-lg font-semibold text-gray-900">
@@ -73,8 +73,8 @@ export default async function MyPage() {
           href="/mypage/applications"
           className="flex items-center gap-4 rounded-lg border bg-white p-5 shadow-sm transition hover:shadow-md"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-            <FileText className="h-5 w-5 text-blue-600" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+            <FileText className="h-5 w-5 text-primary-600" />
           </div>
           <div>
             <p className="font-semibold text-gray-900">応募一覧</p>
@@ -129,9 +129,9 @@ export default async function MyPage() {
           href="/jobs"
           className="flex items-center gap-4 rounded-lg border bg-white p-5 shadow-sm transition hover:shadow-md"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
             <svg
-              className="h-5 w-5 text-blue-600"
+              className="h-5 w-5 text-primary-600"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={2}

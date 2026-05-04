@@ -96,7 +96,7 @@ export function ProfileForm({ initialData }: { initialData: ProfileFormData }) {
             maxLength={100}
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
-            className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"
           />
         </div>
 
@@ -176,7 +176,7 @@ export function ProfileForm({ initialData }: { initialData: ProfileFormData }) {
                 onClick={() => toggleCategory(c.value)}
                 className={`rounded-full px-3 py-1 text-sm font-medium transition ${
                   form.desiredCategories.includes(c.value)
-                    ? "bg-blue-600 text-white"
+                    ? "bg-primary-600 text-white"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
               >
@@ -211,7 +211,7 @@ export function ProfileForm({ initialData }: { initialData: ProfileFormData }) {
             onChange={(e) =>
               setForm({ ...form, profilePublic: e.target.checked })
             }
-            className="h-4 w-4 rounded border-gray-300 text-blue-600"
+            className="h-4 w-4 rounded border-gray-300 text-primary-600"
           />
           <span className="text-sm text-gray-700">
             プロフィールを企業に公開する（スカウトを受け取るために必要です）
@@ -223,7 +223,7 @@ export function ProfileForm({ initialData }: { initialData: ProfileFormData }) {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-md bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+          className="rounded-md bg-primary-600 px-6 py-2 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
         >
           {loading ? "保存中..." : "保存する"}
         </button>

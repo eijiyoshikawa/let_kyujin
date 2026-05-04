@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db"
 
 export const dynamic = "force-dynamic"
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://let-kyujin.vercel.app"
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://genbacareer.jp"
 
 const journalSlugs = [
   "construction-career-guide",

@@ -21,17 +21,16 @@ export function JobCard({ job }: { job: JobCardProps }) {
   return (
     <Link
       href={`/jobs/${job.id}`}
-      className="group flex gap-4 rounded-lg border bg-white p-4 shadow-sm transition hover:shadow-md hover:border-blue-300"
+      className="group flex gap-4 rounded-lg border bg-white p-4 transition hover:border-primary-400"
     >
-      {/* Left: category icon */}
-      <div className="hidden sm:flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-blue-50 group-hover:bg-blue-100 transition">
-        <HardHat className="h-6 w-6 text-blue-600" />
+      <div className="hidden sm:flex h-10 w-10 shrink-0 items-center justify-center rounded bg-gray-100 group-hover:bg-primary-50 transition">
+        <HardHat className="h-6 w-6 text-primary-500" />
       </div>
 
       {/* Center: content */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="inline-flex items-center gap-1 rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+          <span className="inline-flex items-center gap-1 rounded bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700">
             {getCategoryLabel(job.category)}
           </span>
           {job.employmentType && (
@@ -46,7 +45,7 @@ export function JobCard({ job }: { job: JobCardProps }) {
           )}
         </div>
 
-        <h3 className="mt-1.5 text-base font-semibold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition">
+        <h3 className="mt-1.5 text-base font-semibold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition">
           {job.title}
         </h3>
 
@@ -64,7 +63,7 @@ export function JobCard({ job }: { job: JobCardProps }) {
             {job.city && ` ${job.city}`}
           </span>
           {job.salaryMin && (
-            <span className="flex items-center gap-1 font-medium text-blue-600">
+            <span className="flex items-center gap-1 font-medium text-primary-600">
               <Banknote className="h-3.5 w-3.5" />
               {formatSalary(job.salaryMin, job.salaryMax, job.salaryType)}
             </span>
@@ -87,7 +86,7 @@ export function JobCard({ job }: { job: JobCardProps }) {
 
       {/* Right: chevron */}
       <div className="hidden sm:flex items-center">
-        <ChevronRight className="h-5 w-5 text-gray-300 group-hover:text-blue-500 transition" />
+        <ChevronRight className="h-5 w-5 text-gray-300 group-hover:text-primary-500 transition" />
       </div>
     </Link>
   )

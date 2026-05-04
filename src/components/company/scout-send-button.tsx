@@ -61,7 +61,7 @@ export function ScoutSendButton({
     return (
       <button
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700"
+        className="inline-flex items-center gap-1.5 rounded-md bg-primary-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-primary-700"
       >
         <Send className="h-3 w-3" />
         スカウト
@@ -107,7 +107,7 @@ export function ScoutSendButton({
         <button
           onClick={handleSend}
           disabled={loading}
-          className="rounded-md bg-blue-600 px-3 py-1 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+          className="rounded-md bg-primary-600 px-3 py-1 text-xs font-medium text-white hover:bg-primary-700 disabled:opacity-50"
         >
           {loading ? "送信中..." : "送信"}
         </button>

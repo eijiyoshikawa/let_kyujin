@@ -4,7 +4,7 @@ import { HardHat, Search, Home } from "lucide-react"
 export default function NotFound() {
   return (
     <div className="mx-auto max-w-lg px-4 py-24 text-center">
-      <HardHat className="mx-auto h-16 w-16 text-blue-300" />
+      <HardHat className="mx-auto h-16 w-16 text-primary-300" />
       <h1 className="mt-6 text-4xl font-bold text-gray-900">404</h1>
       <p className="mt-2 text-lg text-gray-600">
         ページが見つかりませんでした
@@ -16,7 +16,7 @@ export default function NotFound() {
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
         <Link
           href="/jobs"
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-primary-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-700"
         >
           <Search className="h-4 w-4" />
           求人を検索する

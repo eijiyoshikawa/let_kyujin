@@ -96,7 +96,7 @@ export async function PUT(
         const { createHiringInvoice } = await import("@/lib/billing")
         await createHiringInvoice(id)
       } else {
-        console.log(`[billing] Skipped duplicate invoice for application ${id}`)
+        console.info(`[billing] Skipped duplicate invoice for application ${id}`)
       }
     } catch (error) {
       console.error(`[billing] Failed to create invoice for application ${id}:`, error)
