@@ -264,12 +264,21 @@ function toHelloworkJobData(
   const description = str(record.shigoto_ny)
   const companyName = str(record.jgshmei) ?? "不明"
   const employmentType = parseEmploymentType(str(record.koyokeitai_n) ?? "")
-  const address = str(record.shgbsjusho)
-  const { prefecture, city } = splitPrefectureCity(str(record.shgbsjusho1_n))
+  const address =
+    str(record.shgbsjusho) ?? str(record.jgshjusho_n) ?? null
+
+  // 都道府県・市区町村は shgbsjusho1_n → shgbsjusho → jgshjusho_n の順でフォールバック
+  const locText =
+    str(record.shgbsjusho1_n) ??
+    str(record.shgbsjusho) ??
+    str(record.jgshjusho_n)
+  const { prefecture, city } = splitPrefectureCity(locText)
 
   const salaryMin = numericOrNull(record.chgnkeitai_kagen)
   const salaryMax = numericOrNull(record.chgnkeitai_jgn)
-  const salaryType = inferSalaryType(str(record.chgnkeitai))
+  const salaryType =
+    inferSalaryType(str(record.chgnkeitai)) ??
+    inferSalaryTypeFromAmount(salaryMin ?? salaryMax)
 
   const requirements = str(record.menkyo_skku3_n)
 
@@ -326,6 +335,22 @@ function inferSalaryType(
   if (/年俸|年額|年収/.test(formatText)) return "annual"
   if (/日給/.test(formatText)) return "monthly"
   return null
+}
+
+/**
+ * 賃金タグから種別が判定できないとき、金額レンジから推定する。
+ * 凡そのレンジ:
+ *   - 時給: 〜 5,000 円
+ *   - 月給: 50,000 〜 1,500,000 円
+ *   - 年俸: 1,500,000 円以上
+ */
+function inferSalaryTypeFromAmount(
+  amount: number | null
+): "monthly" | "hourly" | "annual" | null {
+  if (amount === null || amount <= 0) return null
+  if (amount < 5000) return "hourly"
+  if (amount < 1500000) return "monthly"
+  return "annual"
 }
 
 function splitPrefectureCity(text: string | null): {
