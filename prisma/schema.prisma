@@ -271,6 +271,25 @@ model Article {
 }
 
 // ========================================
+// 外部 API 取り込み進捗
+// HelloWork 全国 36 万件の (dataId, page) ローテーション状態を保持する
+// ========================================
+model ImportProgress {
+  id           String    @id @default(uuid()) @db.Uuid
+  source       String    @db.VarChar(20)  // "hellowork"
+  dataId       String    @map("data_id") @db.VarChar(20)  // e.g. "M100"
+  lastPage     Int       @default(0) @map("last_page")  // 直近で完了したページ番号 (0=未着手)
+  exhausted    Boolean   @default(false)  // 末尾ページに到達したら true
+  totalFetched Int       @default(0) @map("total_fetched")
+  lastRunAt    DateTime? @map("last_run_at") @db.Timestamptz()
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz()
+
+  @@unique([source, dataId])
+  @@map("import_progress")
+}
+
+// ========================================
 // SEOランディングページ
 // ========================================
 model SeoPage {
