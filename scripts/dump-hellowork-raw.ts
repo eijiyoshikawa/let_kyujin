@@ -46,7 +46,7 @@ function tryExtractToken(xml: string): string | null {
 
 function tryExtractDataIds(xml: string): string[] {
   const ids: string[] = []
-  const re = /<(?:dataId|id)>([^<]+)<\/(?:dataId|id)>/gi
+  const re = /<(?:data_id|dataId|id)>([^<]+)<\/(?:data_id|dataId|id)>/gi
   let m: RegExpExecArray | null
   while ((m = re.exec(xml)) !== null) {
     const v = m[1].trim()

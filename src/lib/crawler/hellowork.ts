@@ -193,7 +193,7 @@ export async function delToken(token: string): Promise<void> {
 export async function fetchKyujinIdList(token: string): Promise<string[]> {
   const xml = await postForm(`${getApiBase()}/kyujin`, { token })
   const parsed = parseXml<Record<string, unknown>>(xml)
-  return collectStrings(parsed, /^(dataId|id)$/i)
+  return collectStrings(parsed, /^(data_id|dataId|id)$/i)
 }
 
 /**
