@@ -146,16 +146,33 @@ export async function getToken(creds: HelloworkCredentials): Promise<string> {
   return token
 }
 
+/**
+ * <root><token>...</token></root> 構造から token を抽出する。
+ * フォールバックとして、十分な長さ (>=16) の文字列値を再帰探索する。
+ */
 function extractToken(parsed: unknown): string | null {
-  if (!parsed || typeof parsed !== "object") return null
-  for (const value of Object.values(parsed as Record<string, unknown>)) {
-    if (typeof value === "string" && value.trim()) return value.trim()
-    if (value && typeof value === "object") {
-      const nested = extractToken(value)
-      if (nested) return nested
+  const direct = (parsed as { root?: { token?: unknown } } | null)?.root?.token
+  if (typeof direct === "string" && direct.trim()) return direct.trim()
+
+  let best: string | null = null
+  walk(parsed)
+  return best
+  function walk(n: unknown): void {
+    if (!n || typeof n !== "object") return
+    if (Array.isArray(n)) {
+      n.forEach(walk)
+      return
+    }
+    for (const [k, v] of Object.entries(n as Record<string, unknown>)) {
+      if (k.startsWith("?")) continue
+      if (typeof v === "string") {
+        const t = v.trim()
+        if (t.length >= 16 && (!best || t.length > best.length)) best = t
+      } else if (typeof v === "object") {
+        walk(v)
+      }
     }
   }
-  return null
 }
 
 /**
