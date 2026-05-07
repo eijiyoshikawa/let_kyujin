@@ -28,7 +28,10 @@ export async function POST(request: Request) {
 
   const url = new URL(request.url)
   const maxJobs = parseInt(url.searchParams.get("maxJobs") ?? "1000", 10)
-  const closeOrphans = url.searchParams.get("closeOrphans") !== "false"
+  // closeOrphans は安全側のためデフォルト false。
+  // 明示的に ?closeOrphans=true を指定したときのみ、今回バッチに含まれない
+  // 既存 HW 求人を closed にする（= 全件取り込みを意図したケースのみ）。
+  const closeOrphans = url.searchParams.get("closeOrphans") === "true"
 
   const t0 = Date.now()
 
