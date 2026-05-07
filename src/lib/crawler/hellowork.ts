@@ -450,6 +450,65 @@ export async function fetchAllJobs(
   }
 }
 
+/**
+ * 指定 dataId の指定ページから連続で N ページ分だけ取得する。
+ * 全国36万件取り込みのページローテーション戦略で使用する。
+ *
+ * @returns
+ *   - jobs: 取得できた求人配列
+ *   - lastPage: 実際に最後まで取れたページ番号（0 件ページに当たった直前のページ）
+ *   - exhausted: 0 件ページに到達したか（= この dataId の取り尽くし完了）
+ */
+export async function fetchPagesFromDataId(
+  token: string,
+  dataId: string,
+  startPage: number,
+  pageCount: number
+): Promise<{
+  jobs: HelloworkJobData[]
+  lastPage: number
+  exhausted: boolean
+}> {
+  const allJobs: HelloworkJobData[] = []
+  let lastPage = startPage - 1
+  let exhausted = false
+
+  for (let i = 0; i < pageCount; i++) {
+    const page = startPage + i
+    const jobs = await fetchKyujinByDataId(token, dataId, page)
+    if (jobs.length === 0) {
+      exhausted = true
+      break
+    }
+    allJobs.push(...jobs)
+    lastPage = page
+  }
+
+  return { jobs: allJobs, lastPage, exhausted }
+}
+
+/**
+ * dataId リストのみを取得する軽量ヘルパー（getToken / delToken 含む）。
+ * 進捗テーブルの初期化用。
+ */
+export async function fetchDataIds(
+  creds?: HelloworkCredentials
+): Promise<string[]> {
+  const credentials = creds ?? readCredentialsFromEnv()
+  const token = await getToken(credentials)
+  try {
+    return await fetchKyujinIdList(token)
+  } finally {
+    try {
+      await delToken(token)
+    } catch (e) {
+      console.error(
+        `[hellowork] トークン破棄に失敗: ${e instanceof Error ? e.message : e}`
+      )
+    }
+  }
+}
+
 function readCredentialsFromEnv(): HelloworkCredentials {
   const id = process.env.HELLOWORK_API_USER
   const pass = process.env.HELLOWORK_API_PASS
