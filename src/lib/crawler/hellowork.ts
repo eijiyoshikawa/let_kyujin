@@ -241,86 +241,48 @@ function collectStrings(node: unknown, keyPattern: RegExp): string[] {
   }
 }
 
+/**
+ * /kyujin/{dataId}/{page} レスポンスから求人レコード配列を抽出する。
+ * 想定構造: <root><kyujin><data>...</data><data>...</data></kyujin></root>
+ */
 function parseJobsFromKyujinXml(parsed: unknown): HelloworkJobData[] {
-  const records = findKyujinRecords(parsed)
+  const dataNode = (parsed as { root?: { kyujin?: { data?: unknown } } } | null)
+    ?.root?.kyujin?.data
+  if (!dataNode) return []
+  const records = Array.isArray(dataNode) ? dataNode : [dataNode]
   return records
-    .map(toHelloworkJobData)
+    .map((r) => toHelloworkJobData(r as Record<string, unknown>))
     .filter((j): j is HelloworkJobData => j !== null)
-}
-
-function findKyujinRecords(node: unknown): Record<string, unknown>[] {
-  const acc: Record<string, unknown>[] = []
-  walk(node)
-  return acc
-  function walk(n: unknown): void {
-    if (!n || typeof n !== "object") return
-    if (Array.isArray(n)) {
-      n.forEach(walk)
-      return
-    }
-    const obj = n as Record<string, unknown>
-    if (looksLikeKyujinRecord(obj)) {
-      acc.push(obj)
-      return
-    }
-    for (const v of Object.values(obj)) walk(v)
-  }
-}
-
-function looksLikeKyujinRecord(obj: Record<string, unknown>): boolean {
-  const keys = Object.keys(obj).map((k) => k.toLowerCase())
-  const hasId = keys.some((k) => /(kyujinno|kyujinbango|jobno|jobnumber)/.test(k))
-  const hasTitleish = keys.some((k) =>
-    /(shokushuname|shokushu|jobtitle|title|shigotonaiyou)/.test(k)
-  )
-  return hasId && hasTitleish
 }
 
 function toHelloworkJobData(
   record: Record<string, unknown>
 ): HelloworkJobData | null {
-  const get = (patterns: RegExp[]): string | null => {
-    for (const [k, v] of Object.entries(record)) {
-      const lk = k.toLowerCase()
-      if (patterns.some((p) => p.test(lk))) {
-        if (typeof v === "string") return v.trim() || null
-        if (typeof v === "number") return String(v)
-      }
-    }
-    return null
-  }
-
-  const helloworkId = get([/^(kyujinno|kyujinbango|jobno|jobnumber)$/])
+  const helloworkId = str(record.kjno)
   if (!helloworkId) return null
 
-  const title = get([/(shokushuname|jobtitle|^title$)/]) ?? "不明"
-  const companyName =
-    get([/(jigyoshoname|companyname|jigyousho|company)/]) ?? "不明"
-  const description = get([/(shigotonaiyou|description|naiyou)/])
-  const requirements = get([/(hitsuyounakeiken|requirements|shikaku)/])
-  const prefecture = get([/(prefecture|todoufuken|shozaichi.*ken|kinmuti.*ken)/]) ?? ""
-  const city = get([/(city|shichouson)/])
-  const address = get([/(address|shozaichi|kinmuchi|kinmuti)/])
+  const description = str(record.shigoto_ny)
+  const companyName = str(record.jgshmei) ?? "不明"
+  const employmentType = parseEmploymentType(str(record.koyokeitai_n) ?? "")
+  const address = str(record.shgbsjusho)
+  const { prefecture, city } = splitPrefectureCity(str(record.shgbsjusho1_n))
 
-  const salaryText = [
-    get([/(chinginkeitai|salaryform)/]),
-    get([/(chinginmin|salarymin|^chingin$)/]),
-    get([/(chinginmax|salarymax)/]),
-  ]
-    .filter(Boolean)
-    .join(" ")
-  const salary = parseSalary(salaryText)
+  const salaryMin = numericOrNull(record.chgnkeitai_kagen)
+  const salaryMax = numericOrNull(record.chgnkeitai_jgn)
+  const salaryType = inferSalaryType(str(record.chgnkeitai))
 
-  const employmentText = get([/(koyoukeitai|employmenttype|koyou)/]) ?? ""
-  const employmentType = parseEmploymentType(employmentText)
+  const requirements = str(record.menkyo_skku3_n)
+
+  // タイトルは独立した「職種名」タグが無いので、仕事内容の冒頭を流用する
+  const title = description ? description.slice(0, 80) : "求人"
 
   return {
     helloworkId,
     title,
     companyName,
-    salaryMin: salary.min,
-    salaryMax: salary.max,
-    salaryType: salary.type,
+    salaryMin,
+    salaryMax,
+    salaryType,
     prefecture,
     city,
     address,
@@ -333,37 +295,48 @@ function toHelloworkJobData(
 }
 
 // ========================================
-// 値パース
+// 値ヘルパー
 // ========================================
 
-export function parseSalary(salaryText: string): {
-  min: number | null
-  max: number | null
-  type: "monthly" | "hourly" | "annual" | null
-} {
-  if (!salaryText) return { min: null, max: null, type: null }
-  const normalized = salaryText.replace(/,/g, "").replace(/，/g, "")
-
-  let type: "monthly" | "hourly" | "annual" | null = null
-  if (/月額|月給/.test(normalized)) type = "monthly"
-  else if (/時給|時間額/.test(normalized)) type = "hourly"
-  else if (/年俸|年額|年収/.test(normalized)) type = "annual"
-  else if (/日給/.test(normalized)) {
-    type = "monthly"
-    const dailyNumbers = normalized.match(/(\d+)/g)
-    if (dailyNumbers) {
-      const min = parseInt(dailyNumbers[0], 10) * 22
-      const max =
-        dailyNumbers.length > 1 ? parseInt(dailyNumbers[1], 10) * 22 : null
-      return { min, max, type }
-    }
+function str(v: unknown): string | null {
+  if (typeof v === "string") {
+    const t = v.trim()
+    return t || null
   }
+  if (typeof v === "number") return String(v)
+  return null
+}
 
-  const numbers = normalized.match(/(\d+)/g)
-  if (!numbers || numbers.length === 0) return { min: null, max: null, type }
-  const min = parseInt(numbers[0], 10)
-  const max = numbers.length > 1 ? parseInt(numbers[1], 10) : null
-  return { min, max, type }
+function numericOrNull(v: unknown): number | null {
+  const s = str(v)
+  if (!s) return null
+  const cleaned = s.replace(/,/g, "").replace(/，/g, "")
+  const m = cleaned.match(/-?\d+/)
+  if (!m) return null
+  const n = parseInt(m[0], 10)
+  return isNaN(n) ? null : n
+}
+
+function inferSalaryType(
+  formatText: string | null
+): "monthly" | "hourly" | "annual" | null {
+  if (!formatText) return null
+  if (/月給|月額/.test(formatText)) return "monthly"
+  if (/時給|時間額/.test(formatText)) return "hourly"
+  if (/年俸|年額|年収/.test(formatText)) return "annual"
+  if (/日給/.test(formatText)) return "monthly"
+  return null
+}
+
+function splitPrefectureCity(text: string | null): {
+  prefecture: string
+  city: string | null
+} {
+  if (!text) return { prefecture: "", city: null }
+  const m = text.match(/^(北海道|東京都|(?:大阪|京都)府|.{2,3}県)(.*)$/)
+  if (!m) return { prefecture: text, city: null }
+  const city = m[2].trim()
+  return { prefecture: m[1], city: city || null }
 }
 
 function parseEmploymentType(
@@ -374,6 +347,25 @@ function parseEmploymentType(
   if (/パート|アルバイト|短時間/.test(text)) return "part_time"
   if (/契約|有期|派遣|臨時|嘱託/.test(text)) return "contract"
   return null
+}
+
+// ========================================
+// 後方互換: 旧 parseSalary を残す（テキスト→数値変換用）
+// ========================================
+
+export function parseSalary(salaryText: string): {
+  min: number | null
+  max: number | null
+  type: "monthly" | "hourly" | "annual" | null
+} {
+  if (!salaryText) return { min: null, max: null, type: null }
+  const normalized = salaryText.replace(/,/g, "").replace(/，/g, "")
+  const type = inferSalaryType(normalized)
+  const numbers = normalized.match(/(\d+)/g)
+  if (!numbers || numbers.length === 0) return { min: null, max: null, type }
+  const min = parseInt(numbers[0], 10)
+  const max = numbers.length > 1 ? parseInt(numbers[1], 10) : null
+  return { min, max, type }
 }
 
 // ========================================

@@ -109,3 +109,4 @@ main().catch((e) => {
   console.error("Unhandled error:", e)
   process.exit(1)
 })
+export {}
