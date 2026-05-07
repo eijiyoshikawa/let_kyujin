@@ -1,28 +1,42 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fafafa;
+  --background: #ffffff;
   --foreground: #18181b;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  /* Brand orange (CTA) */
   --color-primary-50:  #fff7ed;
   --color-primary-100: #ffedd5;
   --color-primary-200: #fed7aa;
   --color-primary-300: #fdba74;
   --color-primary-400: #fb923c;
-  --color-primary-500: #f97316;
-  --color-primary-600: #ea580c;
+  --color-primary-500: #f37524;
+  --color-primary-600: #e25c0e;
   --color-primary-700: #c2410c;
   --color-primary-800: #9a3412;
   --color-primary-900: #7c2d12;
+  /* Brand yellow (hero band, search box, theme grid band) */
+  --color-brand-yellow-50:  #fffbeb;
+  --color-brand-yellow-100: #fef3c7;
+  --color-brand-yellow-200: #fde68a;
+  --color-brand-yellow-300: #fcd34d;
+  --color-brand-yellow-400: #fbbf24;
+  --color-brand-yellow-500: #f5b400;
+  --color-brand-yellow-600: #d99e00;
+  --color-brand-yellow-700: #b48108;
+  /* Brand ink (hero overlay, easy-search header, footer) */
+  --color-ink-700: #2a2d31;
+  --color-ink-800: #1f2226;
+  --color-ink-900: #14181b;
   --color-warm-50:  #fafaf9;
   --color-warm-100: #f5f5f4;
   --color-warm-200: #e7e5e4;
   --color-accent: #2563eb;
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-noto-jp), "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 
@@ -33,8 +47,10 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif;
+  font-family: var(--font-noto-jp), -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+  font-feature-settings: "palt";
   -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.01em;
   overflow-x: hidden;
 }
 
@@ -81,6 +97,69 @@ body {
 
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Hero soft gradient overlay (replaces hard triangular cut) */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      105deg,
+      transparent 0%,
+      transparent 38%,
+      rgba(20, 24, 27, 0.55) 55%,
+      rgba(20, 24, 27, 0.92) 78%,
+      rgba(20, 24, 27, 0.96) 100%
+    );
+}
+
+/* Hero yellow accent stripes (top + bottom edges) */
+.hero-stripe-top,
+.hero-stripe-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--color-brand-yellow-500);
+  pointer-events: none;
+}
+.hero-stripe-top { top: 0; }
+.hero-stripe-bottom { bottom: 0; }
+
+/* Hero side accent rail (vertical brand-yellow column) */
+.hero-rail-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 6px;
+  background: var(--color-brand-yellow-500);
+  pointer-events: none;
+}
+
+/* Subtle dotted background for alternating sections */
+.section-dots {
+  background-color: #ffffff;
+  background-image: radial-gradient(rgba(20, 24, 27, 0.06) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+/* Subtle warm strip background (replaces flat warm-50) */
+.section-warm {
+  background: #faf8f5;
+}
+
+/* Theme grid yellow band */
+.theme-band-yellow {
+  background: var(--color-brand-yellow-500);
+}
+
+/* Search box yellow band (full bleed) */
+.search-band-yellow {
+  background: var(--color-brand-yellow-500);
+}
+
 
 /* Hover lift effect for cards */
 .hover-lift {

@@ -116,7 +116,7 @@ export default function AdminCompanyNewPage() {
             required
             value={form.name}
             onChange={(e) => update("name", e.target.value)}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             placeholder="株式会社サンプル"
           />
         </div>
@@ -130,7 +130,7 @@ export default function AdminCompanyNewPage() {
               type="text"
               value={form.industry}
               onChange={(e) => update("industry", e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               placeholder="建設業 / 運送業 / 製造業 など"
             />
           </div>
@@ -142,7 +142,7 @@ export default function AdminCompanyNewPage() {
             <select
               value={form.employeeCount}
               onChange={(e) => update("employeeCount", e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             >
               <option value="">選択してください</option>
               {EMPLOYEE_COUNT_OPTIONS.map((opt) => (
@@ -162,7 +162,7 @@ export default function AdminCompanyNewPage() {
             <select
               value={form.prefecture}
               onChange={(e) => update("prefecture", e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             >
               <option value="">選択してください</option>
               {PREFECTURES.map((p) => (
@@ -181,7 +181,7 @@ export default function AdminCompanyNewPage() {
               type="text"
               value={form.city}
               onChange={(e) => update("city", e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               placeholder="新宿区"
             />
           </div>
@@ -195,7 +195,7 @@ export default function AdminCompanyNewPage() {
             type="text"
             value={form.address}
             onChange={(e) => update("address", e.target.value)}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             placeholder="東京都新宿区西新宿1-1-1 サンプルビル5F"
           />
         </div>
@@ -208,7 +208,7 @@ export default function AdminCompanyNewPage() {
             rows={5}
             value={form.description}
             onChange={(e) => update("description", e.target.value)}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             placeholder="創業30年の安定企業。関東エリアを中心に〜"
           />
         </div>
@@ -222,7 +222,7 @@ export default function AdminCompanyNewPage() {
               type="url"
               value={form.logoUrl}
               onChange={(e) => update("logoUrl", e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               placeholder="https://example.com/logo.png"
             />
           </div>
@@ -235,7 +235,7 @@ export default function AdminCompanyNewPage() {
               type="url"
               value={form.websiteUrl}
               onChange={(e) => update("websiteUrl", e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               placeholder="https://example.com"
             />
           </div>
@@ -249,7 +249,7 @@ export default function AdminCompanyNewPage() {
             type="email"
             value={form.contactEmail}
             onChange={(e) => update("contactEmail", e.target.value)}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             placeholder="recruit@example.com"
           />
         </div>
@@ -264,7 +264,7 @@ export default function AdminCompanyNewPage() {
           <button
             type="submit"
             disabled={loading}
-            className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-md bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "登録中..." : "登録する"}
           </button>

@@ -106,7 +106,7 @@ export default async function JournalPage({ searchParams }: Props) {
         {featured.length > 0 && (
           <div className="grid gap-4 sm:grid-cols-3 mb-8">
             {featured.map((a) => (
-              <Link key={a.slug} href={`/journal/${a.slug}`} className="group overflow-hidden rounded-lg border bg-white">
+              <Link key={a.slug} href={`/journal/${a.slug}`} className="group overflow-hidden  border bg-white">
                 {a.imageUrl && (
                   <div className="aspect-video relative overflow-hidden">
                     <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-[1.02] transition duration-300" />
@@ -139,13 +139,13 @@ export default async function JournalPage({ searchParams }: Props) {
             </p>
 
             {articles.length === 0 ? (
-              <div className="rounded-lg border bg-white p-12 text-center">
+              <div className=" border bg-white p-12 text-center">
                 <p className="text-gray-500">記事が見つかりませんでした。</p>
               </div>
             ) : (
               <div className="space-y-3">
                 {articles.map((a) => (
-                  <Link key={a.slug} href={`/journal/${a.slug}`} className="group flex gap-4 rounded-lg border bg-white p-3 hover:border-primary-200 transition">
+                  <Link key={a.slug} href={`/journal/${a.slug}`} className="group flex gap-4  border bg-white p-3 hover:border-primary-200 transition">
                     {a.imageUrl && (
                       <div className="h-20 w-32 shrink-0 rounded overflow-hidden sm:h-24 sm:w-40">
                         <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover" />
@@ -184,7 +184,7 @@ export default async function JournalPage({ searchParams }: Props) {
 
           {/* Sidebar */}
           <aside className="w-full shrink-0 lg:w-64 space-y-6">
-            <div className="rounded-lg bg-primary-600 p-5 text-center text-white">
+            <div className=" bg-primary-600 p-5 text-center text-white">
               <p className="font-bold">求人を探す</p>
               <p className="mt-1 text-xs text-primary-200">建設業界の求人を検索</p>
               <Link href="/jobs" className="mt-3 inline-flex items-center gap-1 rounded bg-white px-5 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50">
@@ -193,7 +193,7 @@ export default async function JournalPage({ searchParams }: Props) {
               </Link>
             </div>
 
-            <div className="rounded-lg border bg-white p-4">
+            <div className=" border bg-white p-4">
               <h3 className="font-bold text-sm text-gray-900 border-b pb-2">カテゴリー</h3>
               <ul className="mt-2 divide-y">
                 {categories.map((c) => (

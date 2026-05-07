@@ -25,7 +25,7 @@ import { LogoSlider } from "@/components/logo-slider"
 export const metadata: Metadata = {
   title: "建設会社の採用担当者の方へ",
   description:
-    "掲載無料・成果報酬型の求人掲載。建設業界に特化した現場キャリアで、建築・土木・設備の人材を採用。",
+    "掲載無料・成果報酬型の求人掲載。建設業界に特化したゲンバキャリアで、建築・土木・設備の人材を採用。",
 }
 
 const jobCategories = [
@@ -122,34 +122,40 @@ const comparisonRows = [
 export default function ForEmployersPage() {
   return (
     <div>
-      {/* Hero Section - Brand gradient with form */}
-      <section className="relative bg-gradient-to-br from-primary-500 to-primary-700 py-10 sm:py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* Hero Section - Black with yellow accent stripes */}
+      <section className="relative bg-ink-900 py-12 sm:py-16">
+        <div className="hero-stripe-top" />
+        <div className="hero-stripe-bottom" />
+        <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: "radial-gradient(rgba(245, 180, 0, 0.08) 1.5px, transparent 1.5px)",
+          backgroundSize: "22px 22px",
+        }} />
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
             {/* Left side - Text + Category links */}
             <div className="flex-1">
-              <p className="text-sm text-primary-200">
+              <p className="text-sm font-bold text-brand-yellow-500">
                 建設業・設備業など現場で働く人材の採用に特化
               </p>
-              <h1 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight">
+              <h1 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight">
                 現場人材の採用なら
                 <br />
-                <span className="text-3xl sm:text-4xl lg:text-5xl">現場キャリア</span>
+                <span className="text-3xl sm:text-4xl lg:text-5xl">ゲンバキャリア</span>
               </h1>
 
               {/* Stats row */}
               <div className="mt-6 flex flex-wrap gap-3">
-                <div className="rounded bg-white/10 px-4 py-2">
-                  <p className="text-xs text-primary-200">料金体系</p>
-                  <p className="text-base font-bold text-white">掲載無料・成果報酬</p>
+                <div className="bg-brand-yellow-500 px-4 py-2">
+                  <p className="text-xs font-bold text-ink-900">料金体系</p>
+                  <p className="text-base font-black text-ink-900 tracking-tight">掲載無料・成果報酬</p>
                 </div>
-                <div className="rounded bg-white/10 px-4 py-2">
-                  <p className="text-xs text-primary-200">成果報酬</p>
-                  <p className="text-base font-bold text-white">1人あたり10万円〜</p>
+                <div className="bg-brand-yellow-500 px-4 py-2">
+                  <p className="text-xs font-bold text-ink-900">成果報酬</p>
+                  <p className="text-base font-black text-ink-900 tracking-tight">1人あたり10万円〜</p>
                 </div>
-                <div className="rounded bg-white/10 px-4 py-2">
-                  <p className="text-xs text-primary-200">機能</p>
-                  <p className="text-base font-bold text-white">スカウト対応</p>
+                <div className="bg-brand-yellow-500 px-4 py-2">
+                  <p className="text-xs font-bold text-ink-900">機能</p>
+                  <p className="text-base font-black text-ink-900 tracking-tight">スカウト対応</p>
                 </div>
               </div>
 
@@ -158,9 +164,9 @@ export default function ForEmployersPage() {
                 {jobCategories.map((cat) => (
                   <div
                     key={cat}
-                    className="flex items-center gap-2 rounded-md bg-white/90 px-3 py-2 text-sm font-medium text-primary-700"
+                    className="flex items-center gap-2 bg-white px-3 py-2 text-sm font-bold text-ink-900"
                   >
-                    <Search className="h-3.5 w-3.5 shrink-0" />
+                    <Search className="h-3.5 w-3.5 shrink-0 text-primary-500" />
                     <span className="text-xs">{cat}</span>
                   </div>
                 ))}
@@ -168,40 +174,40 @@ export default function ForEmployersPage() {
             </div>
 
             {/* Right side - Contact form card */}
-            <div className="w-full shrink-0 rounded-xl bg-white p-6 shadow-xl lg:w-96">
-              <h2 className="text-center text-lg font-bold text-gray-900">
+            <div className="w-full shrink-0 bg-white p-6 shadow-xl lg:w-96">
+              <h2 className="text-center text-lg font-black text-ink-900 tracking-tight">
                 掲載をお考えの方はこちら
               </h2>
 
               <div className="mt-4 space-y-3">
                 <div>
-                  <label className="block text-xs font-medium text-gray-600">電話番号</label>
-                  <div className="mt-1 flex items-center gap-2 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900">
-                    <Phone className="h-4 w-4 text-gray-400" />
+                  <label className="block text-xs font-bold text-ink-900">電話番号</label>
+                  <div className="mt-1 flex items-center gap-2 border border-warm-200 px-3 py-2 text-sm text-ink-900">
+                    <Phone className="h-4 w-4 text-primary-500" />
                     <span>06-6786-8320</span>
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="emp-email" className="block text-xs font-medium text-gray-600">メールアドレス</label>
+                  <label htmlFor="emp-email" className="block text-xs font-bold text-ink-900">メールアドレス</label>
                   <input
                     id="emp-email"
                     type="email"
                     placeholder="example@company.co.jp"
-                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                    className="mt-1 w-full border border-warm-200 px-3 py-2 text-sm placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                   />
                 </div>
                 <div>
-                  <label htmlFor="emp-company" className="block text-xs font-medium text-gray-600">会社名</label>
+                  <label htmlFor="emp-company" className="block text-xs font-bold text-ink-900">会社名</label>
                   <input
                     id="emp-company"
                     type="text"
                     placeholder="株式会社○○建設"
-                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                    className="mt-1 w-full border border-warm-200 px-3 py-2 text-sm placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                   />
                 </div>
                 <Link
                   href="/company/register"
-                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary-600 px-6 py-3 text-sm font-bold text-white hover:bg-primary-700 transition"
+                  className="flex w-full items-center justify-center gap-2 rounded-full bg-primary-500 px-6 py-3 text-sm font-black text-white tracking-tight hover:bg-primary-600 transition"
                 >
                   資料請求する
                   <ArrowRight className="h-4 w-4" />
@@ -210,7 +216,7 @@ export default function ForEmployersPage() {
 
               <div className="mt-4 border-t pt-3 text-center">
                 <p className="text-xs text-gray-500">電話でも受付中</p>
-                <p className="mt-1 flex items-center justify-center gap-1 text-lg font-bold text-gray-900">
+                <p className="mt-1 flex items-center justify-center gap-1 text-lg font-black text-ink-900 tracking-tight">
                   <Phone className="h-4 w-4 text-primary-600" />
                   03-6845-3624
                 </p>
@@ -224,20 +230,20 @@ export default function ForEmployersPage() {
       <LogoSlider />
 
       {/* About Section */}
-      <section className="bg-primary-50 py-10">
+      <section className="bg-brand-yellow-500 py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateOnScroll>
             <div className="flex flex-col items-center gap-8 sm:flex-row">
               <div className="flex-1">
-                <h2 className="text-xl font-bold text-gray-900">現場キャリアとは</h2>
-                <p className="mt-3 text-sm text-gray-600 leading-relaxed">
+                <h2 className="text-2xl font-black text-ink-900 tracking-tight">ゲンバキャリアとは</h2>
+                <p className="mt-3 text-sm text-ink-900 leading-relaxed">
                   建設業・設備業などの現場人材の採用に強みを持つ日本最大級の「現場人材採用サービス」です。
                   掲載無料・成果報酬型で、建築・土木・設備・解体など幅広い職種の人材採用をサポートします。
                 </p>
               </div>
-              <div className="flex h-36 w-52 shrink-0 flex-col items-center justify-center rounded-xl bg-gradient-to-br from-primary-100 to-primary-200 shadow-sm">
-                <HardHat className="h-14 w-14 text-primary-500" />
-                <p className="mt-2 text-xs font-bold text-primary-600">建設業界特化</p>
+              <div className="flex h-36 w-52 shrink-0 flex-col items-center justify-center bg-ink-900 shadow-sm">
+                <HardHat className="h-14 w-14 text-brand-yellow-500" />
+                <p className="mt-2 text-xs font-bold text-white">建設業界特化</p>
               </div>
             </div>
           </AnimateOnScroll>
@@ -245,11 +251,11 @@ export default function ForEmployersPage() {
       </section>
 
       {/* 3 Reasons Section */}
-      <section className="py-12">
+      <section className="bg-warm-50 py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateOnScroll>
-            <h2 className="text-center text-2xl font-bold text-gray-900">
-              現場キャリアが選ばれる<span className="text-primary-600">3つの理由</span>
+            <h2 className="text-center text-2xl font-black text-ink-900 tracking-tight">
+              ゲンバキャリアが選ばれる<span className="text-primary-600">3つの理由</span>
             </h2>
           </AnimateOnScroll>
           <AnimateOnScroll animation="stagger">
@@ -257,11 +263,11 @@ export default function ForEmployersPage() {
               {reasons.map((r) => {
                 const Icon = r.icon
                 return (
-                  <div key={r.title} className="text-center hover-lift rounded-xl">
-                    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-primary-50">
-                      <Icon className="h-10 w-10 text-primary-600" />
+                  <div key={r.title} className="bg-white p-6 text-center hover-lift">
+                    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-brand-yellow-500">
+                      <Icon className="h-10 w-10 text-ink-900" />
                     </div>
-                    <h3 className="mt-4 text-base font-bold text-gray-900">{r.title}</h3>
+                    <h3 className="mt-4 text-base font-black text-ink-900 tracking-tight">{r.title}</h3>
                     <p className="mt-2 text-sm text-gray-600 leading-relaxed">{r.description}</p>
                   </div>
                 )
@@ -272,20 +278,20 @@ export default function ForEmployersPage() {
       </section>
 
       {/* Track Record Section */}
-      <section className="border-t bg-gradient-to-b from-gray-50 to-white py-12">
+      <section className="border-t border-warm-200 bg-warm-100 py-12">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
           <AnimateOnScroll animation="fade-up">
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-black text-ink-900 tracking-tight">
               サービスの特徴
             </h2>
           </AnimateOnScroll>
           <AnimateOnScroll animation="stagger">
             <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:justify-center">
               {trackRecordPoints.map((p) => (
-                <div key={p.title} className="flex-1 rounded-xl border bg-white p-5 shadow-sm">
+                <div key={p.title} className="flex-1 border border-warm-200 bg-white p-5 shadow-sm">
                   <div className="flex items-center gap-2">
-                    <TrendingUp className="h-5 w-5 text-primary-600" />
-                    <h3 className="font-bold text-gray-900">{p.title}</h3>
+                    <TrendingUp className="h-5 w-5 text-primary-500" />
+                    <h3 className="font-black text-ink-900 tracking-tight">{p.title}</h3>
                   </div>
                   <p className="mt-2 text-sm text-gray-600">{p.description}</p>
                 </div>
@@ -296,20 +302,20 @@ export default function ForEmployersPage() {
       </section>
 
       {/* Testimonials */}
-      <section className="border-t bg-white py-12">
+      <section className="border-t border-warm-200 bg-white py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateOnScroll>
-            <h2 className="text-center text-2xl font-bold text-gray-900">
+            <h2 className="text-center text-2xl font-black text-ink-900 tracking-tight">
               お客様からの声
             </h2>
           </AnimateOnScroll>
           <AnimateOnScroll animation="stagger">
             <div className="mt-8 grid gap-6 sm:grid-cols-3">
               {testimonials.map((t) => (
-                <div key={t.company} className="rounded-xl border bg-white p-5 shadow-sm hover-lift">
-                  <MessageSquareQuote className="h-6 w-6 text-primary-300" />
-                  <p className="mt-3 text-sm text-gray-600 leading-relaxed">{t.comment}</p>
-                  <p className="mt-3 border-t pt-3 text-xs font-bold text-gray-900">{t.company}</p>
+                <div key={t.company} className="border border-warm-200 bg-warm-50 p-5 shadow-sm hover-lift">
+                  <MessageSquareQuote className="h-6 w-6 text-brand-yellow-600" />
+                  <p className="mt-3 text-sm text-gray-700 leading-relaxed">{t.comment}</p>
+                  <p className="mt-3 border-t border-warm-200 pt-3 text-xs font-black text-ink-900 tracking-tight">{t.company}</p>
                 </div>
               ))}
             </div>
@@ -318,10 +324,10 @@ export default function ForEmployersPage() {
       </section>
 
       {/* Flow Section */}
-      <section className="border-t bg-gradient-to-b from-gray-50 to-white py-12">
+      <section className="border-t border-warm-200 bg-warm-100 py-12">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <AnimateOnScroll>
-            <h2 className="text-center text-2xl font-bold text-gray-900">
+            <h2 className="text-center text-2xl font-black text-ink-900 tracking-tight">
               掲載までの流れ
             </h2>
           </AnimateOnScroll>
@@ -332,13 +338,13 @@ export default function ForEmployersPage() {
               return (
                 <div key={step.label} className="flex items-center gap-3 sm:gap-4">
                   <div className="flex flex-col items-center">
-                    <div className="relative flex h-16 w-16 items-center justify-center rounded-lg border-2 border-primary-600 bg-white shadow-sm">
-                      <span className="absolute -top-2.5 -left-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-primary-600 text-xs font-bold text-white shadow-sm">
+                    <div className="relative flex h-16 w-16 items-center justify-center border-2 border-ink-900 bg-brand-yellow-500 shadow-sm">
+                      <span className="absolute -top-2.5 -left-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-primary-500 text-xs font-black text-white tracking-tight shadow-sm">
                         {i + 1}
                       </span>
-                      <Icon className="h-7 w-7 text-primary-600" />
+                      <Icon className="h-7 w-7 text-ink-900" />
                     </div>
-                    <span className="mt-2 text-center text-xs font-bold text-gray-900 whitespace-pre-line">
+                    <span className="mt-2 text-center text-xs font-black text-ink-900 tracking-tight whitespace-pre-line">
                       {step.label}
                     </span>
                   </div>
@@ -354,14 +360,14 @@ export default function ForEmployersPage() {
       </section>
 
       {/* Comparison Table */}
-      <section className="border-t bg-white py-12">
+      <section className="border-t border-warm-200 bg-white py-12">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <AnimateOnScroll>
-            <h2 className="text-center text-2xl font-bold text-gray-900">
+            <h2 className="text-center text-2xl font-black text-ink-900 tracking-tight">
               他社との<span className="text-primary-600">料金・サービスの比較表</span>
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
-              現場キャリアは掲載無料、1人あたり10万円〜の成果報酬
+              ゲンバキャリアは掲載無料、1人あたり10万円〜の成果報酬
               <br className="hidden sm:block" />
               採用のミスマッチが少ない人材を低コストで採用可能です
             </p>
@@ -372,14 +378,14 @@ export default function ForEmployersPage() {
             <table className="w-full min-w-[640px] border-collapse text-sm">
               <thead>
                 <tr>
-                  <th className="w-28 border border-gray-200 bg-gray-50 p-3"></th>
-                  <th className="border-2 border-primary-600 bg-primary-600 p-3 text-white font-bold text-base">
-                    現場キャリア
+                  <th className="w-28 border border-warm-200 bg-warm-100 p-3"></th>
+                  <th className="border-2 border-ink-900 bg-ink-900 p-3 text-brand-yellow-500 font-black tracking-tight text-base">
+                    ゲンバキャリア
                   </th>
-                  <th className="border border-gray-200 bg-primary-50 p-3 font-bold text-gray-700">
+                  <th className="border border-warm-200 bg-warm-100 p-3 font-bold text-gray-700">
                     大手求人媒体
                   </th>
-                  <th className="border border-gray-200 bg-primary-50 p-3 font-bold text-gray-700">
+                  <th className="border border-warm-200 bg-warm-100 p-3 font-bold text-gray-700">
                     業界専門の<br />求人媒体
                   </th>
                 </tr>
@@ -387,22 +393,22 @@ export default function ForEmployersPage() {
               <tbody>
                 {comparisonRows.map((row) => (
                   <tr key={row.label}>
-                    <td className="border border-gray-200 bg-gray-50 p-3 text-center font-bold text-gray-700">
+                    <td className="border border-warm-200 bg-warm-100 p-3 text-center font-bold text-gray-700">
                       {row.label}
                     </td>
-                    <td className="border-2 border-primary-600 bg-primary-50/30 p-3 text-center whitespace-pre-line">
+                    <td className="border-2 border-ink-900 bg-brand-yellow-50 p-3 text-center whitespace-pre-line">
                       <div className="flex items-start justify-center gap-1">
-                        <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
-                        <span className="text-gray-900 font-medium">{row.ours}</span>
+                        <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-primary-500" />
+                        <span className="text-ink-900 font-bold">{row.ours}</span>
                       </div>
                     </td>
-                    <td className="border border-gray-200 p-3 text-center text-gray-500 whitespace-pre-line">
+                    <td className="border border-warm-200 p-3 text-center text-gray-500 whitespace-pre-line">
                       <div className="flex items-start justify-center gap-1">
                         <CircleAlert className="mt-0.5 h-4 w-4 shrink-0 text-gray-300" />
                         <span>{row.major}</span>
                       </div>
                     </td>
-                    <td className="border border-gray-200 p-3 text-center text-gray-500 whitespace-pre-line">
+                    <td className="border border-warm-200 p-3 text-center text-gray-500 whitespace-pre-line">
                       <div className="flex items-start justify-center gap-1">
                         <CircleAlert className="mt-0.5 h-4 w-4 shrink-0 text-gray-300" />
                         <span>{row.niche}</span>
@@ -418,26 +424,26 @@ export default function ForEmployersPage() {
       </section>
 
       {/* CTA */}
-      <section className="border-t bg-primary-600 py-12">
+      <section className="border-t border-warm-200 bg-ink-900 py-12">
         <AnimateOnScroll animation="fade-up">
           <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-white">
+            <h2 className="text-3xl font-black tracking-tight text-white">
               まずは無料で掲載を始めましょう
             </h2>
-            <p className="mt-2 text-primary-100">
+            <p className="mt-2 text-sm text-white/80">
               掲載料0円・成果報酬型。採用が決まるまで費用はかかりません。
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
               <Link
                 href="/company/register"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-8 py-3.5 text-base font-bold text-primary-600 shadow-lg hover:bg-primary-50 transition"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-primary-500 px-8 py-3.5 text-base font-black tracking-tight text-white shadow-lg hover:bg-primary-600 transition"
               >
                 無料で企業登録する
                 <ArrowRight className="h-5 w-5" />
               </Link>
               <a
                 href="tel:03-6845-3624"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white px-8 py-3.5 text-base font-bold text-white hover:bg-white/10 transition"
+                className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-brand-yellow-500 bg-brand-yellow-500 px-8 py-3.5 text-base font-black tracking-tight text-ink-900 hover:bg-brand-yellow-600 transition"
               >
                 <Phone className="h-5 w-5" />
                 03-6845-3624

@@ -57,7 +57,7 @@ export default async function AdminCompaniesPage({
         </div>
         <Link
           href="/admin/companies/new"
-          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          className="rounded-md bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600"
         >
           + 企業を追加
         </Link>

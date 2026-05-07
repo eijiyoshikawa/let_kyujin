@@ -13,7 +13,7 @@ export default function AboutPage() {
         <section>
           <h2 className="text-lg font-semibold text-gray-900">本サイトの目的</h2>
           <p className="mt-2">
-            本サイト「現場キャリア」は、建設業界に特化した求人ポータルサイトです。
+            本サイト「ゲンバキャリア」は、建設業界に特化した求人ポータルサイトです。
             建築・土木・設備・解体・重機オペレーターなど、建設現場で活躍する方々が、
             より自分に合った仕事を見つけやすくすることを目的としています。
           </p>
@@ -34,7 +34,7 @@ export default function AboutPage() {
 
         <section>
           <h2 className="text-lg font-semibold text-gray-900">運営事業者情報</h2>
-          <div className="mt-3 overflow-hidden rounded-lg border border-gray-200">
+          <div className="mt-3 overflow-hidden  border border-gray-200">
             <table className="w-full text-sm">
               <tbody className="divide-y divide-gray-200">
                 <tr>

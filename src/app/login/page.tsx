@@ -43,20 +43,20 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-[calc(100vh-200px)] items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        <div className="rounded-xl bg-white p-8 shadow-lg">
+        <div className=" bg-white p-8 shadow-lg">
           <h1 className="mb-6 text-center text-2xl font-bold text-gray-900">
             ログイン
           </h1>
 
           {/* Tab switching */}
-          <div className="mb-6 flex rounded-lg bg-gray-100 p-1">
+          <div className="mb-6 flex  bg-gray-100 p-1">
             <button
               type="button"
               onClick={() => {
                 setActiveTab("seeker");
                 setError("");
               }}
-              className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+              className={`flex-1  px-4 py-2 text-sm font-medium transition-colors ${
                 activeTab === "seeker"
                   ? "bg-white text-primary-600 shadow-sm"
                   : "text-gray-500 hover:text-gray-700"
@@ -70,7 +70,7 @@ export default function LoginPage() {
                 setActiveTab("company");
                 setError("");
               }}
-              className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+              className={`flex-1  px-4 py-2 text-sm font-medium transition-colors ${
                 activeTab === "company"
                   ? "bg-white text-primary-600 shadow-sm"
                   : "text-gray-500 hover:text-gray-700"
@@ -81,7 +81,7 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+            <div className="mb-4  bg-red-50 p-3 text-sm text-red-600">
               {error}
             </div>
           )}
@@ -100,7 +100,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="mt-1 block w-full  border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                 placeholder="example@mail.com"
               />
             </div>
@@ -118,7 +118,7 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="mt-1 block w-full  border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                 placeholder="パスワードを入力"
               />
             </div>
@@ -126,7 +126,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full  bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? "ログイン中..." : "ログイン"}
             </button>

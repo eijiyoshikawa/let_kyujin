@@ -72,7 +72,7 @@ export default async function AdminArticlesPage({
         </div>
         <Link
           href="/admin/articles/new"
-          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          className="rounded-md bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600"
         >
           + 記事を追加
         </Link>
@@ -110,7 +110,7 @@ export default async function AdminArticlesPage({
         </select>
         <button
           type="submit"
-          className="rounded-md bg-blue-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+          className="rounded-md bg-primary-500 px-4 py-1.5 text-sm font-medium text-white hover:bg-primary-600"
         >
           絞り込み
         </button>
@@ -184,7 +184,7 @@ export default async function AdminArticlesPage({
                   <td className="whitespace-nowrap px-4 py-3 text-right text-sm">
                     <Link
                       href={`/admin/articles/${a.id}/edit`}
-                      className="font-medium text-blue-600 hover:text-blue-800"
+                      className="font-medium text-primary-600 hover:text-primary-700"
                     >
                       編集
                     </Link>

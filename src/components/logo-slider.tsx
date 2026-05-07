@@ -21,16 +21,16 @@ export function LogoSlider() {
   const items = [...COMPANIES, ...COMPANIES]
 
   return (
-    <div className="border-b bg-white py-3">
+    <div className="border-y border-warm-200 bg-white py-6 sm:py-8">
       <div className="logo-slider">
         <div className="logo-slider-track">
           {items.map((company, i) => (
             <div
               key={`${company}-${i}`}
-              className="flex shrink-0 items-center gap-1.5 px-4"
+              className="flex shrink-0 items-center gap-2.5 px-7"
             >
-              <Building2 className="h-4 w-4 text-primary-200" />
-              <span className="whitespace-nowrap text-xs text-gray-400">
+              <Building2 className="h-7 w-7 text-primary-400" />
+              <span className="whitespace-nowrap text-base font-bold text-gray-600 tracking-tight">
                 {company}
               </span>
             </div>

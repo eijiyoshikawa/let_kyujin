@@ -99,8 +99,8 @@ export default function ContactPage() {
         {/* Contact info cards */}
         <AnimateOnScroll animation="stagger">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="hover-lift rounded-xl border bg-white p-6 shadow-sm">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+          <div className="hover-lift  border bg-white p-6 shadow-sm">
+            <div className="flex h-10 w-10 items-center justify-center  bg-primary-100">
               <Phone className="h-5 w-5 text-primary-600" />
             </div>
             <h3 className="mt-3 font-bold text-gray-900">お電話</h3>
@@ -111,8 +111,8 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div className="hover-lift rounded-xl border bg-white p-6 shadow-sm">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+          <div className="hover-lift  border bg-white p-6 shadow-sm">
+            <div className="flex h-10 w-10 items-center justify-center  bg-primary-100">
               <Mail className="h-5 w-5 text-primary-600" />
             </div>
             <h3 className="mt-3 font-bold text-gray-900">メール</h3>
@@ -122,8 +122,8 @@ export default function ContactPage() {
             </p>
           </div>
 
-          <div className="hover-lift rounded-xl border bg-white p-6 shadow-sm sm:col-span-2 lg:col-span-1">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+          <div className="hover-lift  border bg-white p-6 shadow-sm sm:col-span-2 lg:col-span-1">
+            <div className="flex h-10 w-10 items-center justify-center  bg-primary-100">
               <MapPin className="h-5 w-5 text-primary-600" />
             </div>
             <h3 className="mt-3 font-bold text-gray-900">所在地</h3>
@@ -149,7 +149,7 @@ export default function ContactPage() {
           {supportLinks.map((section) => {
             const Icon = section.icon
             return (
-              <div key={section.title} className="hover-lift rounded-xl border bg-white p-5 shadow-sm">
+              <div key={section.title} className="hover-lift  border bg-white p-5 shadow-sm">
                 <div className="flex items-center gap-2">
                   <Icon className="h-5 w-5 text-primary-600" />
                   <h3 className="font-bold text-gray-900">{section.title}</h3>
@@ -184,7 +184,7 @@ export default function ContactPage() {
         <AnimateOnScroll animation="stagger">
         <div className="mt-4 space-y-3">
           {faqs.map((faq) => (
-            <div key={faq.q} className="hover-lift rounded-xl border bg-white p-5 shadow-sm">
+            <div key={faq.q} className="hover-lift  border bg-white p-5 shadow-sm">
               <h3 className="flex items-start gap-2 font-bold text-gray-900">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-600 text-[10px] font-bold text-white">
                   Q
@@ -201,7 +201,7 @@ export default function ContactPage() {
 
         {/* CTA */}
         <AnimateOnScroll animation="fade-up">
-        <div className="mt-12 rounded-2xl bg-primary-50 border border-primary-100 p-8 text-center">
+        <div className="mt-12  bg-primary-50 border border-primary-100 p-8 text-center">
           <h3 className="text-lg font-bold text-gray-900">
             解決しない場合は
           </h3>
@@ -211,14 +211,14 @@ export default function ContactPage() {
           <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <a
               href="tel:06-6786-8320"
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary-600 px-6 py-3 text-sm font-bold text-white hover:bg-primary-700 transition"
+              className="inline-flex items-center justify-center gap-2  bg-primary-600 px-6 py-3 text-sm font-bold text-white hover:bg-primary-700 transition"
             >
               <Phone className="h-4 w-4" />
               06-6786-8320
             </a>
             <a
               href="mailto:info@let-group.co.jp"
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-6 py-3 text-sm font-bold text-gray-700 hover:bg-gray-50 transition"
+              className="inline-flex items-center justify-center gap-2  border border-gray-300 bg-white px-6 py-3 text-sm font-bold text-gray-700 hover:bg-gray-50 transition"
             >
               <Mail className="h-4 w-4" />
               メールで問い合わせ
