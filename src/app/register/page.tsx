@@ -1,12 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { PREFECTURES } from "@/lib/constants";
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -16,6 +14,7 @@ export default function RegisterPage() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
 
   const updateField = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -63,13 +62,40 @@ export default function RegisterPage() {
         return;
       }
 
-      router.push("/login?registered=1");
+      setSubmittedEmail(form.email);
     } catch {
       setError("登録中にエラーが発生しました。もう一度お試しください。");
     } finally {
       setLoading(false);
     }
   };
+
+  if (submittedEmail) {
+    return (
+      <div className="flex min-h-[calc(100vh-200px)] items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md bg-white p-8 shadow-lg text-center">
+          <h1 className="mb-3 text-2xl font-bold text-gray-900">
+            登録ありがとうございます
+          </h1>
+          <p className="text-sm text-gray-700">
+            <strong>{submittedEmail}</strong> 宛に確認メールを送信しました。
+          </p>
+          <p className="mt-3 text-sm text-gray-600">
+            メール内のリンクをクリックして確認を完了してください。確認が完了するまでは求人への応募ができません。
+          </p>
+          <p className="mt-4 text-xs text-gray-500">
+            メールが届かない場合は迷惑メールフォルダもご確認ください（リンクの有効期限は24時間です）。
+          </p>
+          <Link
+            href="/login"
+            className="mt-6 inline-block bg-primary-600 px-6 py-2 text-sm font-medium text-white hover:bg-primary-700"
+          >
+            ログインへ
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-[calc(100vh-200px)] items-center justify-center px-4 py-12">
