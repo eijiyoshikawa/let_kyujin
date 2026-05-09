@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { prisma } from "@/lib/db"
 import { CompanyApprovalActions } from "./approval-actions"
+import { PaymentMethodSelector } from "./payment-method-selector"
 
 export const metadata: Metadata = {
   title: "企業詳細",
@@ -69,6 +70,18 @@ export default async function AdminCompanyDetailPage({
           companyId={company.id}
           status={company.status}
           rejectionReason={company.rejectionReason}
+        />
+      </div>
+
+      {/* Payment method */}
+      <div className="rounded-lg border bg-white p-6 shadow-sm">
+        <h2 className="font-bold text-gray-900">支払方法</h2>
+        <p className="mt-1 text-sm text-gray-500">
+          採用確定時の請求書発行先プロバイダを選択してください。
+        </p>
+        <PaymentMethodSelector
+          companyId={company.id}
+          currentMethod={company.paymentMethod}
         />
       </div>
 

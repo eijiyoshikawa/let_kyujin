@@ -56,6 +56,10 @@ model Company {
   websiteUrl       String?  @map("website_url") @db.VarChar(500)
   contactEmail     String?  @map("contact_email") @db.VarChar(255)
   stripeCustomerId String?  @map("stripe_customer_id") @db.VarChar(100)
+  // マネーフォワード クラウド請求書の取引先 ID
+  mfPartnerId      String?  @map("mf_partner_id") @db.VarChar(100)
+  // 支払方法: stripe(カード) | moneyforward(請求書+銀行振込)
+  paymentMethod    String   @default("stripe") @map("payment_method") @db.VarChar(20)
   // 承認ステータス: pending(申請中) | approved(承認済) | rejected(却下)
   status           String   @default("pending") @db.VarChar(20)
   approvedAt       DateTime? @map("approved_at") @db.Timestamptz()
@@ -180,7 +184,13 @@ model BillingEvent {
   applicationId   String   @unique @map("application_id") @db.Uuid
   eventType       String   @map("event_type") @db.VarChar(20) // hired
   amount          Int // 成果報酬金額（円）
+  // 請求書発行プロバイダ: stripe | moneyforward
+  provider        String   @default("stripe") @db.VarChar(20)
   stripeInvoiceId String?  @map("stripe_invoice_id") @db.VarChar(100)
+  // マネーフォワード クラウド請求書の請求書 ID
+  mfBillingId     String?  @map("mf_billing_id") @db.VarChar(100)
+  // 請求書 PDF / Web 公開 URL
+  invoiceUrl      String?  @map("invoice_url") @db.VarChar(500)
   status          String   @default("pending") @db.VarChar(20) // pending | invoiced | paid | failed
   createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz()
 

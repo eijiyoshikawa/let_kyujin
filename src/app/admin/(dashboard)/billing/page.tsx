@@ -97,6 +97,7 @@ export default async function AdminBillingPage({
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">求人</th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">採用者</th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">金額</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">支払方法</th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">ステータス</th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">日付</th>
               </tr>
@@ -115,6 +116,22 @@ export default async function AdminBillingPage({
                   </td>
                   <td className="px-4 py-3 text-sm font-medium text-gray-900">
                     ¥{event.amount.toLocaleString()}
+                  </td>
+                  <td className="px-4 py-3 text-xs text-gray-600">
+                    {event.provider === "moneyforward" ? "マネフォ" : "Stripe"}
+                    {event.invoiceUrl && (
+                      <>
+                        {" · "}
+                        <a
+                          href={event.invoiceUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary-600 underline"
+                        >
+                          請求書
+                        </a>
+                      </>
+                    )}
                   </td>
                   <td className="px-4 py-3">
                     <BillingStatusBadge status={event.status} />
