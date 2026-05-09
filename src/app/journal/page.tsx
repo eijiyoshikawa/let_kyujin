@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import type { Metadata } from "next"
 import { prisma } from "@/lib/db"
 import { Newspaper, Search, ChevronRight, ArrowRight } from "lucide-react"
@@ -109,7 +110,13 @@ export default async function JournalPage({ searchParams }: Props) {
               <Link key={a.slug} href={`/journal/${a.slug}`} className="group overflow-hidden  border bg-white">
                 {a.imageUrl && (
                   <div className="aspect-video relative overflow-hidden">
-                    <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-[1.02] transition duration-300" />
+                    <Image
+                      src={a.imageUrl}
+                      alt={a.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 33vw"
+                      className="object-cover group-hover:scale-[1.02] transition duration-300"
+                    />
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-3 pt-8">
                       <span className="rounded bg-primary-600 px-2 py-0.5 text-xs font-medium text-white">
                         {CATEGORY_LABELS[a.category] ?? a.category}
@@ -147,8 +154,14 @@ export default async function JournalPage({ searchParams }: Props) {
                 {articles.map((a) => (
                   <Link key={a.slug} href={`/journal/${a.slug}`} className="group flex gap-4  border bg-white p-3 hover:border-primary-200 transition">
                     {a.imageUrl && (
-                      <div className="h-20 w-32 shrink-0 rounded overflow-hidden sm:h-24 sm:w-40">
-                        <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover" />
+                      <div className="relative h-20 w-32 shrink-0 rounded overflow-hidden sm:h-24 sm:w-40">
+                        <Image
+                          src={a.imageUrl}
+                          alt={a.title}
+                          fill
+                          sizes="(max-width: 640px) 128px, 160px"
+                          className="object-cover"
+                        />
                       </div>
                     )}
                     <div className="flex-1 min-w-0 py-0.5">
