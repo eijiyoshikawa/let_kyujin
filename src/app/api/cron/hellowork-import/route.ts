@@ -31,7 +31,8 @@ import {
 } from "@/lib/crawler/rotation-planner"
 import { prisma } from "@/lib/db"
 
-export const maxDuration = 300
+// 1 ページ ≒ 113 秒。pages=5 を許容するため 600 秒に拡張（Vercel Pro の serverless 上限内）。
+export const maxDuration = 600
 export const dynamic = "force-dynamic"
 
 const DEFAULT_PAGES_PER_RUN = 2
@@ -119,6 +120,7 @@ export async function POST(request: Request) {
       created: stats.created,
       updated: stats.updated,
       closed: stats.closed,
+      skipped: stats.skipped,
       errors: stats.errors,
       durationMs: Date.now() - t0,
       timestamp: new Date().toISOString(),

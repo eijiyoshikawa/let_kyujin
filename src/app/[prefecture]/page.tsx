@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { prisma } from "@/lib/db"
 import { JobCard } from "@/components/jobs/job-card"
+import { CONSTRUCTION_CATEGORY_VALUES } from "@/lib/categories"
 
 export const revalidate = 21600 // 6 hours ISR
 
@@ -107,11 +108,12 @@ export default async function PrefecturePage({ params }: Props) {
     notFound()
   }
 
-  // 該当県の active 求人を取得（最新 100 件）
+  // 該当県の active 求人を取得（最新 100 件、建設業カテゴリのみ）
   const jobs = await prisma.job.findMany({
     where: {
       status: "active",
       prefecture: prefLabel,
+      category: { in: [...CONSTRUCTION_CATEGORY_VALUES] },
     },
     select: {
       id: true,
@@ -133,10 +135,14 @@ export default async function PrefecturePage({ params }: Props) {
     take: 100,
   })
 
-  // 同じ県でカテゴリ別の件数集計（active のみ）
+  // 同じ県でカテゴリ別の件数集計（active かつ建設業カテゴリのみ）
   const categoryCounts = await prisma.job.groupBy({
     by: ["category"],
-    where: { status: "active", prefecture: prefLabel },
+    where: {
+      status: "active",
+      prefecture: prefLabel,
+      category: { in: [...CONSTRUCTION_CATEGORY_VALUES] },
+    },
     _count: { _all: true },
   })
 

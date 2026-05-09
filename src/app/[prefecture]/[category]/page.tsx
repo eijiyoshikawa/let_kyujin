@@ -3,6 +3,12 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { prisma } from "@/lib/db"
 import { JobCard } from "@/components/jobs/job-card"
+import { CONSTRUCTION_CATEGORY_VALUES } from "@/lib/categories"
+
+// /[prefecture]/[category] の category は建設業のみ受け付ける（"other" は除外）。
+const CONSTRUCTION_CATEGORY_SET: ReadonlySet<string> = new Set(
+  CONSTRUCTION_CATEGORY_VALUES
+)
 
 export const revalidate = 21600 // 6 hours ISR
 
@@ -101,6 +107,12 @@ export default async function PrefectureCategoryPage({ params }: Props) {
   const catLabel = CATEGORIES[category]
 
   if (!prefLabel || !catLabel) {
+    notFound()
+  }
+
+  // category は CATEGORIES の建設業 9 カテゴリでバリデーション済み（other 含む）。
+  // ただし other は SEO 対象外なので念のため除外し、見つからなければ notFound。
+  if (!CONSTRUCTION_CATEGORY_SET.has(category)) {
     notFound()
   }
 

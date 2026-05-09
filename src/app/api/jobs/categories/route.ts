@@ -1,10 +1,16 @@
 import { prisma } from "@/lib/db"
-import { getCategoryLabel } from "@/lib/categories"
+import {
+  CONSTRUCTION_CATEGORY_VALUES,
+  getCategoryLabel,
+} from "@/lib/categories"
 
 export async function GET() {
   const categories = await prisma.job.groupBy({
     by: ["category"],
-    where: { status: "active" },
+    where: {
+      status: "active",
+      category: { in: [...CONSTRUCTION_CATEGORY_VALUES] },
+    },
     _count: { id: true },
     orderBy: { _count: { id: "desc" } },
   })

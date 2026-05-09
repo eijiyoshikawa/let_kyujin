@@ -12,6 +12,28 @@ export const CATEGORIES = [
 
 export type CategoryValue = (typeof CATEGORIES)[number]["value"]
 
+// 建設業に該当するカテゴリ（"other" を除く）。
+// 公開向け求人検索の where 句や groupBy のフィルタとして使用する。
+export const CONSTRUCTION_CATEGORY_VALUES = [
+  "construction",
+  "civil",
+  "electrical",
+  "interior",
+  "demolition",
+  "driver",
+  "management",
+  "survey",
+] as const satisfies ReadonlyArray<CategoryValue>
+
+export type ConstructionCategoryValue =
+  (typeof CONSTRUCTION_CATEGORY_VALUES)[number]
+
+export function isConstructionCategory(
+  value: string
+): value is ConstructionCategoryValue {
+  return (CONSTRUCTION_CATEGORY_VALUES as readonly string[]).includes(value)
+}
+
 export function getCategoryLabel(value: string): string {
   return CATEGORIES.find((c) => c.value === value)?.label ?? value
 }
