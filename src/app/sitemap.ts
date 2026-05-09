@@ -16,6 +16,18 @@ const journalSlugs = [
   "demolition-work",
 ]
 
+// 都道府県スラッグ（src/app/[prefecture]/page.tsx と同じセット）
+const PREFECTURE_SLUGS = [
+  "hokkaido", "aomori", "iwate", "miyagi", "akita", "yamagata", "fukushima",
+  "ibaraki", "tochigi", "gunma", "saitama", "chiba", "tokyo", "kanagawa",
+  "niigata", "toyama", "ishikawa", "fukui", "yamanashi", "nagano",
+  "gifu", "shizuoka", "aichi", "mie",
+  "shiga", "kyoto", "osaka", "hyogo", "nara", "wakayama",
+  "tottori", "shimane", "okayama", "hiroshima", "yamaguchi",
+  "tokushima", "kagawa", "ehime", "kochi",
+  "fukuoka", "saga", "nagasaki", "kumamoto", "oita", "miyazaki", "kagoshima", "okinawa",
+]
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     {
@@ -90,6 +102,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
+  // Prefecture-only landing pages（/[prefecture]/page.tsx に対応）
+  const prefecturePages: MetadataRoute.Sitemap = PREFECTURE_SLUGS.map(
+    (slug) => ({
+      url: `${BASE_URL}/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: 0.85,
+    })
+  )
+
   // Prefecture x category SEO landing pages
   const seoPages = await prisma.seoPage.findMany({
     select: { prefecture: true, category: true, updatedAt: true },
@@ -102,5 +124,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-  return [...staticPages, ...journalPages, ...jobPages, ...seoCombos]
+  return [
+    ...staticPages,
+    ...journalPages,
+    ...prefecturePages,
+    ...jobPages,
+    ...seoCombos,
+  ]
 }
