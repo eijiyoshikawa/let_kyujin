@@ -199,18 +199,29 @@ export async function fetchKyujinIdList(token: string): Promise<string[]> {
 /**
  * 指定求人データ取得 (POST /kyujin/{dataId}/{page})
  * 指定したデータ ID に紐づく求人情報（最大1,000件/ページ）を取得する。
+ *
+ * dataId のページ範囲を超えた page 番号を指定すると HelloWork API は 404 を返す。
+ * これは「データが空」と等価のシグナルなので空配列に正規化し、
+ * 呼び出し元 (`fetchPagesFromDataId`) で `exhausted=true` 判定に委ねる。
  */
 export async function fetchKyujinByDataId(
   token: string,
   dataId: string,
   page = 1
 ): Promise<HelloworkJobData[]> {
-  const xml = await postForm(
-    `${getApiBase()}/kyujin/${encodeURIComponent(dataId)}/${page}`,
-    { token }
-  )
-  const parsed = parseXml<Record<string, unknown>>(xml)
-  return parseJobsFromKyujinXml(parsed)
+  try {
+    const xml = await postForm(
+      `${getApiBase()}/kyujin/${encodeURIComponent(dataId)}/${page}`,
+      { token }
+    )
+    const parsed = parseXml<Record<string, unknown>>(xml)
+    return parseJobsFromKyujinXml(parsed)
+  } catch (err) {
+    if (err instanceof Error && /\b404\b/.test(err.message)) {
+      return []
+    }
+    throw err
+  }
 }
 
 // ========================================
