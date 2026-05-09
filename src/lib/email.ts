@@ -48,6 +48,61 @@ export async function sendEmail({ to, subject, html }: SendEmailParams) {
   return { success: true }
 }
 
+/** メール確認メール送信（求職者サインアップ時） */
+export async function sendEmailVerificationEmail(email: string, token: string) {
+  const baseUrl = process.env.NEXTAUTH_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+  const verifyUrl = `${baseUrl}/verify-email?token=${token}`
+
+  await sendEmail({
+    to: email,
+    subject: "メールアドレスのご確認 — ゲンバキャリア",
+    html: `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2>ゲンバキャリアへのご登録ありがとうございます</h2>
+        <p>以下のリンクからメールアドレスの確認を完了してください。</p>
+        <p>
+          <a href="${verifyUrl}" style="display: inline-block; padding: 12px 24px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px;">
+            メールアドレスを確認する
+          </a>
+        </p>
+        <p style="color: #6b7280; font-size: 14px;">
+          このリンクは24時間有効です。<br>
+          確認が完了するまで、求人への応募ができませんのでご注意ください。<br>
+          心当たりがない場合はこのメールを無視してください。
+        </p>
+      </div>
+    `,
+  })
+}
+
+/** 応募通知メール送信（企業向け） */
+export async function sendApplicationNotificationEmail(
+  toEmail: string,
+  jobTitle: string,
+  applicantName: string,
+  applicationId: string
+) {
+  const baseUrl = process.env.NEXTAUTH_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+  const detailUrl = `${baseUrl}/company/applications/${applicationId}`
+
+  await sendEmail({
+    to: toEmail,
+    subject: `新着応募: ${jobTitle}`,
+    html: `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2>新しい応募が届きました</h2>
+        <p><strong>${jobTitle}</strong> に <strong>${applicantName}</strong> さんから応募がありました。</p>
+        <p>
+          <a href="${detailUrl}" style="display: inline-block; padding: 12px 24px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px;">
+            応募内容を確認する
+          </a>
+        </p>
+        <p style="color: #6b7280; font-size: 14px;">ゲンバキャリア</p>
+      </div>
+    `,
+  })
+}
+
 /** パスワードリセットメール送信 */
 export async function sendPasswordResetEmail(email: string, token: string) {
   const baseUrl = process.env.NEXTAUTH_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"

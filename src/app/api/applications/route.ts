@@ -2,7 +2,10 @@ import { type NextRequest } from "next/server"
 import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
-import { sendApplicationConfirmEmail } from "@/lib/email"
+import {
+  sendApplicationConfirmEmail,
+  sendApplicationNotificationEmail,
+} from "@/lib/email"
 
 const applicationSchema = z.object({
   jobId: z.string().uuid(),
@@ -19,6 +22,23 @@ export async function POST(request: NextRequest) {
   if (role && role !== "seeker") {
     return Response.json(
       { error: "求職者アカウントでログインしてください" },
+      { status: 403 }
+    )
+  }
+
+  // メール確認が完了していないアカウントは応募を拒否（スパム応募の抑止）
+  const seeker = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { emailVerified: true, name: true, email: true },
+  })
+
+  if (!seeker?.emailVerified) {
+    return Response.json(
+      {
+        error:
+          "メールアドレスの確認が完了していません。登録時にお送りした確認メールのリンクをクリックしてください。",
+        code: "email_not_verified",
+      },
       { status: 403 }
     )
   }
@@ -80,10 +100,22 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  // Fetch job title and company name for confirmation email
+  // Fetch job + company detail for notification emails
   const jobDetail = await prisma.job.findUnique({
     where: { id: jobId },
-    select: { title: true, company: { select: { name: true } } },
+    select: {
+      title: true,
+      company: {
+        select: {
+          name: true,
+          contactEmail: true,
+          companyUsers: {
+            where: { role: "admin" },
+            select: { email: true },
+          },
+        },
+      },
+    },
   })
 
   const application = await prisma.application.create({
@@ -96,7 +128,7 @@ export async function POST(request: NextRequest) {
     },
   })
 
-  // Send confirmation email (non-blocking)
+  // 求職者向け：応募完了通知（non-blocking）
   if (session.user.email && jobDetail) {
     sendApplicationConfirmEmail(
       session.user.email,
@@ -105,5 +137,40 @@ export async function POST(request: NextRequest) {
     ).catch((err) => console.error("[email] Application confirm failed:", err))
   }
 
+  // 企業向け：新着応募通知（non-blocking）
+  // 自社掲載求人 (companyId あり) のみ送信。HelloWork 求人は企業情報が無いためスキップ。
+  if (jobDetail?.company) {
+    const recipients = collectCompanyRecipients(jobDetail.company)
+    const applicantName = seeker.name ?? seeker.email ?? "応募者"
+    for (const to of recipients) {
+      sendApplicationNotificationEmail(
+        to,
+        jobDetail.title,
+        applicantName,
+        application.id
+      ).catch((err) =>
+        console.error("[email] Application notification failed:", err)
+      )
+    }
+  }
+
   return Response.json({ application }, { status: 201 })
+}
+
+/**
+ * 企業向け通知メールの宛先を収集する。
+ * - company.contactEmail があればそれを優先
+ * - なければ admin role の CompanyUser 全員に送る
+ * - 重複は除く
+ */
+function collectCompanyRecipients(company: {
+  contactEmail: string | null
+  companyUsers: { email: string }[]
+}): string[] {
+  const set = new Set<string>()
+  if (company.contactEmail) set.add(company.contactEmail)
+  if (set.size === 0) {
+    for (const u of company.companyUsers) set.add(u.email)
+  }
+  return Array.from(set)
 }
