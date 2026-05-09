@@ -56,6 +56,11 @@ model Company {
   websiteUrl       String?  @map("website_url") @db.VarChar(500)
   contactEmail     String?  @map("contact_email") @db.VarChar(255)
   stripeCustomerId String?  @map("stripe_customer_id") @db.VarChar(100)
+  // 承認ステータス: pending(申請中) | approved(承認済) | rejected(却下)
+  status           String   @default("pending") @db.VarChar(20)
+  approvedAt       DateTime? @map("approved_at") @db.Timestamptz()
+  rejectedAt       DateTime? @map("rejected_at") @db.Timestamptz()
+  rejectionReason  String?   @map("rejection_reason")
   createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz()
 
   companyUsers  CompanyUser[]
@@ -64,6 +69,7 @@ model Company {
   billingEvents BillingEvent[]
   applications  Application[]
 
+  @@index([status], name: "idx_companies_status")
   @@map("companies")
 }
 

@@ -1,8 +1,13 @@
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { hashSync } from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { PREFECTURES } from "@/lib/constants";
+import {
+  sendCompanyRegistrationEmail,
+  sendCompanyRegistrationAdminNotification,
+} from "@/lib/email";
+import { checkRateLimit, getClientIp, rateLimitResponse } from "@/lib/rate-limit";
 
 const companyRegisterSchema = z.object({
   companyName: z.string().min(1, "会社名は必須です。"),
@@ -12,7 +17,15 @@ const companyRegisterSchema = z.object({
   password: z.string().min(8, "パスワードは8文字以上で入力してください。"),
 });
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  // スパム登録対策のレート制限
+  const rl = checkRateLimit({
+    key: `company-register:${getClientIp(request)}`,
+    limit: 5,
+    windowMs: 15 * 60 * 1000,
+  });
+  if (!rl.allowed) return rateLimitResponse(rl);
+
   try {
     const body = await request.json();
     const parsed = companyRegisterSchema.safeParse(body);
@@ -38,28 +51,51 @@ export async function POST(request: Request) {
 
     const passwordHash = hashSync(password, 12);
 
-    await prisma.$transaction(async (tx) => {
-      const company = await tx.company.create({
+    const company = await prisma.$transaction(async (tx) => {
+      const created = await tx.company.create({
         data: {
           name: companyName,
           industry,
           prefecture,
           contactEmail,
+          // 管理者の手動承認待ち
+          status: "pending",
         },
       });
 
       await tx.companyUser.create({
         data: {
-          companyId: company.id,
+          companyId: created.id,
           email: contactEmail,
           passwordHash,
           name: companyName,
           role: "admin",
         },
       });
+
+      return created;
     });
 
-    return NextResponse.json({ success: true }, { status: 201 });
+    // メール送信失敗で登録自体を失敗させたくないため try-catch で握る
+    try {
+      await Promise.all([
+        sendCompanyRegistrationEmail(contactEmail, companyName),
+        sendCompanyRegistrationAdminNotification({
+          companyId: company.id,
+          companyName,
+          industry,
+          prefecture,
+          contactEmail,
+        }),
+      ]);
+    } catch (emailError) {
+      console.error("[company-register] email send failed:", emailError);
+    }
+
+    return NextResponse.json(
+      { success: true, status: "pending" },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Company registration error:", error);
     return NextResponse.json(

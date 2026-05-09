@@ -67,7 +67,7 @@ export default function CompanyRegisterPage() {
         return;
       }
 
-      router.push("/login?registered=1");
+      router.push("/login?registered=company-pending");
     } catch {
       setError("登録中にエラーが発生しました。もう一度お試しください。");
     } finally {
