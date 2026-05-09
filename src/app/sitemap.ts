@@ -55,6 +55,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
+      url: `${BASE_URL}/help`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${BASE_URL}/help/seeker`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${BASE_URL}/help/employer`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
       url: `${BASE_URL}/for-employers`,
       lastModified: new Date(),
       changeFrequency: "monthly",
@@ -124,11 +142,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
+  // 公開済みヘルプ記事を sitemap に追加
+  const helpArticles = await prisma.article.findMany({
+    where: {
+      status: "published",
+      category: { in: ["help-seeker", "help-employer"] },
+    },
+    select: { slug: true, category: true, updatedAt: true },
+  })
+
+  const helpPages: MetadataRoute.Sitemap = helpArticles.map((a) => {
+    const audience = a.category === "help-seeker" ? "seeker" : "employer"
+    return {
+      url: `${BASE_URL}/help/${audience}/${a.slug}`,
+      lastModified: a.updatedAt,
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    }
+  })
+
   return [
     ...staticPages,
     ...journalPages,
     ...prefecturePages,
     ...jobPages,
     ...seoCombos,
+    ...helpPages,
   ]
 }
