@@ -518,8 +518,13 @@ export default async function HomePage() {
             <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
               {themeCards.map((c, i) => (
                 <Link key={i} href={`/jobs?theme=${encodeURIComponent(c.label)}`} className="group relative aspect-[4/3] overflow-hidden bg-white shadow-sm hover:shadow-md transition">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={c.image} alt={c.label} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
+                  <Image
+                    src={c.image}
+                    alt={c.label}
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                    className="object-cover group-hover:scale-105 transition duration-300"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/30 to-transparent" />
                   <span className="absolute left-2 top-2 bg-brand-yellow-500 px-1.5 py-0.5 text-[9px] font-black text-ink-900 tracking-tight">
                     #{String(i + 1).padStart(2, "0")}
@@ -556,8 +561,13 @@ export default async function HomePage() {
                     className="group overflow-hidden border border-warm-200 bg-white hover:border-ink-900 hover:shadow-lg transition"
                   >
                     <div className="aspect-[4/3] relative overflow-hidden">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={cat.image} alt={cat.label} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
+                      <Image
+                        src={cat.image}
+                        alt={cat.label}
+                        fill
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                        className="object-cover group-hover:scale-105 transition duration-300"
+                      />
                       <div className="absolute inset-0 bg-gradient-to-t from-ink-900/85 via-ink-900/20 to-transparent" />
                       {/* Category icon top-right */}
                       <span className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center bg-brand-yellow-500">
@@ -603,9 +613,14 @@ export default async function HomePage() {
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     {a.imageUrl && (
-                      <div className="w-20 h-14 shrink-0 overflow-hidden">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition" />
+                      <div className="relative w-20 h-14 shrink-0 overflow-hidden">
+                        <Image
+                          src={a.imageUrl}
+                          alt={a.title}
+                          fill
+                          sizes="80px"
+                          className="object-cover group-hover:scale-105 transition"
+                        />
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
@@ -636,9 +651,14 @@ export default async function HomePage() {
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     {a.imageUrl && (
-                      <div className="w-20 h-14 shrink-0 overflow-hidden">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition" />
+                      <div className="relative w-20 h-14 shrink-0 overflow-hidden">
+                        <Image
+                          src={a.imageUrl}
+                          alt={a.title}
+                          fill
+                          sizes="80px"
+                          className="object-cover group-hover:scale-105 transition"
+                        />
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
