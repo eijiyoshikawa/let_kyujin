@@ -1,4 +1,8 @@
 import { prisma } from "@/lib/db"
+import {
+  CONSTRUCTION_CATEGORY_VALUES,
+  isConstructionCategory,
+} from "@/lib/categories"
 import { type NextRequest } from "next/server"
 
 export async function GET(request: NextRequest) {
@@ -13,10 +17,17 @@ export async function GET(request: NextRequest) {
   const limit = Math.min(50, Math.max(1, Number(searchParams.get("limit") ?? "20")))
   const sort = searchParams.get("sort") ?? "published_at"
 
+  // 建設業特化サイトのため、非建設業カテゴリは常に除外する。
+  // ユーザーが ?category= を指定した場合も建設業カテゴリ以外は無効化。
+  const categoryFilter =
+    category && isConstructionCategory(category)
+      ? { category }
+      : { category: { in: [...CONSTRUCTION_CATEGORY_VALUES] } }
+
   const where = {
     status: "active" as const,
     ...(prefecture && { prefecture }),
-    ...(category && { category }),
+    ...categoryFilter,
     ...(employmentType && { employmentType }),
     ...(salaryMin && { salaryMin: { gte: Number(salaryMin) } }),
     ...(q && {

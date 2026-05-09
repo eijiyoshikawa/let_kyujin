@@ -119,6 +119,7 @@ export async function POST(request: Request) {
       created: stats.created,
       updated: stats.updated,
       closed: stats.closed,
+      skipped: stats.skipped,
       errors: stats.errors,
       durationMs: Date.now() - t0,
       timestamp: new Date().toISOString(),

@@ -13,6 +13,7 @@
  */
 
 import { PrismaClient } from "@prisma/client"
+import type { CategoryValue } from "@/lib/categories"
 import type { HelloworkJobData } from "./hellowork"
 
 // ========================================
@@ -27,6 +28,8 @@ export interface ImportStats {
   updated: number
   /** closed に変更された件数（HW 側で削除済み） */
   closed: number
+  /** 建設業カテゴリにマッチせずスキップした件数 */
+  skipped: number
   /** エラーが発生した件数 */
   errors: number
   /** 処理対象の総件数 */
@@ -71,15 +74,15 @@ if (process.env.NODE_ENV !== "production") {
  * HelloworkJobData を Prisma の Job モデルに適合する形式に変換する。
  *
  * @param job - パース済みのハローワーク求人データ
+ * @param category - 事前に推定された建設業カテゴリ
  * @returns Prisma upsert 用のデータオブジェクト
  */
-function toJobRecord(job: HelloworkJobData) {
+function toJobRecord(job: HelloworkJobData, category: CategoryValue) {
   return {
     source: job.source,
     helloworkId: job.helloworkId,
     title: job.title,
-    // カテゴリは求人タイトルから推定する（暫定マッピング）
-    category: inferCategory(job.title, job.description),
+    category,
     employmentType: job.employmentType,
     description: job.description,
     requirements: job.requirements,
@@ -97,60 +100,52 @@ function toJobRecord(job: HelloworkJobData) {
 }
 
 /**
- * 求人タイトル・説明文から職種カテゴリを推定する。
+ * 求人タイトル・説明文から建設業カテゴリを推定する。
  *
- * キーワードマッチングによる簡易分類。
- * 精度向上が必要な場合は ML モデルや LLM 分類の導入を検討する。
+ * `src/lib/categories.ts` で定義された建設業 9 カテゴリ（"other" を除く 8 つ）
+ * のいずれかに該当するキーワードが含まれていれば該当カテゴリを返す。
+ * いずれにも該当しなければ `null` を返し、呼び出し側はそのジョブを取り込まずスキップする。
  *
- * @param title - 求人タイトル
- * @param description - 求人説明（nullable）
- * @returns 推定されたカテゴリ文字列
+ * パターン優先度: より具体的な業種（civil, electrical, ...）を construction より先に評価し、
+ * 「土木 + 建築」のような複合キーワードを取りこぼさないようにする。
  */
-function inferCategory(title: string, description: string | null): string {
+export function inferCategory(
+  title: string,
+  description: string | null | undefined
+): CategoryValue | null {
   const text = `${title} ${description ?? ""}`.toLowerCase()
 
-  // 優先度順にマッチング
-  const categoryPatterns: Array<{ category: string; patterns: RegExp }> = [
+  const patterns: Array<{ category: CategoryValue; pattern: RegExp }> = [
+    { category: "civil", pattern: /土木|舗装|道路|河川|橋梁|トンネル|造成/ },
+    {
+      category: "electrical",
+      pattern: /電気工事|設備工事|空調|衛生|配管|配線|消防/,
+    },
+    {
+      category: "interior",
+      pattern: /内装|仕上げ|塗装|防水|クロス|タイル|左官/,
+    },
+    { category: "demolition", pattern: /解体|産廃|アスベスト|スクラップ/ },
     {
       category: "driver",
-      patterns:
-        /ドライバー|運転|配送|トラック|タクシー|バス|輸送|運搬|配達/,
+      pattern: /ドライバー|運転手|重機|オペレーター|クレーン|ダンプ/,
     },
+    {
+      category: "management",
+      pattern: /施工管理|現場監督|現場代理人|工事主任|現場所長/,
+    },
+    { category: "survey", pattern: /測量|設計|cad|積算/ },
     {
       category: "construction",
-      patterns:
-        /建設|建築|土木|施工|現場|鳶|左官|型枠|鉄筋|塗装|防水|解体|電気工事|配管/,
-    },
-    {
-      category: "manufacturing",
-      patterns:
-        /製造|工場|組立|加工|検品|検査|ライン|溶接|旋盤|プレス|フォークリフト/,
-    },
-    {
-      category: "office",
-      patterns: /事務|経理|総務|人事|秘書|データ入力|一般事務/,
-    },
-    {
-      category: "sales",
-      patterns: /営業|販売|接客|店長|店舗|レジ/,
-    },
-    {
-      category: "service",
-      patterns:
-        /介護|看護|保育|福祉|調理|清掃|警備|ビルメンテ/,
-    },
-    {
-      category: "it",
-      patterns:
-        /エンジニア|プログラマ|SE|開発|IT|情報処理|ネットワーク|サーバ/,
+      pattern: /建設|建築|躯体|鳶|鉄筋|型枠|大工|足場|基礎/,
     },
   ]
 
-  for (const { category, patterns } of categoryPatterns) {
-    if (patterns.test(text)) return category
+  for (const { category, pattern } of patterns) {
+    if (pattern.test(text)) return category
   }
 
-  return "other"
+  return null
 }
 
 // ========================================
@@ -194,10 +189,13 @@ export async function importHelloworkJobs(
   let created = 0
   let updated = 0
   let closed = 0
+  let skipped = 0
   let errors = 0
   const importErrors: ImportError[] = []
 
   // 今回バッチで処理された hellowork_id のセット
+  // 建設業カテゴリにマッチした（＝取り込み対象になった）ジョブのみが入る。
+  // 非建設業ジョブを含めると closeOrphans が誤って既存の建設業求人を closed にしてしまうため。
   const processedIds = new Set<string>()
 
   console.info(
@@ -209,6 +207,13 @@ export async function importHelloworkJobs(
   // -------------------------------------------------------
   for (const job of jobs) {
     try {
+      // 建設業 9 カテゴリのいずれにも該当しないジョブは取り込まない
+      const category = inferCategory(job.title, job.description)
+      if (category === null) {
+        skipped++
+        continue
+      }
+
       processedIds.add(job.helloworkId)
 
       if (dryRun) {
@@ -225,7 +230,7 @@ export async function importHelloworkJobs(
         continue
       }
 
-      const data = toJobRecord(job)
+      const data = toJobRecord(job, category)
 
       const result = await prisma.job.upsert({
         where: { helloworkId: job.helloworkId },
@@ -311,6 +316,7 @@ export async function importHelloworkJobs(
     created,
     updated,
     closed,
+    skipped,
     errors,
     totalProcessed: jobs.length,
     startedAt,
@@ -322,6 +328,7 @@ export async function importHelloworkJobs(
   console.info(`  新規追加: ${stats.created} 件`)
   console.info(`  更新: ${stats.updated} 件`)
   console.info(`  終了 (closed): ${stats.closed} 件`)
+  console.info(`  スキップ (非建設業): ${stats.skipped} 件`)
   console.info(`  エラー: ${stats.errors} 件`)
   console.info(`  処理時間: ${stats.durationMs}ms`)
 

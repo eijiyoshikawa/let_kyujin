@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next"
 import { prisma } from "@/lib/db"
+import { CONSTRUCTION_CATEGORY_VALUES } from "@/lib/categories"
 
 export const dynamic = "force-dynamic"
 
@@ -112,9 +113,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }))
 
-  // Active job detail pages
+  // Active job detail pages（建設業カテゴリのみ）
   const jobs = await prisma.job.findMany({
-    where: { status: "active" },
+    where: {
+      status: "active",
+      category: { in: [...CONSTRUCTION_CATEGORY_VALUES] },
+    },
     select: { id: true, updatedAt: true },
     orderBy: { updatedAt: "desc" },
   })

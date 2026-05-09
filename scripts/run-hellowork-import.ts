@@ -46,6 +46,7 @@ async function main() {
   console.log(`  新規:   ${stats.created}`)
   console.log(`  更新:   ${stats.updated}`)
   console.log(`  closed: ${stats.closed}`)
+  console.log(`  skip(非建設業): ${stats.skipped}`)
   console.log(`  エラー: ${stats.errors}`)
   console.log(`  処理時間: ${stats.durationMs}ms`)
   console.log("\nロールバックするなら:")

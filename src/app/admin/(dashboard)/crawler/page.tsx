@@ -19,9 +19,14 @@ const PREFECTURES = [
 ]
 
 const CATEGORIES = [
-  { value: "driver", label: "ドライバー" },
-  { value: "construction", label: "建設" },
-  { value: "manufacturing", label: "製造" },
+  { value: "construction", label: "建築・躯体" },
+  { value: "civil", label: "土木" },
+  { value: "electrical", label: "電気・設備" },
+  { value: "interior", label: "内装・仕上げ" },
+  { value: "demolition", label: "解体・産廃" },
+  { value: "driver", label: "ドライバー・重機" },
+  { value: "management", label: "施工管理" },
+  { value: "survey", label: "測量・設計" },
   { value: "", label: "全職種" },
 ]
 
@@ -31,6 +36,7 @@ interface ImportResult {
     created: number
     updated: number
     closed: number
+    skipped?: number
     errors: number
     totalProcessed: number
     durationMs: number
@@ -206,6 +212,12 @@ export default function AdminCrawlerPage() {
                     <dt className="text-gray-600">終了 (closed)</dt>
                     <dd className="text-lg font-bold text-gray-800">
                       {result.stats.closed} 件
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-amber-600">スキップ (非建設業)</dt>
+                    <dd className="text-lg font-bold text-amber-800">
+                      {result.stats.skipped ?? 0} 件
                     </dd>
                   </div>
                   <div>

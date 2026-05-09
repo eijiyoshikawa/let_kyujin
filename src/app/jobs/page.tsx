@@ -5,7 +5,12 @@ import Link from "next/link"
 import { Pagination } from "@/components/pagination"
 import { PREFECTURES } from "@/lib/constants"
 import { AREAS } from "@/lib/areas"
-import { CATEGORIES, getCategoryLabel } from "@/lib/categories"
+import {
+  CATEGORIES,
+  CONSTRUCTION_CATEGORY_VALUES,
+  getCategoryLabel,
+  isConstructionCategory,
+} from "@/lib/categories"
 import type { Metadata } from "next"
 
 type Props = {
@@ -55,11 +60,18 @@ export default async function JobsPage({ searchParams }: Props) {
   const dateWithinThreshold = computeDateWithinThreshold(dateWithinDays)
   const sort = (params.sort && SORT_OPTIONS.find((s) => s.value === params.sort)?.value) ?? "newest"
 
+  // 建設業特化サイトのため、非建設業カテゴリは常に除外する。
+  // ユーザー指定が建設業カテゴリならその値、そうでなければ建設業全体に絞る。
+  const categoryFilter =
+    params.category && isConstructionCategory(params.category)
+      ? { category: params.category }
+      : { category: { in: [...CONSTRUCTION_CATEGORY_VALUES] } }
+
   const where = {
     status: "active" as const,
     ...(params.prefecture && { prefecture: params.prefecture }),
     ...(params.city && { city: params.city }),
-    ...(params.category && { category: params.category }),
+    ...categoryFilter,
     ...(params.employment_type && { employmentType: params.employment_type }),
     ...(salaryMinYen !== null && { salaryMin: { gte: salaryMinYen } }),
     ...(salaryMaxYen !== null && { salaryMax: { lte: salaryMaxYen } }),
@@ -182,7 +194,9 @@ export default async function JobsPage({ searchParams }: Props) {
                     label="職種カテゴリ"
                     name="category"
                     defaultValue={params.category ?? ""}
-                    options={CATEGORIES.map((c) => ({ value: c.value, label: c.label }))}
+                    options={CATEGORIES.filter((c) => c.value !== "other").map(
+                      (c) => ({ value: c.value, label: c.label })
+                    )}
                   />
 
                   <FilterSelect

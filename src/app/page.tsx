@@ -1,6 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { prisma } from "@/lib/db"
+import { CONSTRUCTION_CATEGORY_VALUES } from "@/lib/categories"
 import {
   Search,
   HardHat,
@@ -118,7 +119,10 @@ const featureBanners = [
 export default async function HomePage() {
   const categoryCounts = await prisma.job.groupBy({
     by: ["category"],
-    where: { status: "active" },
+    where: {
+      status: "active",
+      category: { in: [...CONSTRUCTION_CATEGORY_VALUES] },
+    },
     _count: true,
   }).catch(() => [])
 
@@ -141,7 +145,10 @@ export default async function HomePage() {
 
   const [popularJobs, recommendedArticles, latestJobs] = await Promise.all([
     prisma.job.findMany({
-      where: { status: "active" },
+      where: {
+        status: "active",
+        category: { in: [...CONSTRUCTION_CATEGORY_VALUES] },
+      },
       orderBy: { viewCount: "desc" },
       take: 5,
       select: { id: true, title: true, prefecture: true, category: true, viewCount: true },
@@ -153,7 +160,10 @@ export default async function HomePage() {
       select: { slug: true, title: true, category: true },
     }).catch(() => []),
     prisma.job.findMany({
-      where: { status: "active" },
+      where: {
+        status: "active",
+        category: { in: [...CONSTRUCTION_CATEGORY_VALUES] },
+      },
       orderBy: { createdAt: "desc" },
       take: 4,
       select: {
