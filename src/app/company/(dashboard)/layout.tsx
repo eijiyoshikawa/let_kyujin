@@ -1,6 +1,8 @@
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { CompanySidebar } from "@/components/company/sidebar"
+import { CompanyStatusBanner } from "@/components/company/status-banner"
+import { prisma } from "@/lib/db"
 
 export default async function CompanyLayout({
   children,
@@ -15,15 +17,31 @@ export default async function CompanyLayout({
     redirect("/login")
   }
 
+  const companyId = (session.user as { companyId?: string }).companyId ?? ""
+  const company = companyId
+    ? await prisma.company.findUnique({
+        where: { id: companyId },
+        select: { status: true, rejectionReason: true },
+      })
+    : null
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       <div className="flex flex-col gap-6 lg:flex-row">
         <CompanySidebar
-          companyId={(session.user as { companyId?: string }).companyId ?? ""}
+          companyId={companyId}
           userName={session.user.name ?? "担当者"}
           role={role}
         />
-        <div className="flex-1 min-w-0">{children}</div>
+        <div className="flex-1 min-w-0">
+          {company && company.status !== "approved" && (
+            <CompanyStatusBanner
+              status={company.status}
+              rejectionReason={company.rejectionReason}
+            />
+          )}
+          {children}
+        </div>
       </div>
     </div>
   )

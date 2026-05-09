@@ -3,6 +3,7 @@ import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { CATEGORIES } from "@/lib/categories"
+import { requireCompanyAuth, isCompanyAuthError } from "@/lib/company-auth"
 
 const VALID_CATEGORIES = CATEGORIES.map((c) => c.value)
 
@@ -67,9 +68,10 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const ctx = await getCompanySession()
-  if (!ctx) {
-    return Response.json({ error: "企業アカウントでログインしてください" }, { status: 401 })
+  // 求人投稿は status=approved の企業のみ許可
+  const ctx = await requireCompanyAuth({ requireApproved: true })
+  if (isCompanyAuthError(ctx)) {
+    return Response.json({ error: ctx.error }, { status: ctx.status })
   }
 
   let body: unknown
