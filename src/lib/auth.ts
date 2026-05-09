@@ -150,19 +150,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (user.email) {
           const existing = await prisma.user.findUnique({
             where: { email: user.email },
-            select: { id: true },
+            select: { id: true, emailVerified: true },
           })
           if (!existing) {
+            // OAuth プロバイダ経由のメールは確認済みとみなす（Google/LINE が検証済みのため）
             const created = await prisma.user.create({
               data: {
                 email: user.email,
                 name: user.name ?? null,
                 authProvider: account.provider,
+                emailVerified: new Date(),
               },
             })
             user.id = created.id
             ;(user as { role?: string }).role = "seeker"
           } else {
+            // 既存ユーザーが OAuth で初めてログインした場合も emailVerified を埋める
+            if (!existing.emailVerified) {
+              await prisma.user.update({
+                where: { id: existing.id },
+                data: { emailVerified: new Date() },
+              })
+            }
             user.id = existing.id
             ;(user as { role?: string }).role = "seeker"
           }

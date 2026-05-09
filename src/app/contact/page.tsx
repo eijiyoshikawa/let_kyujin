@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { AnimateOnScroll } from "@/components/animate-on-scroll"
+import { ContactForm } from "@/components/contact-form"
 import {
   Phone,
   Mail,
@@ -116,7 +117,7 @@ export default function ContactPage() {
               <Mail className="h-5 w-5 text-primary-600" />
             </div>
             <h3 className="mt-3 font-bold text-gray-900">メール</h3>
-            <p className="mt-1 text-sm text-primary-600">info@let-group.co.jp</p>
+            <p className="mt-1 text-sm text-primary-600">info@let-inc.net</p>
             <p className="mt-2 text-xs text-gray-500">
               通常1〜2営業日以内にご返信いたします。
             </p>
@@ -174,6 +175,19 @@ export default function ContactPage() {
         </div>
         </AnimateOnScroll>
 
+        {/* Contact form */}
+        <AnimateOnScroll>
+        <h2 className="mt-12 flex items-center gap-2 text-xl font-bold text-gray-900">
+          <Mail className="h-5 w-5 text-primary-600" />
+          フォームでお問い合わせ
+        </h2>
+        </AnimateOnScroll>
+        <AnimateOnScroll animation="fade-up">
+        <div className="mt-4">
+          <ContactForm />
+        </div>
+        </AnimateOnScroll>
+
         {/* FAQ */}
         <AnimateOnScroll>
         <h2 className="mt-12 flex items-center gap-2 text-xl font-bold text-gray-900">
@@ -217,7 +231,7 @@ export default function ContactPage() {
               06-6786-8320
             </a>
             <a
-              href="mailto:info@let-group.co.jp"
+              href="mailto:info@let-inc.net"
               className="inline-flex items-center justify-center gap-2  border border-gray-300 bg-white px-6 py-3 text-sm font-bold text-gray-700 hover:bg-gray-50 transition"
             >
               <Mail className="h-4 w-4" />

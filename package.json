@@ -11,7 +11,8 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "db:seed-articles": "tsx prisma/seed-data/seed-articles.ts"
+    "db:seed-articles": "tsx prisma/seed-data/seed-articles.ts",
+    "db:seed-help": "tsx prisma/seed-data/seed-help-articles.ts"
   },
   "dependencies": {
     "@prisma/client": "6.19.3",
