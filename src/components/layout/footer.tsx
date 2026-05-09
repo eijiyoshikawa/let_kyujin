@@ -57,6 +57,7 @@ export function Footer() {
               <li><Link href="/about" className="text-xs text-gray-400 hover:text-primary-300 transition">サイトについて</Link></li>
               <li><Link href="/terms" className="text-xs text-gray-400 hover:text-primary-300 transition">利用規約</Link></li>
               <li><Link href="/privacy" className="text-xs text-gray-400 hover:text-primary-300 transition">プライバシーポリシー</Link></li>
+              <li><Link href="/legal" className="text-xs text-gray-400 hover:text-primary-300 transition">特定商取引法に基づく表記</Link></li>
             </ul>
           </div>
           <div>
