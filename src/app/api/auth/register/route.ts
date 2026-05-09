@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { PREFECTURES } from "@/lib/constants";
 import { generateToken } from "@/lib/tokens";
 import { sendEmailVerificationEmail } from "@/lib/email";
+import { checkRateLimit, getClientIp, rateLimitResponse } from "@/lib/rate-limit";
 
 const registerSchema = z.object({
   name: z.string().min(1, "氏名は必須です。"),
@@ -17,6 +18,14 @@ const registerSchema = z.object({
 const VERIFICATION_TOKEN_EXPIRY_MS = 24 * 60 * 60 * 1000;
 
 export async function POST(request: Request) {
+  // レート制限: 同一 IP から 15 分間に 5 回まで
+  const rl = checkRateLimit({
+    key: `register:${getClientIp(request)}`,
+    limit: 5,
+    windowMs: 15 * 60 * 1000,
+  });
+  if (!rl.allowed) return rateLimitResponse(rl);
+
   try {
     const body = await request.json();
     const parsed = registerSchema.safeParse(body);

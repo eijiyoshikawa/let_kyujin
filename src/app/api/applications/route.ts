@@ -6,6 +6,7 @@ import {
   sendApplicationConfirmEmail,
   sendApplicationNotificationEmail,
 } from "@/lib/email"
+import { checkRateLimit, getClientIp, rateLimitResponse } from "@/lib/rate-limit"
 
 const applicationSchema = z.object({
   jobId: z.string().uuid(),
@@ -16,6 +17,20 @@ export async function POST(request: NextRequest) {
   const session = await auth()
   if (!session?.user?.id) {
     return Response.json({ error: "ログインが必要です" }, { status: 401 })
+  }
+
+  // レート制限: 同一ユーザーから 1 時間に 10 件まで（スパム応募抑止）
+  // 認証済みなのでユーザー ID をキーに使う
+  const rl = checkRateLimit({
+    key: `applications:${session.user.id}:${getClientIp(request)}`,
+    limit: 10,
+    windowMs: 60 * 60 * 1000,
+  })
+  if (!rl.allowed) {
+    return rateLimitResponse(
+      rl,
+      "応募リクエストが多すぎます。1時間あたり10件までに制限されています。"
+    )
   }
 
   const role = (session.user as { role?: string }).role

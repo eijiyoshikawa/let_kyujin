@@ -28,7 +28,8 @@ describe("generateJobPostingSchema", () => {
     expect(schema["@type"]).toBe("JobPosting")
     expect(schema.title).toBe("施工管理")
     expect(schema.description).toBe("建設現場の施工管理業務")
-    expect(schema.hiringOrganization.name).toBe("テスト建設株式会社")
+    const hiringOrg = schema.hiringOrganization as { name: string }
+    expect(hiringOrg.name).toBe("テスト建設株式会社")
   })
 
   it("handles null company", () => {
@@ -50,6 +51,9 @@ describe("generateJobPostingSchema", () => {
     })
 
     expect(schema.title).toBe("求人タイトル")
-    expect(schema.jobLocation.address.addressRegion).toBe("大阪府")
+    const jobLocation = schema.jobLocation as {
+      address: { addressRegion: string }
+    }
+    expect(jobLocation.address.addressRegion).toBe("大阪府")
   })
 })

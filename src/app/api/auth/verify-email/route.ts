@@ -10,12 +10,21 @@
 import { type NextRequest } from "next/server"
 import { z } from "zod"
 import { prisma } from "@/lib/db"
+import { checkRateLimit, getClientIp, rateLimitResponse } from "@/lib/rate-limit"
 
 const schema = z.object({
   token: z.string().min(16),
 })
 
 export async function POST(request: NextRequest) {
+  // レート制限: 同一 IP から 15 分間に 20 回まで（トークンの brute-force 抑止）
+  const rl = checkRateLimit({
+    key: `verify-email:${getClientIp(request)}`,
+    limit: 20,
+    windowMs: 15 * 60 * 1000,
+  })
+  if (!rl.allowed) return rateLimitResponse(rl)
+
   let body: unknown
   try {
     body = await request.json()
