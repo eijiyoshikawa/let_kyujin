@@ -83,9 +83,14 @@ if (process.env.NODE_ENV !== "production") {
  *
  * @param job - パース済みのハローワーク求人データ
  * @param category - 事前に推定された建設業カテゴリ
+ * @param companyId - 事前に upsert された HW Company の id（無ければ null）
  * @returns Prisma upsert 用のデータオブジェクト
  */
-function toJobRecord(job: HelloworkJobData, category: CategoryValue) {
+function toJobRecord(
+  job: HelloworkJobData,
+  category: CategoryValue,
+  companyId: string | null
+) {
   const title = cleanTitle(job.title, job.prefecture)
   const tags = extractTags(job.title, job.description, job.requirements)
   const salary = fallbackSalary(job.description, {
@@ -99,6 +104,7 @@ function toJobRecord(job: HelloworkJobData, category: CategoryValue) {
     helloworkId: truncate(job.helloworkId, 50),
     title: truncate(title, 500) || "求人",
     category,
+    companyId,
     employmentType: job.employmentType,
     description: job.description,
     requirements: job.requirements,
@@ -111,9 +117,50 @@ function toJobRecord(job: HelloworkJobData, category: CategoryValue) {
     tags,
     status: "active" as const,
     publishedAt: new Date(),
-    // companyId は null（ハローワーク求人は自社掲載ではないため）
-    // 会社名は description に含めるか、別途 Company レコードを作成する
   }
+}
+
+/**
+ * HelloWork 由来の事業所情報を `Company` テーブルに find-or-create する。
+ *
+ * 同名企業の重複作成を避けるため `(source='hellowork', name)` の複合 unique を使用。
+ * バッチ実行中に同名企業が複数回登場するので、呼び出し側でメモ化キャッシュを
+ * 渡すと DB ラウンドトリップを 1 回に圧縮できる。
+ *
+ * 状態は "approved" 固定（承認フロー対象外。表示と参照のためだけに存在する）。
+ */
+async function upsertHelloworkCompany(
+  job: HelloworkJobData,
+  cache: Map<string, string>
+): Promise<string | null> {
+  const name = job.companyName?.trim()
+  if (!name || name === "不明") return null
+
+  const cached = cache.get(name)
+  if (cached) return cached
+
+  const company = await prisma.company.upsert({
+    where: { company_source_name_unique: { source: "hellowork", name } },
+    create: {
+      source: "hellowork",
+      name,
+      prefecture: job.prefecture || null,
+      city: job.city,
+      address: job.address,
+      status: "approved",
+    },
+    update: {
+      // 既存レコードの prefecture/city/address は最新ジョブの値で更新
+      // （HW 側で住所が変わる可能性があるため）
+      prefecture: job.prefecture || null,
+      city: job.city,
+      address: job.address,
+    },
+    select: { id: true },
+  })
+
+  cache.set(name, company.id)
+  return company.id
 }
 
 /** schema 上限超過を防ぐ最終防御。`null` / `undefined` も許容して null を返す。 */
@@ -224,6 +271,9 @@ export async function importHelloworkJobs(
   // 非建設業ジョブを含めると closeOrphans が誤って既存の建設業求人を closed にしてしまうため。
   const processedIds = new Set<string>()
 
+  // 同一バッチ内で同じ会社名が複数のジョブで登場する場合の Company upsert 重複を避けるキャッシュ。
+  const companyCache = new Map<string, string>()
+
   console.info(
     `[import-batch] インポート開始: ${jobs.length} 件の求人を処理します`
   )
@@ -256,7 +306,8 @@ export async function importHelloworkJobs(
         continue
       }
 
-      const data = toJobRecord(job, category)
+      const companyId = await upsertHelloworkCompany(job, companyCache)
+      const data = toJobRecord(job, category, companyId)
 
       const result = await prisma.job.upsert({
         where: { helloworkId: job.helloworkId },
@@ -264,6 +315,7 @@ export async function importHelloworkJobs(
         update: {
           title: data.title,
           category: data.category,
+          companyId: data.companyId,
           employmentType: data.employmentType,
           description: data.description,
           requirements: data.requirements,
