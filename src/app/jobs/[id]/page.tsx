@@ -14,10 +14,13 @@ import {
   Briefcase,
   Globe,
   Users,
+  Sparkles,
 } from "lucide-react"
 import type { Metadata } from "next"
 import { generateJobPostingSchema } from "@/lib/structured-data"
 import { getCategoryLabel } from "@/lib/categories"
+import { JobDescription } from "@/components/jobs/job-description"
+import { WorkConditionsBox } from "@/components/jobs/work-conditions-box"
 
 type Props = {
   params: Promise<{ id: string }>
@@ -181,16 +184,22 @@ export default async function JobDetailPage({ params }: Props) {
               </div>
             </div>
 
-            {/* Description */}
+            {/* Work Conditions (auto-extracted from description/requirements) */}
+            <WorkConditionsBox
+              description={job.description}
+              requirements={job.requirements}
+            />
+
+            {/* Description with section markers */}
             {job.description && (
               <div className=" border bg-white p-6 shadow-sm">
                 <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900 border-b pb-3">
                   <Briefcase className="h-5 w-5 text-primary-500" />
                   仕事内容
                 </h2>
-                <p className="mt-4 whitespace-pre-wrap text-sm text-gray-700 leading-relaxed">
-                  {job.description}
-                </p>
+                <div className="mt-4">
+                  <JobDescription text={job.description} />
+                </div>
               </div>
             )}
 
@@ -224,17 +233,24 @@ export default async function JobDetailPage({ params }: Props) {
               </div>
             )}
 
-            {/* Tags */}
+            {/* Tags（待遇・特徴の自動抽出） */}
             {job.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {job.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs text-gray-600"
-                  >
-                    {tag}
-                  </span>
-                ))}
+              <div className=" border bg-white p-6 shadow-sm">
+                <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900 border-b pb-3">
+                  <Sparkles className="h-5 w-5 text-amber-500" />
+                  待遇・特徴
+                </h2>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {job.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-3 py-1 text-sm font-medium text-amber-800"
+                    >
+                      <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
             )}
 

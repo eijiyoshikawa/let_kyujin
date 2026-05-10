@@ -14,6 +14,11 @@
 
 import { PrismaClient } from "@prisma/client"
 import type { CategoryValue } from "@/lib/categories"
+import {
+  cleanTitle,
+  extractTags,
+  fallbackSalary,
+} from "@/lib/job-enrichment"
 import type { HelloworkJobData } from "./hellowork"
 
 // ========================================
@@ -81,20 +86,29 @@ if (process.env.NODE_ENV !== "production") {
  * @returns Prisma upsert 用のデータオブジェクト
  */
 function toJobRecord(job: HelloworkJobData, category: CategoryValue) {
+  const title = cleanTitle(job.title, job.prefecture)
+  const tags = extractTags(job.title, job.description, job.requirements)
+  const salary = fallbackSalary(job.description, {
+    min: job.salaryMin,
+    max: job.salaryMax,
+    type: job.salaryType,
+  })
+
   return {
     source: job.source,
     helloworkId: truncate(job.helloworkId, 50),
-    title: truncate(job.title, 500) || "求人",
+    title: truncate(title, 500) || "求人",
     category,
     employmentType: job.employmentType,
     description: job.description,
     requirements: job.requirements,
-    salaryMin: job.salaryMin,
-    salaryMax: job.salaryMax,
-    salaryType: job.salaryType,
+    salaryMin: salary.min,
+    salaryMax: salary.max,
+    salaryType: salary.type,
     prefecture: truncate(job.prefecture, 20) || "不明",
     city: job.city ? truncate(job.city, 100) : null,
     address: job.address,
+    tags,
     status: "active" as const,
     publishedAt: new Date(),
     // companyId は null（ハローワーク求人は自社掲載ではないため）
@@ -259,6 +273,7 @@ export async function importHelloworkJobs(
           prefecture: data.prefecture,
           city: data.city,
           address: data.address,
+          tags: data.tags,
           status: "active",
           // updatedAt は Prisma が自動更新する
         },
