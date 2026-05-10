@@ -73,6 +73,9 @@ if (process.env.NODE_ENV !== "production") {
 /**
  * HelloworkJobData を Prisma の Job モデルに適合する形式に変換する。
  *
+ * 防御的に schema 上限を超える文字列は truncate する。
+ * （schema 側で既に余裕を持たせているが、API 仕様変更や想定外データへの保険）
+ *
  * @param job - パース済みのハローワーク求人データ
  * @param category - 事前に推定された建設業カテゴリ
  * @returns Prisma upsert 用のデータオブジェクト
@@ -80,8 +83,8 @@ if (process.env.NODE_ENV !== "production") {
 function toJobRecord(job: HelloworkJobData, category: CategoryValue) {
   return {
     source: job.source,
-    helloworkId: job.helloworkId,
-    title: job.title,
+    helloworkId: truncate(job.helloworkId, 50),
+    title: truncate(job.title, 500) || "求人",
     category,
     employmentType: job.employmentType,
     description: job.description,
@@ -89,14 +92,23 @@ function toJobRecord(job: HelloworkJobData, category: CategoryValue) {
     salaryMin: job.salaryMin,
     salaryMax: job.salaryMax,
     salaryType: job.salaryType,
-    prefecture: job.prefecture,
-    city: job.city,
+    prefecture: truncate(job.prefecture, 20) || "不明",
+    city: job.city ? truncate(job.city, 100) : null,
     address: job.address,
     status: "active" as const,
     publishedAt: new Date(),
     // companyId は null（ハローワーク求人は自社掲載ではないため）
     // 会社名は description に含めるか、別途 Company レコードを作成する
   }
+}
+
+/** schema 上限超過を防ぐ最終防御。`null` / `undefined` も許容して null を返す。 */
+function truncate<T extends string | null | undefined>(
+  value: T,
+  maxLen: number
+): T extends string ? string : null {
+  if (value == null) return null as never
+  return (value.length <= maxLen ? value : value.slice(0, maxLen)) as never
 }
 
 /**
