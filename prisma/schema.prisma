@@ -102,7 +102,7 @@ model Job {
   companyId      String?   @map("company_id") @db.Uuid
   source         String    @default("direct") @db.VarChar(20) // direct | hellowork
   helloworkId    String?   @unique @map("hellowork_id") @db.VarChar(50)
-  title          String    @db.VarChar(200)
+  title          String    @db.VarChar(500)
   category       String    @db.VarChar(50) // driver | construction | manufacturing | other
   subcategory    String?   @db.VarChar(50)
   employmentType String?   @map("employment_type") @db.VarChar(20) // full_time | part_time | contract
@@ -111,8 +111,8 @@ model Job {
   salaryMin      Int?      @map("salary_min")
   salaryMax      Int?      @map("salary_max")
   salaryType     String?   @map("salary_type") @db.VarChar(20) // monthly | hourly | annual
-  prefecture     String    @db.VarChar(10)
-  city           String?   @db.VarChar(50)
+  prefecture     String    @db.VarChar(20)
+  city           String?   @db.VarChar(100)
   address        String?
   benefits       String[]  @default([])
   tags           String[]  @default([])

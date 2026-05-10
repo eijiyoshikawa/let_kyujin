@@ -364,15 +364,48 @@ function inferSalaryTypeFromAmount(
   return "annual"
 }
 
-function splitPrefectureCity(text: string | null): {
+/** 全 47 都道府県名（正式表記）。`splitPrefectureCity` のフォールバック検索に使う。 */
+const ALL_PREFECTURES = [
+  "北海道",
+  "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県",
+  "茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都", "神奈川県",
+  "新潟県", "富山県", "石川県", "福井県", "山梨県", "長野県",
+  "岐阜県", "静岡県", "愛知県", "三重県",
+  "滋賀県", "京都府", "大阪府", "兵庫県", "奈良県", "和歌山県",
+  "鳥取県", "島根県", "岡山県", "広島県", "山口県",
+  "徳島県", "香川県", "愛媛県", "高知県",
+  "福岡県", "佐賀県", "長崎県", "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県",
+] as const
+
+export function splitPrefectureCity(text: string | null): {
   prefecture: string
   city: string | null
 } {
-  if (!text) return { prefecture: "", city: null }
-  const m = text.match(/^(北海道|東京都|(?:大阪|京都)府|.{2,3}県)(.*)$/)
-  if (!m) return { prefecture: text, city: null }
-  const city = m[2].trim()
-  return { prefecture: m[1], city: city || null }
+  if (!text) return { prefecture: "不明", city: null }
+
+  // 1) 先頭が都道府県プレフィックスにマッチする標準形式
+  const head = text.match(/^(北海道|東京都|(?:大阪|京都)府|.{2,3}県)(.*)$/)
+  if (head) {
+    const city = head[2].trim()
+    return { prefecture: head[1], city: city || null }
+  }
+
+  // 2) 〒xxx-xxxx や全角空白で先頭が崩れているケースを救済：
+  //    住所文字列のどこかに 47 都道府県名が含まれていれば抽出する
+  for (const pref of ALL_PREFECTURES) {
+    const idx = text.indexOf(pref)
+    if (idx >= 0) {
+      const after = text.slice(idx + pref.length).trim()
+      return { prefecture: pref, city: after || null }
+    }
+  }
+
+  // 3) 都道府県を一切特定できない場合は city に原文（先頭 100 字）を残し、
+  //    prefecture は "不明" にする。これにより VarChar(20) を絶対超えない。
+  return {
+    prefecture: "不明",
+    city: text.slice(0, 100) || null,
+  }
 }
 
 function parseEmploymentType(
