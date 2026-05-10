@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { prisma } from "@/lib/db"
+import { publishedArticleFilter } from "@/lib/articles"
 import { ChevronRight } from "lucide-react"
 import type { Metadata } from "next"
 
@@ -10,8 +11,8 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const article = await prisma.article.findUnique({
-    where: { slug, status: "published" },
+  const article = await prisma.article.findFirst({
+    where: { slug, ...publishedArticleFilter() },
     select: { title: true, metaDescription: true, excerpt: true },
   })
   if (!article) return { title: "記事が見つかりません" }
@@ -23,8 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ArticlePage({ params }: Props) {
   const { slug } = await params
-  const article = await prisma.article.findUnique({
-    where: { slug, status: "published" },
+  const article = await prisma.article.findFirst({
+    where: { slug, ...publishedArticleFilter() },
   })
 
   if (!article) notFound()
@@ -34,7 +35,11 @@ export default async function ArticlePage({ params }: Props) {
 
   // Fetch related articles (same category, excluding current)
   const related = await prisma.article.findMany({
-    where: { category: article.category, status: "published", id: { not: article.id } },
+    where: {
+      ...publishedArticleFilter(),
+      category: article.category,
+      id: { not: article.id },
+    },
     select: { slug: true, title: true, publishedAt: true },
     orderBy: { publishedAt: "desc" },
     take: 5,

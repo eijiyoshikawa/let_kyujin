@@ -3,6 +3,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ChevronRight, ChevronLeft } from "lucide-react"
 import { prisma } from "@/lib/db"
+import { publishedArticleFilter } from "@/lib/articles"
 import { getHelpSections, helpCategory } from "@/lib/help-articles"
 
 export const revalidate = 3600
@@ -24,8 +25,8 @@ export async function generateMetadata({
     return { title: "ページが見つかりません" }
   }
 
-  const article = await prisma.article.findUnique({
-    where: { slug },
+  const article = await prisma.article.findFirst({
+    where: { slug, ...publishedArticleFilter() },
     select: {
       title: true,
       metaDescription: true,
@@ -51,8 +52,8 @@ export default async function HelpArticlePage({ params }: Props) {
     notFound()
   }
 
-  const article = await prisma.article.findUnique({
-    where: { slug },
+  const article = await prisma.article.findFirst({
+    where: { slug, ...publishedArticleFilter() },
     select: {
       slug: true,
       title: true,
@@ -65,11 +66,7 @@ export default async function HelpArticlePage({ params }: Props) {
     },
   })
 
-  if (
-    !article ||
-    article.category !== helpCategory(audience) ||
-    article.status !== "published"
-  ) {
+  if (!article || article.category !== helpCategory(audience)) {
     notFound()
   }
 

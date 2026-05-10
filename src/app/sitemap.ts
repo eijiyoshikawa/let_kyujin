@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next"
 import { prisma } from "@/lib/db"
 import { CONSTRUCTION_CATEGORY_VALUES } from "@/lib/categories"
+import { publishedArticleFilter } from "@/lib/articles"
 
 export const dynamic = "force-dynamic"
 
@@ -152,10 +153,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-  // 公開済みヘルプ記事を sitemap に追加
+  // 公開済みヘルプ記事を sitemap に追加（未来日付の記事は除外）
   const helpArticles = await prisma.article.findMany({
     where: {
-      status: "published",
+      ...publishedArticleFilter(),
       category: { in: ["help-seeker", "help-employer"] },
     },
     select: { slug: true, category: true, updatedAt: true },

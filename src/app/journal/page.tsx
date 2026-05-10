@@ -2,6 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import type { Metadata } from "next"
 import { prisma } from "@/lib/db"
+import { publishedArticleFilter } from "@/lib/articles"
 import { Newspaper, Search, ChevronRight, ArrowRight } from "lucide-react"
 import { Pagination } from "@/components/pagination"
 
@@ -31,7 +32,7 @@ export default async function JournalPage({ searchParams }: Props) {
   const categoryFilter = params.category ?? ""
 
   const where = {
-    status: "published" as const,
+    ...publishedArticleFilter(),
     ...(categoryFilter ? { category: categoryFilter } : {}),
   }
 
@@ -46,7 +47,7 @@ export default async function JournalPage({ searchParams }: Props) {
     prisma.article.count({ where }),
     page === 1 && !categoryFilter
       ? prisma.article.findMany({
-          where: { status: "published", featured: true },
+          where: { ...publishedArticleFilter(), featured: true },
           orderBy: { publishedAt: "desc" },
           take: 3,
           select: { slug: true, title: true, category: true, imageUrl: true },
@@ -54,7 +55,7 @@ export default async function JournalPage({ searchParams }: Props) {
       : Promise.resolve([]),
     prisma.article.groupBy({
       by: ["category"],
-      where: { status: "published" },
+      where: publishedArticleFilter(),
       _count: true,
       orderBy: { _count: { category: "desc" } },
     }),

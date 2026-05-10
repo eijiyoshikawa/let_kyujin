@@ -2,6 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { prisma } from "@/lib/db"
 import { CONSTRUCTION_CATEGORY_VALUES } from "@/lib/categories"
+import { publishedArticleFilter } from "@/lib/articles"
 import {
   Search,
   HardHat,
@@ -130,13 +131,13 @@ export default async function HomePage() {
 
   const [magazineArticles, interviewArticles] = await Promise.all([
     prisma.article.findMany({
-      where: { status: "published", category: { not: "interview" } },
+      where: { ...publishedArticleFilter(), category: { not: "interview" } },
       orderBy: { publishedAt: "desc" },
       take: 3,
       select: { slug: true, title: true, category: true, imageUrl: true },
     }).catch(() => []),
     prisma.article.findMany({
-      where: { status: "published", category: "interview" },
+      where: { ...publishedArticleFilter(), category: "interview" },
       orderBy: { publishedAt: "desc" },
       take: 3,
       select: { slug: true, title: true, category: true, imageUrl: true },
@@ -154,7 +155,7 @@ export default async function HomePage() {
       select: { id: true, title: true, prefecture: true, category: true, viewCount: true },
     }).catch(() => []),
     prisma.article.findMany({
-      where: { status: "published" },
+      where: publishedArticleFilter(),
       orderBy: { viewCount: "desc" },
       take: 5,
       select: { slug: true, title: true, category: true },
