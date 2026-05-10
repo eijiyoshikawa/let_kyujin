@@ -3,6 +3,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ChevronRight } from "lucide-react"
 import { prisma } from "@/lib/db"
+import { publishedArticleFilter } from "@/lib/articles"
 import {
   getHelpSections,
   helpCategory,
@@ -49,7 +50,7 @@ export default async function HelpAudiencePage({ params }: Props) {
 
   // DB に登録済みの記事 slug を引いて、雛形にあるが DB 未登録のものは "準備中" 表示
   const published = await prisma.article.findMany({
-    where: { category, status: "published" },
+    where: { ...publishedArticleFilter(), category },
     select: { slug: true, updatedAt: true },
   })
   const publishedSlugs = new Set(published.map((a) => a.slug))
