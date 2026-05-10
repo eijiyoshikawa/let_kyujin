@@ -76,8 +76,11 @@ function validateRequestBody(
     valid: true,
     data: {
       dryRun: typeof b.dryRun === "boolean" ? b.dryRun : false,
+      // closeOrphans=true は「今回バッチに含まれない HW 求人を全部 closed にする」破壊的操作。
+      // ローテーション取り込みでは絶対に false にすべきで、UI 側からも明示的に true を送ってきた
+      // 場合のみ実行されるよう、デフォルトを false に変更（旧デフォルト true は事故の元）。
       closeOrphans:
-        typeof b.closeOrphans === "boolean" ? b.closeOrphans : true,
+        typeof b.closeOrphans === "boolean" ? b.closeOrphans : false,
       maxJobs: typeof b.maxJobs === "number" ? b.maxJobs : undefined,
     },
   }

@@ -49,6 +49,7 @@ export default function AdminCrawlerPage() {
   const [category, setCategory] = useState("driver")
   const [maxPages, setMaxPages] = useState("3")
   const [dryRun, setDryRun] = useState(true)
+  const [closeOrphans, setCloseOrphans] = useState(false)
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<ImportResult | null>(null)
 
@@ -65,6 +66,7 @@ export default function AdminCrawlerPage() {
           category: category || undefined,
           maxPages: Number(maxPages),
           dryRun,
+          closeOrphans,
         }),
       })
 
@@ -163,6 +165,27 @@ export default function AdminCrawlerPage() {
               />
               <span className="text-sm text-gray-700">
                 ドライラン（DB変更なし）
+              </span>
+            </label>
+          </div>
+
+          <div className="sm:col-span-2 rounded-md border border-amber-300 bg-amber-50 p-3">
+            <label className="flex items-start gap-2">
+              <input
+                type="checkbox"
+                checked={closeOrphans}
+                onChange={(e) => setCloseOrphans(e.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-amber-400 text-amber-600"
+              />
+              <span className="text-sm text-amber-900">
+                <strong>closeOrphans を有効にする（破壊的・通常 OFF）</strong>
+                <span className="mt-1 block text-xs text-amber-800">
+                  ON にすると、この 1 回のバッチに含まれない HW 求人すべてが
+                  <code className="mx-1 rounded bg-amber-100 px-1">
+                    status=closed
+                  </code>
+                  に書き換わります。週次 fullSweep など全件取得時のみ使用してください。
+                </span>
               </span>
             </label>
           </div>
