@@ -45,6 +45,8 @@ model User {
 // ========================================
 model Company {
   id               String   @id @default(uuid()) @db.Uuid
+  // 掲載元: direct(自社掲載企業) | hellowork(HelloWork API 由来の参照データ)
+  source           String   @default("direct") @db.VarChar(20)
   name             String   @db.VarChar(200)
   industry         String?  @db.VarChar(100)
   prefecture       String?  @db.VarChar(10)
@@ -61,6 +63,7 @@ model Company {
   // 支払方法: stripe(カード) | moneyforward(請求書+銀行振込)
   paymentMethod    String   @default("stripe") @map("payment_method") @db.VarChar(20)
   // 承認ステータス: pending(申請中) | approved(承認済) | rejected(却下)
+  // HelloWork 由来の参照企業は承認フローの対象外なので "approved" 固定
   status           String   @default("pending") @db.VarChar(20)
   approvedAt       DateTime? @map("approved_at") @db.Timestamptz()
   rejectedAt       DateTime? @map("rejected_at") @db.Timestamptz()
@@ -73,7 +76,9 @@ model Company {
   billingEvents BillingEvent[]
   applications  Application[]
 
+  @@unique([source, name], name: "company_source_name_unique")
   @@index([status], name: "idx_companies_status")
+  @@index([source], name: "idx_companies_source")
   @@map("companies")
 }
 

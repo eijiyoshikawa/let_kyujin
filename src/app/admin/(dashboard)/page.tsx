@@ -19,7 +19,7 @@ export default async function AdminDashboard() {
     prisma.job.count(),
     prisma.job.count({ where: { status: "active" } }),
     prisma.user.count(),
-    prisma.company.count(),
+    prisma.company.count({ where: { source: "direct" } }),
     prisma.application.count(),
     prisma.application.findMany({
       orderBy: { createdAt: "desc" },

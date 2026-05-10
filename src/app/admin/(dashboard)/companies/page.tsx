@@ -26,7 +26,10 @@ export default async function AdminCompaniesPage({
   const statusFilter = (params.status as StatusFilter) || "all"
   const perPage = 20
 
+  // HelloWork 由来の参照企業（source='hellowork'）は承認フロー対象外なので
+  // admin 一覧からは除外する。直接掲載企業 (source='direct') のみ表示。
   const where = {
+    source: "direct",
     ...(query
       ? { name: { contains: query, mode: "insensitive" as const } }
       : {}),
@@ -57,7 +60,7 @@ export default async function AdminCompaniesPage({
       },
     }),
     prisma.company.count({ where }),
-    prisma.company.count({ where: { status: "pending" } }),
+    prisma.company.count({ where: { source: "direct", status: "pending" } }),
   ])
 
   const totalPages = Math.ceil(total / perPage)
