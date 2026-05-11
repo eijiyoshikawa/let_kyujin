@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { HardHat, CirclePlay, Camera } from "lucide-react"
+import { CirclePlay, Camera } from "lucide-react"
+import { BrandLogo } from "./brand-logo"
 
 export function Footer() {
   return (
@@ -8,12 +9,12 @@ export function Footer() {
         {/* Top section */}
         <div className="flex flex-col gap-8 sm:flex-row sm:justify-between">
           <div>
-            <Link href="/" className="flex items-center gap-2">
-              <HardHat className="h-6 w-6 text-primary-400" />
-              <span className="text-lg font-bold text-white">ゲンバキャリア</span>
+            <Link href="/" aria-label="ゲンバキャリア トップへ">
+              <BrandLogo variant="dark" />
             </Link>
-            <p className="mt-2 text-xs text-gray-400 max-w-xs leading-relaxed">
-              建築・土木・設備・解体に特化した建設業界専門の求人サイトです。
+            <p className="mt-3 text-xs text-gray-400 max-w-xs leading-relaxed">
+              現場で働く方のための求人サービス。
+              建築・土木・設備・解体に特化、20〜30 代の若手も活躍中。
             </p>
           </div>
 

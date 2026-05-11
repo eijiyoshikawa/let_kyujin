@@ -40,14 +40,29 @@ const DATE_WITHIN_OPTIONS = [
 
 const MAN_YEN = 10_000
 
-export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  searchParams,
+}: Props): Promise<Metadata> {
   const params = await searchParams
   const parts: string[] = []
   if (params.prefecture) parts.push(params.prefecture)
   if (params.city) parts.push(params.city)
   if (params.category) parts.push(getCategoryLabel(params.category))
-  const title = parts.length > 0 ? `${parts.join(" ")}の求人一覧` : "求人検索"
-  return { title }
+  const title =
+    parts.length > 0
+      ? `${parts.join(" ")}の建設業求人 | ゲンバキャリア`
+      : "建設業の求人を探す | ゲンバキャリア"
+  const description = parts.length
+    ? `${parts.join(" ")}で募集中の建設業求人を掲載中。20〜30 代の若手も活躍中、LINE で気軽に応募できます。`
+    : "建築・土木・電気・内装の求人を探せる建設業特化型求人サイト。20〜30 代の若手も活躍中、履歴書なし LINE で気軽に応募。"
+
+  // canonical はクエリ無しの /jobs に固定（カテゴリ別ページが個別 URL を持っているため）
+  return {
+    title,
+    description,
+    alternates: { canonical: "/jobs" },
+    openGraph: { title, description },
+  }
 }
 
 export default async function JobsPage({ searchParams }: Props) {
