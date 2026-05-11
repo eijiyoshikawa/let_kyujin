@@ -3,6 +3,10 @@ import { Noto_Sans_JP } from "next/font/google";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { GoogleAnalytics } from "@/components/analytics";
+import {
+  generateOrganizationSchema,
+  generateWebSiteSchema,
+} from "@/lib/structured-data";
 import "./globals.css";
 
 const notoSansJP = Noto_Sans_JP({
@@ -51,10 +55,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // サイト全体に効く Organization + WebSite の構造化データ。
+  // Google 検索結果のサイトリンクや「サイト内検索」表示の元となる。
+  const orgSchema = generateOrganizationSchema()
+  const siteSchema = generateWebSiteSchema()
+
   return (
     <html lang="ja" className={`h-full antialiased ${notoSansJP.variable}`}>
       <body className="min-h-full flex flex-col font-sans bg-white">
         <GoogleAnalytics />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteSchema) }}
+        />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

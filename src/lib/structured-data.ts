@@ -1,5 +1,72 @@
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://genbacareer.jp"
 
+/** サイト全体の Organization 構造化データ。root layout で 1 回だけ埋め込む。 */
+export function generateOrganizationSchema(): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${BASE_URL}/#organization`,
+    name: "ゲンバキャリア",
+    alternateName: "Genba Career",
+    url: BASE_URL,
+    logo: `${BASE_URL}/icon.png`,
+    sameAs: [
+      "https://youtube.com/@let-kensetsu",
+      "https://instagram.com/let_kensetsu",
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: "info@let-inc.net",
+      areaServed: "JP",
+      availableLanguage: ["Japanese"],
+    },
+    parentOrganization: {
+      "@type": "Organization",
+      name: "株式会社LET",
+    },
+  }
+}
+
+/** サイトの WebSite 構造化データ。検索ボックスを Google 検索結果に表示するため SearchAction 付き。 */
+export function generateWebSiteSchema(): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${BASE_URL}/#website`,
+    url: BASE_URL,
+    name: "ゲンバキャリア",
+    description:
+      "建築・土木・電気・内装・解体・ドライバー・施工管理・測量の求人を掲載する建設業特化型求人サイト。",
+    publisher: { "@id": `${BASE_URL}/#organization` },
+    inLanguage: "ja",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${BASE_URL}/jobs?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  }
+}
+
+/** パンくずリストの構造化データを生成する。 */
+export function generateBreadcrumbSchema(
+  items: Array<{ name: string; url: string }>
+): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      item: item.url.startsWith("http") ? item.url : `${BASE_URL}${item.url}`,
+    })),
+  }
+}
+
 type JobInput = {
   id: string
   title: string

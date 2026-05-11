@@ -7,8 +7,14 @@ import { Newspaper, Search, ChevronRight, ArrowRight } from "lucide-react"
 import { Pagination } from "@/components/pagination"
 
 export const metadata: Metadata = {
-  title: "建設求人マガジン",
-  description: "建設業界で働く方に役立つ情報を発信。転職ガイド、資格情報、業界ニュースなど。",
+  title: "建設業マガジン | ゲンバキャリア",
+  description:
+    "建設業界で働く方に役立つ情報を発信。転職ガイド、資格情報、業界知識、体験談など 350 記事超を掲載。",
+  alternates: { canonical: "/journal" },
+  openGraph: {
+    title: "建設業マガジン | ゲンバキャリア",
+    description: "転職・資格・業界知識・体験談。建設業特化のキャリアマガジン。",
+  },
 }
 
 const CATEGORY_LABELS: Record<string, string> = {

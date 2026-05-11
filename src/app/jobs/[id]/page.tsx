@@ -18,7 +18,10 @@ import {
   Share2,
 } from "lucide-react"
 import type { Metadata } from "next"
-import { generateJobPostingSchema } from "@/lib/structured-data"
+import {
+  generateJobPostingSchema,
+  generateBreadcrumbSchema,
+} from "@/lib/structured-data"
 import { getCategoryLabel } from "@/lib/categories"
 import { groupTags } from "@/lib/job-enrichment"
 import { JobDescription } from "@/components/jobs/job-description"
@@ -31,6 +34,7 @@ import { StickyActionBar } from "@/components/jobs/sticky-action-bar"
 import { HeroBanner } from "@/components/jobs/hero-banner"
 import { SnsLinks } from "@/components/jobs/sns-links"
 import { PhotoGallery } from "@/components/jobs/photo-gallery"
+import { MapEmbed } from "@/components/jobs/map-embed"
 
 type Props = {
   params: Promise<{ id: string }>
@@ -123,6 +127,8 @@ export default async function JobDetailPage({ params }: Props) {
   )
   const photos = job.company?.photos ?? []
 
+  const mapAddress = buildMapAddress(job.address, job.prefecture, job.city)
+
   const tocItems = buildTocItems({
     hasFeatures: job.tags.length > 0 || !!job.employmentType,
     hasDescription: !!job.description,
@@ -131,14 +137,29 @@ export default async function JobDetailPage({ params }: Props) {
     hasEmployeeVoice: !!job.company?.employeeVoice,
     hasPhotos: photos.length > 0,
     hasWorkConditions: !!job.description || !!job.requirements,
+    hasMap: !!mapAddress,
     hasCompany: !!job.company,
   })
+
+  const breadcrumb = generateBreadcrumbSchema([
+    { name: "トップ", url: "/" },
+    { name: "求人検索", url: "/jobs" },
+    {
+      name: getCategoryLabel(job.category),
+      url: `/jobs?category=${job.category}`,
+    },
+    { name: job.title, url: `/jobs/${job.id}` },
+  ])
 
   return (
     <div className="bg-gray-50 min-h-screen pb-24 sm:pb-28">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
       />
 
       {/* Breadcrumb */}
@@ -338,6 +359,20 @@ export default async function JobDetailPage({ params }: Props) {
               />
             </section>
 
+            {/* 勤務地の地図 */}
+            {mapAddress && (
+              <section
+                id="map"
+                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+              >
+                <SectionHeading>
+                  <MapPin className="h-4 w-4 text-primary-500" />
+                  勤務地の地図
+                </SectionHeading>
+                <MapEmbed address={mapAddress} />
+              </section>
+            )}
+
             {/* Company info */}
             {job.company && (
               <section
@@ -386,6 +421,19 @@ export default async function JobDetailPage({ params }: Props) {
                   <p className="text-sm text-gray-600 leading-relaxed border-t pt-4">
                     {job.company.description}
                   </p>
+                )}
+
+                {/* 公式 HP リンクボタン（CTAとして目立たせる） */}
+                {job.company.websiteUrl && (
+                  <a
+                    href={job.company.websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded border border-primary-500 px-4 py-2 text-sm font-medium text-primary-700 hover:bg-primary-50 transition"
+                  >
+                    <Globe className="h-4 w-4" />
+                    {job.company.name} 公式 HP を見る
+                  </a>
                 )}
 
                 {hasSns && (
@@ -523,6 +571,7 @@ function buildTocItems(flags: {
   hasEmployeeVoice: boolean
   hasPhotos: boolean
   hasWorkConditions: boolean
+  hasMap: boolean
   hasCompany: boolean
 }) {
   const items: Array<{ id: string; label: string }> = []
@@ -538,6 +587,25 @@ function buildTocItems(flags: {
   if (flags.hasPhotos) items.push({ id: "photos", label: "写真ギャラリー" })
   if (flags.hasWorkConditions)
     items.push({ id: "conditions", label: "勤務条件" })
+  if (flags.hasMap) items.push({ id: "map", label: "勤務地の地図" })
   if (flags.hasCompany) items.push({ id: "company", label: "企業情報" })
   return items
+}
+
+/**
+ * MapEmbed に渡す住所文字列を組み立てる。
+ * address が入っていればそれを優先、無ければ prefecture + city。
+ * Google Maps の検索クエリとして使えるよう正規化。
+ */
+function buildMapAddress(
+  address: string | null,
+  prefecture: string,
+  city: string | null
+): string | null {
+  if (address && address.trim().length > 0) return address.trim()
+  const parts = [prefecture, city].filter((s) => s && s.trim().length > 0)
+  if (parts.length === 0) return null
+  // 「不明」など意味のない値は除外
+  if (parts.every((p) => p === "不明")) return null
+  return parts.join(" ")
 }
