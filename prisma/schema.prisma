@@ -161,6 +161,7 @@ model Job {
   applications      Application[]
   scouts            Scout[]
   applicationClicks ApplicationClick[]
+  lineLeads         LineLead[]
 
   @@index([prefecture, category, employmentType, status], name: "idx_jobs_search")
   @@index([salaryMin, salaryMax], name: "idx_jobs_salary")
@@ -213,6 +214,39 @@ model ApplicationClick {
   @@index([jobId, clickedAt(sort: Desc)], name: "idx_app_clicks_job_time")
   @@index([userId, clickedAt(sort: Desc)], name: "idx_app_clicks_user_time")
   @@map("application_clicks")
+}
+
+// ========================================
+// LINE 応募ミニフォームから生成されるリード
+// ========================================
+// 求人詳細から「LINE で応募」を押すと、まずミニフォーム（氏名 / 電話 / メール 必須）
+// を経由して当 LeadCapture に保存し、その後 LINE 公式アカウントへ遷移する。
+// LINE 友だち追加後の Webhook で lineUserId が後追いで紐付く。
+model LineLead {
+  id              String   @id @default(uuid()) @db.Uuid
+  jobId           String?  @map("job_id") @db.Uuid
+  name            String   @db.VarChar(100)
+  phone           String   @db.VarChar(30)
+  email           String   @db.VarChar(255)
+  prefecture      String?  @db.VarChar(10)
+  experienceYears Int?     @map("experience_years")
+  notes           String?
+  // LINE 友だち追加後の Webhook でセットされる
+  lineUserId      String?  @map("line_user_id") @db.VarChar(50)
+  lineDisplayName String?  @map("line_display_name") @db.VarChar(100)
+  // pending | line_added | contacted | qualified | converted | rejected
+  status          String   @default("pending") @db.VarChar(20)
+  ipAddress       String?  @map("ip_address") @db.VarChar(45)
+  userAgent       String?  @map("user_agent") @db.VarChar(500)
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+  job Job? @relation(fields: [jobId], references: [id], onDelete: SetNull)
+
+  @@index([jobId, createdAt(sort: Desc)], name: "idx_line_leads_job")
+  @@index([lineUserId], name: "idx_line_leads_line_user")
+  @@index([status, createdAt(sort: Desc)], name: "idx_line_leads_status")
+  @@map("line_leads")
 }
 
 // ========================================

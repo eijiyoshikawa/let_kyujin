@@ -1,13 +1,17 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { MessageCircle, Loader2, ExternalLink } from "lucide-react"
+import { useState } from "react"
+import Link from "next/link"
+import { MessageCircle, Loader2, ExternalLink, User, Phone, Mail, Briefcase } from "lucide-react"
 
 /**
- * クライアント側で：
- * 1. POST /api/jobs/[id]/apply-click を呼び出して click を記録 + LINE URL 取得
- * 2. モバイルなら自動で window.location.href に遷移
- * 3. デスクトップなら「LINE を開く」ボタン + QR コードを表示
+ * 「LINE で応募」のミニフォーム + 遷移コンポーネント。
+ *
+ * 旧フロー: 求人詳細 → クリック計測のみで即 LINE 遷移
+ * 新フロー: ミニフォーム（氏名 / 電話 / メール 必須）→ /api/applications/line-lead に
+ *           保存 → 返却された LINE URL に遷移（モバイルは自動 / デスクトップは QR + ボタン）
+ *
+ * 既存の clickedRedirect 計測機能は API 側で代替される。
  */
 export function LineApplyClient({
   jobId,
@@ -18,105 +22,242 @@ export function LineApplyClient({
   isMobileGuess: boolean
   lineOaId: string
 }) {
+  const [submitting, setSubmitting] = useState(false)
   const [lineUrl, setLineUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  // SSR 側の UA 判定をそのまま使用（headers() で正確に判定済み）。
-  // クライアント側で再判定すると hydration 後の setState で再レンダーが走るため避ける。
-  const isMobile = isMobileGuess
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    experienceYears: "",
+    notes: "",
+  })
 
-  // マウント時に click を記録 + LINE URL 取得
-  useEffect(() => {
-    let cancelled = false
-    async function track() {
-      try {
-        const res = await fetch(`/api/jobs/${jobId}/apply-click`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ source: "apply_page" }),
-        })
-        const json = await res.json()
-        if (cancelled) return
-        if (!res.ok || !json?.lineUrl) {
-          setError(json?.error ?? "unknown_error")
-          return
-        }
-        setLineUrl(json.lineUrl)
-      } catch (e) {
-        if (!cancelled) {
-          setError(e instanceof Error ? e.message : "network_error")
-        }
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setError(null)
+    setSubmitting(true)
+    try {
+      const res = await fetch("/api/applications/line-lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jobId,
+          name: form.name.trim(),
+          phone: form.phone.trim(),
+          email: form.email.trim(),
+          experienceYears: form.experienceYears ? Number(form.experienceYears) : null,
+          notes: form.notes.trim() || null,
+        }),
+      })
+      const json = await res.json()
+      if (!res.ok || !json?.lineUrl) {
+        setError(json?.error ?? "送信に失敗しました")
+        setSubmitting(false)
+        return
       }
+      setLineUrl(json.lineUrl)
+      // モバイル: 自動遷移（短いディレイを挟む）
+      if (isMobileGuess) {
+        setTimeout(() => {
+          window.location.href = json.lineUrl
+        }, 600)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "通信エラーが発生しました")
+      setSubmitting(false)
     }
-    track()
-    return () => {
-      cancelled = true
-    }
-  }, [jobId])
+  }
 
-  // モバイルかつ LINE URL 取得済みなら自動遷移
-  useEffect(() => {
-    if (!lineUrl || !isMobile) return
-    // ボタンを 1 拍見せてから遷移（UX 向上）
-    const id = setTimeout(() => {
-      window.location.href = lineUrl
-    }, 600)
-    return () => clearTimeout(id)
-  }, [lineUrl, isMobile])
-
-  if (error) {
+  // LINE URL 取得後の表示（QR + ボタン）
+  if (lineUrl) {
+    const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(lineUrl)}`
     return (
-      <div className="mt-6 border border-red-200 bg-red-50 p-4 text-sm text-red-800">
-        通信エラーが発生しました。ページを再読み込みしてもう一度お試しください。
+      <div className="mt-6 space-y-4">
+        <div className="border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800">
+          ご入力ありがとうございます。続けて LINE でメッセージを送信してください。
+        </div>
+        <a
+          href={lineUrl}
+          className="press flex w-full items-center justify-center gap-2 bg-[#06C755] px-6 py-4 text-base font-bold text-white shadow-sm transition hover:bg-[#05A847]"
+        >
+          <MessageCircle className="h-5 w-5" />
+          LINE を開く
+          <ExternalLink className="h-4 w-4 opacity-70" />
+        </a>
+
+        {!isMobileGuess && (
+          <div className="mt-6 border border-gray-200 bg-gray-50 p-4 text-center">
+            <p className="text-sm text-gray-700 font-medium">
+              スマートフォンで LINE を開きたい方
+            </p>
+            <p className="mt-1 text-xs text-gray-500">
+              QR を LINE で読み取ると応募メッセージが事前入力されます
+            </p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={qrSrc}
+              alt="LINE 応募用 QR コード"
+              width={180}
+              height={180}
+              className="mx-auto mt-3"
+              loading="lazy"
+            />
+            <p className="mt-2 text-[10px] text-gray-400">
+              LINE 公式アカウント ID: {lineOaId || "（未設定）"}
+            </p>
+          </div>
+        )}
       </div>
     )
   }
 
-  if (!lineUrl) {
-    return (
-      <div className="mt-6 flex items-center justify-center gap-2 py-8 text-sm text-gray-500">
-        <Loader2 className="h-4 w-4 animate-spin" />
-        LINE に接続しています…
-      </div>
-    )
-  }
-
-  const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(lineUrl)}`
-
+  // ミニフォーム表示
   return (
-    <div className="mt-6 space-y-4">
-      <a
-        href={lineUrl}
-        className="flex w-full items-center justify-center gap-2 bg-[#06C755] px-6 py-4 text-base font-bold text-white shadow-sm transition hover:bg-[#05A847] active:scale-[0.98]"
-      >
-        <MessageCircle className="h-5 w-5" />
-        LINE で応募する
-        <ExternalLink className="h-4 w-4 opacity-70" />
-      </a>
+    <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+      <p className="text-xs text-gray-500 leading-relaxed">
+        担当者からの折り返し連絡のため、最低限のご連絡先をご入力ください。
+        個人情報は応募対応以外の目的では使用しません。
+      </p>
 
-      {/* デスクトップ向け QR コード */}
-      {!isMobile && (
-        <div className="mt-6 border border-gray-200 bg-gray-50 p-4 text-center">
-          <p className="text-sm text-gray-700 font-medium">
-            スマートフォンで LINE を開きたい方
-          </p>
-          <p className="mt-1 text-xs text-gray-500">
-            このコードを LINE で読み取ると応募メッセージが事前入力されます
-          </p>
-          {/* qr-server.com の公開 API は外部依存だが、本番でも追加コストなく動く */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={qrSrc}
-            alt="LINE 応募用 QR コード"
-            width={180}
-            height={180}
-            className="mx-auto mt-3"
-            loading="lazy"
-          />
-          <p className="mt-2 text-[10px] text-gray-400">
-            LINE 公式アカウント ID: {lineOaId || "（未設定）"}
-          </p>
+      <Field
+        id="lead-name"
+        label="お名前"
+        required
+        icon={<User className="h-4 w-4 text-primary-500" />}
+        type="text"
+        autoComplete="name"
+        placeholder="例: 山田 太郎"
+        value={form.name}
+        onChange={(v) => setForm({ ...form, name: v })}
+      />
+      <Field
+        id="lead-phone"
+        label="電話番号"
+        required
+        icon={<Phone className="h-4 w-4 text-primary-500" />}
+        type="tel"
+        autoComplete="tel"
+        placeholder="例: 090-1234-5678"
+        value={form.phone}
+        onChange={(v) => setForm({ ...form, phone: v })}
+      />
+      <Field
+        id="lead-email"
+        label="メールアドレス"
+        required
+        icon={<Mail className="h-4 w-4 text-primary-500" />}
+        type="email"
+        autoComplete="email"
+        placeholder="例: yamada@example.com"
+        value={form.email}
+        onChange={(v) => setForm({ ...form, email: v })}
+      />
+      <Field
+        id="lead-exp"
+        label="建設業の経験年数"
+        icon={<Briefcase className="h-4 w-4 text-primary-500" />}
+        type="number"
+        min={0}
+        max={60}
+        placeholder="任意（例: 3）"
+        value={form.experienceYears}
+        onChange={(v) => setForm({ ...form, experienceYears: v })}
+      />
+      <div>
+        <label htmlFor="lead-notes" className="block text-xs font-bold text-gray-700">
+          ご質問・希望条件など <span className="text-gray-400">(任意)</span>
+        </label>
+        <textarea
+          id="lead-notes"
+          rows={3}
+          placeholder="例: 寮完備の現場を希望、平日連絡可"
+          className="mt-1 block w-full border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          value={form.notes}
+          onChange={(e) => setForm({ ...form, notes: e.target.value })}
+        />
+      </div>
+
+      {error && (
+        <div className="border border-red-200 bg-red-50 p-3 text-xs text-red-800">
+          {error}
         </div>
       )}
+
+      <button
+        type="submit"
+        disabled={submitting}
+        className="press flex w-full items-center justify-center gap-2 bg-[#06C755] px-6 py-4 text-base font-extrabold text-white shadow-sm transition hover:bg-[#05A847] disabled:opacity-60 disabled:cursor-not-allowed"
+      >
+        {submitting ? (
+          <>
+            <Loader2 className="h-5 w-5 animate-spin" />
+            送信中…
+          </>
+        ) : (
+          <>
+            <MessageCircle className="h-5 w-5" />
+            内容を確認して LINE で送る
+          </>
+        )}
+      </button>
+
+      <p className="text-[10px] text-gray-400 leading-relaxed">
+        「LINE で送る」を押すと、ご入力情報を当社に送信し、続いて LINE 公式アカウントが
+        起動します。LINE のチャット画面で送信ボタンを押すと応募が完了します。
+        <br />
+        ご入力情報の取り扱いは <Link href="/privacy" className="text-primary-600 underline">プライバシーポリシー</Link> をご参照ください。
+      </p>
+    </form>
+  )
+}
+
+function Field({
+  id,
+  label,
+  required,
+  icon,
+  type,
+  placeholder,
+  value,
+  onChange,
+  autoComplete,
+  min,
+  max,
+}: {
+  id: string
+  label: string
+  required?: boolean
+  icon: React.ReactNode
+  type: string
+  placeholder?: string
+  value: string
+  onChange: (v: string) => void
+  autoComplete?: string
+  min?: number
+  max?: number
+}) {
+  return (
+    <div>
+      <label htmlFor={id} className="block text-xs font-bold text-gray-700">
+        {label}
+        {required ? <span className="ml-1 text-red-600">*</span> : <span className="ml-1 text-gray-400">(任意)</span>}
+      </label>
+      <div className="mt-1 flex items-center gap-2 border border-gray-300 bg-white px-3 py-2 focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-primary-500">
+        {icon}
+        <input
+          id={id}
+          type={type}
+          required={required}
+          autoComplete={autoComplete}
+          min={min}
+          max={max}
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="flex-1 min-w-0 bg-transparent text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none"
+        />
+      </div>
     </div>
   )
 }

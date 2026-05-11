@@ -23,6 +23,28 @@ const STATEMENTS: ReadonlyArray<string> = [
  ADD COLUMN IF NOT EXISTS "rank_score" INTEGER NOT NULL DEFAULT 0`,
  `CREATE INDEX IF NOT EXISTS "idx_jobs_status_rank"
  ON "jobs" ("status", "rank_score" DESC, "published_at" DESC)`,
+ // LINE ミニフォームから生まれるリード（氏名/電話/メール 必須 + LINE 紐付け後追い）
+ `CREATE TABLE IF NOT EXISTS "line_leads" (
+   "id" UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+   "job_id" UUID,
+   "name" VARCHAR(100) NOT NULL,
+   "phone" VARCHAR(30) NOT NULL,
+   "email" VARCHAR(255) NOT NULL,
+   "prefecture" VARCHAR(10),
+   "experience_years" INTEGER,
+   "notes" TEXT,
+   "line_user_id" VARCHAR(50),
+   "line_display_name" VARCHAR(100),
+   "status" VARCHAR(20) NOT NULL DEFAULT 'pending',
+   "ip_address" VARCHAR(45),
+   "user_agent" VARCHAR(500),
+   "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+   "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+   CONSTRAINT "line_leads_job_id_fkey" FOREIGN KEY ("job_id") REFERENCES "jobs"("id") ON DELETE SET NULL
+ )`,
+ `CREATE INDEX IF NOT EXISTS "idx_line_leads_job" ON "line_leads" ("job_id", "created_at" DESC)`,
+ `CREATE INDEX IF NOT EXISTS "idx_line_leads_line_user" ON "line_leads" ("line_user_id")`,
+ `CREATE INDEX IF NOT EXISTS "idx_line_leads_status" ON "line_leads" ("status", "created_at" DESC)`,
 ]
 
 let inflight: Promise<boolean> | null = null
