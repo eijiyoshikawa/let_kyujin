@@ -5,9 +5,9 @@ import {
   Building2,
   HardHat,
   ChevronRight,
-  Sparkles,
 } from "lucide-react"
 import { getCategoryLabel } from "@/lib/categories"
+import { TagChip } from "./tag-chip"
 
 type JobCardProps = {
   id: string
@@ -87,17 +87,13 @@ export function JobCard({ job }: { job: JobCardProps }) {
           </p>
         )}
 
-        {/* 待遇チップ（自動抽出されたタグを 5 件まで） */}
+        {/* 待遇チップ（自動抽出されたタグを 5 件まで、デザインシステム TagChip 統一）*/}
         {tagsToShow.length > 0 && (
           <div className="mt-2.5 flex flex-wrap gap-1.5">
             {tagsToShow.map((tag) => (
-              <span
-                key={tag}
-                className="inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-2 py-0.5 text-xs font-medium text-amber-800"
-              >
-                <Sparkles className="h-3 w-3 text-amber-500" />
+              <TagChip key={tag} size="sm">
                 {tag}
-              </span>
+              </TagChip>
             ))}
             {job.tags.length > tagsToShow.length && (
               <span className="text-xs text-gray-400 self-center">

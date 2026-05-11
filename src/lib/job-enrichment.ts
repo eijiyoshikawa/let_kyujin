@@ -90,6 +90,62 @@ const TAG_PATTERNS: Array<{ pattern: RegExp; tag: string }> = [
   { pattern: /外国人(可|歓迎|活躍)/, tag: "外国人歓迎" },
 ]
 
+/** タグを 5 つのグループに分類するためのテーブル。 */
+const TAG_GROUP_MAP: Record<string, TagGroup> = {
+  // 経験・年齢
+  "未経験OK": "experience",
+  "学歴不問": "experience",
+  "年齢不問": "experience",
+  "女性歓迎": "experience",
+  "外国人歓迎": "experience",
+  // 賃金
+  "賞与あり": "wage",
+  "昇給あり": "wage",
+  "退職金あり": "wage",
+  "日払い・週払い": "wage",
+  "交通費支給": "wage",
+  // 福利厚生・働き方
+  "寮・社宅あり": "benefits",
+  "資格取得支援": "benefits",
+  "社保完備": "benefits",
+  "制服支給": "benefits",
+  // 時間・休日・通勤
+  "週休2日": "time",
+  "土日休み": "time",
+  "残業少なめ": "time",
+  "日勤のみ": "time",
+  "長期休暇あり": "time",
+  "マイカー通勤可": "time",
+  "駅近": "time",
+}
+
+export type TagGroup = "wage" | "benefits" | "experience" | "time"
+
+/**
+ * タグ配列を 4 グループに分類する（求人詳細の「この求人の特徴」表示用）。
+ * 未定義のタグは "benefits" にフォールバックする。
+ */
+export function groupTags(tags: string[]): Record<TagGroup, string[]> {
+  const out: Record<TagGroup, string[]> = {
+    wage: [],
+    benefits: [],
+    experience: [],
+    time: [],
+  }
+  for (const tag of tags) {
+    const group = TAG_GROUP_MAP[tag] ?? "benefits"
+    if (!out[group].includes(tag)) out[group].push(tag)
+  }
+  return out
+}
+
+export const TAG_GROUP_LABELS: Record<TagGroup, string> = {
+  wage: "賃金",
+  benefits: "福利厚生・働き方",
+  experience: "経験・年齢",
+  time: "時間・休日・通勤",
+}
+
 /**
  * 求人テキスト（title + description + requirements）から待遇タグを抽出する。
  * 重複は自動排除、最大 12 件まで。
