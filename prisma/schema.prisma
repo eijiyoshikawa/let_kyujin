@@ -71,6 +71,29 @@ model Company {
   rejectionReason  String?   @map("rejection_reason")
   createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz()
 
+  // 求人詳細ページ用のリッチコンテンツ。すべて nullable。
+  // tagline はメガホン枠の 1 行キャッチコピー
+  tagline           String? @db.VarChar(200)
+  // 「こんなトコロがすごい！」自社の魅力ポイント
+  pitchHighlights   String? @map("pitch_highlights")
+  // 「こんな人が向いています！」求める人物像
+  idealCandidate    String? @map("ideal_candidate")
+  // 「働いている社員の声」employee voice
+  employeeVoice     String? @map("employee_voice")
+  // 求人写真ギャラリー（最大 12 枚想定、URL のみ保持。ストレージ上限は別途運用で管理）
+  photos            String[] @default([])
+
+  // SNS リンク（5 種）
+  instagramUrl      String? @map("instagram_url") @db.VarChar(500)
+  tiktokUrl         String? @map("tiktok_url") @db.VarChar(500)
+  facebookUrl       String? @map("facebook_url") @db.VarChar(500)
+  xUrl              String? @map("x_url") @db.VarChar(500)
+  youtubeUrl        String? @map("youtube_url") @db.VarChar(500)
+
+  // 求人一覧のソート順決定に使う。リッチコンテンツが最後に更新された日時。
+  // 3 ヶ月以内に更新されているかが「活性企業」の指標になる。
+  lastContentUpdatedAt DateTime? @map("last_content_updated_at") @db.Timestamptz()
+
   companyUsers  CompanyUser[]
   jobs          Job[]
   scouts        Scout[]
@@ -80,6 +103,7 @@ model Company {
   @@unique([source, name], name: "company_source_name_unique")
   @@index([status], name: "idx_companies_status")
   @@index([source], name: "idx_companies_source")
+  @@index([lastContentUpdatedAt(sort: Desc)], name: "idx_companies_last_content")
   @@map("companies")
 }
 
