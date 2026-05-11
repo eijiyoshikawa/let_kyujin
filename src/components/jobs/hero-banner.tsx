@@ -29,7 +29,7 @@ export function HeroBanner({ category }: { category: string }) {
   const Icon = cfg.Icon
   return (
     <div
-      className={`relative h-28 sm:h-40 rounded overflow-hidden bg-gradient-to-br ${cfg.from} ${cfg.to}`}
+      className={`relative h-28 sm:h-40 overflow-hidden bg-gradient-to-br ${cfg.from} ${cfg.to}`}
     >
       <div className="absolute inset-0 flex items-center justify-end pr-8 sm:pr-12 opacity-30">
         <Icon className="h-24 w-24 sm:h-36 sm:w-36 text-white" />

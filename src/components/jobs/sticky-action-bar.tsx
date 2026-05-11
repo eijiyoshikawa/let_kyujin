@@ -34,7 +34,7 @@ export function StickyActionBar({
         {/* 気になる（stub） */}
         <button
           type="button"
-          className="hidden sm:inline-flex items-center gap-1.5 rounded border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          className="hidden sm:inline-flex items-center gap-1.5 border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           aria-label="気になるに追加"
         >
           <Bookmark className="h-4 w-4" />
@@ -43,7 +43,7 @@ export function StickyActionBar({
 
         <Link
           href={`/jobs/${jobId}/apply`}
-          className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 rounded bg-primary-600 hover:bg-primary-700 px-5 py-2.5 text-sm sm:text-base font-bold text-white shadow-sm transition active:scale-[0.98]"
+          className="press flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 px-5 py-2.5 text-sm sm:text-base font-bold text-white shadow-sm transition"
         >
           <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5" />
           話を聞きたい

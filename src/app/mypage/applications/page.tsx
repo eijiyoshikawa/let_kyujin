@@ -92,11 +92,11 @@ export default async function ApplicationsPage({ searchParams }: Props) {
       <p className="mt-2 text-sm text-gray-500">{total} 件の応募</p>
 
       {applications.length === 0 ? (
-        <div className="mt-6 rounded-lg border bg-white p-12 text-center">
+        <div className="mt-6 border bg-white p-12 text-center">
           <p className="text-gray-500">まだ応募がありません。</p>
           <Link
             href="/jobs"
-            className="mt-4 inline-block rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
+            className="mt-4 inline-block bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
           >
             求人を探す
           </Link>
@@ -113,7 +113,7 @@ export default async function ApplicationsPage({ searchParams }: Props) {
               <Link
                 key={app.id}
                 href={`/jobs/${app.job.id}`}
-                className="block rounded-lg border bg-white p-4 shadow-sm transition hover:shadow-md"
+                className="block border bg-white p-4 shadow-sm transition hover:shadow-md"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">
@@ -133,7 +133,7 @@ export default async function ApplicationsPage({ searchParams }: Props) {
                     </p>
                   </div>
                   <span
-                    className={`inline-flex flex-shrink-0 items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${config.className}`}
+                    className={`inline-flex flex-shrink-0 items-center px-2.5 py-0.5 text-xs font-medium ${config.className}`}
                   >
                     {config.label}
                   </span>

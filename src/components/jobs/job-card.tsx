@@ -30,25 +30,25 @@ export function JobCard({ job }: { job: JobCardProps }) {
   return (
     <Link
       href={`/jobs/${job.id}`}
-      className="group flex gap-4 rounded-lg border bg-white p-4 transition hover:border-primary-400 hover:shadow-sm"
+      className="group flex gap-4 border bg-white p-4 transition hover:border-primary-400 hover:shadow-sm"
     >
-      <div className="hidden sm:flex h-10 w-10 shrink-0 items-center justify-center rounded bg-gray-100 group-hover:bg-primary-50 transition">
+      <div className="hidden sm:flex h-10 w-10 shrink-0 items-center justify-center bg-gray-100 group-hover:bg-primary-50 transition">
         <HardHat className="h-6 w-6 text-primary-500" />
       </div>
 
       <div className="flex-1 min-w-0">
         {/* メタ: カテゴリ + 雇用形態 + 出典 */}
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="inline-flex items-center gap-1 rounded bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700">
+          <span className="inline-flex items-center gap-1 bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700">
             {getCategoryLabel(job.category)}
           </span>
           {job.employmentType && (
-            <span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+            <span className="bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
               {employmentTypeLabel(job.employmentType)}
             </span>
           )}
           {job.source === "hellowork" && (
-            <span className="rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+            <span className="bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
               HW
             </span>
           )}

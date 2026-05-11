@@ -46,7 +46,7 @@ export function CompanyApprovalActions({
   return (
     <div className="mt-4 space-y-3">
       {error && (
-        <div className="rounded bg-red-50 p-3 text-sm text-red-600">
+        <div className="bg-red-50 p-3 text-sm text-red-600">
           {error}
         </div>
       )}
@@ -61,7 +61,7 @@ export function CompanyApprovalActions({
             onChange={(e) => setReason(e.target.value)}
             rows={3}
             maxLength={500}
-            className="w-full rounded-md border px-3 py-2 text-sm"
+            className="w-full border px-3 py-2 text-sm"
             placeholder="例: 登録内容に不備があります"
           />
           <div className="flex gap-2">
@@ -69,7 +69,7 @@ export function CompanyApprovalActions({
               type="button"
               disabled={loading}
               onClick={() => callApi("reject", { reason })}
-              className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+              className="bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
             >
               {loading ? "却下中..." : "却下を確定"}
             </button>
@@ -77,7 +77,7 @@ export function CompanyApprovalActions({
               type="button"
               disabled={loading}
               onClick={() => setShowRejectForm(false)}
-              className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-gray-50"
+              className="border px-4 py-2 text-sm font-medium hover:bg-gray-50"
             >
               キャンセル
             </button>
@@ -90,7 +90,7 @@ export function CompanyApprovalActions({
               type="button"
               disabled={loading}
               onClick={() => callApi("approve")}
-              className="rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
+              className="bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
             >
               {loading ? "処理中..." : "承認する"}
             </button>
@@ -100,7 +100,7 @@ export function CompanyApprovalActions({
               type="button"
               disabled={loading}
               onClick={() => setShowRejectForm(true)}
-              className="rounded-md border border-red-600 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+              className="border border-red-600 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
             >
               却下する
             </button>

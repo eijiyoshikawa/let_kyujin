@@ -80,7 +80,7 @@ export function ProfileForm({
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       {/* 会社名（read-only） */}
-      <div className="rounded border bg-white p-5 shadow-sm">
+      <div className="border bg-white p-5 shadow-sm">
         <label className="block text-xs font-medium text-gray-500">
           企業名
         </label>
@@ -95,7 +95,7 @@ export function ProfileForm({
       </div>
 
       {/* キャッチコピー */}
-      <section className="rounded border bg-white p-5 shadow-sm space-y-3">
+      <section className="border bg-white p-5 shadow-sm space-y-3">
         <h2 className="font-bold text-gray-900">キャッチコピー</h2>
         <p className="text-xs text-gray-500">
           求人詳細ページのタイトル下に表示される 1 行コピー。最大 200 文字。
@@ -106,12 +106,12 @@ export function ProfileForm({
           onChange={(e) => update("tagline", e.target.value)}
           maxLength={200}
           placeholder="技術も、家族の笑顔も。どちらも諦めないのが、弊社のスタイルです。"
-          className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          className="w-full border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
         />
       </section>
 
       {/* リッチコンテンツ */}
-      <section className="rounded border bg-white p-5 shadow-sm space-y-4">
+      <section className="border bg-white p-5 shadow-sm space-y-4">
         <h2 className="font-bold text-gray-900">求人ページの本文</h2>
 
         <TextAreaField
@@ -135,7 +135,7 @@ export function ProfileForm({
       </section>
 
       {/* 写真ギャラリー */}
-      <section className="rounded border bg-white p-5 shadow-sm space-y-3">
+      <section className="border bg-white p-5 shadow-sm space-y-3">
         <h2 className="font-bold text-gray-900">写真ギャラリー</h2>
         <p className="text-xs text-gray-500">
           写真の URL を 1 行 1 つで入力。最大 12 枚。Supabase Storage や
@@ -146,12 +146,12 @@ export function ProfileForm({
           onChange={(e) => setPhotosText(e.target.value)}
           rows={6}
           placeholder={"https://example.com/photo1.jpg\nhttps://example.com/photo2.jpg"}
-          className="w-full rounded border border-gray-300 px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          className="w-full border border-gray-300 px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
         />
       </section>
 
       {/* SNS */}
-      <section className="rounded border bg-white p-5 shadow-sm space-y-4">
+      <section className="border bg-white p-5 shadow-sm space-y-4">
         <h2 className="font-bold text-gray-900">公式 SNS</h2>
         <p className="text-xs text-gray-500">
           登録すると求人詳細ページ末尾にアイコンで表示されます。求人一覧のソート評価にも影響します。
@@ -190,13 +190,13 @@ export function ProfileForm({
 
       {/* 結果メッセージ */}
       {result?.ok === true && (
-        <div className="flex items-center gap-2 rounded border border-green-200 bg-green-50 p-3 text-sm text-green-800">
+        <div className="flex items-center gap-2 border border-green-200 bg-green-50 p-3 text-sm text-green-800">
           <Check className="h-4 w-4" />
           保存しました
         </div>
       )}
       {result?.ok === false && (
-        <div className="flex items-start gap-2 rounded border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+        <div className="flex items-start gap-2 border border-red-200 bg-red-50 p-3 text-sm text-red-800">
           <AlertCircle className="h-4 w-4 mt-0.5" />
           {result.message}
         </div>
@@ -207,7 +207,7 @@ export function ProfileForm({
         <button
           type="submit"
           disabled={saving}
-          className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition"
+          className="inline-flex w-full sm:w-auto items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition"
         >
           {saving ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -240,7 +240,7 @@ function TextAreaField({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         rows={5}
-        className="mt-1.5 w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+        className="mt-1.5 w-full border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
       />
       <p className="text-xs text-gray-400 mt-1 text-right">
         {value.length} 文字
@@ -268,7 +268,7 @@ function UrlField({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="mt-1 w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+        className="mt-1 w-full border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
       />
     </div>
   )

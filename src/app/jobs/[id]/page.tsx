@@ -199,7 +199,7 @@ export default async function JobDetailPage({ params }: Props) {
                 <div className="flex items-center gap-2 flex-wrap text-xs">
                   <TagChip size="sm">{getCategoryLabel(job.category)}</TagChip>
                   {job.source === "hellowork" && (
-                    <span className="inline-flex items-center rounded border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                    <span className="inline-flex items-center border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
                       HW 転載
                     </span>
                   )}
@@ -217,8 +217,8 @@ export default async function JobDetailPage({ params }: Props) {
                 )}
 
                 {job.company && (
-                  <div className="flex items-center gap-3 p-3 rounded border bg-white">
-                    <div className="h-10 w-10 flex items-center justify-center rounded bg-primary-50">
+                  <div className="flex items-center gap-3 p-3 border bg-white">
+                    <div className="h-10 w-10 flex items-center justify-center bg-primary-50">
                       <Building2 className="h-5 w-5 text-primary-500" />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -276,7 +276,7 @@ export default async function JobDetailPage({ params }: Props) {
             {job.description && (
               <section
                 id="description"
-                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+                className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
                   <Briefcase className="h-4 w-4 text-primary-500" />
@@ -290,7 +290,7 @@ export default async function JobDetailPage({ params }: Props) {
             {job.company?.pitchHighlights && (
               <section
                 id="pitch"
-                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+                className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
                   <Sparkles className="h-4 w-4 text-primary-500" />
@@ -306,7 +306,7 @@ export default async function JobDetailPage({ params }: Props) {
             {job.company?.idealCandidate && (
               <section
                 id="ideal"
-                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+                className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
                   <UserCheck className="h-4 w-4 text-primary-500" />
@@ -322,7 +322,7 @@ export default async function JobDetailPage({ params }: Props) {
             {job.company?.employeeVoice && (
               <section
                 id="voice"
-                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+                className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
                   <MessageSquareQuote className="h-4 w-4 text-primary-500" />
@@ -338,7 +338,7 @@ export default async function JobDetailPage({ params }: Props) {
             {photos.length > 0 && (
               <section
                 id="photos"
-                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+                className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
                   <Camera className="h-4 w-4 text-primary-500" />
@@ -363,7 +363,7 @@ export default async function JobDetailPage({ params }: Props) {
             {mapAddress && (
               <section
                 id="map"
-                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+                className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
                   <MapPin className="h-4 w-4 text-primary-500" />
@@ -377,7 +377,7 @@ export default async function JobDetailPage({ params }: Props) {
             {job.company && (
               <section
                 id="company"
-                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+                className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
                   <Building2 className="h-4 w-4 text-primary-500" />
@@ -429,7 +429,7 @@ export default async function JobDetailPage({ params }: Props) {
                     href={job.company.websiteUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded border border-primary-500 px-4 py-2 text-sm font-medium text-primary-700 hover:bg-primary-50 transition"
+                    className="inline-flex items-center gap-2 border border-primary-500 px-4 py-2 text-sm font-medium text-primary-700 hover:bg-primary-50 transition"
                   >
                     <Globe className="h-4 w-4" />
                     {job.company.name} 公式 HP を見る

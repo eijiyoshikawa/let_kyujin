@@ -65,7 +65,7 @@ export function LineApplyClient({
 
   if (error) {
     return (
-      <div className="mt-6 border border-red-200 bg-red-50 p-4 text-sm text-red-800 rounded">
+      <div className="mt-6 border border-red-200 bg-red-50 p-4 text-sm text-red-800">
         通信エラーが発生しました。ページを再読み込みしてもう一度お試しください。
       </div>
     )
@@ -86,7 +86,7 @@ export function LineApplyClient({
     <div className="mt-6 space-y-4">
       <a
         href={lineUrl}
-        className="flex w-full items-center justify-center gap-2 rounded bg-[#06C755] px-6 py-4 text-base font-bold text-white shadow-sm transition hover:bg-[#05A847] active:scale-[0.98]"
+        className="flex w-full items-center justify-center gap-2 bg-[#06C755] px-6 py-4 text-base font-bold text-white shadow-sm transition hover:bg-[#05A847] active:scale-[0.98]"
       >
         <MessageCircle className="h-5 w-5" />
         LINE で応募する
@@ -95,7 +95,7 @@ export function LineApplyClient({
 
       {/* デスクトップ向け QR コード */}
       {!isMobile && (
-        <div className="mt-6 rounded border border-gray-200 bg-gray-50 p-4 text-center">
+        <div className="mt-6 border border-gray-200 bg-gray-50 p-4 text-center">
           <p className="text-sm text-gray-700 font-medium">
             スマートフォンで LINE を開きたい方
           </p>

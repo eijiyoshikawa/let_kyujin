@@ -173,7 +173,7 @@ export default async function PrefectureCategoryPage({ params }: Props) {
           </p>
           <Link
             href="/jobs"
-            className="mt-4 inline-block rounded-lg bg-primary-600 px-6 py-2 text-sm font-medium text-white hover:bg-primary-700"
+            className="mt-4 inline-block bg-primary-600 px-6 py-2 text-sm font-medium text-white hover:bg-primary-700"
           >
             すべての求人を見る
           </Link>

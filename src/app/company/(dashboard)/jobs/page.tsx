@@ -59,7 +59,7 @@ export default async function CompanyJobsPage({
         <h1 className="text-2xl font-bold text-gray-900">求人管理</h1>
         <Link
           href="/company/jobs/new"
-          className="inline-flex items-center gap-2 rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
+          className="inline-flex items-center gap-2 bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
         >
           <Plus className="h-4 w-4" />
           新規作成
@@ -77,7 +77,7 @@ export default async function CompanyJobsPage({
           <Link
             key={opt.value}
             href={`/company/jobs?status=${opt.value}`}
-            className={`rounded-full px-3 py-1 text-sm font-medium ${
+            className={` px-3 py-1 text-sm font-medium ${
               statusFilter === opt.value
                 ? "bg-primary-600 text-white"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -90,7 +90,7 @@ export default async function CompanyJobsPage({
 
       {/* Jobs table */}
       {jobs.length === 0 ? (
-        <div className="mt-8 rounded-lg border bg-white p-8 text-center shadow-sm">
+        <div className="mt-8 border bg-white p-8 text-center shadow-sm">
           <p className="text-gray-500">求人がありません。</p>
           <Link
             href="/company/jobs/new"
@@ -101,7 +101,7 @@ export default async function CompanyJobsPage({
           </Link>
         </div>
       ) : (
-        <div className="mt-4 overflow-hidden rounded-lg border bg-white shadow-sm">
+        <div className="mt-4 overflow-hidden border bg-white shadow-sm">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -182,7 +182,7 @@ function JobStatusBadge({ status }: { status: string }) {
 
   return (
     <span
-      className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${className}`}
+      className={`inline-flex px-2 py-0.5 text-xs font-medium ${className}`}
     >
       {label}
     </span>

@@ -74,7 +74,7 @@ export default async function ArticlePage({ params }: Props) {
       <article className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex items-center gap-2">
-          <span className="rounded bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700">
+          <span className="bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700">
             {categoryLabels[article.category] ?? article.category}
           </span>
           {article.publishedAt && (
@@ -96,7 +96,7 @@ export default async function ArticlePage({ params }: Props) {
         <div className="mt-6">
           <Link
             href="/jobs"
-            className="flex w-full items-center justify-center gap-2 rounded bg-red-500 py-3 text-sm font-bold text-white hover:bg-red-600 transition"
+            className="flex w-full items-center justify-center gap-2 bg-red-500 py-3 text-sm font-bold text-white hover:bg-red-600 transition"
           >
             求人を探す
           </Link>
@@ -112,7 +112,7 @@ export default async function ArticlePage({ params }: Props) {
         {article.tags.length > 0 && (
           <div className="mt-8 flex flex-wrap gap-2">
             {article.tags.map((tag) => (
-              <span key={tag} className="rounded border border-gray-200 px-2.5 py-1 text-xs text-gray-500">
+              <span key={tag} className="border border-gray-200 px-2.5 py-1 text-xs text-gray-500">
                 {tag}
               </span>
             ))}
@@ -126,10 +126,10 @@ export default async function ArticlePage({ params }: Props) {
             建設求人ポータルで、あなたに合った求人を見つけましょう。
           </p>
           <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-center">
-            <Link href="/jobs" className="rounded bg-primary-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-700">
+            <Link href="/jobs" className="bg-primary-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-700">
               求人を検索する
             </Link>
-            <Link href="/register" className="rounded border border-gray-300 px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
+            <Link href="/register" className="border border-gray-300 px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
               無料会員登録
             </Link>
           </div>

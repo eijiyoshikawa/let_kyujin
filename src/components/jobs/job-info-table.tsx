@@ -37,9 +37,9 @@ export function JobInfoTable({
   if (rows.length === 0) return null
 
   return (
-    <div className="rounded border bg-white p-5 sm:p-6 shadow-sm">
+    <div className="border bg-white p-5 sm:p-6 shadow-sm">
       <div className="flex items-center gap-2 mb-4">
-        <span className="inline-block h-5 w-1 rounded-full bg-primary-500" />
+        <span className="inline-block h-5 w-1 bg-primary-500" />
         <h2 className="text-base sm:text-lg font-bold text-gray-900">
           この求人の特徴
         </h2>

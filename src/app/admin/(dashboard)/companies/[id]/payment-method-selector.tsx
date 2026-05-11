@@ -62,7 +62,7 @@ export function PaymentMethodSelector({
   return (
     <div className="mt-4 space-y-3">
       {error && (
-        <div className="rounded bg-red-50 p-3 text-sm text-red-600">
+        <div className="bg-red-50 p-3 text-sm text-red-600">
           {error}
         </div>
       )}
@@ -71,7 +71,7 @@ export function PaymentMethodSelector({
         {(["stripe", "moneyforward"] as const).map((m) => (
           <label
             key={m}
-            className={`flex cursor-pointer gap-3 rounded-md border p-3 text-sm ${
+            className={`flex cursor-pointer gap-3  border p-3 text-sm ${
               selected === m
                 ? "border-primary-500 bg-primary-50"
                 : "border-gray-200 hover:bg-gray-50"
@@ -98,7 +98,7 @@ export function PaymentMethodSelector({
           type="button"
           disabled={!dirty || loading}
           onClick={save}
-          className="rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
+          className="bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
         >
           {loading ? "保存中..." : "支払方法を保存"}
         </button>

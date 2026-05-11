@@ -207,7 +207,7 @@ export default function ForEmployersPage() {
                 </div>
                 <Link
                   href="/company/register"
-                  className="flex w-full items-center justify-center gap-2 rounded-full bg-primary-500 px-6 py-3 text-sm font-black text-white tracking-tight hover:bg-primary-600 transition"
+                  className="flex w-full items-center justify-center gap-2 bg-primary-500 px-6 py-3 text-sm font-black text-white tracking-tight hover:bg-primary-600 transition"
                 >
                   資料請求する
                   <ArrowRight className="h-4 w-4" />
@@ -264,7 +264,7 @@ export default function ForEmployersPage() {
                 const Icon = r.icon
                 return (
                   <div key={r.title} className="bg-white p-6 text-center hover-lift">
-                    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-brand-yellow-500">
+                    <div className="mx-auto flex h-20 w-20 items-center justify-center bg-brand-yellow-500">
                       <Icon className="h-10 w-10 text-ink-900" />
                     </div>
                     <h3 className="mt-4 text-base font-black text-ink-900 tracking-tight">{r.title}</h3>
@@ -339,7 +339,7 @@ export default function ForEmployersPage() {
                 <div key={step.label} className="flex items-center gap-3 sm:gap-4">
                   <div className="flex flex-col items-center">
                     <div className="relative flex h-16 w-16 items-center justify-center border-2 border-ink-900 bg-brand-yellow-500 shadow-sm">
-                      <span className="absolute -top-2.5 -left-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-primary-500 text-xs font-black text-white tracking-tight shadow-sm">
+                      <span className="absolute -top-2.5 -left-2.5 flex h-6 w-6 items-center justify-center bg-primary-500 text-xs font-black text-white tracking-tight shadow-sm">
                         {i + 1}
                       </span>
                       <Icon className="h-7 w-7 text-ink-900" />
@@ -436,14 +436,14 @@ export default function ForEmployersPage() {
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
               <Link
                 href="/company/register"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-primary-500 px-8 py-3.5 text-base font-black tracking-tight text-white shadow-lg hover:bg-primary-600 transition"
+                className="inline-flex items-center justify-center gap-2 bg-primary-500 px-8 py-3.5 text-base font-black tracking-tight text-white shadow-lg hover:bg-primary-600 transition"
               >
                 無料で企業登録する
                 <ArrowRight className="h-5 w-5" />
               </Link>
               <a
                 href="tel:03-6845-3624"
-                className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-brand-yellow-500 bg-brand-yellow-500 px-8 py-3.5 text-base font-black tracking-tight text-ink-900 hover:bg-brand-yellow-600 transition"
+                className="inline-flex items-center justify-center gap-2 border-2 border-brand-yellow-500 bg-brand-yellow-500 px-8 py-3.5 text-base font-black tracking-tight text-ink-900 hover:bg-brand-yellow-600 transition"
               >
                 <Phone className="h-5 w-5" />
                 03-6845-3624

@@ -79,7 +79,7 @@ export default async function AdminDashboard() {
         {recentApplications.length === 0 ? (
           <p className="mt-4 text-sm text-gray-500">応募はまだありません。</p>
         ) : (
-          <div className="mt-4 overflow-hidden rounded-lg border bg-white shadow-sm">
+          <div className="mt-4 overflow-hidden border bg-white shadow-sm">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -99,7 +99,7 @@ export default async function AdminDashboard() {
                     <td className="px-4 py-3 text-sm text-gray-600">{app.job.title}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{app.company?.name ?? "—"}</td>
                     <td className="px-4 py-3">
-                      <span className="inline-flex rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+                      <span className="inline-flex bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
                         {app.status}
                       </span>
                     </td>
@@ -131,9 +131,9 @@ function StatCard({
   sub: string
 }) {
   return (
-    <div className="rounded-lg border bg-white p-5 shadow-sm">
+    <div className="border bg-white p-5 shadow-sm">
       <div className="flex items-center gap-3">
-        <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${iconBg}`}>
+        <div className={`flex h-10 w-10 items-center justify-center ${iconBg}`}>
           {icon}
         </div>
         <div>

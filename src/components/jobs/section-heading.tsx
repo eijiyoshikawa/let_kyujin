@@ -16,7 +16,7 @@ export function SectionHeading({
       id={id}
       className="flex items-center gap-2 text-base sm:text-lg font-bold text-gray-900"
     >
-      <span className="inline-block h-5 w-1 rounded-full bg-primary-500" />
+      <span className="inline-block h-5 w-1 bg-primary-500" />
       {children}
     </h2>
   )

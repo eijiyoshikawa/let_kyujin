@@ -141,7 +141,7 @@ export default async function JobsPage({ searchParams }: Props) {
             <h1 className="text-xl font-bold text-white">求人検索</h1>
             <Link
               href="/hw-jobs"
-              className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-xs text-white/90 hover:bg-white/20 transition"
+              className="inline-flex items-center gap-1 bg-white/10 px-3 py-1 text-xs text-white/90 hover:bg-white/20 transition"
             >
               <Briefcase className="h-3.5 w-3.5" />
               ハローワーク求人を見る
@@ -161,7 +161,7 @@ export default async function JobsPage({ searchParams }: Props) {
               </div>
               <button
                 type="submit"
-                className="flex items-center gap-1.5 rounded-full bg-primary-500 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-primary-600 transition"
+                className="flex items-center gap-1.5 bg-primary-500 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-primary-600 transition"
               >
                 <Search className="h-4 w-4" />
                 検索
@@ -454,7 +454,7 @@ function FilterBadge({
   return (
     <a
       href={href}
-      className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-3 py-1 text-xs font-medium text-primary-700 hover:bg-primary-200 transition"
+      className="inline-flex items-center gap-1 bg-primary-100 px-3 py-1 text-xs font-medium text-primary-700 hover:bg-primary-200 transition"
     >
       {label}
       <span className="text-primary-400">&times;</span>

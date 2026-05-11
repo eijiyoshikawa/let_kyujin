@@ -20,7 +20,7 @@ export function PhotoGallery({
       {photos.slice(0, 12).map((url, i) => (
         <div
           key={`${url}-${i}`}
-          className="relative aspect-square overflow-hidden rounded bg-gray-100"
+          className="relative aspect-square overflow-hidden bg-gray-100"
         >
           <Image
             src={url}

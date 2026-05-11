@@ -73,7 +73,7 @@ export default async function AdminBillingPage({
           <Link
             key={opt.value}
             href={`/admin/billing?status=${opt.value}`}
-            className={`rounded-full px-3 py-1 text-sm font-medium ${
+            className={` px-3 py-1 text-sm font-medium ${
               statusFilter === opt.value
                 ? "bg-primary-600 text-white"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -85,11 +85,11 @@ export default async function AdminBillingPage({
       </div>
 
       {events.length === 0 ? (
-        <div className="mt-6 rounded-lg border bg-white p-8 text-center shadow-sm">
+        <div className="mt-6 border bg-white p-8 text-center shadow-sm">
           <p className="text-gray-500">課金イベントはありません。</p>
         </div>
       ) : (
-        <div className="mt-4 overflow-hidden rounded-lg border bg-white shadow-sm">
+        <div className="mt-4 overflow-hidden border bg-white shadow-sm">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -152,7 +152,7 @@ export default async function AdminBillingPage({
             <Link
               key={p}
               href={`/admin/billing?status=${statusFilter}&page=${p}`}
-              className={`rounded-md px-3 py-1 text-sm ${
+              className={` px-3 py-1 text-sm ${
                 p === page
                   ? "bg-primary-600 text-white"
                   : "bg-white text-gray-600 border hover:bg-gray-50"
@@ -179,7 +179,7 @@ function SummaryCard({
   className: string
 }) {
   return (
-    <div className="rounded-lg border bg-white p-4 shadow-sm">
+    <div className="border bg-white p-4 shadow-sm">
       <p className="text-sm text-gray-500">{label}</p>
       <p className={`mt-1 text-xl font-bold ${className}`}>
         ¥{amount.toLocaleString()}
@@ -198,7 +198,7 @@ function BillingStatusBadge({ status }: { status: string }) {
   }
   const { label, className } = config[status] ?? { label: status, className: "bg-gray-100 text-gray-600" }
   return (
-    <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${className}`}>
+    <span className={`inline-flex px-2 py-0.5 text-xs font-medium ${className}`}>
       {label}
     </span>
   )

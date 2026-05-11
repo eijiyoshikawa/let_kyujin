@@ -123,7 +123,7 @@ export default function LegalPage() {
       </h1>
       <p className="mt-2 text-sm text-gray-500">最終更新日: 2026年5月9日</p>
 
-      <div className="mt-8 overflow-hidden rounded-lg border bg-white">
+      <div className="mt-8 overflow-hidden border bg-white">
         <dl className="divide-y">
           {ROWS.map((row) => (
             <div

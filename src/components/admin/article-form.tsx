@@ -160,14 +160,14 @@ export function ArticleForm({ mode, articleId, initialValues }: Props) {
       </div>
 
       {error && (
-        <div className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+        <div className="mt-4 bg-red-50 p-3 text-sm text-red-600">
           {error}
         </div>
       )}
 
       <form
         onSubmit={handleSubmit}
-        className="mt-6 space-y-6 rounded-lg border bg-white p-6 shadow-sm"
+        className="mt-6 space-y-6 border bg-white p-6 shadow-sm"
       >
         <div>
           <label className="block text-sm font-medium text-gray-700">
@@ -178,7 +178,7 @@ export function ArticleForm({ mode, articleId, initialValues }: Props) {
             required
             value={form.title}
             onChange={(e) => update("title", e.target.value)}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className="mt-1 block w-full border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             placeholder="建設業界の現状と将来性 — 2026年版"
           />
         </div>
@@ -192,7 +192,7 @@ export function ArticleForm({ mode, articleId, initialValues }: Props) {
             required
             value={form.slug}
             onChange={(e) => update("slug", e.target.value)}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className="mt-1 block w-full border border-gray-300 px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             placeholder="construction-industry-overview-2026"
           />
           <p className="mt-1 text-xs text-gray-500">
@@ -208,7 +208,7 @@ export function ArticleForm({ mode, articleId, initialValues }: Props) {
             <select
               value={form.category}
               onChange={(e) => update("category", e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className="mt-1 block w-full border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             >
               {ARTICLE_CATEGORIES.map((c) => (
                 <option key={c.value} value={c.value}>
@@ -226,7 +226,7 @@ export function ArticleForm({ mode, articleId, initialValues }: Props) {
               type="text"
               value={form.authorName}
               onChange={(e) => update("authorName", e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className="mt-1 block w-full border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               placeholder="ゲンバキャリア編集部"
             />
           </div>
@@ -240,7 +240,7 @@ export function ArticleForm({ mode, articleId, initialValues }: Props) {
             type="text"
             value={form.tags}
             onChange={(e) => update("tags", e.target.value)}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className="mt-1 block w-full border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             placeholder="業界動向, 市場規模, 未経験"
           />
         </div>
@@ -253,7 +253,7 @@ export function ArticleForm({ mode, articleId, initialValues }: Props) {
             rows={3}
             value={form.excerpt}
             onChange={(e) => update("excerpt", e.target.value)}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className="mt-1 block w-full border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             placeholder="一覧ページに表示される1〜2文の紹介文"
           />
         </div>
@@ -266,7 +266,7 @@ export function ArticleForm({ mode, articleId, initialValues }: Props) {
             rows={2}
             value={form.metaDescription}
             onChange={(e) => update("metaDescription", e.target.value)}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className="mt-1 block w-full border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             placeholder="検索結果に表示される説明文（120〜160文字推奨）"
           />
         </div>
@@ -279,7 +279,7 @@ export function ArticleForm({ mode, articleId, initialValues }: Props) {
             type="url"
             value={form.imageUrl}
             onChange={(e) => update("imageUrl", e.target.value)}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className="mt-1 block w-full border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             placeholder="https://images.unsplash.com/..."
           />
         </div>
@@ -293,7 +293,7 @@ export function ArticleForm({ mode, articleId, initialValues }: Props) {
             rows={20}
             value={form.body}
             onChange={(e) => update("body", e.target.value)}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 font-mono text-xs focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className="mt-1 block w-full border border-gray-300 px-3 py-2 font-mono text-xs focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             placeholder={"<h2>見出し</h2>\n<p>本文...</p>"}
           />
           <p className="mt-1 text-xs text-gray-500">
@@ -311,7 +311,7 @@ export function ArticleForm({ mode, articleId, initialValues }: Props) {
               onChange={(e) =>
                 update("status", e.target.value as "draft" | "published")
               }
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className="mt-1 block w-full border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             >
               <option value="draft">下書き</option>
               <option value="published">公開</option>
@@ -326,7 +326,7 @@ export function ArticleForm({ mode, articleId, initialValues }: Props) {
               type="datetime-local"
               value={form.publishedAt}
               onChange={(e) => update("publishedAt", e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className="mt-1 block w-full border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             />
             <p className="mt-1 text-xs text-gray-500">
               空欄で公開時 = 現在時刻
@@ -339,7 +339,7 @@ export function ArticleForm({ mode, articleId, initialValues }: Props) {
                 type="checkbox"
                 checked={form.featured}
                 onChange={(e) => update("featured", e.target.checked)}
-                className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                className="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
               />
               注目記事にする
             </label>
@@ -352,7 +352,7 @@ export function ArticleForm({ mode, articleId, initialValues }: Props) {
               type="button"
               onClick={handleDelete}
               disabled={deleting || loading}
-              className="rounded-md border border-red-300 bg-white px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="border border-red-300 bg-white px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {deleting ? "削除中..." : "削除"}
             </button>
@@ -362,14 +362,14 @@ export function ArticleForm({ mode, articleId, initialValues }: Props) {
           <div className="flex gap-3">
             <Link
               href="/admin/articles"
-              className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
             >
               キャンセル
             </Link>
             <button
               type="submit"
               disabled={loading || deleting}
-              className="rounded-md bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
+              className="bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? "保存中..." : mode === "create" ? "作成する" : "更新する"}
             </button>

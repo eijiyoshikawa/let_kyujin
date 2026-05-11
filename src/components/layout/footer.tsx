@@ -21,13 +21,13 @@ export function Footer() {
           <div className="flex items-start gap-3">
             <Link
               href="/register"
-              className="rounded-full bg-primary-500 px-5 py-2 text-sm font-medium text-white hover:bg-primary-600 transition"
+              className="press bg-primary-500 px-5 py-2 text-sm font-medium text-white hover:bg-primary-600 transition"
             >
               会員登録（無料）
             </Link>
             <Link
               href="/contact"
-              className="rounded-full border border-gray-500 px-5 py-2 text-sm font-medium text-gray-300 hover:bg-stone-800 transition"
+              className="press border border-gray-500 px-5 py-2 text-sm font-medium text-gray-300 hover:bg-stone-800 transition"
             >
               ヘルプ・お問い合わせ
             </Link>
@@ -79,10 +79,10 @@ export function Footer() {
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
             <div className="flex items-center gap-2">
               <span className="text-xs font-medium text-gray-500">公式SNS</span>
-              <a href="https://youtube.com/@let-kensetsu" target="_blank" rel="noopener noreferrer" className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-700 text-gray-300 hover:bg-red-600 hover:text-white transition" aria-label="YouTube">
+              <a href="https://youtube.com/@let-kensetsu" target="_blank" rel="noopener noreferrer" className="flex h-8 w-8 items-center justify-center bg-stone-700 text-gray-300 hover:bg-red-600 hover:text-white transition" aria-label="YouTube">
                 <CirclePlay className="h-4 w-4" />
               </a>
-              <a href="https://instagram.com/let_kensetsu" target="_blank" rel="noopener noreferrer" className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-700 text-gray-300 hover:bg-pink-600 hover:text-white transition" aria-label="Instagram">
+              <a href="https://instagram.com/let_kensetsu" target="_blank" rel="noopener noreferrer" className="flex h-8 w-8 items-center justify-center bg-stone-700 text-gray-300 hover:bg-pink-600 hover:text-white transition" aria-label="Instagram">
                 <Camera className="h-4 w-4" />
               </a>
             </div>

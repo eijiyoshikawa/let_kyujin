@@ -63,14 +63,14 @@ export default async function CompanyBillingPage({
 
       {/* Summary */}
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <div className="rounded-lg border bg-white p-5 shadow-sm">
+        <div className="border bg-white p-5 shadow-sm">
           <p className="text-sm text-gray-500">成果報酬単価</p>
           <p className="mt-1 text-2xl font-bold text-gray-900">
             ¥{HIRING_FEE_AMOUNT.toLocaleString()}
           </p>
           <p className="text-xs text-gray-400">1採用あたり</p>
         </div>
-        <div className="rounded-lg border bg-white p-5 shadow-sm">
+        <div className="border bg-white p-5 shadow-sm">
           <p className="text-sm text-gray-500">支払い済み</p>
           <p className="mt-1 text-2xl font-bold text-green-600">
             ¥{totalPaid.toLocaleString()}
@@ -79,7 +79,7 @@ export default async function CompanyBillingPage({
             {summaryData.find((s) => s.status === "paid")?._count ?? 0} 件
           </p>
         </div>
-        <div className="rounded-lg border bg-white p-5 shadow-sm">
+        <div className="border bg-white p-5 shadow-sm">
           <p className="text-sm text-gray-500">未払い</p>
           <p className="mt-1 text-2xl font-bold text-yellow-600">
             ¥{totalPending.toLocaleString()}
@@ -90,14 +90,14 @@ export default async function CompanyBillingPage({
 
       {/* Events table */}
       {events.length === 0 ? (
-        <div className="mt-8 rounded-lg border bg-white p-8 text-center shadow-sm">
+        <div className="mt-8 border bg-white p-8 text-center shadow-sm">
           <p className="text-gray-500">課金履歴はまだありません。</p>
           <p className="mt-1 text-sm text-gray-400">
             応募者のステータスを「採用」に変更すると、成果報酬が自動的に発生します。
           </p>
         </div>
       ) : (
-        <div className="mt-6 overflow-hidden rounded-lg border bg-white shadow-sm">
+        <div className="mt-6 overflow-hidden border bg-white shadow-sm">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -150,7 +150,7 @@ export default async function CompanyBillingPage({
             <a
               key={p}
               href={`/company/billing?page=${p}`}
-              className={`rounded-md px-3 py-1 text-sm ${
+              className={` px-3 py-1 text-sm ${
                 p === page
                   ? "bg-primary-600 text-white"
                   : "bg-white text-gray-600 border hover:bg-gray-50"
@@ -180,7 +180,7 @@ function BillingStatusBadge({ status }: { status: string }) {
 
   return (
     <span
-      className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${className}`}
+      className={`inline-flex px-2 py-0.5 text-xs font-medium ${className}`}
     >
       {label}
     </span>

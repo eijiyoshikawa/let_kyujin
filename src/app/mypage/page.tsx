@@ -40,7 +40,7 @@ export default async function MyPage() {
       {/* User Info */}
       <div className="mt-6  border bg-white p-6 shadow-sm">
         <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-100">
+          <div className="flex h-14 w-14 items-center justify-center bg-primary-100">
             <User className="h-7 w-7 text-primary-600" />
           </div>
           <div>

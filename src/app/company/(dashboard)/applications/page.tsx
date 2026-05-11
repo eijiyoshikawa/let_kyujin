@@ -75,7 +75,7 @@ export default async function CompanyApplicationsPage({
           <a
             key={opt.value}
             href={`/company/applications?status=${opt.value}`}
-            className={`rounded-full px-3 py-1 text-sm font-medium ${
+            className={` px-3 py-1 text-sm font-medium ${
               statusFilter === opt.value
                 ? "bg-primary-600 text-white"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -87,11 +87,11 @@ export default async function CompanyApplicationsPage({
       </div>
 
       {applications.length === 0 ? (
-        <div className="mt-8 rounded-lg border bg-white p-8 text-center shadow-sm">
+        <div className="mt-8 border bg-white p-8 text-center shadow-sm">
           <p className="text-gray-500">応募はまだありません。</p>
         </div>
       ) : (
-        <div className="mt-4 overflow-hidden rounded-lg border bg-white shadow-sm">
+        <div className="mt-4 overflow-hidden border bg-white shadow-sm">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
