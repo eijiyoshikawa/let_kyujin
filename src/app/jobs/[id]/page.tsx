@@ -15,6 +15,7 @@ import {
   Globe,
   Users,
   Sparkles,
+  MessageCircle,
 } from "lucide-react"
 import type { Metadata } from "next"
 import { generateJobPostingSchema } from "@/lib/structured-data"
@@ -295,19 +296,20 @@ export default async function JobDetailPage({ params }: Props) {
           {/* Sticky sidebar */}
           <aside className="w-full shrink-0 lg:w-72">
             <div className="sticky top-20 space-y-4">
-              {/* Apply CTA card */}
-              <div className=" border bg-white p-5 shadow-sm">
+              {/* Apply CTA card — LINE 集約 */}
+              <div className="border bg-white p-5 shadow-sm">
                 <p className="text-center text-sm font-medium text-gray-600">
                   この求人に興味がありますか？
                 </p>
                 <Link
                   href={`/jobs/${job.id}/apply`}
-                  className="mt-3 flex w-full items-center justify-center gap-2  bg-green-500 py-3 text-base font-bold text-white hover:bg-green-600 transition shadow-sm"
+                  className="mt-3 flex w-full items-center justify-center gap-2 bg-[#06C755] py-3 text-base font-bold text-white hover:bg-[#05A847] transition shadow-sm rounded"
                 >
-                  応募する
+                  <MessageCircle className="h-5 w-5" />
+                  LINE で応募
                 </Link>
                 <p className="mt-2 text-center text-[10px] text-gray-400">
-                  会員登録（無料）が必要です
+                  当社公式 LINE のチャット画面が開きます
                 </p>
               </div>
 
