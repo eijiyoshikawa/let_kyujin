@@ -19,6 +19,7 @@ import {
   extractTags,
   fallbackSalary,
 } from "@/lib/job-enrichment"
+import { computeRankScore } from "@/lib/ranking"
 import type { HelloworkJobData } from "./hellowork"
 
 // ========================================
@@ -99,6 +100,13 @@ function toJobRecord(
     type: job.salaryType,
   })
 
+  // 取り込み時のランキングスコアは company 情報を引かない簡易計算（job text のみ）
+  // 企業プロフィール保存時に再計算されるため初期値で OK。
+  const rankScore = computeRankScore(
+    { description: job.description, requirements: job.requirements },
+    null
+  )
+
   return {
     source: job.source,
     helloworkId: truncate(job.helloworkId, 50),
@@ -115,6 +123,7 @@ function toJobRecord(
     city: job.city ? truncate(job.city, 100) : null,
     address: job.address,
     tags,
+    rankScore,
     status: "active" as const,
     publishedAt: new Date(),
   }
@@ -326,6 +335,7 @@ export async function importHelloworkJobs(
           city: data.city,
           address: data.address,
           tags: data.tags,
+          rankScore: data.rankScore,
           status: "active",
           // updatedAt は Prisma が自動更新する
         },

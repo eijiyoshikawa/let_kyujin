@@ -24,6 +24,7 @@ const EMPLOYMENT_TYPES = [
 ] as const
 
 const SORT_OPTIONS = [
+  { value: "recommended", label: "おすすめ順" },
   { value: "newest", label: "新着順" },
   { value: "salary_high", label: "給与が高い順" },
   { value: "salary_low", label: "給与が低い順" },
@@ -58,7 +59,9 @@ export default async function JobsPage({ searchParams }: Props) {
   const salaryMaxYen = parseManYenToYen(params.salary_max)
   const dateWithinDays = parseDateWithin(params.date_within)
   const dateWithinThreshold = computeDateWithinThreshold(dateWithinDays)
-  const sort = (params.sort && SORT_OPTIONS.find((s) => s.value === params.sort)?.value) ?? "newest"
+  const sort =
+    (params.sort && SORT_OPTIONS.find((s) => s.value === params.sort)?.value) ??
+    "recommended"
 
   // 建設業特化サイトのため、非建設業カテゴリは常に除外する。
   // ユーザー指定が建設業カテゴリならその値、そうでなければ建設業全体に絞る。
@@ -353,8 +356,15 @@ function buildOrderBy(sort: string) {
     case "popular":
       return [{ viewCount: "desc" as const }, { publishedAt: "desc" as const }]
     case "newest":
-    default:
       return { publishedAt: "desc" as const }
+    case "recommended":
+    default:
+      // SNS 登録数 / 文字量 / 写真数 / 3 ヶ月以内更新 を加点した rankScore で並べ替え。
+      // 同点の場合は新しい求人を上位に。
+      return [
+        { rankScore: "desc" as const },
+        { publishedAt: "desc" as const },
+      ]
   }
 }
 

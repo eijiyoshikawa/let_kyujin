@@ -12,6 +12,7 @@ import { type NextRequest } from "next/server"
 import { z } from "zod"
 import { prisma } from "@/lib/db"
 import { isCompanyAuthError, requireCompanyAuth } from "@/lib/company-auth"
+import { computeRankScore } from "@/lib/ranking"
 
 export const dynamic = "force-dynamic"
 
@@ -69,7 +70,7 @@ export async function PATCH(request: NextRequest) {
     )
   }
 
-  await prisma.company.update({
+  const updated = await prisma.company.update({
     where: { id: ctx.companyId },
     data: {
       tagline: emptyToNull(body.tagline),
@@ -84,7 +85,44 @@ export async function PATCH(request: NextRequest) {
       youtubeUrl: emptyToNull(body.youtubeUrl),
       lastContentUpdatedAt: new Date(),
     },
+    select: {
+      tagline: true,
+      pitchHighlights: true,
+      idealCandidate: true,
+      employeeVoice: true,
+      photos: true,
+      instagramUrl: true,
+      tiktokUrl: true,
+      facebookUrl: true,
+      xUrl: true,
+      youtubeUrl: true,
+      lastContentUpdatedAt: true,
+    },
   })
 
-  return Response.json({ success: true })
+  // この企業の全求人の rankScore を再計算（求人一覧の並び順反映用）
+  // - 企業の SNS / 文字量 / 写真 / 更新フレッシュ度 が変わったので求人ごとに再評価
+  const companyJobs = await prisma.job.findMany({
+    where: { companyId: ctx.companyId },
+    select: { id: true, description: true, requirements: true },
+  })
+
+  await Promise.all(
+    companyJobs.map((job) =>
+      prisma.job.update({
+        where: { id: job.id },
+        data: {
+          rankScore: computeRankScore(
+            { description: job.description, requirements: job.requirements },
+            updated
+          ),
+        },
+      })
+    )
+  )
+
+  return Response.json({
+    success: true,
+    rerankedJobs: companyJobs.length,
+  })
 }

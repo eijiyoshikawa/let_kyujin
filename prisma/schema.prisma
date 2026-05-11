@@ -150,6 +150,10 @@ model Job {
   publishedAt    DateTime? @map("published_at") @db.Timestamptz()
   expiresAt      DateTime? @map("expires_at") @db.Timestamptz()
   viewCount      Int       @default(0) @map("view_count")
+  // 求人一覧の「おすすめ順」で使うスコア。
+  // 内容量・SNS 登録数・写真数・3 ヶ月以内更新を加点で評価する（ranking.ts 参照）。
+  // 取り込み時 / 企業プロフィール保存時に再計算される。
+  rankScore      Int       @default(0) @map("rank_score")
   createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamptz()
 
@@ -161,6 +165,7 @@ model Job {
   @@index([prefecture, category, employmentType, status], name: "idx_jobs_search")
   @@index([salaryMin, salaryMax], name: "idx_jobs_salary")
   @@index([status, publishedAt(sort: Desc)], name: "idx_jobs_status_published")
+  @@index([status, rankScore(sort: Desc), publishedAt(sort: Desc)], name: "idx_jobs_status_rank")
   @@map("jobs")
 }
 

@@ -43,7 +43,13 @@ export async function GET(request: NextRequest) {
       ? { salaryMax: "desc" as const }
       : sort === "view_count"
         ? { viewCount: "desc" as const }
-        : { publishedAt: "desc" as const }
+        : sort === "newest"
+          ? { publishedAt: "desc" as const }
+          : // default: recommended (rankScore)
+            [
+              { rankScore: "desc" as const },
+              { publishedAt: "desc" as const },
+            ]
 
   const [jobs, total] = await Promise.all([
     prisma.job.findMany({
