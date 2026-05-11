@@ -5,6 +5,8 @@ import {
   fallbackSalary,
   extractWorkConditions,
   formatDescriptionSections,
+  groupTags,
+  TAG_GROUP_LABELS,
 } from "@/lib/job-enrichment"
 
 describe("cleanTitle", () => {
@@ -128,6 +130,46 @@ describe("extractWorkConditions", () => {
   it("falls back to per-insurance bundle when 完備 not stated", () => {
     const c = extractWorkConditions("加入保険: 雇用保険、労災保険、健康保険、厚生年金")
     expect(c.insurance).toBe("雇用・労災・健康・厚生年金")
+  })
+})
+
+describe("groupTags", () => {
+  it("groups well-known tags into expected buckets", () => {
+    const r = groupTags([
+      "未経験OK", // experience
+      "賞与あり", // wage
+      "週休2日", // time
+      "資格取得支援", // benefits
+    ])
+    expect(r.experience).toEqual(["未経験OK"])
+    expect(r.wage).toEqual(["賞与あり"])
+    expect(r.time).toEqual(["週休2日"])
+    expect(r.benefits).toEqual(["資格取得支援"])
+  })
+
+  it("falls back unknown tags to benefits", () => {
+    const r = groupTags(["未経験OK", "独自カスタムタグ"])
+    expect(r.experience).toEqual(["未経験OK"])
+    expect(r.benefits).toContain("独自カスタムタグ")
+  })
+
+  it("dedupes within a group", () => {
+    const r = groupTags(["未経験OK", "未経験OK"])
+    expect(r.experience).toEqual(["未経験OK"])
+  })
+
+  it("returns all groups even when empty", () => {
+    const r = groupTags([])
+    expect(r).toEqual({ wage: [], benefits: [], experience: [], time: [] })
+  })
+})
+
+describe("TAG_GROUP_LABELS", () => {
+  it("has labels for all 4 groups", () => {
+    expect(TAG_GROUP_LABELS.wage).toBe("賃金")
+    expect(TAG_GROUP_LABELS.benefits).toBe("福利厚生・働き方")
+    expect(TAG_GROUP_LABELS.experience).toBe("経験・年齢")
+    expect(TAG_GROUP_LABELS.time).toBe("時間・休日・通勤")
   })
 })
 
