@@ -63,7 +63,7 @@ export default async function HwJobsPage({ searchParams }: PageProps) {
         </div>
         <Link
           href="/jobs"
-          className="inline-flex items-center gap-1 rounded-full border border-primary-200 bg-white px-3 py-1 text-xs font-medium text-primary-600 hover:bg-brand-yellow-50"
+          className="inline-flex items-center gap-1 border border-primary-200 bg-white px-3 py-1 text-xs font-medium text-primary-600 hover:bg-brand-yellow-50"
         >
           自社掲載求人を見る
         </Link>

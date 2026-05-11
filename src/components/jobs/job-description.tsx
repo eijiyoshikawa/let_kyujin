@@ -24,7 +24,7 @@ export function JobDescription({
       {sections.map((section, i) => (
         <section key={i}>
           {section.heading && (
-            <h3 className="mb-2 inline-block rounded bg-primary-50 px-2.5 py-1 text-sm font-bold text-primary-700">
+            <h3 className="mb-2 inline-block bg-primary-50 px-2.5 py-1 text-sm font-bold text-primary-700">
               {section.heading}
             </h3>
           )}

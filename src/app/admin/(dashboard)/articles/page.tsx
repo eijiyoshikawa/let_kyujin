@@ -72,7 +72,7 @@ export default async function AdminArticlesPage({
         </div>
         <Link
           href="/admin/articles/new"
-          className="rounded-md bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600"
+          className="bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600"
         >
           + 記事を追加
         </Link>
@@ -85,12 +85,12 @@ export default async function AdminArticlesPage({
           name="q"
           defaultValue={query}
           placeholder="タイトル・slugで検索..."
-          className="rounded-md border px-3 py-1.5 text-sm flex-1 min-w-[200px] max-w-sm"
+          className="border px-3 py-1.5 text-sm flex-1 min-w-[200px] max-w-sm"
         />
         <select
           name="status"
           defaultValue={statusFilter}
-          className="rounded-md border px-3 py-1.5 text-sm"
+          className="border px-3 py-1.5 text-sm"
         >
           <option value="">すべての状態</option>
           <option value="published">公開中</option>
@@ -99,7 +99,7 @@ export default async function AdminArticlesPage({
         <select
           name="category"
           defaultValue={categoryFilter}
-          className="rounded-md border px-3 py-1.5 text-sm"
+          className="border px-3 py-1.5 text-sm"
         >
           <option value="">すべてのカテゴリ</option>
           {ARTICLE_CATEGORIES.map((c) => (
@@ -110,18 +110,18 @@ export default async function AdminArticlesPage({
         </select>
         <button
           type="submit"
-          className="rounded-md bg-primary-500 px-4 py-1.5 text-sm font-medium text-white hover:bg-primary-600"
+          className="bg-primary-500 px-4 py-1.5 text-sm font-medium text-white hover:bg-primary-600"
         >
           絞り込み
         </button>
       </form>
 
       {articles.length === 0 ? (
-        <div className="mt-6 rounded-lg border bg-white p-8 text-center shadow-sm">
+        <div className="mt-6 border bg-white p-8 text-center shadow-sm">
           <p className="text-gray-500">記事が見つかりません。</p>
         </div>
       ) : (
-        <div className="mt-4 overflow-hidden rounded-lg border bg-white shadow-sm">
+        <div className="mt-4 overflow-hidden border bg-white shadow-sm">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -151,7 +151,7 @@ export default async function AdminArticlesPage({
                   <td className="px-4 py-3">
                     <p className="text-sm font-medium text-gray-900 line-clamp-1">
                       {a.featured && (
-                        <span className="mr-1 inline-block rounded bg-yellow-100 px-1.5 py-0.5 text-[10px] font-semibold text-yellow-800">
+                        <span className="mr-1 inline-block bg-yellow-100 px-1.5 py-0.5 text-[10px] font-semibold text-yellow-800">
                           注目
                         </span>
                       )}
@@ -164,11 +164,11 @@ export default async function AdminArticlesPage({
                   </td>
                   <td className="px-4 py-3 text-sm">
                     {a.status === "published" ? (
-                      <span className="inline-block rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                      <span className="inline-block bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
                         公開中
                       </span>
                     ) : (
-                      <span className="inline-block rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+                      <span className="inline-block bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
                         下書き
                       </span>
                     )}

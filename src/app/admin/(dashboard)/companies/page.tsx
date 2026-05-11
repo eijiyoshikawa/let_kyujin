@@ -73,7 +73,7 @@ export default async function AdminCompaniesPage({
           <p className="mt-1 text-sm text-gray-500">
             登録企業: {total} 社
             {pendingCount > 0 && (
-              <span className="ml-2 inline-flex items-center rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
+              <span className="ml-2 inline-flex items-center bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
                 承認待ち {pendingCount} 社
               </span>
             )}
@@ -81,7 +81,7 @@ export default async function AdminCompaniesPage({
         </div>
         <Link
           href="/admin/companies/new"
-          className="rounded-md bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600"
+          className="bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600"
         >
           + 企業を追加
         </Link>
@@ -126,22 +126,22 @@ export default async function AdminCompaniesPage({
           name="q"
           defaultValue={query}
           placeholder="企業名で検索..."
-          className="rounded-md border px-3 py-1.5 text-sm flex-1 max-w-sm"
+          className="border px-3 py-1.5 text-sm flex-1 max-w-sm"
         />
         <button
           type="submit"
-          className="rounded-md bg-primary-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-primary-700"
+          className="bg-primary-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-primary-700"
         >
           検索
         </button>
       </form>
 
       {companies.length === 0 ? (
-        <div className="mt-6 rounded-lg border bg-white p-8 text-center shadow-sm">
+        <div className="mt-6 border bg-white p-8 text-center shadow-sm">
           <p className="text-gray-500">企業が見つかりません。</p>
         </div>
       ) : (
-        <div className="mt-4 overflow-hidden rounded-lg border bg-white shadow-sm">
+        <div className="mt-4 overflow-hidden border bg-white shadow-sm">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -173,7 +173,7 @@ export default async function AdminCompaniesPage({
                     </td>
                     <td className="px-4 py-3">
                       <span
-                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${status.className}`}
+                        className={`inline-flex items-center px-2 py-0.5 text-xs font-medium ${status.className}`}
                       >
                         {status.text}
                       </span>

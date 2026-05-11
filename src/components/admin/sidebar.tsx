@@ -24,10 +24,10 @@ export function AdminSidebar({ userName }: { userName: string }) {
 
   return (
     <aside className="w-full shrink-0 lg:w-56">
-      <div className="rounded-lg border bg-white shadow-sm">
+      <div className="border bg-white shadow-sm">
         <div className="border-b p-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100">
+            <div className="flex h-10 w-10 items-center justify-center bg-red-100">
               <Shield className="h-5 w-5 text-red-600" />
             </div>
             <div className="min-w-0">
@@ -49,7 +49,7 @@ export function AdminSidebar({ userName }: { userName: string }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition ${
+                className={`flex items-center gap-3  px-3 py-2 text-sm font-medium transition ${
                   isActive
                     ? "bg-red-50 text-red-700"
                     : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"

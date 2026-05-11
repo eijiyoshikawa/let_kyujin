@@ -16,14 +16,14 @@ export default function NotFound() {
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
         <Link
           href="/jobs"
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-primary-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-700"
+          className="inline-flex items-center justify-center gap-2 bg-primary-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-700"
         >
           <Search className="h-4 w-4" />
           求人を検索する
         </Link>
         <Link
           href="/"
-          className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-300 px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          className="inline-flex items-center justify-center gap-2 border border-gray-300 px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
           <Home className="h-4 w-4" />
           トップページへ

@@ -127,12 +127,12 @@ export function JobForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="rounded-md bg-red-50 p-4 text-sm text-red-600">
+        <div className="bg-red-50 p-4 text-sm text-red-600">
           {error}
         </div>
       )}
 
-      <div className="rounded-lg border bg-white p-6 shadow-sm space-y-5">
+      <div className="border bg-white p-6 shadow-sm space-y-5">
         <h2 className="text-lg font-semibold text-gray-900">基本情報</h2>
 
         <div>
@@ -145,7 +145,7 @@ export function JobForm({
             maxLength={200}
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
-            className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"
+            className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"
             placeholder="例: 大型トラックドライバー（長距離）"
           />
         </div>
@@ -159,7 +159,7 @@ export function JobForm({
               required
               value={form.category}
               onChange={(e) => setForm({ ...form, category: e.target.value })}
-              className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm"
+              className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm"
             >
               {CATEGORIES.map((c) => (
                 <option key={c.value} value={c.value}>
@@ -178,7 +178,7 @@ export function JobForm({
               onChange={(e) =>
                 setForm({ ...form, employmentType: e.target.value })
               }
-              className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm"
+              className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm"
             >
               {EMPLOYMENT_TYPES.map((t) => (
                 <option key={t.value} value={t.value}>
@@ -197,7 +197,7 @@ export function JobForm({
             rows={5}
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
-            className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm"
+            className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm"
             placeholder="仕事の詳細な内容を記入してください"
           />
         </div>
@@ -212,13 +212,13 @@ export function JobForm({
             onChange={(e) =>
               setForm({ ...form, requirements: e.target.value })
             }
-            className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm"
+            className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm"
             placeholder="必要な資格・経験など"
           />
         </div>
       </div>
 
-      <div className="rounded-lg border bg-white p-6 shadow-sm space-y-5">
+      <div className="border bg-white p-6 shadow-sm space-y-5">
         <h2 className="text-lg font-semibold text-gray-900">給与</h2>
 
         <div className="grid gap-4 sm:grid-cols-3">
@@ -231,7 +231,7 @@ export function JobForm({
               onChange={(e) =>
                 setForm({ ...form, salaryType: e.target.value })
               }
-              className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm"
+              className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm"
             >
               {SALARY_TYPES.map((t) => (
                 <option key={t.value} value={t.value}>
@@ -249,7 +249,7 @@ export function JobForm({
               min={0}
               value={form.salaryMin}
               onChange={(e) => setForm({ ...form, salaryMin: e.target.value })}
-              className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm"
+              className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm"
               placeholder="200000"
             />
           </div>
@@ -262,14 +262,14 @@ export function JobForm({
               min={0}
               value={form.salaryMax}
               onChange={(e) => setForm({ ...form, salaryMax: e.target.value })}
-              className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm"
+              className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm"
               placeholder="350000"
             />
           </div>
         </div>
       </div>
 
-      <div className="rounded-lg border bg-white p-6 shadow-sm space-y-5">
+      <div className="border bg-white p-6 shadow-sm space-y-5">
         <h2 className="text-lg font-semibold text-gray-900">勤務地</h2>
 
         <div className="grid gap-4 sm:grid-cols-2">
@@ -283,7 +283,7 @@ export function JobForm({
               onChange={(e) =>
                 setForm({ ...form, prefecture: e.target.value })
               }
-              className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm"
+              className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm"
             >
               <option value="">選択してください</option>
               {PREFECTURES.map((p) => (
@@ -301,7 +301,7 @@ export function JobForm({
               type="text"
               value={form.city}
               onChange={(e) => setForm({ ...form, city: e.target.value })}
-              className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm"
+              className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm"
               placeholder="例: 新宿区"
             />
           </div>
@@ -315,12 +315,12 @@ export function JobForm({
             type="text"
             value={form.address}
             onChange={(e) => setForm({ ...form, address: e.target.value })}
-            className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm"
+            className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm"
           />
         </div>
       </div>
 
-      <div className="rounded-lg border bg-white p-6 shadow-sm space-y-5">
+      <div className="border bg-white p-6 shadow-sm space-y-5">
         <h2 className="text-lg font-semibold text-gray-900">その他</h2>
 
         <div>
@@ -331,7 +331,7 @@ export function JobForm({
             type="text"
             value={form.benefits}
             onChange={(e) => setForm({ ...form, benefits: e.target.value })}
-            className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm"
+            className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm"
             placeholder="社会保険完備, 交通費支給, 賞与あり"
           />
         </div>
@@ -344,7 +344,7 @@ export function JobForm({
             type="text"
             value={form.tags}
             onChange={(e) => setForm({ ...form, tags: e.target.value })}
-            className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm"
+            className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm"
             placeholder="未経験歓迎, 土日休み, 残業少なめ"
           />
         </div>
@@ -357,7 +357,7 @@ export function JobForm({
           name="status"
           disabled={loading}
           onClick={() => setForm({ ...form, status: "active" })}
-          className="rounded-md bg-primary-600 px-6 py-2 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
+          className="bg-primary-600 px-6 py-2 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
         >
           {loading ? "保存中..." : isEditing ? "更新して公開" : "公開する"}
         </button>
@@ -365,7 +365,7 @@ export function JobForm({
           type="submit"
           disabled={loading}
           onClick={() => setForm({ ...form, status: "draft" })}
-          className="rounded-md border bg-white px-6 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+          className="border bg-white px-6 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
         >
           下書き保存
         </button>

@@ -53,7 +53,7 @@ export default async function AdminCompanyDetailPage({
             </p>
           </div>
           <span
-            className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${status.className}`}
+            className={`inline-flex items-center px-3 py-1 text-sm font-medium ${status.className}`}
           >
             {status.text}
           </span>
@@ -61,7 +61,7 @@ export default async function AdminCompanyDetailPage({
       </div>
 
       {/* Approval actions */}
-      <div className="rounded-lg border bg-white p-6 shadow-sm">
+      <div className="border bg-white p-6 shadow-sm">
         <h2 className="font-bold text-gray-900">承認操作</h2>
         <p className="mt-1 text-sm text-gray-500">
           現在のステータス: <strong>{status.text}</strong>
@@ -74,7 +74,7 @@ export default async function AdminCompanyDetailPage({
       </div>
 
       {/* Payment method */}
-      <div className="rounded-lg border bg-white p-6 shadow-sm">
+      <div className="border bg-white p-6 shadow-sm">
         <h2 className="font-bold text-gray-900">支払方法</h2>
         <p className="mt-1 text-sm text-gray-500">
           採用確定時の請求書発行先プロバイダを選択してください。
@@ -86,7 +86,7 @@ export default async function AdminCompanyDetailPage({
       </div>
 
       {/* Company info */}
-      <div className="rounded-lg border bg-white p-6 shadow-sm">
+      <div className="border bg-white p-6 shadow-sm">
         <h2 className="font-bold text-gray-900">基本情報</h2>
         <dl className="mt-4 grid gap-3 sm:grid-cols-2 text-sm">
           <div>
@@ -134,24 +134,24 @@ export default async function AdminCompanyDetailPage({
 
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-lg border bg-white p-4 shadow-sm">
+        <div className="border bg-white p-4 shadow-sm">
           <p className="text-xs text-gray-500">求人数</p>
           <p className="mt-1 text-2xl font-bold">{company._count.jobs}</p>
         </div>
-        <div className="rounded-lg border bg-white p-4 shadow-sm">
+        <div className="border bg-white p-4 shadow-sm">
           <p className="text-xs text-gray-500">応募数</p>
           <p className="mt-1 text-2xl font-bold">
             {company._count.applications}
           </p>
         </div>
-        <div className="rounded-lg border bg-white p-4 shadow-sm">
+        <div className="border bg-white p-4 shadow-sm">
           <p className="text-xs text-gray-500">スカウト数</p>
           <p className="mt-1 text-2xl font-bold">{company._count.scouts}</p>
         </div>
       </div>
 
       {/* Users */}
-      <div className="rounded-lg border bg-white p-6 shadow-sm">
+      <div className="border bg-white p-6 shadow-sm">
         <h2 className="font-bold text-gray-900">担当者</h2>
         <ul className="mt-3 divide-y">
           {company.companyUsers.map((u) => (

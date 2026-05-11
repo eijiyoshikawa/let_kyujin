@@ -21,7 +21,7 @@ export function MapEmbed({
   const linkOut = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
 
   return (
-    <div className="overflow-hidden rounded border bg-gray-100">
+    <div className="overflow-hidden border bg-gray-100">
       <iframe
         src={src}
         width="100%"
@@ -37,7 +37,7 @@ export function MapEmbed({
           href={linkOut}
           target="_blank"
           rel="noopener noreferrer"
-          className="shrink-0 inline-flex items-center gap-1 rounded-full bg-primary-500 px-3 py-1 font-medium text-white hover:bg-primary-600"
+          className="press shrink-0 inline-flex items-center gap-1 bg-primary-500 px-3 py-1 font-medium text-white hover:bg-primary-600"
         >
           Google Maps で開く
         </a>

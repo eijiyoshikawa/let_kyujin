@@ -61,7 +61,7 @@ export function ScoutSendButton({
     return (
       <button
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-1.5 rounded-md bg-primary-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-primary-700"
+        className="inline-flex items-center gap-1.5 bg-primary-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-primary-700"
       >
         <Send className="h-3 w-3" />
         スカウト
@@ -70,7 +70,7 @@ export function ScoutSendButton({
   }
 
   return (
-    <div className="w-72 rounded-lg border bg-white p-4 shadow-lg">
+    <div className="w-72 border bg-white p-4 shadow-lg">
       <p className="text-sm font-medium text-gray-900">
         {userName} にスカウトを送信
       </p>
@@ -83,7 +83,7 @@ export function ScoutSendButton({
         <select
           value={jobId}
           onChange={(e) => setJobId(e.target.value)}
-          className="mt-3 block w-full rounded-md border px-2 py-1.5 text-xs"
+          className="mt-3 block w-full border px-2 py-1.5 text-xs"
         >
           <option value="">求人を選択（任意）</option>
           {jobs.map((job) => (
@@ -100,14 +100,14 @@ export function ScoutSendButton({
         onChange={(e) => setMessage(e.target.value)}
         placeholder="スカウトメッセージを入力..."
         maxLength={2000}
-        className="mt-3 block w-full rounded-md border px-2 py-1.5 text-xs"
+        className="mt-3 block w-full border px-2 py-1.5 text-xs"
       />
 
       <div className="mt-3 flex gap-2">
         <button
           onClick={handleSend}
           disabled={loading}
-          className="rounded-md bg-primary-600 px-3 py-1 text-xs font-medium text-white hover:bg-primary-700 disabled:opacity-50"
+          className="bg-primary-600 px-3 py-1 text-xs font-medium text-white hover:bg-primary-700 disabled:opacity-50"
         >
           {loading ? "送信中..." : "送信"}
         </button>

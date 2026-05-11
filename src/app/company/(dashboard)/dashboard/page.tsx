@@ -56,7 +56,7 @@ export default async function CompanyDashboard() {
         </h1>
         <Link
           href="/company/jobs/new"
-          className="inline-flex items-center gap-2 rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
+          className="inline-flex items-center gap-2 bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
         >
           <Plus className="h-4 w-4" />
           新規求人作成
@@ -65,9 +65,9 @@ export default async function CompanyDashboard() {
 
       {/* Stats */}
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <div className="rounded-lg border bg-white p-5 shadow-sm">
+        <div className="border bg-white p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+            <div className="flex h-10 w-10 items-center justify-center bg-primary-100">
               <Briefcase className="h-5 w-5 text-primary-600" />
             </div>
             <div>
@@ -82,9 +82,9 @@ export default async function CompanyDashboard() {
           </div>
         </div>
 
-        <div className="rounded-lg border bg-white p-5 shadow-sm">
+        <div className="border bg-white p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
+            <div className="flex h-10 w-10 items-center justify-center bg-green-100">
               <Users className="h-5 w-5 text-green-600" />
             </div>
             <div>
@@ -96,9 +96,9 @@ export default async function CompanyDashboard() {
           </div>
         </div>
 
-        <div className="rounded-lg border bg-white p-5 shadow-sm">
+        <div className="border bg-white p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
+            <div className="flex h-10 w-10 items-center justify-center bg-purple-100">
               <Eye className="h-5 w-5 text-purple-600" />
             </div>
             <div>
@@ -126,7 +126,7 @@ export default async function CompanyDashboard() {
         {recentApplications.length === 0 ? (
           <p className="mt-4 text-sm text-gray-500">まだ応募はありません。</p>
         ) : (
-          <div className="mt-4 overflow-hidden rounded-lg border bg-white shadow-sm">
+          <div className="mt-4 overflow-hidden border bg-white shadow-sm">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -187,7 +187,7 @@ function ApplicationStatusBadge({ status }: { status: string }) {
 
   return (
     <span
-      className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${className}`}
+      className={`inline-flex px-2 py-0.5 text-xs font-medium ${className}`}
     >
       {label}
     </span>

@@ -43,7 +43,7 @@ export function FileUploader() {
 
   return (
     <div className="mt-3">
-      <label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-6 text-sm text-gray-500 hover:border-primary-400 hover:bg-primary-50 transition">
+      <label className="flex cursor-pointer items-center justify-center gap-2 border-2 border-dashed border-gray-300 bg-gray-50 p-6 text-sm text-gray-500 hover:border-primary-400 hover:bg-primary-50 transition">
         <Upload className="h-5 w-5" />
         {uploading ? "アップロード中..." : "ファイルを選択してアップロード"}
         <input

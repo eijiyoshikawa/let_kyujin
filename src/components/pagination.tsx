@@ -44,7 +44,7 @@ export function Pagination({
       {currentPage > 1 && (
         <Link
           href={buildHref(currentPage - 1)}
-          className="flex h-9 items-center gap-1 rounded-lg border border-gray-300 bg-white px-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
+          className="flex h-9 items-center gap-1 border border-gray-300 bg-white px-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
         >
           <ChevronLeft className="h-4 w-4" />
           前へ
@@ -55,7 +55,7 @@ export function Pagination({
         <Link
           key={p}
           href={buildHref(p)}
-          className={`flex h-9 min-w-9 items-center justify-center rounded-lg px-3 text-sm font-medium transition ${
+          className={`flex h-9 min-w-9 items-center justify-center  px-3 text-sm font-medium transition ${
             p === currentPage
               ? "bg-primary-500 text-white shadow-sm"
               : "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
@@ -68,7 +68,7 @@ export function Pagination({
       {currentPage < totalPages && (
         <Link
           href={buildHref(currentPage + 1)}
-          className="flex h-9 items-center gap-1 rounded-lg border border-gray-300 bg-white px-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
+          className="flex h-9 items-center gap-1 border border-gray-300 bg-white px-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
         >
           次へ
           <ChevronRight className="h-4 w-4" />

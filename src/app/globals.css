@@ -170,6 +170,51 @@ body {
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
+/* === ボタン共通プレスアニメーション ============================
+   ネイティブ <button> 全てに自動適用。
+   Link-as-button にも `.press` を付ければ同じ挙動。
+   角丸を全廃した代わりに「沈み込み」で触り心地を担保する。 */
+button,
+.press {
+  transition: transform 120ms ease, box-shadow 120ms ease, background-color 150ms ease, border-color 150ms ease, color 150ms ease, opacity 150ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+button:active:not(:disabled),
+.press:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: none !important;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* === シャープなコーナーに「デザイン性」を付与 ==================
+   角丸をなくしたカードに左 3px / 上 3px の brand カラーアクセント。
+   フラット感を保ちつつ単調にしないための装飾。 */
+.accent-l { position: relative; }
+.accent-l::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--color-primary-500);
+}
+.accent-t {
+  position: relative;
+  border-top: 3px solid var(--color-primary-500);
+}
+
+/* セクション見出し用の左バー（角ばった四角） */
+.section-bar { display: inline-flex; align-items: center; }
+.section-bar::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 1.1em;
+  background: var(--color-primary-500);
+  margin-right: 8px;
+}
+
 /* Article body styles */
 .article-body h2 {
   font-size: 1.125rem;

@@ -74,17 +74,17 @@ export function ProfileForm({ initialData }: { initialData: ProfileFormData }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="rounded-md bg-red-50 p-4 text-sm text-red-600">
+        <div className="bg-red-50 p-4 text-sm text-red-600">
           {error}
         </div>
       )}
       {success && (
-        <div className="rounded-md bg-green-50 p-4 text-sm text-green-600">
+        <div className="bg-green-50 p-4 text-sm text-green-600">
           プロフィールを更新しました
         </div>
       )}
 
-      <div className="rounded-lg border bg-white p-6 shadow-sm space-y-5">
+      <div className="border bg-white p-6 shadow-sm space-y-5">
         <h2 className="text-lg font-semibold text-gray-900">基本情報</h2>
 
         <div>
@@ -96,7 +96,7 @@ export function ProfileForm({ initialData }: { initialData: ProfileFormData }) {
             maxLength={100}
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
-            className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"
+            className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"
           />
         </div>
 
@@ -109,7 +109,7 @@ export function ProfileForm({ initialData }: { initialData: ProfileFormData }) {
             maxLength={20}
             value={form.phone}
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
-            className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm"
+            className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm"
             placeholder="090-1234-5678"
           />
         </div>
@@ -124,7 +124,7 @@ export function ProfileForm({ initialData }: { initialData: ProfileFormData }) {
               onChange={(e) =>
                 setForm({ ...form, prefecture: e.target.value })
               }
-              className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm"
+              className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm"
             >
               <option value="">選択してください</option>
               {PREFECTURES.map((p) => (
@@ -143,7 +143,7 @@ export function ProfileForm({ initialData }: { initialData: ProfileFormData }) {
               maxLength={50}
               value={form.city}
               onChange={(e) => setForm({ ...form, city: e.target.value })}
-              className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm"
+              className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm"
             />
           </div>
         </div>
@@ -156,12 +156,12 @@ export function ProfileForm({ initialData }: { initialData: ProfileFormData }) {
             type="date"
             value={form.birthDate}
             onChange={(e) => setForm({ ...form, birthDate: e.target.value })}
-            className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm"
+            className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm"
           />
         </div>
       </div>
 
-      <div className="rounded-lg border bg-white p-6 shadow-sm space-y-5">
+      <div className="border bg-white p-6 shadow-sm space-y-5">
         <h2 className="text-lg font-semibold text-gray-900">希望条件</h2>
 
         <div>
@@ -174,7 +174,7 @@ export function ProfileForm({ initialData }: { initialData: ProfileFormData }) {
                 key={c.value}
                 type="button"
                 onClick={() => toggleCategory(c.value)}
-                className={`rounded-full px-3 py-1 text-sm font-medium transition ${
+                className={` px-3 py-1 text-sm font-medium transition ${
                   form.desiredCategories.includes(c.value)
                     ? "bg-primary-600 text-white"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -197,13 +197,13 @@ export function ProfileForm({ initialData }: { initialData: ProfileFormData }) {
             onChange={(e) =>
               setForm({ ...form, desiredSalaryMin: e.target.value })
             }
-            className="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm"
+            className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm"
             placeholder="200000"
           />
         </div>
       </div>
 
-      <div className="rounded-lg border bg-white p-6 shadow-sm">
+      <div className="border bg-white p-6 shadow-sm">
         <label className="flex items-center gap-3">
           <input
             type="checkbox"
@@ -211,7 +211,7 @@ export function ProfileForm({ initialData }: { initialData: ProfileFormData }) {
             onChange={(e) =>
               setForm({ ...form, profilePublic: e.target.checked })
             }
-            className="h-4 w-4 rounded border-gray-300 text-primary-600"
+            className="h-4 w-4 border-gray-300 text-primary-600"
           />
           <span className="text-sm text-gray-700">
             プロフィールを企業に公開する（スカウトを受け取るために必要です）
@@ -223,7 +223,7 @@ export function ProfileForm({ initialData }: { initialData: ProfileFormData }) {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-md bg-primary-600 px-6 py-2 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
+          className="bg-primary-600 px-6 py-2 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
         >
           {loading ? "保存中..." : "保存する"}
         </button>

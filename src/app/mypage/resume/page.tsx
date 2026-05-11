@@ -113,7 +113,7 @@ export default async function ResumePage() {
           <div className="mt-4 space-y-2">
             <h3 className="text-sm font-medium text-gray-700">アップロード済みファイル</h3>
             {uploadedFiles.map((f) => (
-              <div key={f.id} className="flex items-center justify-between rounded-lg border bg-white p-3">
+              <div key={f.id} className="flex items-center justify-between border bg-white p-3">
                 <div className="flex items-center gap-2">
                   <FileText className="h-5 w-5 text-primary-600" />
                   <div>

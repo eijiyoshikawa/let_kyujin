@@ -61,7 +61,7 @@ export default async function ApplyPage({ params }: Props) {
         </h1>
 
         {/* Job summary */}
-        <div className="mt-4 bg-gray-50 p-4 rounded">
+        <div className="mt-4 bg-gray-50 p-4">
           <p className="font-semibold text-gray-900">{job.title}</p>
           {job.company && (
             <p className="mt-1 flex items-center gap-1 text-sm text-gray-600">
@@ -77,11 +77,11 @@ export default async function ApplyPage({ params }: Props) {
         </div>
 
         {job.status !== "active" ? (
-          <div className="mt-6 border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-800 rounded">
+          <div className="mt-6 border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-800">
             この求人は現在募集を停止しているため、応募できません。
           </div>
         ) : !configured ? (
-          <div className="mt-6 border border-red-200 bg-red-50 p-4 text-sm text-red-800 rounded">
+          <div className="mt-6 border border-red-200 bg-red-50 p-4 text-sm text-red-800">
             応募導線の準備中です。お手数ですが、しばらく経ってから再度お試しください。
           </div>
         ) : (
