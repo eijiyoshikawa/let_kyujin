@@ -11,6 +11,11 @@ import {
   Globe,
   Users,
   Megaphone,
+  Sparkles,
+  UserCheck,
+  MessageSquareQuote,
+  Camera,
+  Share2,
 } from "lucide-react"
 import type { Metadata } from "next"
 import { generateJobPostingSchema } from "@/lib/structured-data"
@@ -24,6 +29,8 @@ import { JobInfoTable } from "@/components/jobs/job-info-table"
 import { RightTocNav } from "@/components/jobs/right-toc-nav"
 import { StickyActionBar } from "@/components/jobs/sticky-action-bar"
 import { HeroBanner } from "@/components/jobs/hero-banner"
+import { SnsLinks } from "@/components/jobs/sns-links"
+import { PhotoGallery } from "@/components/jobs/photo-gallery"
 
 type Props = {
   params: Promise<{ id: string }>
@@ -59,6 +66,16 @@ export default async function JobDetailPage({ params }: Props) {
           description: true,
           logoUrl: true,
           websiteUrl: true,
+          tagline: true,
+          pitchHighlights: true,
+          idealCandidate: true,
+          employeeVoice: true,
+          photos: true,
+          instagramUrl: true,
+          tiktokUrl: true,
+          facebookUrl: true,
+          xUrl: true,
+          youtubeUrl: true,
         },
       },
     },
@@ -94,11 +111,25 @@ export default async function JobDetailPage({ params }: Props) {
   })
 
   const tagGroups = groupTags(job.tags)
-  const tagline = extractTagline(job.description)
+  // tagline は企業がカスタム設定していればそれを優先、無ければ description から抽出
+  const tagline = job.company?.tagline ?? extractTagline(job.description)
+
+  const hasSns = !!(
+    job.company?.instagramUrl ||
+    job.company?.tiktokUrl ||
+    job.company?.facebookUrl ||
+    job.company?.xUrl ||
+    job.company?.youtubeUrl
+  )
+  const photos = job.company?.photos ?? []
 
   const tocItems = buildTocItems({
     hasFeatures: job.tags.length > 0 || !!job.employmentType,
     hasDescription: !!job.description,
+    hasPitch: !!job.company?.pitchHighlights,
+    hasIdealCandidate: !!job.company?.idealCandidate,
+    hasEmployeeVoice: !!job.company?.employeeVoice,
+    hasPhotos: photos.length > 0,
     hasWorkConditions: !!job.description || !!job.requirements,
     hasCompany: !!job.company,
   })
@@ -234,6 +265,71 @@ export default async function JobDetailPage({ params }: Props) {
               </section>
             )}
 
+            {/* こんなトコロがすごい！ */}
+            {job.company?.pitchHighlights && (
+              <section
+                id="pitch"
+                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+              >
+                <SectionHeading>
+                  <Sparkles className="h-4 w-4 text-primary-500" />
+                  こんなトコロがすごい！
+                </SectionHeading>
+                <p className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed">
+                  {job.company.pitchHighlights}
+                </p>
+              </section>
+            )}
+
+            {/* こんな人が向いています！ */}
+            {job.company?.idealCandidate && (
+              <section
+                id="ideal"
+                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+              >
+                <SectionHeading>
+                  <UserCheck className="h-4 w-4 text-primary-500" />
+                  こんな人が向いています！
+                </SectionHeading>
+                <p className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed">
+                  {job.company.idealCandidate}
+                </p>
+              </section>
+            )}
+
+            {/* 働いている社員の声 */}
+            {job.company?.employeeVoice && (
+              <section
+                id="voice"
+                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+              >
+                <SectionHeading>
+                  <MessageSquareQuote className="h-4 w-4 text-primary-500" />
+                  働いている社員の声
+                </SectionHeading>
+                <p className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed">
+                  {job.company.employeeVoice}
+                </p>
+              </section>
+            )}
+
+            {/* 写真ギャラリー */}
+            {photos.length > 0 && (
+              <section
+                id="photos"
+                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+              >
+                <SectionHeading>
+                  <Camera className="h-4 w-4 text-primary-500" />
+                  写真ギャラリー
+                </SectionHeading>
+                <PhotoGallery
+                  photos={photos}
+                  alt={job.company?.name ?? "求人写真"}
+                />
+              </section>
+            )}
+
             {/* Work conditions */}
             <section id="conditions">
               <WorkConditionsBox
@@ -290,6 +386,24 @@ export default async function JobDetailPage({ params }: Props) {
                   <p className="text-sm text-gray-600 leading-relaxed border-t pt-4">
                     {job.company.description}
                   </p>
+                )}
+
+                {hasSns && (
+                  <div className="border-t pt-4">
+                    <p className="flex items-center gap-1.5 text-xs text-gray-500 mb-2">
+                      <Share2 className="h-3.5 w-3.5" />
+                      公式 SNS
+                    </p>
+                    <SnsLinks
+                      sns={{
+                        instagramUrl: job.company.instagramUrl,
+                        tiktokUrl: job.company.tiktokUrl,
+                        facebookUrl: job.company.facebookUrl,
+                        xUrl: job.company.xUrl,
+                        youtubeUrl: job.company.youtubeUrl,
+                      }}
+                    />
+                  </div>
                 )}
               </section>
             )}
@@ -404,6 +518,10 @@ function extractTagline(description: string | null): string | null {
 function buildTocItems(flags: {
   hasFeatures: boolean
   hasDescription: boolean
+  hasPitch: boolean
+  hasIdealCandidate: boolean
+  hasEmployeeVoice: boolean
+  hasPhotos: boolean
   hasWorkConditions: boolean
   hasCompany: boolean
 }) {
@@ -411,6 +529,13 @@ function buildTocItems(flags: {
   if (flags.hasFeatures) items.push({ id: "features", label: "求人の特徴" })
   if (flags.hasDescription)
     items.push({ id: "description", label: "こんな仕事です" })
+  if (flags.hasPitch)
+    items.push({ id: "pitch", label: "こんなトコロがすごい" })
+  if (flags.hasIdealCandidate)
+    items.push({ id: "ideal", label: "こんな人が向いています" })
+  if (flags.hasEmployeeVoice)
+    items.push({ id: "voice", label: "働いている社員の声" })
+  if (flags.hasPhotos) items.push({ id: "photos", label: "写真ギャラリー" })
   if (flags.hasWorkConditions)
     items.push({ id: "conditions", label: "勤務条件" })
   if (flags.hasCompany) items.push({ id: "company", label: "企業情報" })
