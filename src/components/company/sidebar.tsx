@@ -9,6 +9,7 @@ import {
   Send,
   CreditCard,
   Building2,
+  Settings,
 } from "lucide-react"
 
 const navItems = [
@@ -17,6 +18,7 @@ const navItems = [
   { href: "/company/applications", label: "応募者管理", icon: Users },
   { href: "/company/scouts", label: "スカウト", icon: Send },
   { href: "/company/billing", label: "課金履歴", icon: CreditCard },
+  { href: "/company/profile", label: "企業情報・SNS", icon: Settings },
 ]
 
 export function CompanySidebar({
