@@ -169,6 +169,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
+  // 公開されている直接掲載企業の詳細ページ
+  const companies = await prisma.company.findMany({
+    where: { status: "approved", source: "direct" },
+    select: { id: true, createdAt: true },
+  })
+
+  const companyPages: MetadataRoute.Sitemap = companies.map((c) => ({
+    url: `${BASE_URL}/companies/${c.id}`,
+    lastModified: c.createdAt,
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
+  }))
+
   // 公開済みヘルプ記事を sitemap に追加（未来日付の記事は除外）
   const helpArticles = await prisma.article.findMany({
     where: {
@@ -195,6 +208,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...categoryPages,
     ...jobPages,
     ...seoCombos,
+    ...companyPages,
     ...helpPages,
   ]
 }

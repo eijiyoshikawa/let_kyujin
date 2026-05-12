@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { prisma } from "@/lib/db"
 import { Pagination } from "@/components/pagination"
-import { MessageCircle, Search } from "lucide-react"
+import { MessageCircle, Search, Download } from "lucide-react"
 import {
   LEAD_STATUSES,
   LEAD_STATUS_META,
@@ -120,14 +120,23 @@ export default async function AdminLineLeadsPage({ searchParams }: Props) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
-          <MessageCircle className="h-6 w-6 text-primary-500" />
-          LINE リード管理
-        </h1>
-        <p className="mt-1 text-sm text-gray-500">
-          LINE 応募フォームから届いたリードの一覧。クリックで詳細展開 / ステータス変更 / メモを編集できます。
-        </p>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+            <MessageCircle className="h-6 w-6 text-primary-500" />
+            LINE リード管理
+          </h1>
+          <p className="mt-1 text-sm text-gray-500">
+            LINE 応募フォームから届いたリードの一覧。クリックで詳細展開 / ステータス変更 / メモを編集できます。
+          </p>
+        </div>
+        <a
+          href={`/api/admin/line-leads/export${buildExportQuery({ q, status: statusFilter })}`}
+          className="press inline-flex items-center gap-1.5 border border-gray-300 bg-white hover:bg-gray-50 px-3 py-2 text-sm font-bold text-gray-700"
+        >
+          <Download className="h-4 w-4" />
+          CSV エクスポート
+        </a>
       </div>
 
       {/* サマリ */}
@@ -245,4 +254,12 @@ function buildHref(params: { q?: string; status?: LeadStatus | undefined }): str
   if (params.status) url.set("status", params.status)
   const qs = url.toString()
   return qs ? `/admin/line-leads?${qs}` : "/admin/line-leads"
+}
+
+function buildExportQuery(params: { q?: string; status?: LeadStatus | undefined }): string {
+  const url = new URLSearchParams()
+  if (params.q) url.set("q", params.q)
+  if (params.status) url.set("status", params.status)
+  const qs = url.toString()
+  return qs ? `?${qs}` : ""
 }
