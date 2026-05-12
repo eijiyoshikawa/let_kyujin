@@ -85,3 +85,139 @@ export function computeRankScore(
 function isNonEmpty(v: string | null | undefined): v is string {
   return typeof v === "string" && v.trim().length > 0
 }
+
+// ============================================================
+// UI 用: スコア内訳（プロフィール編集ページのリアルタイム表示）
+// ============================================================
+
+export interface ScoreBreakdownItem {
+  /** 一意 id（key 用） */
+  id: "sns" | "photos" | "text" | "freshness"
+  /** ラベル */
+  label: string
+  /** 現時点の獲得点 */
+  current: number
+  /** 取り得る最大点 */
+  max: number
+  /** 完了済みか（current >= max なら true） */
+  done: boolean
+  /** 改善のためのヒント（残り何で +N 点） */
+  hint: string
+}
+
+export interface ScoreBreakdown {
+  items: ScoreBreakdownItem[]
+  /** 現時点の合計点（求人本文を除く company 寄与のみ） */
+  totalScore: number
+  /** 取り得る最大点 */
+  maxScore: number
+  /** 0-1 の進捗率 */
+  ratio: number
+}
+
+const TEXT_FIELDS = ["tagline", "pitchHighlights", "idealCandidate", "employeeVoice"] as const
+const RECOMMENDED_TEXT_TOTAL = 3000 // 4 項目合計 3000 文字あれば概ね充実
+
+/**
+ * 企業プロフィール編集 UI のスコア表示用。
+ * computeRankScore と同じロジックを項目別に分解する。
+ */
+export function computeScoreBreakdown(
+  company: CompanyForRank,
+  now: Date = new Date()
+): ScoreBreakdown {
+  // SNS
+  const snsList = [
+    company.instagramUrl,
+    company.tiktokUrl,
+    company.facebookUrl,
+    company.xUrl,
+    company.youtubeUrl,
+  ]
+  const snsCount = snsList.filter(isNonEmpty).length
+  const snsScore = snsCount * 5
+  const snsMax = 5 * 5
+
+  // 写真
+  const photoCount = company.photos?.length ?? 0
+  const photoScoreCount = Math.min(12, photoCount)
+  const photoScore = photoScoreCount * 2
+  const photoMax = 12 * 2
+
+  // テキスト量
+  const totalChars = TEXT_FIELDS.reduce((sum, f) => sum + (company[f] ?? "").length, 0)
+  const textScore = Math.min(60, Math.floor(totalChars / 50))
+  const textMax = 60
+
+  // 更新日
+  let freshScore = 0
+  let freshHint = "プロフィールを保存するとフレッシュネス +20 点"
+  if (company.lastContentUpdatedAt) {
+    const days =
+      (now.getTime() - company.lastContentUpdatedAt.getTime()) / (1000 * 60 * 60 * 24)
+    if (days <= 90) {
+      freshScore = 20
+      freshHint = "3 ヶ月以内に更新済み（+20）"
+    } else if (days <= 180) {
+      freshScore = 10
+      freshHint = `${Math.floor(days)} 日経過、再保存で +10`
+    } else {
+      freshScore = 0
+      freshHint = `${Math.floor(days)} 日経過、再保存で +20`
+    }
+  }
+  const freshMax = 20
+
+  const items: ScoreBreakdownItem[] = [
+    {
+      id: "sns",
+      label: `SNS 登録（${snsCount} / 5 個）`,
+      current: snsScore,
+      max: snsMax,
+      done: snsCount >= 5,
+      hint:
+        snsCount >= 5
+          ? "全 SNS 登録済み"
+          : `あと ${5 - snsCount} 個で +${(5 - snsCount) * 5} 点`,
+    },
+    {
+      id: "photos",
+      label: `写真（${photoCount} / 12 枚）`,
+      current: photoScore,
+      max: photoMax,
+      done: photoCount >= 12,
+      hint:
+        photoCount >= 12
+          ? "上限まで掲載済み"
+          : `あと ${12 - photoCount} 枚で +${(12 - photoCount) * 2} 点`,
+    },
+    {
+      id: "text",
+      label: `本文の充実度（${totalChars.toLocaleString()} / ${RECOMMENDED_TEXT_TOTAL.toLocaleString()} 文字）`,
+      current: textScore,
+      max: textMax,
+      done: textScore >= textMax,
+      hint:
+        textScore >= textMax
+          ? "充実"
+          : `あと ${(textMax - textScore) * 50} 文字で +${textMax - textScore} 点`,
+    },
+    {
+      id: "freshness",
+      label: "最終更新",
+      current: freshScore,
+      max: freshMax,
+      done: freshScore >= freshMax,
+      hint: freshHint,
+    },
+  ]
+
+  const totalScore = items.reduce((sum, it) => sum + it.current, 0)
+  const maxScore = items.reduce((sum, it) => sum + it.max, 0)
+  return {
+    items,
+    totalScore,
+    maxScore,
+    ratio: maxScore > 0 ? totalScore / maxScore : 0,
+  }
+}
