@@ -14,6 +14,7 @@ import { prisma } from "@/lib/db"
 import { buildLineApplyUrl, isLineConfigured } from "@/lib/line"
 import { checkRateLimit, getClientIp, rateLimitResponse } from "@/lib/rate-limit"
 import { notifyNewLead } from "@/lib/lead-notifications"
+import { findRelatedJobs } from "@/lib/job-matching"
 
 export const dynamic = "force-dynamic"
 
@@ -122,10 +123,14 @@ export async function POST(request: NextRequest) {
     helloworkId: job.helloworkId,
   })
 
+  // 「あなたへのおすすめ求人」を 3 件抽出。エラーは無視（フォーム完了体験を阻害しない）。
+  const recommendedJobs = await findRelatedJobs(job.id, 3).catch(() => [])
+
   return Response.json({
     success: true,
     leadId,
     lineUrl,
     configured: isLineConfigured(),
+    recommendedJobs,
   })
 }
