@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 import Link from "next/link"
 import { Building2, MapPin } from "lucide-react"
 import { Pagination } from "@/components/pagination"
+import { ApplicationProgressBar } from "@/components/applications/progress-bar"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -138,7 +139,13 @@ export default async function ApplicationsPage({ searchParams }: Props) {
                     {config.label}
                   </span>
                 </div>
-                <p className="mt-2 text-xs text-gray-400">
+
+                {/* 進捗バー */}
+                <div className="mt-4 border-t pt-3">
+                  <ApplicationProgressBar status={app.status} />
+                </div>
+
+                <p className="mt-3 text-xs text-gray-400">
                   応募日: {app.createdAt.toLocaleDateString("ja-JP")}
                 </p>
               </Link>
