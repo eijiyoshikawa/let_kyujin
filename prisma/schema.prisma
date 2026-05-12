@@ -39,8 +39,40 @@ model User {
   applicationClicks ApplicationClick[]
   jobViews          JobView[]
   notifications     Notification[]
+  savedSearches     SavedSearch[]
 
   @@map("users")
+}
+
+// ========================================
+// 検索保存・新着アラート
+// ========================================
+// 求職者が条件を保存し、日次バッチで新着求人をマッチさせて inbox / LINE に通知する。
+model SavedSearch {
+  id             String   @id @default(uuid()) @db.Uuid
+  userId         String   @map("user_id") @db.Uuid
+  // ユーザーが見つけやすいよう自分で付ける名前。空なら自動生成。
+  name           String   @db.VarChar(100)
+  // フィルタ条件（/jobs のクエリと同じ意味論）
+  q              String?  @db.VarChar(200)
+  prefecture     String?  @db.VarChar(20)
+  city           String?  @db.VarChar(100)
+  category       String?  @db.VarChar(50)
+  employmentType String?  @map("employment_type") @db.VarChar(20)
+  salaryMin      Int?     @map("salary_min")
+  source         String?  @db.VarChar(20) // direct | hellowork、null なら両方
+  // 通知設定
+  alertEnabled   Boolean  @default(true) @map("alert_enabled")
+  // 最後にスキャンした時刻。これより新しい publishedAt を新着とみなす。
+  lastNotifiedAt DateTime? @map("last_notified_at") @db.Timestamptz()
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt(sort: Desc)], name: "idx_saved_searches_user")
+  @@index([alertEnabled, lastNotifiedAt], name: "idx_saved_searches_alert")
+  @@map("saved_searches")
 }
 
 // ========================================

@@ -8,6 +8,10 @@
     {
       "path": "/api/cron/hellowork-import?pages=5",
       "schedule": "0 */2 * * *"
+    },
+    {
+      "path": "/api/cron/saved-search-alerts",
+      "schedule": "0 9 * * *"
     }
   ]
 }

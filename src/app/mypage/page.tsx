@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { FileText, User, Pencil, Mail, Bell } from "lucide-react"
+import { FileText, User, Pencil, Mail, Bell, Bookmark } from "lucide-react"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export default async function MyPage() {
   const session = await auth()
   if (!session?.user?.id) redirect("/login")
 
-  const [user, applicationCount, scoutCount, unreadNotifications] =
+  const [user, applicationCount, scoutCount, unreadNotifications, savedSearchCount] =
     await Promise.all([
       prisma.user.findUnique({
         where: { id: session.user.id },
@@ -32,6 +32,9 @@ export default async function MyPage() {
       }),
       prisma.notification
         .count({ where: { userId: session.user.id, readAt: null } })
+        .catch(() => 0),
+      prisma.savedSearch
+        .count({ where: { userId: session.user.id } })
         .catch(() => 0),
     ])
 
@@ -106,6 +109,23 @@ export default async function MyPage() {
             <p className="font-semibold text-gray-900">応募一覧</p>
             <p className="text-sm text-gray-500">
               {applicationCount} 件の応募
+            </p>
+          </div>
+        </Link>
+
+        <Link
+          href="/mypage/saved-searches"
+          className="flex items-center gap-4 border bg-white p-5 shadow-sm transition hover:shadow-md"
+        >
+          <div className="flex h-10 w-10 items-center justify-center bg-sky-100">
+            <Bookmark className="h-5 w-5 text-sky-700" />
+          </div>
+          <div>
+            <p className="font-semibold text-gray-900">保存した検索</p>
+            <p className="text-sm text-gray-500">
+              {savedSearchCount > 0
+                ? `${savedSearchCount} 件 — 新着があれば通知`
+                : "条件を保存して新着通知を受け取る"}
             </p>
           </div>
         </Link>
