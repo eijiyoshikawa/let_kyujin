@@ -22,7 +22,7 @@ const siteUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "https://genbacareer.jp";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "ゲンバキャリア | ノンデスク産業特化の求人サイト",
+    default: "ゲンバキャリア | 建設業界特化型求人サイト",
     template: "%s | ゲンバキャリア",
   },
   description:
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ja_JP",
     siteName: "ゲンバキャリア",
-    title: "ゲンバキャリア | ノンデスク産業特化の求人サイト",
+    title: "ゲンバキャリア | 建設業界特化型求人サイト",
     description: "建築・土木・設備・解体に特化した求人サイト。ハローワーク求人も掲載。",
     url: siteUrl,
     images: [{ url: "/opengraph-image", width: 1200, height: 630 }],

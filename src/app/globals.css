@@ -198,6 +198,7 @@ button:disabled {
   left: 0; top: 0; bottom: 0;
   width: 3px;
   background: var(--color-primary-500);
+  pointer-events: none;
 }
 .accent-t {
   position: relative;
@@ -213,6 +214,7 @@ button:disabled {
   height: 1.1em;
   background: var(--color-primary-500);
   margin-right: 8px;
+  pointer-events: none;
 }
 
 /* Article body styles */

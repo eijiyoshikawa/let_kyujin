@@ -202,18 +202,20 @@ export default async function HomePage() {
     <div className="bg-white">
       {/* === Hero（建設現場写真 + 検索）======================================= */}
       <section className="relative isolate overflow-hidden bg-ink-900 text-white">
+        {/* 背景写真は装飾。クリックを吸わせない */}
         <Image
           src={HERO_IMAGE}
-          alt="建設現場の風景"
+          alt=""
           fill
           priority
           sizes="100vw"
-          className="object-cover opacity-55"
+          className="object-cover opacity-55 pointer-events-none select-none"
         />
-        <div aria-hidden className="hero-stripe-top" />
-        <div className="absolute inset-0 bg-gradient-to-r from-ink-900/95 via-ink-900/70 to-ink-900/30 pointer-events-none" />
+        <div aria-hidden className="hero-stripe-top pointer-events-none" />
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-r from-ink-900/95 via-ink-900/70 to-ink-900/30 pointer-events-none" />
 
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+        {/* コンテンツは必ず最前面（フォーム/ボタンのクリックを確実に通す） */}
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
           <div className="max-w-2xl">
             <p className="inline-flex items-center gap-1.5 bg-brand-yellow-500 text-ink-900 px-3 py-1 text-xs font-extrabold">
               <Sparkles className="h-3.5 w-3.5" />
@@ -251,7 +253,7 @@ export default async function HomePage() {
             </form>
           </div>
         </div>
-        <div aria-hidden className="hero-stripe-bottom" />
+        <div aria-hidden className="hero-stripe-bottom pointer-events-none" />
       </section>
 
       {/* === 注目特集（写真バナー 3 つ）======================================== */}
