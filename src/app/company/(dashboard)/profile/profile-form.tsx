@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import {
   Loader2,
@@ -18,6 +18,9 @@ import {
   CircleDashed,
   CircleCheck,
   Camera,
+  Search,
+  X,
+  ExternalLink,
 } from "lucide-react"
 import { computeScoreBreakdown } from "@/lib/ranking"
 import {
@@ -70,6 +73,7 @@ export function ProfileForm({
   const [result, setResult] = useState<
     null | { ok: true } | { ok: false; message: string }
   >(null)
+  const [pickerOpen, setPickerOpen] = useState(false)
 
   // リアルタイム スコア計算
   const breakdown = useMemo(
@@ -106,6 +110,24 @@ export function ProfileForm({
   function addPhoto() {
     if (data.photos.length >= PHOTO_MAX) return
     setData((d) => ({ ...d, photos: [...d.photos, ""] }))
+  }
+
+  function addPhotoUrls(urls: string[]) {
+    setData((d) => {
+      const existing = new Set(d.photos.filter(Boolean))
+      const merged = [...d.photos]
+      for (const u of urls) {
+        if (merged.length >= PHOTO_MAX) break
+        if (existing.has(u)) continue
+        existing.add(u)
+        // 空スロットがあればそこに入れる、無ければ末尾に追加
+        const emptyIdx = merged.findIndex((p) => !p)
+        if (emptyIdx >= 0) merged[emptyIdx] = u
+        else merged.push(u)
+      }
+      return { ...d, photos: merged }
+    })
+    setResult(null)
   }
 
   function updatePhoto(idx: number, value: string) {
@@ -325,22 +347,29 @@ export function ProfileForm({
               </span>
             </h3>
             <p className="text-xs text-gray-500 mt-1">
-              現場写真や社内の様子を URL で登録。最大 {PHOTO_MAX} 枚。
-            </p>
-            <p className="text-[11px] text-amber-700 bg-amber-50 px-2 py-1 mt-2 inline-block">
-              <ImageIcon className="inline h-3 w-3 mr-1" />
-              次回アップデートで「素材ライブラリから選ぶ」ボタンを追加予定（Unsplash 連携）
+              現場写真や社内の様子を最大 {PHOTO_MAX} 枚。素材ライブラリ（Unsplash）からも追加できます。
             </p>
           </div>
-          <button
-            type="button"
-            onClick={addPhoto}
-            disabled={data.photos.length >= PHOTO_MAX}
-            className="press inline-flex items-center gap-1.5 border border-primary-300 bg-primary-50 px-3 py-1.5 text-xs font-bold text-primary-700 hover:bg-primary-100 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Plus className="h-3.5 w-3.5" />
-            URL を追加
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setPickerOpen(true)}
+              disabled={data.photos.length >= PHOTO_MAX}
+              className="press inline-flex items-center gap-1.5 border border-brand-yellow-500 bg-brand-yellow-50 px-3 py-1.5 text-xs font-bold text-ink-900 hover:bg-brand-yellow-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ImageIcon className="h-3.5 w-3.5" />
+              素材から選ぶ
+            </button>
+            <button
+              type="button"
+              onClick={addPhoto}
+              disabled={data.photos.length >= PHOTO_MAX}
+              className="press inline-flex items-center gap-1.5 border border-primary-300 bg-primary-50 px-3 py-1.5 text-xs font-bold text-primary-700 hover:bg-primary-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              URL を追加
+            </button>
+          </div>
         </div>
 
         {data.photos.length === 0 ? (
@@ -470,6 +499,18 @@ export function ProfileForm({
 
       {/* iOS Safari 用に下部余白 */}
       <div className="h-4" aria-hidden />
+
+      {/* Unsplash 素材ライブラリ モーダル */}
+      {pickerOpen && (
+        <UnsplashPickerModal
+          onClose={() => setPickerOpen(false)}
+          onPick={(urls) => {
+            addPhotoUrls(urls)
+            setPickerOpen(false)
+          }}
+          slotsLeft={PHOTO_MAX - data.photos.filter(Boolean).length}
+        />
+      )}
     </form>
   )
 }
@@ -610,5 +651,276 @@ function CharCount({ value, max }: { value: string; max?: number }) {
       {value.length.toLocaleString()}
       {max ? ` / ${max}` : ""} 文字
     </p>
+  )
+}
+
+// ============================================================
+// Unsplash 素材ライブラリ モーダル
+// ============================================================
+
+interface UnsplashApiPhoto {
+  id: string
+  description: string | null
+  urls: { regular: string; small: string; thumb: string }
+  user: { name: string; username: string; profileUrl: string }
+  htmlUrl: string
+  color: string | null
+}
+
+const QUERY_PRESETS = [
+  "construction site",
+  "建設 現場",
+  "建築 職人",
+  "土木 工事",
+  "重機 クレーン",
+  "電気工事",
+  "内装 仕上げ",
+  "ヘルメット 作業員",
+  "施工管理",
+]
+
+function UnsplashPickerModal({
+  onClose,
+  onPick,
+  slotsLeft,
+}: {
+  onClose: () => void
+  onPick: (urls: string[]) => void
+  slotsLeft: number
+}) {
+  const [query, setQuery] = useState("建設 現場")
+  const [photos, setPhotos] = useState<UnsplashApiPhoto[]>([])
+  const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function runSearch(q: string) {
+    if (!q.trim()) return
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await fetch(
+        `/api/integrations/unsplash/search?q=${encodeURIComponent(q)}&orientation=landscape`
+      )
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}))
+        if (res.status === 503) {
+          setError("素材ライブラリは管理者が設定するまでご利用いただけません")
+        } else {
+          setError(j?.error ?? `検索に失敗しました (${res.status})`)
+        }
+        setPhotos([])
+        return
+      }
+      const j = (await res.json()) as { results: UnsplashApiPhoto[] }
+      setPhotos(j.results ?? [])
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "通信エラー")
+      setPhotos([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // 初期表示で 1 回検索
+  useEffect(() => {
+    runSearch("建設 現場")
+  }, [])
+
+  function toggleSelect(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else if (next.size < slotsLeft) next.add(id)
+      return next
+    })
+  }
+
+  function confirmPick() {
+    const urls = photos
+      .filter((p) => selected.has(p.id))
+      .map((p) => p.urls.regular)
+    if (urls.length > 0) onPick(urls)
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-4xl bg-white shadow-2xl max-h-[90vh] flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* ヘッダ */}
+        <div className="flex items-center justify-between border-b border-gray-200 p-4">
+          <div>
+            <h3 className="flex items-center gap-2 text-base font-extrabold text-gray-900">
+              <ImageIcon className="h-5 w-5 text-primary-500" />
+              素材ライブラリから選ぶ
+            </h3>
+            <p className="text-[11px] text-gray-500 mt-0.5">
+              Unsplash の無料写真をプロフィールに追加できます。あと {slotsLeft} 枚まで選択可能。
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="press p-2 text-gray-400 hover:text-gray-700"
+            aria-label="閉じる"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* 検索バー */}
+        <div className="border-b border-gray-100 p-3 space-y-2">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              runSearch(query)
+            }}
+            className="flex gap-2"
+          >
+            <div className="flex-1 flex items-center gap-2 border border-gray-300 px-3 py-2">
+              <Search className="h-4 w-4 text-gray-400 shrink-0" />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="キーワード（例: 建設 現場、ヘルメット、クレーン）"
+                className="flex-1 min-w-0 bg-transparent text-sm focus:outline-none"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="press inline-flex items-center gap-1.5 bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 px-4 py-2 text-sm font-bold text-white"
+            >
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+              検索
+            </button>
+          </form>
+          <div className="flex flex-wrap gap-1.5">
+            {QUERY_PRESETS.map((preset) => (
+              <button
+                key={preset}
+                type="button"
+                onClick={() => {
+                  setQuery(preset)
+                  runSearch(preset)
+                }}
+                className="press border border-gray-300 bg-white px-2 py-0.5 text-[11px] text-gray-700 hover:bg-primary-50 hover:border-primary-300"
+              >
+                {preset}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* 結果グリッド */}
+        <div className="flex-1 overflow-y-auto p-3">
+          {error && (
+            <div className="border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+              <AlertCircle className="inline h-4 w-4 mr-1" />
+              {error}
+            </div>
+          )}
+          {!error && loading && photos.length === 0 && (
+            <div className="flex items-center justify-center py-12 text-sm text-gray-500">
+              <Loader2 className="h-5 w-5 animate-spin mr-2" />
+              検索中…
+            </div>
+          )}
+          {!loading && !error && photos.length === 0 && (
+            <div className="text-center py-12 text-sm text-gray-400">
+              該当する写真が見つかりませんでした。
+            </div>
+          )}
+          {photos.length > 0 && (
+            <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              {photos.map((p) => {
+                const isSelected = selected.has(p.id)
+                const disabledForSelection = !isSelected && selected.size >= slotsLeft
+                return (
+                  <li key={p.id} className="relative">
+                    <button
+                      type="button"
+                      onClick={() => toggleSelect(p.id)}
+                      disabled={disabledForSelection}
+                      className={`press block w-full overflow-hidden border-2 transition ${
+                        isSelected
+                          ? "border-primary-600 ring-2 ring-primary-300"
+                          : "border-gray-200 hover:border-primary-300"
+                      } ${disabledForSelection ? "opacity-40 cursor-not-allowed" : ""}`}
+                      style={{ background: p.color ?? "#f5f5f4" }}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={p.urls.thumb}
+                        alt={p.description ?? ""}
+                        className="block w-full aspect-[4/3] object-cover"
+                        loading="lazy"
+                      />
+                      {isSelected && (
+                        <div className="absolute top-1.5 right-1.5 bg-primary-600 text-white text-[10px] font-extrabold px-1.5 py-0.5">
+                          ✓ 選択中
+                        </div>
+                      )}
+                    </button>
+                    <p className="mt-1 text-[10px] text-gray-500 line-clamp-1">
+                      Photo by{" "}
+                      <a
+                        href={`${p.user.profileUrl}?utm_source=genbacareer&utm_medium=referral`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:text-primary-600"
+                      >
+                        {p.user.name}
+                      </a>{" "}
+                      on{" "}
+                      <a
+                        href="https://unsplash.com/?utm_source=genbacareer&utm_medium=referral"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:text-primary-600"
+                      >
+                        Unsplash
+                        <ExternalLink className="inline h-2.5 w-2.5 ml-0.5" />
+                      </a>
+                    </p>
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+        </div>
+
+        {/* フッタ: 追加ボタン */}
+        <div className="border-t border-gray-200 p-3 flex items-center justify-between gap-3 flex-wrap">
+          <p className="text-xs text-gray-600">
+            {selected.size} / {slotsLeft} 枚を選択中
+          </p>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="press border border-gray-300 bg-white px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-50"
+            >
+              キャンセル
+            </button>
+            <button
+              type="button"
+              onClick={confirmPick}
+              disabled={selected.size === 0}
+              className="press inline-flex items-center gap-1.5 bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 px-5 py-2 text-sm font-extrabold text-white"
+            >
+              <Plus className="h-4 w-4" />
+              選択した {selected.size} 枚を追加
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
