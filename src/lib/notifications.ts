@@ -6,6 +6,7 @@
  */
 
 import { prisma } from "@/lib/db"
+import { pushUserNotification } from "@/lib/line-push-notifier"
 
 export type NotificationType =
   | "application_status"
@@ -31,7 +32,10 @@ const STATUS_NOTIFICATION_BODY: Record<string, string> = {
 }
 
 /**
- * 単一の通知を作成する。失敗は警告ログのみで握り潰す。
+ * 単一の通知を作成し、紐付いた LINE 友だちにも push する。
+ *
+ * - inbox 行の作成失敗は警告ログのみで握り潰す（フローを止めない）
+ * - LINE Push は最良努力 (best effort)、友だちが見つからなければスキップ
  */
 export async function createNotification(input: {
   userId: string
@@ -55,6 +59,18 @@ export async function createNotification(input: {
   } catch (e) {
     console.warn(`[notifications] create failed: ${e instanceof Error ? e.message : e}`)
   }
+
+  // LINE Push: 紐付け済みユーザーへリアルタイム配信
+  pushUserNotification({
+    userId: input.userId,
+    title: input.title,
+    body: input.body,
+    linkUrl: input.linkUrl,
+  }).catch((e) => {
+    console.warn(
+      `[notifications] line push failed: ${e instanceof Error ? e.message : e}`
+    )
+  })
 }
 
 /**
