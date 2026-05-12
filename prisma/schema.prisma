@@ -38,8 +38,35 @@ model User {
   uploadedFiles     UploadedFile[]
   applicationClicks ApplicationClick[]
   jobViews          JobView[]
+  notifications     Notification[]
 
   @@map("users")
+}
+
+// ========================================
+// 求職者向け通知
+// ========================================
+// マイページの通知センターに表示する inbox 行。
+// メール / LINE への配信は別経路で行い、本テーブルは「未読・既読」を管理する。
+model Notification {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  // application_status | scout_received | system | promo
+  type      String   @db.VarChar(30)
+  title     String   @db.VarChar(200)
+  body      String?
+  // クリック時の遷移先（/mypage/applications/<id> 等）
+  linkUrl   String?  @map("link_url") @db.VarChar(500)
+  // 既読日時。null なら未読。
+  readAt    DateTime? @map("read_at") @db.Timestamptz()
+  // 関連リソースの id（applicationId / scoutId / jobId 等）
+  refId     String?  @map("ref_id") @db.VarChar(50)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt, createdAt(sort: Desc)], name: "idx_notifications_user_inbox")
+  @@map("notifications")
 }
 
 // ========================================

@@ -3,6 +3,7 @@ import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { sendApplicationStatusEmail } from "@/lib/application-notifications"
+import { notifyApplicationStatusChange } from "@/lib/notifications"
 
 const VALID_STATUS_TRANSITIONS: Record<string, string[]> = {
   applied: ["reviewing", "rejected"],
@@ -80,6 +81,7 @@ export async function PUT(
     where: { id },
     select: {
       companyId: true,
+      userId: true,
       status: true,
       statusHistory: true,
       user: { select: { email: true, name: true } },
@@ -153,6 +155,16 @@ export async function PUT(
       console.error(`[billing] Failed to create invoice for application ${id}:`, error)
     }
   }
+
+  // マイページ inbox 通知（fire-and-forget）
+  notifyApplicationStatusChange({
+    userId: application.userId,
+    applicationId: id,
+    newStatus,
+    jobTitle: application.job.title,
+  }).catch((e) => {
+    console.warn(`[notification] failed: ${e instanceof Error ? e.message : e}`)
+  })
 
   // ステータス通知メール（fire-and-forget）
   if (application.user.email) {
