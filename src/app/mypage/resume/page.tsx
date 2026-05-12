@@ -71,14 +71,25 @@ export default async function ResumePage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold text-gray-900">履歴書・職務経歴書</h1>
-        <Link
-          href="/mypage"
-          className="text-sm font-medium text-primary-600 hover:text-primary-700"
-        >
-          ← マイページ
-        </Link>
+        <div className="flex items-center gap-3">
+          <a
+            href="/mypage/resume/print?auto=1"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="press inline-flex items-center gap-1.5 border border-primary-300 bg-white hover:bg-primary-50 px-3 py-2 text-sm font-bold text-primary-700"
+            title="入力内容を PDF として保存"
+          >
+            PDF で保存
+          </a>
+          <Link
+            href="/mypage"
+            className="text-sm font-medium text-primary-600 hover:text-primary-700"
+          >
+            ← マイページ
+          </Link>
+        </div>
       </div>
 
       {/* Tab navigation */}
