@@ -1,9 +1,9 @@
 import { formatDescriptionSections } from "@/lib/job-enrichment"
+import { FormattedText } from "./formatted-text"
 
 /**
- * HelloWork の長文 description を見出し付きセクションに分解して描画する。
- *
- * 取り込み時には保存テキストを変更しないので、抽出ロジックは将来調整可能。
+ * HelloWork の長文 description を見出し付きセクションに分解し、
+ * 各セクションの本文は `FormattedText` で段落・箇条書き・注記に整形して描画する。
  */
 export function JobDescription({
   text,
@@ -28,9 +28,7 @@ export function JobDescription({
               {section.heading}
             </h3>
           )}
-          <p className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed">
-            {section.body}
-          </p>
+          <FormattedText text={section.body} />
         </section>
       ))}
     </div>

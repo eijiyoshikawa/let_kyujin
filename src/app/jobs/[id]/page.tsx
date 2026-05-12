@@ -6,20 +6,28 @@ import { getOrCreateSessionId } from "@/lib/session-id"
 import { recordJobView, extractUtmFromUrl } from "@/lib/tracking"
 import {
   MapPin,
-  Banknote,
-  Building2,
+  Money,
+  Buildings,
   ArrowLeft,
-  ChevronRight,
+  CaretRight,
   Briefcase,
   Globe,
-  Users,
+  UsersThree,
   Megaphone,
-  Sparkles,
-  UserCheck,
-  MessageSquareQuote,
+  Sparkle,
+  UserFocus,
+  ChatCenteredDots,
   Camera,
-  Share2,
-} from "lucide-react"
+  ShareNetwork,
+  Wallet,
+  GraduationCap,
+  ClipboardText,
+  Cigarette,
+  Factory,
+  ShieldCheck,
+  ClockCountdown,
+  WarningCircle,
+} from "@phosphor-icons/react/dist/ssr"
 import type { Metadata } from "next"
 import {
   generateJobPostingSchema,
@@ -28,6 +36,8 @@ import {
 import { getCategoryLabel } from "@/lib/categories"
 import { groupTags } from "@/lib/job-enrichment"
 import { JobDescription } from "@/components/jobs/job-description"
+import { FormattedText } from "@/components/jobs/formatted-text"
+import { generateRecommendation } from "@/lib/job-recommendation"
 import { WorkConditionsBox } from "@/components/jobs/work-conditions-box"
 import { TagChip } from "@/components/jobs/tag-chip"
 import { SectionHeading } from "@/components/jobs/section-heading"
@@ -133,6 +143,12 @@ export default async function JobDetailPage({ params }: Props) {
     address: job.address,
     publishedAt: job.publishedAt,
     createdAt: job.createdAt,
+    occupationCategoryName: job.occupationCategoryName,
+    industryCode: job.industryCode,
+    workHours: job.workHours,
+    holidays: job.holidays,
+    requiredExperience: job.requiredExperience,
+    education: job.education,
     company: job.company
       ? {
           name: job.company.name,
@@ -146,6 +162,50 @@ export default async function JobDetailPage({ params }: Props) {
   // tagline は企業がカスタム設定していればそれを優先、無ければ description から抽出
   const tagline = job.company?.tagline ?? extractTagline(job.description)
 
+  const hasSalaryDetail = !!(
+    job.baseSalary ||
+    job.bonus ||
+    job.commuteAllowance ||
+    job.fixedOvertime
+  )
+  const hasBenefits = !!(job.trialPeriod || job.smokingPolicy)
+  const hasRequirements = !!(
+    job.requiredExperience ||
+    job.education ||
+    job.recruitmentCount ||
+    job.recruitmentReason
+  )
+  const hasOccupationMeta = !!(
+    job.occupationTitle ||
+    job.occupationCategoryName ||
+    job.jobTypeName
+  )
+  const validUntilInfo = computeValidUntilInfo(job.validUntil)
+  const recommendation = generateRecommendation({
+    title: job.title,
+    category: job.category,
+    prefecture: job.prefecture,
+    city: job.city,
+    address: job.address,
+    employmentType: job.employmentType,
+    salaryMin: job.salaryMin,
+    salaryMax: job.salaryMax,
+    salaryType: job.salaryType,
+    description: job.description,
+    requirements: job.requirements,
+    bonus: job.bonus,
+    commuteAllowance: job.commuteAllowance,
+    fixedOvertime: job.fixedOvertime,
+    workHours: job.workHours,
+    holidays: job.holidays,
+    annualHolidays: job.annualHolidays,
+    insurance: job.insurance,
+    smokingPolicy: job.smokingPolicy,
+    trialPeriod: job.trialPeriod,
+    requiredExperience: job.requiredExperience,
+    education: job.education,
+  })
+
   const hasSns = !!(
     job.company?.instagramUrl ||
     job.company?.tiktokUrl ||
@@ -158,13 +218,24 @@ export default async function JobDetailPage({ params }: Props) {
   const mapAddress = buildMapAddress(job.address, job.prefecture, job.city)
 
   const tocItems = buildTocItems({
+    hasRecommendation: !!recommendation,
     hasFeatures: job.tags.length > 0 || !!job.employmentType,
     hasDescription: !!job.description,
     hasPitch: !!job.company?.pitchHighlights,
     hasIdealCandidate: !!job.company?.idealCandidate,
     hasEmployeeVoice: !!job.company?.employeeVoice,
     hasPhotos: photos.length > 0,
-    hasWorkConditions: !!job.description || !!job.requirements,
+    hasWorkConditions:
+      !!job.description ||
+      !!job.requirements ||
+      !!job.workHours ||
+      !!job.holidays ||
+      job.annualHolidays != null ||
+      !!job.insurance,
+    hasSalaryDetail,
+    hasBenefits,
+    hasNotes: !!job.jobConditionNotes,
+    hasRequirements,
     hasMap: !!mapAddress,
     hasCompany: !!job.company,
   })
@@ -197,18 +268,18 @@ export default async function JobDetailPage({ params }: Props) {
             <Link href="/" className="hover:text-primary-600 shrink-0">
               トップ
             </Link>
-            <ChevronRight className="h-3 w-3 shrink-0" />
+            <CaretRight weight="duotone" className="h-3 w-3 shrink-0" />
             <Link href="/jobs" className="hover:text-primary-600 shrink-0">
               求人検索
             </Link>
-            <ChevronRight className="h-3 w-3 shrink-0" />
+            <CaretRight weight="duotone" className="h-3 w-3 shrink-0" />
             <Link
               href={`/jobs?category=${job.category}`}
               className="hover:text-primary-600 shrink-0"
             >
               {getCategoryLabel(job.category)}
             </Link>
-            <ChevronRight className="h-3 w-3 shrink-0" />
+            <CaretRight weight="duotone" className="h-3 w-3 shrink-0" />
             <span className="text-gray-700 line-clamp-1">{job.title}</span>
           </nav>
         </div>
@@ -223,14 +294,9 @@ export default async function JobDetailPage({ params }: Props) {
               <HeroBanner category={job.category} />
 
               <div className="space-y-3">
-                {/* Category + HW badges */}
+                {/* Category badge */}
                 <div className="flex items-center gap-2 flex-wrap text-xs">
                   <TagChip size="sm">{getCategoryLabel(job.category)}</TagChip>
-                  {job.source === "hellowork" && (
-                    <span className="inline-flex items-center border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
-                      HW 転載
-                    </span>
-                  )}
                 </div>
 
                 <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 leading-tight">
@@ -239,7 +305,7 @@ export default async function JobDetailPage({ params }: Props) {
 
                 {tagline && (
                   <p className="flex items-start gap-1.5 text-sm sm:text-base text-primary-700 font-medium">
-                    <Megaphone className="h-4 w-4 mt-0.5 shrink-0" />
+                    <Megaphone weight="duotone" className="h-4 w-4 mt-0.5 shrink-0" />
                     <span>{tagline}</span>
                   </p>
                 )}
@@ -247,7 +313,7 @@ export default async function JobDetailPage({ params }: Props) {
                 {job.company && (
                   <div className="flex items-center gap-3 p-3 border bg-white">
                     <div className="h-10 w-10 flex items-center justify-center bg-primary-50">
-                      <Building2 className="h-5 w-5 text-primary-500" />
+                      <Buildings weight="duotone" className="h-5 w-5 text-primary-500" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="font-medium text-gray-900 line-clamp-1">
@@ -270,8 +336,10 @@ export default async function JobDetailPage({ params }: Props) {
                 {/* Quick info row */}
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="flex items-center gap-2 text-sm">
-                    <Banknote className="h-4 w-4 text-primary-500" />
-                    <dt className="text-gray-500 mr-1">月給:</dt>
+                    <Money weight="duotone" className="h-4 w-4 text-primary-500" />
+                    <dt className="text-gray-500 mr-1">
+                      {salaryUnitLabel(job.salaryType)}:
+                    </dt>
                     <dd className="font-bold text-primary-700">
                       {job.salaryMin
                         ? formatSalary(
@@ -279,20 +347,100 @@ export default async function JobDetailPage({ params }: Props) {
                             job.salaryMax,
                             job.salaryType
                           )
+                            .replace(/^(月給|時給|年収|日給)\s*/, "")
                         : "応相談"}
                     </dd>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <MapPin className="h-4 w-4 text-primary-500" />
+                    <MapPin weight="duotone" className="h-4 w-4 text-primary-500" />
                     <dt className="text-gray-500 mr-1">勤務地:</dt>
                     <dd className="font-medium text-gray-900">
                       {job.prefecture}
                       {job.city ? ` ${job.city}` : ""}
                     </dd>
                   </div>
+                  {hasOccupationMeta && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <Briefcase weight="duotone" className="h-4 w-4 text-primary-500" />
+                      <dt className="text-gray-500 mr-1">職種:</dt>
+                      <dd className="font-medium text-gray-900 line-clamp-1">
+                        {job.occupationTitle ??
+                          job.occupationCategoryName ??
+                          job.jobTypeName}
+                        {job.occupationCategoryName &&
+                          job.occupationTitle &&
+                          job.occupationCategoryName !== job.occupationTitle && (
+                            <span className="ml-1.5 text-xs text-gray-500">
+                              （{job.occupationCategoryName}）
+                            </span>
+                          )}
+                      </dd>
+                    </div>
+                  )}
+                  {validUntilInfo && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <ClockCountdown
+                        weight="duotone"
+                        className={`h-4 w-4 ${
+                          validUntilInfo.isUrgent
+                            ? "text-red-500"
+                            : "text-primary-500"
+                        }`}
+                      />
+                      <dt className="text-gray-500 mr-1">応募締切:</dt>
+                      <dd
+                        className={`font-medium ${
+                          validUntilInfo.isUrgent
+                            ? "text-red-600"
+                            : "text-gray-900"
+                        }`}
+                      >
+                        {validUntilInfo.label}
+                        {validUntilInfo.daysLeft != null && (
+                          <span
+                            className={`ml-1.5 text-xs font-bold ${
+                              validUntilInfo.isUrgent
+                                ? "text-red-600"
+                                : "text-gray-500"
+                            }`}
+                          >
+                            （あと {validUntilInfo.daysLeft}日）
+                          </span>
+                        )}
+                      </dd>
+                    </div>
+                  )}
                 </dl>
               </div>
             </section>
+
+            {/* この求人のおすすめポイント */}
+            {recommendation && (
+              <section
+                id="recommendation"
+                className="rounded border border-primary-200 bg-gradient-to-br from-primary-50 to-white p-5 sm:p-6 shadow-sm space-y-3"
+              >
+                <SectionHeading>
+                  <Sparkle weight="duotone" className="h-4 w-4 text-primary-500" />
+                  この求人のおすすめポイント
+                </SectionHeading>
+                <p className="text-sm sm:text-[15px] text-gray-800 leading-relaxed">
+                  {recommendation.summary}
+                </p>
+                {recommendation.points.length > 0 && (
+                  <ul className="flex flex-wrap gap-1.5">
+                    {recommendation.points.map((p) => (
+                      <li
+                        key={p.label}
+                        className="inline-flex items-center rounded-full border border-primary-200 bg-white px-2.5 py-1 text-xs font-medium text-primary-700"
+                      >
+                        {p.label}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+            )}
 
             {/* Structured tag table */}
             <JobInfoTable
@@ -307,7 +455,7 @@ export default async function JobDetailPage({ params }: Props) {
                 className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
-                  <Briefcase className="h-4 w-4 text-primary-500" />
+                  <Briefcase weight="duotone" className="h-4 w-4 text-primary-500" />
                   こんな仕事です
                 </SectionHeading>
                 <JobDescription text={job.description} />
@@ -321,12 +469,10 @@ export default async function JobDetailPage({ params }: Props) {
                 className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
-                  <Sparkles className="h-4 w-4 text-primary-500" />
+                  <Sparkle weight="duotone" className="h-4 w-4 text-primary-500" />
                   こんなトコロがすごい！
                 </SectionHeading>
-                <p className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed">
-                  {job.company.pitchHighlights}
-                </p>
+                <FormattedText text={job.company.pitchHighlights} />
               </section>
             )}
 
@@ -337,12 +483,10 @@ export default async function JobDetailPage({ params }: Props) {
                 className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
-                  <UserCheck className="h-4 w-4 text-primary-500" />
+                  <UserFocus weight="duotone" className="h-4 w-4 text-primary-500" />
                   こんな人が向いています！
                 </SectionHeading>
-                <p className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed">
-                  {job.company.idealCandidate}
-                </p>
+                <FormattedText text={job.company.idealCandidate} />
               </section>
             )}
 
@@ -353,12 +497,10 @@ export default async function JobDetailPage({ params }: Props) {
                 className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
-                  <MessageSquareQuote className="h-4 w-4 text-primary-500" />
+                  <ChatCenteredDots weight="duotone" className="h-4 w-4 text-primary-500" />
                   働いている社員の声
                 </SectionHeading>
-                <p className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed">
-                  {job.company.employeeVoice}
-                </p>
+                <FormattedText text={job.company.employeeVoice} />
               </section>
             )}
 
@@ -369,7 +511,7 @@ export default async function JobDetailPage({ params }: Props) {
                 className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
-                  <Camera className="h-4 w-4 text-primary-500" />
+                  <Camera weight="duotone" className="h-4 w-4 text-primary-500" />
                   写真ギャラリー
                 </SectionHeading>
                 <PhotoGallery
@@ -384,8 +526,116 @@ export default async function JobDetailPage({ params }: Props) {
               <WorkConditionsBox
                 description={job.description}
                 requirements={job.requirements}
+                structured={{
+                  workHours: job.workHours,
+                  workHoursNotes: job.workHoursNotes,
+                  holidays: job.holidays,
+                  holidaysOther: job.holidaysOther,
+                  annualHolidays: job.annualHolidays,
+                  insurance: job.insurance,
+                }}
               />
             </section>
+
+            {/* 給与の詳細 */}
+            {hasSalaryDetail && (
+              <section
+                id="salary-detail"
+                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+              >
+                <SectionHeading>
+                  <Wallet weight="duotone" className="h-4 w-4 text-primary-500" />
+                  給与・手当
+                </SectionHeading>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {job.baseSalary && (
+                    <DlItem label="基本給" value={job.baseSalary} />
+                  )}
+                  {job.bonus && <DlItem label="賞与" value={job.bonus} />}
+                  {job.commuteAllowance && (
+                    <DlItem label="通勤手当" value={job.commuteAllowance} />
+                  )}
+                  {job.fixedOvertime && (
+                    <DlItem label="固定残業代" value={job.fixedOvertime} />
+                  )}
+                </div>
+              </section>
+            )}
+
+            {/* 待遇・福利厚生 */}
+            {hasBenefits && (
+              <section
+                id="benefits"
+                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+              >
+                <SectionHeading>
+                  <ShieldCheck weight="duotone" className="h-4 w-4 text-primary-500" />
+                  待遇・福利厚生
+                </SectionHeading>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {job.trialPeriod && (
+                    <DlItem label="試用期間" value={job.trialPeriod} />
+                  )}
+                  {job.smokingPolicy && (
+                    <DlItem
+                      label="受動喫煙対策"
+                      value={job.smokingPolicy}
+                      icon={<Cigarette weight="duotone" className="h-3.5 w-3.5 text-gray-400" />}
+                    />
+                  )}
+                </div>
+              </section>
+            )}
+
+            {/* 求人条件の特記事項 */}
+            {job.jobConditionNotes && (
+              <section
+                id="notes"
+                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+              >
+                <SectionHeading>
+                  <WarningCircle weight="duotone" className="h-4 w-4 text-primary-500" />
+                  求人条件の特記事項
+                </SectionHeading>
+                <FormattedText text={job.jobConditionNotes} />
+              </section>
+            )}
+
+            {/* 応募要件・採用情報 */}
+            {hasRequirements && (
+              <section
+                id="requirements"
+                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+              >
+                <SectionHeading>
+                  <ClipboardText weight="duotone" className="h-4 w-4 text-primary-500" />
+                  応募要件・採用情報
+                </SectionHeading>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {job.requiredExperience && (
+                    <DlItem
+                      label="必要な経験"
+                      value={job.requiredExperience}
+                    />
+                  )}
+                  {job.education && (
+                    <DlItem
+                      label="必要な学歴"
+                      value={job.education}
+                      icon={
+                        <GraduationCap weight="duotone" className="h-3.5 w-3.5 text-gray-400" />
+                      }
+                    />
+                  )}
+                  {job.recruitmentCount && (
+                    <DlItem label="採用人数" value={job.recruitmentCount} />
+                  )}
+                  {job.recruitmentReason && (
+                    <DlItem label="募集理由" value={job.recruitmentReason} />
+                  )}
+                </div>
+              </section>
+            )}
 
             {/* 勤務地の地図 */}
             {mapAddress && (
@@ -394,7 +644,7 @@ export default async function JobDetailPage({ params }: Props) {
                 className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
-                  <MapPin className="h-4 w-4 text-primary-500" />
+                  <MapPin weight="duotone" className="h-4 w-4 text-primary-500" />
                   勤務地の地図
                 </SectionHeading>
                 <MapEmbed address={mapAddress} />
@@ -408,19 +658,23 @@ export default async function JobDetailPage({ params }: Props) {
                 className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
-                  <Building2 className="h-4 w-4 text-primary-500" />
+                  <Buildings weight="duotone" className="h-4 w-4 text-primary-500" />
                   企業情報
                 </SectionHeading>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <DlItem label="企業名" value={job.company.name} />
                   {job.company.industry && (
-                    <DlItem label="業種" value={job.company.industry} />
+                    <DlItem
+                      label="業種"
+                      value={job.company.industry}
+                      icon={<Factory weight="duotone" className="h-3.5 w-3.5 text-gray-400" />}
+                    />
                   )}
                   {job.company.employeeCount && (
                     <DlItem
                       label="従業員数"
                       value={`${job.company.employeeCount}名`}
-                      icon={<Users className="h-3.5 w-3.5 text-gray-400" />}
+                      icon={<UsersThree weight="duotone" className="h-3.5 w-3.5 text-gray-400" />}
                     />
                   )}
                   {(job.company.prefecture || job.company.address) && (
@@ -433,22 +687,34 @@ export default async function JobDetailPage({ params }: Props) {
                       ]
                         .filter(Boolean)
                         .join(" ")}
-                      icon={<MapPin className="h-3.5 w-3.5 text-gray-400" />}
+                      icon={<MapPin weight="duotone" className="h-3.5 w-3.5 text-gray-400" />}
                     />
                   )}
-                  {job.company.websiteUrl && (
+                  {(job.company.websiteUrl || job.companyUrl) && (
                     <DlItem
                       label="Web サイト"
-                      value={job.company.websiteUrl}
-                      icon={<Globe className="h-3.5 w-3.5 text-gray-400" />}
+                      value={(job.company.websiteUrl ?? job.companyUrl) as string}
+                      icon={<Globe weight="duotone" className="h-3.5 w-3.5 text-gray-400" />}
                       isLink
                     />
                   )}
                 </div>
+                {job.businessContent && (
+                  <div className="border-t pt-4 space-y-2">
+                    <p className="text-xs font-medium text-gray-500">事業内容</p>
+                    <FormattedText text={job.businessContent} />
+                  </div>
+                )}
+                {job.companyFeatures && (
+                  <div className="border-t pt-4 space-y-2">
+                    <p className="text-xs font-medium text-gray-500">会社の特長</p>
+                    <FormattedText text={job.companyFeatures} />
+                  </div>
+                )}
                 {job.company.description && (
-                  <p className="text-sm text-gray-600 leading-relaxed border-t pt-4">
-                    {job.company.description}
-                  </p>
+                  <div className="border-t pt-4">
+                    <FormattedText text={job.company.description} />
+                  </div>
                 )}
 
                 {/* 公式 HP リンクボタン（CTAとして目立たせる） */}
@@ -459,7 +725,7 @@ export default async function JobDetailPage({ params }: Props) {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 border border-primary-500 px-4 py-2 text-sm font-medium text-primary-700 hover:bg-primary-50 transition"
                   >
-                    <Globe className="h-4 w-4" />
+                    <Globe weight="duotone" className="h-4 w-4" />
                     {job.company.name} 公式 HP を見る
                   </a>
                 )}
@@ -467,7 +733,7 @@ export default async function JobDetailPage({ params }: Props) {
                 {hasSns && (
                   <div className="border-t pt-4">
                     <p className="flex items-center gap-1.5 text-xs text-gray-500 mb-2">
-                      <Share2 className="h-3.5 w-3.5" />
+                      <ShareNetwork weight="duotone" className="h-3.5 w-3.5" />
                       公式 SNS
                     </p>
                     <SnsLinks
@@ -497,7 +763,7 @@ export default async function JobDetailPage({ params }: Props) {
                 href="/jobs"
                 className="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-primary-600"
               >
-                <ArrowLeft className="h-4 w-4" />
+                <ArrowLeft weight="duotone" className="h-4 w-4" />
                 求人一覧に戻る
               </Link>
             </div>
@@ -553,18 +819,60 @@ function DlItem({
   )
 }
 
+function formatDate(date: Date): string {
+  return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}`
+}
+
+/**
+ * 応募締切（validUntil）を表示用ラベルと残日数に整形する。
+ * 期限切れ・無効値の場合は null を返す。残日数 7 日以下は urgent 扱い。
+ */
+function computeValidUntilInfo(validUntil: Date | null): {
+  label: string
+  daysLeft: number | null
+  isUrgent: boolean
+} | null {
+  if (!validUntil) return null
+  const now = Date.now()
+  const target = validUntil.getTime()
+  const diffMs = target - now
+  if (diffMs < 0) return null // 期限切れ
+  const daysLeft = Math.ceil(diffMs / (24 * 60 * 60 * 1000))
+  return {
+    label: formatDate(validUntil),
+    daysLeft,
+    isUrgent: daysLeft <= 7,
+  }
+}
+
 function formatSalary(
   min: number | null,
   max: number | null,
   type: string | null
 ): string {
-  const unit =
-    type === "hourly" ? "時給" : type === "annual" ? "年収" : "月給"
+  const unit = salaryUnitLabel(type)
+  const useManYen = type !== "hourly" && type !== "daily"
   const fmt = (n: number) =>
-    n >= 10000 ? `${(n / 10000).toFixed(0)}万` : `${n.toLocaleString()}`
+    useManYen && n >= 10000
+      ? `${(n / 10000).toFixed(0)}万`
+      : `${n.toLocaleString()}`
   if (min && max) return `${unit} ${fmt(min)}〜${fmt(max)}円`
   if (min) return `${unit} ${fmt(min)}円〜`
   return ""
+}
+
+function salaryUnitLabel(type: string | null): string {
+  switch (type) {
+    case "hourly":
+      return "時給"
+    case "annual":
+      return "年収"
+    case "daily":
+      return "日給"
+    case "monthly":
+    default:
+      return "月給"
+  }
 }
 
 /**
@@ -592,6 +900,7 @@ function extractTagline(description: string | null): string | null {
 }
 
 function buildTocItems(flags: {
+  hasRecommendation: boolean
   hasFeatures: boolean
   hasDescription: boolean
   hasPitch: boolean
@@ -599,10 +908,16 @@ function buildTocItems(flags: {
   hasEmployeeVoice: boolean
   hasPhotos: boolean
   hasWorkConditions: boolean
+  hasSalaryDetail: boolean
+  hasBenefits: boolean
+  hasNotes: boolean
+  hasRequirements: boolean
   hasMap: boolean
   hasCompany: boolean
 }) {
   const items: Array<{ id: string; label: string }> = []
+  if (flags.hasRecommendation)
+    items.push({ id: "recommendation", label: "おすすめポイント" })
   if (flags.hasFeatures) items.push({ id: "features", label: "求人の特徴" })
   if (flags.hasDescription)
     items.push({ id: "description", label: "こんな仕事です" })
@@ -615,6 +930,13 @@ function buildTocItems(flags: {
   if (flags.hasPhotos) items.push({ id: "photos", label: "写真ギャラリー" })
   if (flags.hasWorkConditions)
     items.push({ id: "conditions", label: "勤務条件" })
+  if (flags.hasSalaryDetail)
+    items.push({ id: "salary-detail", label: "給与・手当" })
+  if (flags.hasBenefits)
+    items.push({ id: "benefits", label: "待遇・福利厚生" })
+  if (flags.hasNotes) items.push({ id: "notes", label: "特記事項" })
+  if (flags.hasRequirements)
+    items.push({ id: "requirements", label: "応募要件" })
   if (flags.hasMap) items.push({ id: "map", label: "勤務地の地図" })
   if (flags.hasCompany) items.push({ id: "company", label: "企業情報" })
   return items

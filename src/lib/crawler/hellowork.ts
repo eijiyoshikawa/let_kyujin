@@ -36,7 +36,7 @@ export interface HelloworkJobData {
   companyName: string
   salaryMin: number | null
   salaryMax: number | null
-  salaryType: "monthly" | "hourly" | "annual" | null
+  salaryType: "monthly" | "hourly" | "annual" | "daily" | null
   prefecture: string
   city: string | null
   address: string | null
@@ -45,7 +45,83 @@ export interface HelloworkJobData {
   requirements: string | null
   source: "hellowork"
   attribution: string
+
+  // ハローワーク API 拡張フィールド
+  occupationTitle: string | null
+  jobConditionNotes: string | null
+  industryCode: string | null
+  industryMajorCode: string | null
+  occupationCode: string | null
+  occupationCategoryName: string | null
+  jobTypeName: string | null
+  baseSalary: string | null
+  bonus: string | null
+  commuteAllowance: string | null
+  fixedOvertime: string | null
+  workHours: string | null
+  workHoursNotes: string | null
+  holidays: string | null
+  holidaysOther: string | null
+  annualHolidays: number | null
+  insurance: string | null
+  smokingPolicy: string | null
+  trialPeriod: string | null
+  requiredExperience: string | null
+  education: string | null
+  recruitmentCount: string | null
+  recruitmentReason: string | null
+  companyFeatures: string | null
+  businessContent: string | null
+  companyUrl: string | null
+  validUntil: Date | null
+  receivedDate: Date | null
+  /** 個別カラムに抽出していない全 API タグ（未加工値） */
+  rawData: Record<string, unknown>
 }
+
+/** 個別カラム化済みの API タグ。`rawData` ではここに無いタグだけを残す。 */
+const EXTRACTED_TAGS = new Set([
+  "kjno",
+  "shigoto_ny",
+  "jgshmei",
+  "koyokeitai_n",
+  "koyokeitai_c",
+  "shgbsjusho",
+  "jgshjusho_n",
+  "shgbsjusho1_n",
+  "chgnkeitai_kagen",
+  "chgnkeitai_jgn",
+  "chgnkeitai",
+  "menkyo_skku3_n",
+  "sksu",
+  "kjjknktkjk",
+  "skgybrui1_c",
+  "skgybruicode1_dai_c",
+  "sngbrui_c",
+  "sngbrui_n",
+  "kjkbn1_n",
+  "khky",
+  "shoyo",
+  "tskntat",
+  "ktizangydi",
+  "shgjn",
+  "shgjn_tkjk",
+  "kyjs",
+  "kyjstosnta",
+  "nenkankjsu_n",
+  "knyhkn",
+  "okni_jdktentisk_n",
+  "sykkn",
+  "hynakiknt",
+  "grki",
+  "saiyoninzu_n",
+  "boshury_n",
+  "kaishatokucho",
+  "jigyony",
+  "jgshhp",
+  "kjyukoymd",
+  "uktkymd_seireki",
+])
 
 /** クローラーの取得結果 */
 export interface CrawlResult {
@@ -293,8 +369,15 @@ function toHelloworkJobData(
 
   const requirements = str(record.menkyo_skku3_n)
 
-  // タイトルは独立した「職種名」タグが無いので、仕事内容の冒頭を流用する
-  const title = description ? description.slice(0, 80) : "求人"
+  // 職種名 (sksu) を title に採用。無ければ仕事内容の冒頭を流用。
+  const occupationTitle = str(record.sksu)
+  const title = occupationTitle ?? (description ? description.slice(0, 80) : "求人")
+
+  // 拡張フィールド抽出
+  const rawData: Record<string, unknown> = {}
+  for (const [k, v] of Object.entries(record)) {
+    if (!EXTRACTED_TAGS.has(k)) rawData[k] = v
+  }
 
   return {
     helloworkId,
@@ -311,7 +394,51 @@ function toHelloworkJobData(
     requirements,
     source: "hellowork",
     attribution: ATTRIBUTION,
+
+    occupationTitle,
+    jobConditionNotes: str(record.kjjknktkjk),
+    industryCode: str(record.skgybrui1_c),
+    industryMajorCode: str(record.skgybruicode1_dai_c),
+    occupationCode: str(record.sngbrui_c),
+    occupationCategoryName: str(record.sngbrui_n),
+    jobTypeName: str(record.kjkbn1_n),
+    baseSalary: str(record.khky),
+    bonus: str(record.shoyo),
+    commuteAllowance: str(record.tskntat),
+    fixedOvertime: str(record.ktizangydi),
+    workHours: str(record.shgjn),
+    workHoursNotes: str(record.shgjn_tkjk),
+    holidays: str(record.kyjs),
+    holidaysOther: str(record.kyjstosnta),
+    annualHolidays: numericOrNull(record.nenkankjsu_n),
+    insurance: str(record.knyhkn),
+    smokingPolicy: str(record.okni_jdktentisk_n),
+    trialPeriod: str(record.sykkn),
+    requiredExperience: str(record.hynakiknt),
+    education: str(record.grki),
+    recruitmentCount: str(record.saiyoninzu_n),
+    recruitmentReason: str(record.boshury_n),
+    companyFeatures: str(record.kaishatokucho),
+    businessContent: str(record.jigyony),
+    companyUrl: str(record.jgshhp),
+    validUntil: parseDate(str(record.kjyukoymd)),
+    receivedDate: parseDate(str(record.uktkymd_seireki)),
+    rawData,
   }
+}
+
+/** "YYYY-MM-DD" / "YYYYMMDD" / "YYYY/MM/DD" を Date に変換。失敗時は null。 */
+function parseDate(s: string | null): Date | null {
+  if (!s) return null
+  // 区切り文字を統一して 8 桁の数字を抽出
+  const digits = s.replace(/\D/g, "")
+  if (digits.length !== 8) return null
+  const y = parseInt(digits.slice(0, 4), 10)
+  const m = parseInt(digits.slice(4, 6), 10)
+  const d = parseInt(digits.slice(6, 8), 10)
+  if (!y || !m || !d) return null
+  const date = new Date(Date.UTC(y, m - 1, d))
+  return isNaN(date.getTime()) ? null : date
 }
 
 // ========================================
@@ -339,12 +466,12 @@ function numericOrNull(v: unknown): number | null {
 
 function inferSalaryType(
   formatText: string | null
-): "monthly" | "hourly" | "annual" | null {
+): "monthly" | "hourly" | "annual" | "daily" | null {
   if (!formatText) return null
   if (/月給|月額/.test(formatText)) return "monthly"
   if (/時給|時間額/.test(formatText)) return "hourly"
   if (/年俸|年額|年収/.test(formatText)) return "annual"
-  if (/日給/.test(formatText)) return "monthly"
+  if (/日給|日額/.test(formatText)) return "daily"
   return null
 }
 
@@ -352,15 +479,17 @@ function inferSalaryType(
  * 賃金タグから種別が判定できないとき、金額レンジから推定する。
  * 凡そのレンジ:
  *   - 時給: 〜 5,000 円
- *   - 月給: 50,000 〜 1,500,000 円
+ *   - 日給: 5,000 〜 30,000 円
+ *   - 月給: 30,000 〜 1,500,000 円
  *   - 年俸: 1,500,000 円以上
  */
 function inferSalaryTypeFromAmount(
   amount: number | null
-): "monthly" | "hourly" | "annual" | null {
+): "monthly" | "hourly" | "annual" | "daily" | null {
   if (amount === null || amount <= 0) return null
-  if (amount < 5000) return "hourly"
-  if (amount < 1500000) return "monthly"
+  if (amount < 5_000) return "hourly"
+  if (amount < 30_000) return "daily"
+  if (amount < 1_500_000) return "monthly"
   return "annual"
 }
 
@@ -425,7 +554,7 @@ function parseEmploymentType(
 export function parseSalary(salaryText: string): {
   min: number | null
   max: number | null
-  type: "monthly" | "hourly" | "annual" | null
+  type: "monthly" | "hourly" | "annual" | "daily" | null
 } {
   if (!salaryText) return { min: null, max: null, type: null }
   const normalized = salaryText.replace(/,/g, "").replace(/，/g, "")

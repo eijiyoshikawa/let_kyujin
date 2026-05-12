@@ -81,6 +81,13 @@ type JobInput = {
   address: string | null
   publishedAt: Date | null
   createdAt: Date
+  // 新カラム（任意）— ハローワーク掲載情報から取得した正規化値
+  occupationCategoryName?: string | null
+  industryCode?: string | null
+  workHours?: string | null
+  holidays?: string | null
+  requiredExperience?: string | null
+  education?: string | null
   company: {
     name: string
     logoUrl: string | null
@@ -96,6 +103,7 @@ const EMPLOYMENT_TYPE_MAP: Record<string, string> = {
 
 const SALARY_UNIT_MAP: Record<string, string> = {
   hourly: "HOUR",
+  daily: "DAY",
   monthly: "MONTH",
   annual: "YEAR",
 }
@@ -178,6 +186,25 @@ export function generateJobPostingSchema(job: JobInput): Record<string, unknown>
         unitText,
       },
     }
+  }
+
+  if (job.occupationCategoryName) {
+    schema.occupationalCategory = job.occupationCategoryName
+  }
+  if (job.industryCode) {
+    schema.industry = job.industryCode
+  }
+  if (job.workHours) {
+    schema.workHours = job.workHours
+  }
+  if (job.requiredExperience) {
+    schema.experienceRequirements = job.requiredExperience
+  }
+  if (job.education) {
+    schema.educationRequirements = job.education
+  }
+  if (job.holidays) {
+    schema.jobBenefits = job.holidays
   }
 
   return schema

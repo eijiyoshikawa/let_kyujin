@@ -12,7 +12,7 @@
  * @module import-batch
  */
 
-import { PrismaClient } from "@prisma/client"
+import { Prisma, PrismaClient } from "@prisma/client"
 import type { CategoryValue } from "@/lib/categories"
 import {
   cleanTitle,
@@ -126,6 +126,38 @@ function toJobRecord(
     rankScore,
     status: "active" as const,
     publishedAt: new Date(),
+    expiresAt: job.validUntil,
+
+    // ハローワーク API 拡張フィールド
+    occupationTitle: truncate(job.occupationTitle, 100),
+    jobConditionNotes: job.jobConditionNotes,
+    industryCode: truncate(job.industryCode, 10),
+    industryMajorCode: truncate(job.industryMajorCode, 5),
+    occupationCode: truncate(job.occupationCode, 10),
+    occupationCategoryName: truncate(job.occupationCategoryName, 50),
+    jobTypeName: truncate(job.jobTypeName, 20),
+    baseSalary: truncate(job.baseSalary, 50),
+    bonus: truncate(job.bonus, 100),
+    commuteAllowance: truncate(job.commuteAllowance, 50),
+    fixedOvertime: truncate(job.fixedOvertime, 100),
+    workHours: truncate(job.workHours, 100),
+    workHoursNotes: truncate(job.workHoursNotes, 255),
+    holidays: truncate(job.holidays, 50),
+    holidaysOther: truncate(job.holidaysOther, 200),
+    annualHolidays: job.annualHolidays,
+    insurance: truncate(job.insurance, 50),
+    smokingPolicy: truncate(job.smokingPolicy, 20),
+    trialPeriod: truncate(job.trialPeriod, 100),
+    requiredExperience: truncate(job.requiredExperience, 500),
+    education: truncate(job.education, 50),
+    recruitmentCount: truncate(job.recruitmentCount, 10),
+    recruitmentReason: truncate(job.recruitmentReason, 20),
+    companyFeatures: job.companyFeatures,
+    businessContent: job.businessContent,
+    companyUrl: truncate(job.companyUrl, 255),
+    validUntil: job.validUntil,
+    receivedDate: job.receivedDate,
+    rawData: (job.rawData ?? {}) as Prisma.InputJsonValue,
   }
 }
 
@@ -190,6 +222,10 @@ function truncate<T extends string | null | undefined>(
  *
  * パターン優先度: より具体的な業種（civil, electrical, ...）を construction より先に評価し、
  * 「土木 + 建築」のような複合キーワードを取りこぼさないようにする。
+ *
+ * NOTE: ハローワーク API の `skgybruicode1_dai_c`（産業大分類コード）は
+ * JSIC 標準ではなくハローワーク独自のコード体系（"06","07","08" は飲食・サービス業を含む）
+ * のため、業種コードでの判定は使用しない。コードは将来分析用に DB へ保存だけする。
  */
 export function inferCategory(
   title: string,
@@ -337,6 +373,37 @@ export async function importHelloworkJobs(
           tags: data.tags,
           rankScore: data.rankScore,
           status: "active",
+          expiresAt: data.expiresAt,
+          // ハローワーク API 拡張フィールド
+          occupationTitle: data.occupationTitle,
+          jobConditionNotes: data.jobConditionNotes,
+          industryCode: data.industryCode,
+          industryMajorCode: data.industryMajorCode,
+          occupationCode: data.occupationCode,
+          occupationCategoryName: data.occupationCategoryName,
+          jobTypeName: data.jobTypeName,
+          baseSalary: data.baseSalary,
+          bonus: data.bonus,
+          commuteAllowance: data.commuteAllowance,
+          fixedOvertime: data.fixedOvertime,
+          workHours: data.workHours,
+          workHoursNotes: data.workHoursNotes,
+          holidays: data.holidays,
+          holidaysOther: data.holidaysOther,
+          annualHolidays: data.annualHolidays,
+          insurance: data.insurance,
+          smokingPolicy: data.smokingPolicy,
+          trialPeriod: data.trialPeriod,
+          requiredExperience: data.requiredExperience,
+          education: data.education,
+          recruitmentCount: data.recruitmentCount,
+          recruitmentReason: data.recruitmentReason,
+          companyFeatures: data.companyFeatures,
+          businessContent: data.businessContent,
+          companyUrl: data.companyUrl,
+          validUntil: data.validUntil,
+          receivedDate: data.receivedDate,
+          rawData: data.rawData,
           // updatedAt は Prisma が自動更新する
         },
       })

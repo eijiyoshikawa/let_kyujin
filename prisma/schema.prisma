@@ -155,6 +155,39 @@ model Job {
   // 内容量・SNS 登録数・写真数・3 ヶ月以内更新を加点で評価する（ranking.ts 参照）。
   // 取り込み時 / 企業プロフィール保存時に再計算される。
   rankScore      Int       @default(0) @map("rank_score")
+
+  // ハローワーク API 由来の拡張フィールド（C案ハイブリッド: 主要項目を個別カラム化）
+  occupationTitle        String?   @map("occupation_title") @db.VarChar(100)
+  jobConditionNotes      String?   @map("job_condition_notes")
+  industryCode           String?   @map("industry_code") @db.VarChar(10)
+  industryMajorCode      String?   @map("industry_major_code") @db.VarChar(5)
+  occupationCode         String?   @map("occupation_code") @db.VarChar(10)
+  occupationCategoryName String?   @map("occupation_category_name") @db.VarChar(50)
+  jobTypeName            String?   @map("job_type_name") @db.VarChar(20)
+  baseSalary             String?   @map("base_salary") @db.VarChar(50)
+  bonus                  String?   @db.VarChar(100)
+  commuteAllowance       String?   @map("commute_allowance") @db.VarChar(50)
+  fixedOvertime          String?   @map("fixed_overtime") @db.VarChar(100)
+  workHours              String?   @map("work_hours") @db.VarChar(100)
+  workHoursNotes         String?   @map("work_hours_notes") @db.VarChar(255)
+  holidays               String?   @db.VarChar(50)
+  holidaysOther          String?   @map("holidays_other") @db.VarChar(200)
+  annualHolidays         Int?      @map("annual_holidays")
+  insurance              String?   @db.VarChar(50)
+  smokingPolicy          String?   @map("smoking_policy") @db.VarChar(20)
+  trialPeriod            String?   @map("trial_period") @db.VarChar(100)
+  requiredExperience     String?   @map("required_experience") @db.VarChar(500)
+  education              String?   @db.VarChar(50)
+  recruitmentCount       String?   @map("recruitment_count") @db.VarChar(10)
+  recruitmentReason      String?   @map("recruitment_reason") @db.VarChar(20)
+  companyFeatures        String?   @map("company_features")
+  businessContent        String?   @map("business_content")
+  companyUrl             String?   @map("company_url") @db.VarChar(255)
+  validUntil             DateTime? @map("valid_until") @db.Date
+  receivedDate           DateTime? @map("received_date") @db.Date
+  // 上記以外の API タグを丸ごと格納
+  rawData                Json?     @map("raw_data")
+
   createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamptz()
 
@@ -169,6 +202,7 @@ model Job {
   @@index([salaryMin, salaryMax], name: "idx_jobs_salary")
   @@index([status, publishedAt(sort: Desc)], name: "idx_jobs_status_published")
   @@index([status, rankScore(sort: Desc), publishedAt(sort: Desc)], name: "idx_jobs_status_rank")
+  @@index([industryMajorCode], name: "idx_jobs_industry_major")
   @@map("jobs")
 }
 

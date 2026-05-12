@@ -1,11 +1,13 @@
 import Link from "next/link"
 import {
   MapPin,
-  Banknote,
-  Building2,
+  Money,
+  Buildings,
   HardHat,
-  ChevronRight,
-} from "lucide-react"
+  CaretRight,
+  CalendarCheck,
+  ShieldCheck,
+} from "@phosphor-icons/react/dist/ssr"
 import { getCategoryLabel } from "@/lib/categories"
 import { TagChip } from "./tag-chip"
 
@@ -21,6 +23,8 @@ type JobCardProps = {
   city: string | null
   source: string
   tags: string[]
+  annualHolidays?: number | null
+  insurance?: string | null
   company: { name: string; logoUrl: string | null } | null
 }
 
@@ -33,7 +37,7 @@ export function JobCard({ job }: { job: JobCardProps }) {
       className="group flex gap-4 border bg-white p-4 transition hover:border-primary-400 hover:shadow-sm"
     >
       <div className="hidden sm:flex h-10 w-10 shrink-0 items-center justify-center bg-gray-100 group-hover:bg-primary-50 transition">
-        <HardHat className="h-6 w-6 text-primary-500" />
+        <HardHat weight="duotone" className="h-6 w-6 text-primary-500" />
       </div>
 
       <div className="flex-1 min-w-0">
@@ -47,11 +51,6 @@ export function JobCard({ job }: { job: JobCardProps }) {
               {employmentTypeLabel(job.employmentType)}
             </span>
           )}
-          {job.source === "hellowork" && (
-            <span className="bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
-              HW
-            </span>
-          )}
         </div>
 
         {/* タイトル */}
@@ -63,17 +62,17 @@ export function JobCard({ job }: { job: JobCardProps }) {
         <div className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1">
           {job.salaryMin ? (
             <span className="inline-flex items-center gap-1 text-base font-bold text-primary-600">
-              <Banknote className="h-4 w-4" />
+              <Money weight="duotone" className="h-4 w-4" />
               {formatSalary(job.salaryMin, job.salaryMax, job.salaryType)}
             </span>
           ) : (
             <span className="inline-flex items-center gap-1 text-sm text-gray-400">
-              <Banknote className="h-4 w-4" />
+              <Money weight="duotone" className="h-4 w-4" />
               給与応相談
             </span>
           )}
           <span className="inline-flex items-center gap-1 text-sm text-gray-600">
-            <MapPin className="h-4 w-4 text-gray-400" />
+            <MapPin weight="duotone" className="h-4 w-4 text-gray-400" />
             {job.prefecture}
             {job.city && ` ${job.city}`}
           </span>
@@ -82,9 +81,27 @@ export function JobCard({ job }: { job: JobCardProps }) {
         {/* 会社名（小さく） */}
         {job.company && (
           <p className="mt-1.5 flex items-center gap-1 text-xs text-gray-500">
-            <Building2 className="h-3.5 w-3.5 shrink-0" />
+            <Buildings weight="duotone" className="h-3.5 w-3.5 shrink-0" />
             {job.company.name}
           </p>
+        )}
+
+        {/* 構造化バッジ（年間休日 / 保険） */}
+        {(job.annualHolidays != null || job.insurance) && (
+          <div className="mt-2 flex flex-wrap gap-2 text-xs text-gray-600">
+            {job.annualHolidays != null && (
+              <span className="inline-flex items-center gap-1">
+                <CalendarCheck weight="duotone" className="h-3.5 w-3.5 text-primary-500" />
+                年間休日 {job.annualHolidays}日
+              </span>
+            )}
+            {job.insurance && (
+              <span className="inline-flex items-center gap-1">
+                <ShieldCheck weight="duotone" className="h-3.5 w-3.5 text-primary-500" />
+                {truncate(job.insurance, 20)}
+              </span>
+            )}
+          </div>
         )}
 
         {/* 待遇チップ（自動抽出されたタグを 5 件まで、デザインシステム TagChip 統一）*/}
@@ -105,7 +122,7 @@ export function JobCard({ job }: { job: JobCardProps }) {
       </div>
 
       <div className="hidden sm:flex items-center">
-        <ChevronRight className="h-5 w-5 text-gray-300 group-hover:text-primary-500 transition" />
+        <CaretRight weight="duotone" className="h-5 w-5 text-gray-300 group-hover:text-primary-500 transition" />
       </div>
     </Link>
   )
@@ -116,12 +133,30 @@ function formatSalary(
   max: number | null,
   type: string | null
 ): string {
-  const unit = type === "hourly" ? "時給" : type === "annual" ? "年収" : "月給"
+  const unit = salaryUnitLabel(type)
+  // 時給・日給は 1 万未満が大半なので万円表記しない
+  const useManYen = type !== "hourly" && type !== "daily"
   const fmt = (n: number) =>
-    n >= 10000 ? `${(n / 10000).toFixed(0)}万` : `${n.toLocaleString()}`
+    useManYen && n >= 10000
+      ? `${(n / 10000).toFixed(0)}万`
+      : `${n.toLocaleString()}`
   if (min && max) return `${unit} ${fmt(min)}〜${fmt(max)}円`
   if (min) return `${unit} ${fmt(min)}円〜`
   return ""
+}
+
+function salaryUnitLabel(type: string | null): string {
+  switch (type) {
+    case "hourly":
+      return "時給"
+    case "annual":
+      return "年収"
+    case "daily":
+      return "日給"
+    case "monthly":
+    default:
+      return "月給"
+  }
 }
 
 function employmentTypeLabel(type: string): string {
@@ -131,4 +166,8 @@ function employmentTypeLabel(type: string): string {
     contract: "契約社員",
   }
   return labels[type] ?? type
+}
+
+function truncate(s: string, max: number): string {
+  return s.length > max ? `${s.slice(0, max)}…` : s
 }
