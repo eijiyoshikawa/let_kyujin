@@ -40,8 +40,29 @@ model User {
   jobViews          JobView[]
   notifications     Notification[]
   savedSearches     SavedSearch[]
+  messageTemplates  ApplicationMessageTemplate[]
 
   @@map("users")
+}
+
+// ========================================
+// 応募メッセージ テンプレート
+// ========================================
+// 求職者が応募フォームの「ご質問・希望条件」欄にすばやく挿入できる定型文。
+// 1 ユーザーあたり 10 件まで（API で制限）。
+model ApplicationMessageTemplate {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  name      String   @db.VarChar(60)
+  body      String
+  sortOrder Int      @default(100) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, sortOrder], name: "idx_app_msg_tpl_user")
+  @@map("application_message_templates")
 }
 
 // ========================================
