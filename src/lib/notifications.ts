@@ -7,6 +7,7 @@
 
 import { prisma } from "@/lib/db"
 import { pushUserNotification } from "@/lib/line-push-notifier"
+import { sendWebPushToUser } from "@/lib/web-push"
 
 export type NotificationType =
   | "application_status"
@@ -69,6 +70,18 @@ export async function createNotification(input: {
   }).catch((e) => {
     console.warn(
       `[notifications] line push failed: ${e instanceof Error ? e.message : e}`
+    )
+  })
+
+  // Web Push: 購読中のブラウザにも配信（VAPID 未設定なら no-op）
+  sendWebPushToUser(input.userId, {
+    title: input.title,
+    body: input.body ?? undefined,
+    url: input.linkUrl ?? "/mypage/notifications",
+    tag: input.type,
+  }).catch((e) => {
+    console.warn(
+      `[notifications] web push failed: ${e instanceof Error ? e.message : e}`
     )
   })
 }

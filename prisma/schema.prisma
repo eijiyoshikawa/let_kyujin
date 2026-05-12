@@ -42,8 +42,32 @@ model User {
   savedSearches     SavedSearch[]
   messageTemplates  ApplicationMessageTemplate[]
   jobFavorites      JobFavorite[]
+  webPushSubscriptions WebPushSubscription[]
 
   @@map("users")
+}
+
+// ========================================
+// Web Push 通知 サブスクリプション
+// ========================================
+// ブラウザの Push API を購読中の endpoint を保存する。
+// 同じユーザーが複数ブラウザ / 端末から購読することがあるので endpoint unique。
+model WebPushSubscription {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  endpoint  String   @unique @db.VarChar(2000)
+  p256dh    String   @db.VarChar(255)
+  authKey   String   @map("auth_key") @db.VarChar(255)
+  userAgent String?  @map("user_agent") @db.VarChar(500)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  // 配信失敗時の連続失敗回数。閾値超過で自動削除候補とする。
+  failureCount Int   @default(0) @map("failure_count")
+  lastFailedAt DateTime? @map("last_failed_at") @db.Timestamptz()
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt(sort: Desc)], name: "idx_web_push_user")
+  @@map("web_push_subscriptions")
 }
 
 // ========================================
