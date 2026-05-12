@@ -214,45 +214,22 @@ function truncate<T extends string | null | undefined>(
 }
 
 /**
- * ハローワーク API の産業大分類コード（`skgybruicode1_dai_c`）のうち
- * 建設業に該当するもの。JSIC 2013 では大分類 D = 建設業。
+ * 求人タイトル・説明文から建設業カテゴリを推定する。
  *
- * NOTE: API が返す具体的なコード体系が未確定なので、観測される
- *       コード値を見ながら随時追加する。"D" / "06"〜"08" を初期候補とする。
- */
-const CONSTRUCTION_INDUSTRY_MAJOR_CODES = new Set(["D", "06", "07", "08"])
-
-/**
- * 産業大分類コードが建設業を示すかを判定する。
- * 既知の建設業コードに含まれていれば true。
- */
-function isConstructionIndustryCode(
-  industryMajorCode: string | null | undefined
-): boolean {
-  if (!industryMajorCode) return false
-  const normalized = industryMajorCode.trim().toUpperCase()
-  if (CONSTRUCTION_INDUSTRY_MAJOR_CODES.has(normalized)) return true
-  // 中分類フォーマット（"D06" 等）にも一応対応
-  return /^D(0?[678])?$/.test(normalized)
-}
-
-/**
- * 産業コード優先で建設業 9 カテゴリ（"other" を除く 8 つ）を推定する。
- *
- * 判定順:
- *   1. 産業大分類コード（`industryMajorCode`）が建設業を示す
- *      → タイトル・説明文のキーワードでサブカテゴリを推定
- *   2. industryMajorCode が未取得 / 建設業以外
- *      → 従来通りキーワードマッチでカテゴリ推定（フォールバック）
- *   3. どちらにも該当しなければ null（取り込み対象外）
+ * `src/lib/categories.ts` で定義された建設業 9 カテゴリ（"other" を除く 8 つ）
+ * のいずれかに該当するキーワードが含まれていれば該当カテゴリを返す。
+ * いずれにも該当しなければ `null` を返し、呼び出し側はそのジョブを取り込まずスキップする。
  *
  * パターン優先度: より具体的な業種（civil, electrical, ...）を construction より先に評価し、
  * 「土木 + 建築」のような複合キーワードを取りこぼさないようにする。
+ *
+ * NOTE: ハローワーク API の `skgybruicode1_dai_c`（産業大分類コード）は
+ * JSIC 標準ではなくハローワーク独自のコード体系（"06","07","08" は飲食・サービス業を含む）
+ * のため、業種コードでの判定は使用しない。コードは将来分析用に DB へ保存だけする。
  */
 export function inferCategory(
   title: string,
-  description: string | null | undefined,
-  industryMajorCode?: string | null
+  description: string | null | undefined
 ): CategoryValue | null {
   const text = `${title} ${description ?? ""}`.toLowerCase()
 
@@ -282,20 +259,8 @@ export function inferCategory(
     },
   ]
 
-  // 1. 産業コード優先: 建設業コードに該当すればサブカテゴリをテキストで推定
-  if (isConstructionIndustryCode(industryMajorCode)) {
-    for (const { category, pattern } of patterns) {
-      if (pattern.test(text)) return category
-    }
-    // 建設業だがサブカテゴリ不明 → 既定で construction
-    return "construction"
-  }
-
-  // 2. industryMajorCode が無い / 建設業以外: 従来のテキスト判定にフォールバック
-  if (industryMajorCode == null || industryMajorCode === "") {
-    for (const { category, pattern } of patterns) {
-      if (pattern.test(text)) return category
-    }
+  for (const { category, pattern } of patterns) {
+    if (pattern.test(text)) return category
   }
 
   return null
@@ -364,11 +329,7 @@ export async function importHelloworkJobs(
   for (const job of jobs) {
     try {
       // 建設業 9 カテゴリのいずれにも該当しないジョブは取り込まない
-      const category = inferCategory(
-        job.title,
-        job.description,
-        job.industryMajorCode
-      )
+      const category = inferCategory(job.title, job.description)
       if (category === null) {
         skipped++
         continue
