@@ -104,6 +104,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "yearly",
       priority: 0.3,
     },
+    {
+      url: `${BASE_URL}/faq`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
   ]
 
   // Journal articles
@@ -135,6 +141,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const prefecturePages: MetadataRoute.Sitemap = PREFECTURE_SLUGS.map(
     (slug) => ({
       url: `${BASE_URL}/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: 0.85,
+    })
+  )
+
+  // National category landing pages（/categories/[category]/page.tsx に対応）
+  const categoryPages: MetadataRoute.Sitemap = CONSTRUCTION_CATEGORY_VALUES.map(
+    (slug) => ({
+      url: `${BASE_URL}/categories/${slug}`,
       lastModified: new Date(),
       changeFrequency: "daily" as const,
       priority: 0.85,
@@ -176,6 +192,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...staticPages,
     ...journalPages,
     ...prefecturePages,
+    ...categoryPages,
     ...jobPages,
     ...seoCombos,
     ...helpPages,

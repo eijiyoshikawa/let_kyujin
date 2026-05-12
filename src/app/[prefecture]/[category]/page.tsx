@@ -12,6 +12,8 @@ const CONSTRUCTION_CATEGORY_SET: ReadonlySet<string> = new Set(
 
 export const revalidate = 21600 // 6 hours ISR
 
+const SITE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://genbacareer.jp"
+
 const PREFECTURES: Record<string, string> = {
   hokkaido: "北海道",
   aomori: "青森県",
@@ -97,6 +99,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
+    alternates: { canonical: `/${prefecture}/${category}` },
     openGraph: { title, description },
   }
 }
@@ -144,8 +147,39 @@ export default async function PrefectureCategoryPage({ params }: Props) {
     })
     .catch(() => [])
 
+  const breadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "トップ", item: SITE_URL },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "求人一覧",
+        item: `${SITE_URL}/jobs`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: prefLabel,
+        item: `${SITE_URL}/${prefecture}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 4,
+        name: catLabel,
+        item: `${SITE_URL}/${prefecture}/${category}`,
+      },
+    ],
+  }
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+      />
+
       <nav className="mb-4 text-sm text-gray-500">
         <Link href="/" className="hover:text-gray-700">
           トップ
@@ -155,9 +189,11 @@ export default async function PrefectureCategoryPage({ params }: Props) {
           求人一覧
         </Link>
         <span className="mx-1">/</span>
-        <span className="text-gray-900">
-          {prefLabel} - {catLabel}
-        </span>
+        <Link href={`/${prefecture}`} className="hover:text-gray-700">
+          {prefLabel}
+        </Link>
+        <span className="mx-1">/</span>
+        <span className="text-gray-900">{catLabel}</span>
       </nav>
 
       <h1 className="text-2xl font-bold text-gray-900">

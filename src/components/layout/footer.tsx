@@ -42,6 +42,7 @@ export function Footer() {
               <li><Link href="/jobs" className="text-xs text-gray-400 hover:text-primary-300 transition">求人検索</Link></li>
               <li><Link href="/register" className="text-xs text-gray-400 hover:text-primary-300 transition">会員登録</Link></li>
               <li><Link href="/login" className="text-xs text-gray-400 hover:text-primary-300 transition">ログイン</Link></li>
+              <li><Link href="/faq" className="text-xs text-gray-400 hover:text-primary-300 transition">よくある質問</Link></li>
             </ul>
           </div>
           <div>
