@@ -4,8 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { PREFECTURES } from "@/lib/constants"
 import { CATEGORIES } from "@/lib/categories"
-import { Sparkles, Loader2, Eye, ChevronRight, ChevronLeft, Save, Check } from "lucide-react"
+import { Sparkles, Loader2, Eye, ChevronRight, ChevronLeft, Save, Check, FileStack } from "lucide-react"
 import { JobCard } from "@/components/jobs/job-card"
+import { JOB_TEMPLATES, type JobTemplate } from "@/lib/job-templates"
 
 const EMPLOYMENT_TYPES = [
   { value: "full_time", label: "正社員" },
@@ -112,6 +113,22 @@ export function JobWizard({
 
   const [step, setStep] = useState(0)
   const [form, setForm] = useState<FormState>(() => buildInitial(initialData))
+  const [templatesOpen, setTemplatesOpen] = useState(!isEditing && !initialData)
+
+  const applyTemplate = useCallback((t: JobTemplate) => {
+    setForm((prev) => ({
+      ...prev,
+      category: t.category,
+      // 空の項目だけテンプレで埋める。既に入力済みは尊重。
+      description: prev.description || t.description,
+      requirements: prev.requirements || t.requirements,
+      benefits: prev.benefits || t.benefits.join(", "),
+      tags: prev.tags || t.tags.join(", "),
+      salaryMin: prev.salaryMin || (t.salaryMin ? String(t.salaryMin) : ""),
+      salaryMax: prev.salaryMax || (t.salaryMax ? String(t.salaryMax) : ""),
+    }))
+    setTemplatesOpen(false)
+  }, [])
   const [error, setError] = useState("")
   const [submitting, setSubmitting] = useState(false)
   const [titleSuggestions, setTitleSuggestions] = useState<string[]>([])
@@ -375,6 +392,60 @@ export function JobWizard({
         {error && (
           <div className="border border-red-200 bg-red-50 p-3 text-sm text-red-700">
             {error}
+          </div>
+        )}
+
+        {/* Templates (step 0 only, new only) */}
+        {step === 0 && !isEditing && (
+          <div className="border border-primary-200 bg-primary-50/40">
+            <button
+              type="button"
+              onClick={() => setTemplatesOpen((o) => !o)}
+              className="flex w-full items-center justify-between gap-2 px-5 py-3 text-left"
+            >
+              <span className="flex items-center gap-2 text-sm font-bold text-primary-800">
+                <FileStack className="h-4 w-4" />
+                テンプレートから作成（{JOB_TEMPLATES.length} 件）
+              </span>
+              <span className="text-xs text-primary-700">
+                {templatesOpen ? "閉じる" : "選ぶ"} →
+              </span>
+            </button>
+            {templatesOpen && (
+              <div className="border-t border-primary-200 px-5 py-4">
+                <p className="text-xs text-gray-600 mb-3">
+                  業界別のひな型を選ぶと「カテゴリ / 仕事内容 / 応募要件 / 福利厚生 / タグ / 給与」が一括で埋まります。
+                  既に入力済みの項目は上書きされません。
+                </p>
+                <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {JOB_TEMPLATES.map((t) => (
+                    <li key={t.id}>
+                      <button
+                        type="button"
+                        onClick={() => applyTemplate(t)}
+                        className="group w-full border bg-white hover:bg-warm-50 hover:border-primary-300 px-3 py-2 text-left transition"
+                      >
+                        <p className="text-sm font-bold text-gray-900 group-hover:text-primary-700">
+                          {t.name}
+                        </p>
+                        {t.hint && (
+                          <p className="mt-0.5 text-[11px] text-gray-500 line-clamp-2">
+                            {t.hint}
+                          </p>
+                        )}
+                        {(t.salaryMin || t.salaryMax) && (
+                          <p className="mt-1 text-xs text-primary-700 tabular-nums">
+                            月給 {t.salaryMin?.toLocaleString() ?? "—"}
+                            {" 〜 "}
+                            {t.salaryMax?.toLocaleString() ?? "—"} 円
+                          </p>
+                        )}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         )}
 
