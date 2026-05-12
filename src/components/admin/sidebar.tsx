@@ -10,10 +10,12 @@ import {
   Shield,
   FileText,
   MessageCircle,
+  BarChart3,
 } from "lucide-react"
 
 const navItems = [
   { href: "/admin", label: "ダッシュボード", icon: LayoutDashboard, exact: true },
+  { href: "/admin/analytics", label: "分析", icon: BarChart3 },
   { href: "/admin/line-leads", label: "LINE リード", icon: MessageCircle },
   { href: "/admin/companies", label: "企業管理", icon: Building2 },
   { href: "/admin/articles", label: "記事管理", icon: FileText },
