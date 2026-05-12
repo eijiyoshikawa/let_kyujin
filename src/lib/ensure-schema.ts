@@ -71,6 +71,20 @@ const STATEMENTS: ReadonlyArray<string> = [
   )`,
  `CREATE INDEX IF NOT EXISTS "idx_job_views_job_time" ON "job_views" ("job_id", "viewed_at" DESC)`,
  `CREATE INDEX IF NOT EXISTS "idx_job_views_session_time" ON "job_views" ("session_id", "viewed_at" DESC)`,
+ // PR #40: BroadcastLog
+ `CREATE TABLE IF NOT EXISTS "broadcast_logs" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+    "segment" JSONB NOT NULL,
+    "job_ids" UUID[] NOT NULL DEFAULT ARRAY[]::UUID[],
+    "free_text" TEXT,
+    "target_count" INTEGER NOT NULL DEFAULT 0,
+    "success_count" INTEGER NOT NULL DEFAULT 0,
+    "failure_count" INTEGER NOT NULL DEFAULT 0,
+    "skipped_count" INTEGER NOT NULL DEFAULT 0,
+    "triggered_by" UUID,
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`,
+ `CREATE INDEX IF NOT EXISTS "idx_broadcast_logs_time" ON "broadcast_logs" ("created_at" DESC)`,
 ]
 
 let inflight: Promise<boolean> | null = null
