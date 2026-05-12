@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { JobWizard } from "@/components/company/job-wizard"
+import { loadActiveJobTemplates } from "@/lib/job-templates"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -14,6 +15,8 @@ export default async function NewJobPage() {
   const companyId = (session.user as { companyId?: string }).companyId
   if (!companyId) redirect("/login")
 
+  const templates = await loadActiveJobTemplates()
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-900">新規求人作成</h1>
@@ -21,7 +24,7 @@ export default async function NewJobPage() {
         4 ステップで入力。AI 提案と下書き自動保存に対応しています。
       </p>
       <div className="mt-6">
-        <JobWizard companyId={companyId} />
+        <JobWizard companyId={companyId} templates={templates} />
       </div>
     </div>
   )

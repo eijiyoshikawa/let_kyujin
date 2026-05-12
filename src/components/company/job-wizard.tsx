@@ -6,7 +6,7 @@ import { PREFECTURES } from "@/lib/constants"
 import { CATEGORIES } from "@/lib/categories"
 import { Sparkles, Loader2, Eye, ChevronRight, ChevronLeft, Save, Check, FileStack } from "lucide-react"
 import { JobCard } from "@/components/jobs/job-card"
-import { JOB_TEMPLATES, type JobTemplate } from "@/lib/job-templates"
+import { type JobTemplate } from "@/lib/job-templates"
 
 const EMPLOYMENT_TYPES = [
   { value: "full_time", label: "正社員" },
@@ -114,16 +114,18 @@ function toApiBody(form: FormState, status: string) {
 export function JobWizard({
   companyId,
   initialData,
+  templates = [],
 }: {
   companyId: string
   initialData?: JobWizardData
+  templates?: JobTemplate[]
 }) {
   const router = useRouter()
   const isEditing = !!initialData?.id
 
   const [step, setStep] = useState(0)
   const [form, setForm] = useState<FormState>(() => buildInitial(initialData))
-  const [templatesOpen, setTemplatesOpen] = useState(!isEditing && !initialData)
+  const [templatesOpen, setTemplatesOpen] = useState(!isEditing && !initialData && templates.length > 0)
 
   const applyTemplate = useCallback((t: JobTemplate) => {
     setForm((prev) => ({
@@ -406,7 +408,7 @@ export function JobWizard({
         )}
 
         {/* Templates (step 0 only, new only) */}
-        {step === 0 && !isEditing && (
+        {step === 0 && !isEditing && templates.length > 0 && (
           <div className="border border-primary-200 bg-primary-50/40">
             <button
               type="button"
@@ -415,7 +417,7 @@ export function JobWizard({
             >
               <span className="flex items-center gap-2 text-sm font-bold text-primary-800">
                 <FileStack className="h-4 w-4" />
-                テンプレートから作成（{JOB_TEMPLATES.length} 件）
+                テンプレートから作成（{templates.length} 件）
               </span>
               <span className="text-xs text-primary-700">
                 {templatesOpen ? "閉じる" : "選ぶ"} →
@@ -428,7 +430,7 @@ export function JobWizard({
                   既に入力済みの項目は上書きされません。
                 </p>
                 <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                  {JOB_TEMPLATES.map((t) => (
+                  {templates.map((t) => (
                     <li key={t.id}>
                       <button
                         type="button"

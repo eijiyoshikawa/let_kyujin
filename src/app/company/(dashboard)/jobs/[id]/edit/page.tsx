@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { redirect, notFound } from "next/navigation"
 import { JobWizard } from "@/components/company/job-wizard"
+import { loadActiveJobTemplates } from "@/lib/job-templates"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -47,11 +48,17 @@ export default async function EditJobPage({
 
   if (!job || job.companyId !== companyId) notFound()
 
+  const templates = await loadActiveJobTemplates()
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-900">求人編集</h1>
       <div className="mt-6">
-        <JobWizard companyId={companyId} initialData={job} />
+        <JobWizard
+          companyId={companyId}
+          initialData={job}
+          templates={templates}
+        />
       </div>
     </div>
   )
