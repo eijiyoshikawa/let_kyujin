@@ -5,6 +5,8 @@ import {
   Building2,
   HardHat,
   ChevronRight,
+  CalendarCheck,
+  ShieldCheck,
 } from "lucide-react"
 import { getCategoryLabel } from "@/lib/categories"
 import { TagChip } from "./tag-chip"
@@ -21,6 +23,8 @@ type JobCardProps = {
   city: string | null
   source: string
   tags: string[]
+  annualHolidays?: number | null
+  insurance?: string | null
   company: { name: string; logoUrl: string | null } | null
 }
 
@@ -87,6 +91,24 @@ export function JobCard({ job }: { job: JobCardProps }) {
           </p>
         )}
 
+        {/* 構造化バッジ（年間休日 / 保険） */}
+        {(job.annualHolidays != null || job.insurance) && (
+          <div className="mt-2 flex flex-wrap gap-2 text-xs text-gray-600">
+            {job.annualHolidays != null && (
+              <span className="inline-flex items-center gap-1">
+                <CalendarCheck className="h-3.5 w-3.5 text-primary-500" />
+                年間休日 {job.annualHolidays}日
+              </span>
+            )}
+            {job.insurance && (
+              <span className="inline-flex items-center gap-1">
+                <ShieldCheck className="h-3.5 w-3.5 text-primary-500" />
+                {truncate(job.insurance, 20)}
+              </span>
+            )}
+          </div>
+        )}
+
         {/* 待遇チップ（自動抽出されたタグを 5 件まで、デザインシステム TagChip 統一）*/}
         {tagsToShow.length > 0 && (
           <div className="mt-2.5 flex flex-wrap gap-1.5">
@@ -131,4 +153,8 @@ function employmentTypeLabel(type: string): string {
     contract: "契約社員",
   }
   return labels[type] ?? type
+}
+
+function truncate(s: string, max: number): string {
+  return s.length > max ? `${s.slice(0, max)}…` : s
 }

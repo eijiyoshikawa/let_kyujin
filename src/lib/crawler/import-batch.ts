@@ -12,7 +12,7 @@
  * @module import-batch
  */
 
-import { PrismaClient } from "@prisma/client"
+import { Prisma, PrismaClient } from "@prisma/client"
 import type { CategoryValue } from "@/lib/categories"
 import {
   cleanTitle,
@@ -157,7 +157,7 @@ function toJobRecord(
     companyUrl: truncate(job.companyUrl, 255),
     validUntil: job.validUntil,
     receivedDate: job.receivedDate,
-    rawData: job.rawData,
+    rawData: (job.rawData ?? {}) as Prisma.InputJsonValue,
   }
 }
 

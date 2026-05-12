@@ -3,23 +3,52 @@ import {
   CalendarDays,
   Train,
   ShieldCheck,
+  CalendarCheck,
 } from "lucide-react"
 import { extractWorkConditions } from "@/lib/job-enrichment"
 
+type StructuredFields = {
+  workHours: string | null
+  workHoursNotes: string | null
+  holidays: string | null
+  holidaysOther: string | null
+  annualHolidays: number | null
+  insurance: string | null
+}
+
 /**
- * description / requirements から勤務時間・休日・通勤・保険を抽出して
- * カード型ボックスで表示する。何も抽出できない場合は null を返す。
+ * 構造化済みのカラム値を優先しつつ、未取得分は description / requirements からの抽出で補完して
+ * 勤務条件カードを表示する。
+ *
+ * structured 引数があれば「ハローワーク API から取得した正規化済みの値」を信頼し、
+ * 文章解析に頼らない。何も埋まらない場合は null を返して非表示。
  */
 export function WorkConditionsBox({
   description,
   requirements,
+  structured,
 }: {
   description: string | null | undefined
   requirements: string | null | undefined
+  structured?: Partial<StructuredFields>
 }) {
-  const c = extractWorkConditions(description, requirements)
-  const hasAny =
-    c.workingHours || c.holidays || c.accessNote || c.insurance
+  const fallback = extractWorkConditions(description, requirements)
+
+  const workingHours = joinNonEmpty(
+    structured?.workHours,
+    structured?.workHoursNotes
+  ) || fallback.workingHours
+
+  const holidays = joinNonEmpty(
+    structured?.holidays,
+    structured?.holidaysOther
+  ) || fallback.holidays
+
+  const insurance = structured?.insurance || fallback.insurance
+  const accessNote = fallback.accessNote
+  const annualHolidays = structured?.annualHolidays ?? null
+
+  const hasAny = workingHours || holidays || accessNote || insurance || annualHolidays != null
   if (!hasAny) return null
 
   return (
@@ -28,24 +57,35 @@ export function WorkConditionsBox({
         勤務条件
       </h2>
       <dl className="mt-4 grid gap-3 sm:grid-cols-2">
-        {c.workingHours && (
-          <Item icon={<Clock className="h-4 w-4 text-primary-500" />} label="勤務時間" value={c.workingHours} />
+        {workingHours && (
+          <Item icon={<Clock className="h-4 w-4 text-primary-500" />} label="勤務時間" value={workingHours} />
         )}
-        {c.holidays && (
-          <Item icon={<CalendarDays className="h-4 w-4 text-primary-500" />} label="休日" value={c.holidays} />
+        {holidays && (
+          <Item icon={<CalendarDays className="h-4 w-4 text-primary-500" />} label="休日" value={holidays} />
         )}
-        {c.accessNote && (
-          <Item icon={<Train className="h-4 w-4 text-primary-500" />} label="通勤" value={c.accessNote} />
+        {annualHolidays != null && (
+          <Item
+            icon={<CalendarCheck className="h-4 w-4 text-primary-500" />}
+            label="年間休日"
+            value={`${annualHolidays}日`}
+          />
         )}
-        {c.insurance && (
-          <Item icon={<ShieldCheck className="h-4 w-4 text-primary-500" />} label="保険" value={c.insurance} />
+        {accessNote && (
+          <Item icon={<Train className="h-4 w-4 text-primary-500" />} label="通勤" value={accessNote} />
+        )}
+        {insurance && (
+          <Item icon={<ShieldCheck className="h-4 w-4 text-primary-500" />} label="保険" value={insurance} />
         )}
       </dl>
       <p className="mt-3 text-[11px] text-gray-400">
-        ※ 求人本文から自動抽出した参考情報です。最終的な条件は応募先にご確認ください。
+        ※ ハローワーク掲載情報をもとに表示しています。最終的な条件は応募先にご確認ください。
       </p>
     </div>
   )
+}
+
+function joinNonEmpty(...parts: Array<string | null | undefined>): string {
+  return parts.filter((p): p is string => !!p && p.trim().length > 0).join(" / ")
 }
 
 function Item({
