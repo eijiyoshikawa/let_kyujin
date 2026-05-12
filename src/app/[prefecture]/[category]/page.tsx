@@ -116,31 +116,33 @@ export default async function PrefectureCategoryPage({ params }: Props) {
     notFound()
   }
 
-  const jobs = await prisma.job.findMany({
-    where: {
-      status: "active",
-      prefecture: prefLabel,
-      category,
-    },
-    select: {
-      id: true,
-      title: true,
-      category: true,
-      employmentType: true,
-      salaryMin: true,
-      salaryMax: true,
-      salaryType: true,
-      prefecture: true,
-      city: true,
-      source: true,
-      tags: true,
-      company: {
-        select: { name: true, logoUrl: true },
+  const jobs = await prisma.job
+    .findMany({
+      where: {
+        status: "active",
+        prefecture: prefLabel,
+        category,
       },
-    },
-    orderBy: { publishedAt: "desc" },
-    take: 100,
-  })
+      select: {
+        id: true,
+        title: true,
+        category: true,
+        employmentType: true,
+        salaryMin: true,
+        salaryMax: true,
+        salaryType: true,
+        prefecture: true,
+        city: true,
+        source: true,
+        tags: true,
+        company: {
+          select: { name: true, logoUrl: true },
+        },
+      },
+      orderBy: { publishedAt: "desc" },
+      take: 100,
+    })
+    .catch(() => [])
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">

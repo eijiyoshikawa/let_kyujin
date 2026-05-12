@@ -21,8 +21,10 @@ type Props = {
   params: Promise<{ audience: string }>
 }
 
+// ビルド時に prerender すると DB 接続が必要になるため、空配列でオンデマンド化。
+// ISR の revalidate で初回リクエスト後にキャッシュ。
 export async function generateStaticParams() {
-  return [{ audience: "seeker" }, { audience: "employer" }]
+  return []
 }
 
 export async function generateMetadata({
@@ -49,10 +51,12 @@ export default async function HelpAudiencePage({ params }: Props) {
   const category = helpCategory(audience)
 
   // DB に登録済みの記事 slug を引いて、雛形にあるが DB 未登録のものは "準備中" 表示
-  const published = await prisma.article.findMany({
-    where: { ...publishedArticleFilter(), category },
-    select: { slug: true, updatedAt: true },
-  })
+  const published = await prisma.article
+    .findMany({
+      where: { ...publishedArticleFilter(), category },
+      select: { slug: true, updatedAt: true },
+    })
+    .catch(() => [])
   const publishedSlugs = new Set(published.map((a) => a.slug))
 
   return (
