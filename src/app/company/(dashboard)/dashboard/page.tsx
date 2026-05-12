@@ -13,6 +13,7 @@ import {
 } from "@/lib/company-funnel"
 import { FunnelChart } from "@/components/company/funnel-chart"
 import { TimeSeriesChart } from "@/components/company/timeseries-chart"
+import { ClientErrorBoundary } from "@/components/error-boundary"
 
 export const metadata: Metadata = {
   title: "企業ダッシュボード",
@@ -186,7 +187,9 @@ export default async function CompanyDashboard({
         </div>
 
         <div className="mt-6">
-          <FunnelChart stages={funnel.stages} />
+          <ClientErrorBoundary name="funnel-chart">
+            <FunnelChart stages={funnel.stages} />
+          </ClientErrorBoundary>
         </div>
 
         {/* Overall conversion */}
@@ -229,7 +232,9 @@ export default async function CompanyDashboard({
           {funnel.range.label} ・ 閲覧 / 応募 / 採用の件数推移（各系列は独立スケールで正規化）
         </p>
         <div className="mt-4">
-          <TimeSeriesChart data={timeSeries} />
+          <ClientErrorBoundary name="dashboard-timeseries">
+            <TimeSeriesChart data={timeSeries} />
+          </ClientErrorBoundary>
         </div>
       </section>
 
