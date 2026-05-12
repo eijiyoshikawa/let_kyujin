@@ -21,6 +21,7 @@ const profileSchema = z.object({
   pitchHighlights: z.string().max(4000).optional().default(""),
   idealCandidate: z.string().max(4000).optional().default(""),
   employeeVoice: z.string().max(4000).optional().default(""),
+  logoUrl: urlOrEmpty(),
   photos: z
     .array(z.string().url().max(500))
     .max(12)
@@ -77,6 +78,7 @@ export async function PATCH(request: NextRequest) {
       pitchHighlights: emptyToNull(body.pitchHighlights),
       idealCandidate: emptyToNull(body.idealCandidate),
       employeeVoice: emptyToNull(body.employeeVoice),
+      logoUrl: emptyToNull(body.logoUrl),
       photos: body.photos ?? [],
       instagramUrl: emptyToNull(body.instagramUrl),
       tiktokUrl: emptyToNull(body.tiktokUrl),
@@ -90,6 +92,7 @@ export async function PATCH(request: NextRequest) {
       pitchHighlights: true,
       idealCandidate: true,
       employeeVoice: true,
+      logoUrl: true,
       photos: true,
       instagramUrl: true,
       tiktokUrl: true,
