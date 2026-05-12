@@ -682,16 +682,9 @@ export default async function JobDetailPage({ params }: Props) {
 
             {/* HW notice */}
             {job.source === "hellowork" && (
-              <div className="space-y-1 text-xs text-gray-400 leading-relaxed">
-                {job.receivedDate && (
-                  <p>
-                    ハローワーク受理日: {formatDate(job.receivedDate)}
-                  </p>
-                )}
-                <p>
-                  この求人はハローワークインターネットサービスより転載しています。最新の情報はハローワークでご確認ください。
-                </p>
-              </div>
+              <p className="text-xs text-gray-400 leading-relaxed">
+                この求人はハローワークインターネットサービスより転載しています。最新の情報はハローワークでご確認ください。
+              </p>
             )}
 
             {/* Back link */}
