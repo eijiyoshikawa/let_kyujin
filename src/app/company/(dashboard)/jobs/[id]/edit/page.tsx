@@ -40,6 +40,7 @@ export default async function EditJobPage({
       address: true,
       benefits: true,
       tags: true,
+      videoUrls: true,
       status: true,
     },
   })

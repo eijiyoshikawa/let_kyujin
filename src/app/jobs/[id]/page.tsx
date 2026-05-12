@@ -47,6 +47,7 @@ import { StickyActionBar } from "@/components/jobs/sticky-action-bar"
 import { HeroBanner } from "@/components/jobs/hero-banner"
 import { SnsLinks } from "@/components/jobs/sns-links"
 import { PhotoGallery } from "@/components/jobs/photo-gallery"
+import { VideoGallery } from "@/components/jobs/video-gallery"
 import { MapEmbed } from "@/components/jobs/map-embed"
 
 type Props = {
@@ -527,6 +528,16 @@ export default async function JobDetailPage({ params }: Props) {
                   photos={photos}
                   alt={job.company?.name ?? "求人写真"}
                 />
+              </section>
+            )}
+
+            {/* Video gallery */}
+            {job.videoUrls.length > 0 && (
+              <section
+                id="videos"
+                className="border bg-white p-5 sm:p-6 shadow-sm"
+              >
+                <VideoGallery urls={job.videoUrls} />
               </section>
             )}
 

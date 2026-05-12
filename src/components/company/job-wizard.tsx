@@ -36,6 +36,7 @@ export interface JobWizardData {
   address: string | null
   benefits: string[]
   tags: string[]
+  videoUrls?: string[]
   status: string
 }
 
@@ -54,6 +55,7 @@ type FormState = {
   address: string
   benefits: string
   tags: string
+  videoUrls: string
 }
 
 const STEPS = ["基本情報", "勤務地", "給与・条件", "プレビュー"] as const
@@ -76,6 +78,7 @@ function buildInitial(initial?: JobWizardData): FormState {
     address: initial?.address ?? "",
     benefits: initial?.benefits?.join(", ") ?? "",
     tags: initial?.tags?.join(", ") ?? "",
+    videoUrls: initial?.videoUrls?.join("\n") ?? "",
   }
 }
 
@@ -97,6 +100,13 @@ function toApiBody(form: FormState, status: string) {
       ? form.benefits.split(",").map((s) => s.trim()).filter(Boolean)
       : [],
     tags: form.tags ? form.tags.split(",").map((s) => s.trim()).filter(Boolean) : [],
+    videoUrls: form.videoUrls
+      ? form.videoUrls
+          .split(/[\n,]/)
+          .map((s) => s.trim())
+          .filter(Boolean)
+          .slice(0, 6)
+      : [],
     status,
   }
 }
@@ -726,6 +736,24 @@ export function JobWizard({
                   className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm"
                   placeholder="未経験歓迎, 土日休み, 残業少なめ"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  動画 URL（YouTube / TikTok / Vimeo、1 行 1 URL、最大 6 本）
+                </label>
+                <textarea
+                  rows={3}
+                  value={form.videoUrls}
+                  onChange={(e) =>
+                    setForm({ ...form, videoUrls: e.target.value })
+                  }
+                  className="mt-1 block w-full border px-3 py-2 text-sm shadow-sm font-mono"
+                  placeholder={"https://youtu.be/XXXXXXXXXXX\nhttps://www.tiktok.com/@user/video/0000000000000000000"}
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  現場の様子・社員インタビュー・1 日の流れなどの動画を掲載できます。求人詳細ページで埋め込み表示されます。
+                </p>
               </div>
             </div>
           </div>
