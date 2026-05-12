@@ -54,7 +54,71 @@ export function verifyWebhookSignature(rawBody: string, signature: string | null
 }
 
 type TextMessage = { type: "text"; text: string }
-type LineMessage = TextMessage // 必要に応じて拡張
+
+// === Flex Message ====================================================
+// LINE Messaging API の Flex Message。bubble / carousel をサポート。
+// 詳細: https://developers.line.biz/ja/docs/messaging-api/using-flex-messages/
+
+export type FlexText = {
+  type: "text"
+  text: string
+  size?: "xxs" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl"
+  weight?: "regular" | "bold"
+  color?: string
+  wrap?: boolean
+  align?: "start" | "center" | "end"
+  margin?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl"
+  decoration?: "none" | "underline" | "line-through"
+}
+export type FlexBox = {
+  type: "box"
+  layout: "vertical" | "horizontal" | "baseline"
+  contents: FlexComponent[]
+  spacing?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl"
+  margin?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl"
+  paddingAll?: string
+  backgroundColor?: string
+}
+export type FlexButton = {
+  type: "button"
+  action:
+    | { type: "uri"; label: string; uri: string }
+    | { type: "message"; label: string; text: string }
+    | { type: "postback"; label: string; data: string }
+  style?: "primary" | "secondary" | "link"
+  color?: string
+  height?: "sm" | "md"
+}
+export type FlexImage = {
+  type: "image"
+  url: string
+  size?: "full" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "3xl" | "4xl" | "5xl"
+  aspectMode?: "cover" | "fit"
+  aspectRatio?: string
+  action?: { type: "uri"; uri: string; label?: string }
+}
+export type FlexFiller = { type: "filler" }
+export type FlexSeparator = { type: "separator"; margin?: string; color?: string }
+export type FlexComponent = FlexText | FlexBox | FlexButton | FlexImage | FlexFiller | FlexSeparator
+
+export type FlexBubble = {
+  type: "bubble"
+  hero?: FlexImage
+  body?: FlexBox
+  footer?: FlexBox
+  size?: "nano" | "micro" | "kilo" | "mega" | "giga"
+}
+export type FlexCarousel = {
+  type: "carousel"
+  contents: FlexBubble[]
+}
+export type FlexMessage = {
+  type: "flex"
+  altText: string
+  contents: FlexBubble | FlexCarousel
+}
+
+export type LineMessage = TextMessage | FlexMessage
 
 async function callApi(path: string, init: RequestInit, base = API_BASE): Promise<Response> {
   return fetch(`${base}${path}`, {
