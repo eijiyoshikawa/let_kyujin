@@ -133,12 +133,30 @@ function formatSalary(
   max: number | null,
   type: string | null
 ): string {
-  const unit = type === "hourly" ? "時給" : type === "annual" ? "年収" : "月給"
+  const unit = salaryUnitLabel(type)
+  // 時給・日給は 1 万未満が大半なので万円表記しない
+  const useManYen = type !== "hourly" && type !== "daily"
   const fmt = (n: number) =>
-    n >= 10000 ? `${(n / 10000).toFixed(0)}万` : `${n.toLocaleString()}`
+    useManYen && n >= 10000
+      ? `${(n / 10000).toFixed(0)}万`
+      : `${n.toLocaleString()}`
   if (min && max) return `${unit} ${fmt(min)}〜${fmt(max)}円`
   if (min) return `${unit} ${fmt(min)}円〜`
   return ""
+}
+
+function salaryUnitLabel(type: string | null): string {
+  switch (type) {
+    case "hourly":
+      return "時給"
+    case "annual":
+      return "年収"
+    case "daily":
+      return "日給"
+    case "monthly":
+    default:
+      return "月給"
+  }
 }
 
 function employmentTypeLabel(type: string): string {

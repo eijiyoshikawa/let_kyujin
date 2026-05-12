@@ -309,7 +309,9 @@ export default async function JobDetailPage({ params }: Props) {
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="flex items-center gap-2 text-sm">
                     <Money weight="duotone" className="h-4 w-4 text-primary-500" />
-                    <dt className="text-gray-500 mr-1">月給:</dt>
+                    <dt className="text-gray-500 mr-1">
+                      {salaryUnitLabel(job.salaryType)}:
+                    </dt>
                     <dd className="font-bold text-primary-700">
                       {job.salaryMin
                         ? formatSalary(
@@ -317,6 +319,7 @@ export default async function JobDetailPage({ params }: Props) {
                             job.salaryMax,
                             job.salaryType
                           )
+                            .replace(/^(月給|時給|年収|日給)\s*/, "")
                         : "応相談"}
                     </dd>
                   </div>
@@ -819,13 +822,29 @@ function formatSalary(
   max: number | null,
   type: string | null
 ): string {
-  const unit =
-    type === "hourly" ? "時給" : type === "annual" ? "年収" : "月給"
+  const unit = salaryUnitLabel(type)
+  const useManYen = type !== "hourly" && type !== "daily"
   const fmt = (n: number) =>
-    n >= 10000 ? `${(n / 10000).toFixed(0)}万` : `${n.toLocaleString()}`
+    useManYen && n >= 10000
+      ? `${(n / 10000).toFixed(0)}万`
+      : `${n.toLocaleString()}`
   if (min && max) return `${unit} ${fmt(min)}〜${fmt(max)}円`
   if (min) return `${unit} ${fmt(min)}円〜`
   return ""
+}
+
+function salaryUnitLabel(type: string | null): string {
+  switch (type) {
+    case "hourly":
+      return "時給"
+    case "annual":
+      return "年収"
+    case "daily":
+      return "日給"
+    case "monthly":
+    default:
+      return "月給"
+  }
 }
 
 /**

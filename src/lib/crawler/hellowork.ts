@@ -36,7 +36,7 @@ export interface HelloworkJobData {
   companyName: string
   salaryMin: number | null
   salaryMax: number | null
-  salaryType: "monthly" | "hourly" | "annual" | null
+  salaryType: "monthly" | "hourly" | "annual" | "daily" | null
   prefecture: string
   city: string | null
   address: string | null
@@ -466,12 +466,12 @@ function numericOrNull(v: unknown): number | null {
 
 function inferSalaryType(
   formatText: string | null
-): "monthly" | "hourly" | "annual" | null {
+): "monthly" | "hourly" | "annual" | "daily" | null {
   if (!formatText) return null
   if (/月給|月額/.test(formatText)) return "monthly"
   if (/時給|時間額/.test(formatText)) return "hourly"
   if (/年俸|年額|年収/.test(formatText)) return "annual"
-  if (/日給/.test(formatText)) return "monthly"
+  if (/日給|日額/.test(formatText)) return "daily"
   return null
 }
 
@@ -479,15 +479,17 @@ function inferSalaryType(
  * 賃金タグから種別が判定できないとき、金額レンジから推定する。
  * 凡そのレンジ:
  *   - 時給: 〜 5,000 円
- *   - 月給: 50,000 〜 1,500,000 円
+ *   - 日給: 5,000 〜 30,000 円
+ *   - 月給: 30,000 〜 1,500,000 円
  *   - 年俸: 1,500,000 円以上
  */
 function inferSalaryTypeFromAmount(
   amount: number | null
-): "monthly" | "hourly" | "annual" | null {
+): "monthly" | "hourly" | "annual" | "daily" | null {
   if (amount === null || amount <= 0) return null
-  if (amount < 5000) return "hourly"
-  if (amount < 1500000) return "monthly"
+  if (amount < 5_000) return "hourly"
+  if (amount < 30_000) return "daily"
+  if (amount < 1_500_000) return "monthly"
   return "annual"
 }
 
@@ -552,7 +554,7 @@ function parseEmploymentType(
 export function parseSalary(salaryText: string): {
   min: number | null
   max: number | null
-  type: "monthly" | "hourly" | "annual" | null
+  type: "monthly" | "hourly" | "annual" | "daily" | null
 } {
   if (!salaryText) return { min: null, max: null, type: null }
   const normalized = salaryText.replace(/,/g, "").replace(/，/g, "")

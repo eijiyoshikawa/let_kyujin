@@ -103,6 +103,7 @@ const EMPLOYMENT_TYPE_MAP: Record<string, string> = {
 
 const SALARY_UNIT_MAP: Record<string, string> = {
   hourly: "HOUR",
+  daily: "DAY",
   monthly: "MONTH",
   annual: "YEAR",
 }

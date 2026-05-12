@@ -193,7 +193,7 @@ export function fallbackSalary(
   const hourly = matchSalary(text, /時給[\s　]*([\d,，]+)\s*円?(?:\s*[〜~から-]\s*([\d,，]+)\s*円?)?/, "hourly")
   if (hourly) return hourly
 
-  const daily = matchSalary(text, /日給[\s　]*([\d,，]+)\s*円?(?:\s*[〜~から-]\s*([\d,，]+)\s*円?)?/, "monthly")
+  const daily = matchSalary(text, /日給[\s　]*([\d,，]+)\s*円?(?:\s*[〜~から-]\s*([\d,，]+)\s*円?)?/, "daily")
   if (daily) return daily
 
   // 年収（万円単位）— レンジを先に試して、無ければ単一値
@@ -222,7 +222,7 @@ export function fallbackSalary(
 function matchSalary(
   text: string,
   pattern: RegExp,
-  type: "monthly" | "hourly" | "annual"
+  type: "monthly" | "hourly" | "annual" | "daily"
 ): { min: number; max: number | null; type: string } | null {
   const m = text.match(pattern)
   if (!m) return null

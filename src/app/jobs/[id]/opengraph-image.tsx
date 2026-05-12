@@ -174,7 +174,13 @@ function formatSalary(
 ): string {
   if (min == null && max == null) return ""
   const unit =
-    type === "hourly" ? "円/時" : type === "annual" ? "円/年" : "円/月"
+    type === "hourly"
+      ? "円/時"
+      : type === "annual"
+        ? "円/年"
+        : type === "daily"
+          ? "円/日"
+          : "円/月"
   const fmt = (v: number) => v.toLocaleString("ja-JP")
   if (min != null && max != null) return `${fmt(min)}〜${fmt(max)}${unit}`
   if (min != null) return `${fmt(min)}${unit}〜`
