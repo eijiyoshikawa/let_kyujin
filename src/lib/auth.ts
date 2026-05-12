@@ -110,6 +110,7 @@ providers.push(
       credentials: {
         email: { label: "メールアドレス", type: "email" },
         password: { label: "パスワード", type: "password" },
+        totp: { label: "認証コード", type: "text" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null
@@ -126,6 +127,33 @@ providers.push(
           companyUser.passwordHash
         )
         if (!isValid) return null
+
+        // TOTP 2FA: 有効化済みなら 6 桁コード or リカバリコードを必須化
+        if (companyUser.totpEnabled && companyUser.totpSecret) {
+          const code = (credentials.totp as string | undefined)?.trim()
+          if (!code) {
+            // フロント側で 2 段目フォームを表示するためのシグナル
+            throw new Error("TOTP_REQUIRED")
+          }
+          const { verifyTotp, consumeRecoveryCode } = await import("@/lib/totp")
+          const ok = verifyTotp(code, companyUser.totpSecret)
+          if (!ok) {
+            // リカバリコードで救済
+            const consumed = await consumeRecoveryCode(
+              code,
+              companyUser.totpRecoveryCodes
+            )
+            if (!consumed) {
+              throw new Error("TOTP_INVALID")
+            }
+            await prisma.companyUser
+              .update({
+                where: { id: companyUser.id },
+                data: { totpRecoveryCodes: consumed.remaining },
+              })
+              .catch(() => {})
+          }
+        }
 
         return {
           id: companyUser.id,

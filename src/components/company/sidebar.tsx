@@ -11,6 +11,7 @@ import {
   CreditCard,
   Building2,
   Settings,
+  Shield,
 } from "lucide-react"
 
 const navItems = [
@@ -21,6 +22,7 @@ const navItems = [
   { href: "/company/scouts", label: "スカウト", icon: Send },
   { href: "/company/billing", label: "課金履歴", icon: CreditCard },
   { href: "/company/profile", label: "企業情報・SNS", icon: Settings },
+  { href: "/company/security", label: "セキュリティ", icon: Shield },
 ]
 
 export function CompanySidebar({
