@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 import Link from "next/link"
 import { Plus, Pencil } from "lucide-react"
 import { Pagination } from "@/components/pagination"
+import { DuplicateJobButton } from "@/components/company/duplicate-job-button"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -145,13 +146,16 @@ export default async function CompanyJobsPage({
                     {job.createdAt.toLocaleDateString("ja-JP")}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <Link
-                      href={`/company/jobs/${job.id}/edit`}
-                      className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:text-primary-700"
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                      編集
-                    </Link>
+                    <div className="flex items-center justify-end gap-4">
+                      <DuplicateJobButton jobId={job.id} />
+                      <Link
+                        href={`/company/jobs/${job.id}/edit`}
+                        className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:text-primary-700"
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                        編集
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               ))}
