@@ -58,9 +58,19 @@ export default async function CompanyApplicationsPage({
 
   const totalPages = Math.ceil(total / perPage)
 
+  const exportQuery = statusFilter !== "all" ? `?status=${statusFilter}` : ""
+
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900">応募者管理</h1>
+      <div className="flex items-start justify-between gap-3">
+        <h1 className="text-2xl font-bold text-gray-900">応募者管理</h1>
+        <a
+          href={`/api/company/applications/export${exportQuery}`}
+          className="inline-flex items-center gap-1.5 border border-gray-300 bg-white hover:bg-gray-50 px-3 py-2 text-sm font-bold text-gray-700"
+        >
+          CSV エクスポート
+        </a>
+      </div>
 
       {/* Status filter */}
       <div className="mt-4 flex flex-wrap gap-2">
