@@ -28,12 +28,17 @@ import {
   type ProfileTemplate,
   type TemplateField,
 } from "@/lib/profile-templates"
+import {
+  ImageUploader,
+  MultiImageUploader,
+} from "@/components/company/image-uploader"
 
 type ProfileData = {
   tagline: string
   pitchHighlights: string
   idealCandidate: string
   employeeVoice: string
+  logoUrl: string
   photos: string[]
   instagramUrl: string
   tiktokUrl: string
@@ -261,6 +266,18 @@ export function ProfileForm({
         </select>
       </section>
 
+      {/* ロゴ画像 ============================================================ */}
+      <section className="border bg-white p-5 shadow-sm">
+        <ImageUploader
+          kind="logo"
+          label="企業ロゴ"
+          hint="正方形に近い画像を推奨。求人カード・企業詳細ページで使用されます。"
+          value={data.logoUrl}
+          onChange={(url) => update("logoUrl", url)}
+          size="md"
+        />
+      </section>
+
       {/* キャッチコピー ===================================================== */}
       <FieldSection
         icon={<Megaphone className="h-5 w-5 text-primary-500" />}
@@ -371,6 +388,17 @@ export function ProfileForm({
             </button>
           </div>
         </div>
+
+        {/* ファイルアップロード（写真を画像ファイルから追加） */}
+        <MultiImageUploader
+          label="ファイルから追加"
+          hint="ドラッグ&ドロップは未対応。クリックして複数選択できます。"
+          values={data.photos.filter(Boolean)}
+          onChange={(urls) =>
+            setData((d) => ({ ...d, photos: urls.slice(0, PHOTO_MAX) }))
+          }
+          max={PHOTO_MAX}
+        />
 
         {data.photos.length === 0 ? (
           <div className="border border-dashed border-gray-300 p-8 text-center text-sm text-gray-400">
