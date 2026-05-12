@@ -100,7 +100,7 @@ export default function PrivacyPage() {
           <p className="mt-2">
             個人情報の取扱いに関するお問い合わせは、以下の窓口までご連絡ください。
           </p>
-          <div className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm">
+          <div className="mt-3 border border-gray-200 bg-gray-50 p-4 text-sm">
             <p className="font-medium">株式会社LET</p>
             <p className="mt-1">個人情報管理責任者: 取締役 吉川英治</p>
             <p className="mt-1">住所: 〒541-0058 大阪府大阪市中央区南久宝寺町4丁目4-12 IB CENTERビル8F</p>

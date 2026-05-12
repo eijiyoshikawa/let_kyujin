@@ -15,7 +15,7 @@ export function RightTocNav({
 
   return (
     <aside className="hidden lg:block w-64 shrink-0">
-      <div className="sticky top-20 rounded border bg-white shadow-sm overflow-hidden">
+      <div className="sticky top-20 border bg-white shadow-sm overflow-hidden">
         <h3 className="px-4 py-3 text-sm font-bold text-gray-700 border-b bg-gray-50">
           求人詳細
         </h3>

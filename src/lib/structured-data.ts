@@ -108,14 +108,38 @@ const SALARY_UNIT_MAP: Record<string, string> = {
   annual: "YEAR",
 }
 
+/** 求人の有効期限を datePosted から 90 日後とする（Google 推奨）。 */
+function computeValidThrough(posted: Date): string {
+  const validThrough = new Date(posted.getTime() + 90 * 24 * 60 * 60 * 1000)
+  return validThrough.toISOString()
+}
+
+const CATEGORY_TO_INDUSTRY: Record<string, string> = {
+  construction: "建築工事業",
+  civil: "土木工事業",
+  electrical: "電気・設備工事業",
+  interior: "内装仕上工事業",
+  demolition: "解体工事業",
+  driver: "運送・物流",
+  management: "施工管理・建設マネジメント",
+  survey: "測量・建築設計",
+}
+
 export function generateJobPostingSchema(job: JobInput): Record<string, unknown> {
+  const datePosted = job.publishedAt ?? job.createdAt
   const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "JobPosting",
     title: job.title,
     description: job.description ?? job.title,
-    datePosted: (job.publishedAt ?? job.createdAt).toISOString(),
+    datePosted: datePosted.toISOString(),
+    // Google Search Console / Rich Result が強く推奨する有効期限
+    validThrough: computeValidThrough(datePosted),
     url: `${BASE_URL}/jobs/${job.id}`,
+    // 候補者が当サイト経由で直接応募できる
+    directApply: true,
+    // 求人形態
+    industry: CATEGORY_TO_INDUSTRY[job.category] ?? "建設業",
   }
 
   if (job.employmentType && EMPLOYMENT_TYPE_MAP[job.employmentType]) {

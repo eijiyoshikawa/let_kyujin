@@ -87,7 +87,7 @@ export function HwSearchForm({ values }: HwSearchFormProps) {
       <div className="mt-3 flex justify-end">
         <button
           type="submit"
-          className="inline-flex items-center gap-1.5 rounded-full bg-primary-500 px-6 py-2 text-sm font-bold text-white shadow-sm hover:bg-primary-600 transition"
+          className="inline-flex items-center gap-1.5 bg-primary-500 px-6 py-2 text-sm font-bold text-white shadow-sm hover:bg-primary-600 transition"
         >
           <Search className="h-4 w-4" />
           検索する

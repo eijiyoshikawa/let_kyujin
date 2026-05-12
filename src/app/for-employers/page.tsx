@@ -25,7 +25,7 @@ import { LogoSlider } from "@/components/logo-slider"
 export const metadata: Metadata = {
   title: "建設会社の採用担当者の方へ",
   description:
-    "掲載無料・成果報酬型の求人掲載。建設業界に特化したゲンバキャリアで、建築・土木・設備の人材を採用。",
+    "掲載料 無料キャンペーン中、成果報酬は 1 名 29.8 万円〜。建設業界に特化したゲンバキャリアで、建築・土木・設備の人材を採用。",
 }
 
 const jobCategories = [
@@ -95,7 +95,7 @@ const comparisonRows = [
   },
   {
     label: "費用",
-    ours: "月額0円（1人あたり10万円〜）\n求人を増やしても掲載費用無料",
+    ours: "成果報酬 1 名 29.8 万円〜\n掲載料 無料キャンペーン中（求人数無制限）",
     major: "月額30万円〜\n1求人ごとに費用が発生",
     niche: "月額6万円〜\n1求人ごとに費用が発生",
   },
@@ -145,13 +145,16 @@ export default function ForEmployersPage() {
 
               {/* Stats row */}
               <div className="mt-6 flex flex-wrap gap-3">
-                <div className="bg-brand-yellow-500 px-4 py-2">
-                  <p className="text-xs font-bold text-ink-900">料金体系</p>
-                  <p className="text-base font-black text-ink-900 tracking-tight">掲載無料・成果報酬</p>
+                <div className="relative bg-primary-500 px-4 py-2 text-white">
+                  <span className="absolute -top-2 -right-2 inline-flex items-center bg-ink-900 px-1.5 py-0.5 text-[9px] font-extrabold text-brand-yellow-300 tracking-wider">
+                    期間限定
+                  </span>
+                  <p className="text-xs font-bold">掲載料</p>
+                  <p className="text-base font-black tracking-tight">無料キャンペーン中</p>
                 </div>
                 <div className="bg-brand-yellow-500 px-4 py-2">
                   <p className="text-xs font-bold text-ink-900">成果報酬</p>
-                  <p className="text-base font-black text-ink-900 tracking-tight">1人あたり10万円〜</p>
+                  <p className="text-base font-black text-ink-900 tracking-tight">1 名 29.8 万円〜</p>
                 </div>
                 <div className="bg-brand-yellow-500 px-4 py-2">
                   <p className="text-xs font-bold text-ink-900">機能</p>
@@ -207,7 +210,7 @@ export default function ForEmployersPage() {
                 </div>
                 <Link
                   href="/company/register"
-                  className="flex w-full items-center justify-center gap-2 rounded-full bg-primary-500 px-6 py-3 text-sm font-black text-white tracking-tight hover:bg-primary-600 transition"
+                  className="flex w-full items-center justify-center gap-2 bg-primary-500 px-6 py-3 text-sm font-black text-white tracking-tight hover:bg-primary-600 transition"
                 >
                   資料請求する
                   <ArrowRight className="h-4 w-4" />
@@ -238,7 +241,7 @@ export default function ForEmployersPage() {
                 <h2 className="text-2xl font-black text-ink-900 tracking-tight">ゲンバキャリアとは</h2>
                 <p className="mt-3 text-sm text-ink-900 leading-relaxed">
                   建設業・設備業などの現場人材の採用に強みを持つ日本最大級の「現場人材採用サービス」です。
-                  掲載無料・成果報酬型で、建築・土木・設備・解体など幅広い職種の人材採用をサポートします。
+                  掲載料 無料キャンペーン中・成果報酬は 1 名 29.8 万円〜。建築・土木・設備・解体など幅広い職種の人材採用をサポートします。
                 </p>
               </div>
               <div className="flex h-36 w-52 shrink-0 flex-col items-center justify-center bg-ink-900 shadow-sm">
@@ -264,7 +267,7 @@ export default function ForEmployersPage() {
                 const Icon = r.icon
                 return (
                   <div key={r.title} className="bg-white p-6 text-center hover-lift">
-                    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-brand-yellow-500">
+                    <div className="mx-auto flex h-20 w-20 items-center justify-center bg-brand-yellow-500">
                       <Icon className="h-10 w-10 text-ink-900" />
                     </div>
                     <h3 className="mt-4 text-base font-black text-ink-900 tracking-tight">{r.title}</h3>
@@ -339,7 +342,7 @@ export default function ForEmployersPage() {
                 <div key={step.label} className="flex items-center gap-3 sm:gap-4">
                   <div className="flex flex-col items-center">
                     <div className="relative flex h-16 w-16 items-center justify-center border-2 border-ink-900 bg-brand-yellow-500 shadow-sm">
-                      <span className="absolute -top-2.5 -left-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-primary-500 text-xs font-black text-white tracking-tight shadow-sm">
+                      <span className="absolute -top-2.5 -left-2.5 flex h-6 w-6 items-center justify-center bg-primary-500 text-xs font-black text-white tracking-tight shadow-sm">
                         {i + 1}
                       </span>
                       <Icon className="h-7 w-7 text-ink-900" />
@@ -367,7 +370,7 @@ export default function ForEmployersPage() {
               他社との<span className="text-primary-600">料金・サービスの比較表</span>
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
-              ゲンバキャリアは掲載無料、1人あたり10万円〜の成果報酬
+              ゲンバキャリアは掲載料 無料キャンペーン中、成果報酬は 1 名 29.8 万円〜
               <br className="hidden sm:block" />
               採用のミスマッチが少ない人材を低コストで採用可能です
             </p>
@@ -431,19 +434,19 @@ export default function ForEmployersPage() {
               まずは無料で掲載を始めましょう
             </h2>
             <p className="mt-2 text-sm text-white/80">
-              掲載料0円・成果報酬型。採用が決まるまで費用はかかりません。
+掲載料 無料キャンペーン中・成果報酬型（1 名 29.8 万円〜）。採用が決まるまで費用はかかりません。
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
               <Link
                 href="/company/register"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-primary-500 px-8 py-3.5 text-base font-black tracking-tight text-white shadow-lg hover:bg-primary-600 transition"
+                className="inline-flex items-center justify-center gap-2 bg-primary-500 px-8 py-3.5 text-base font-black tracking-tight text-white shadow-lg hover:bg-primary-600 transition"
               >
                 無料で企業登録する
                 <ArrowRight className="h-5 w-5" />
               </Link>
               <a
                 href="tel:03-6845-3624"
-                className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-brand-yellow-500 bg-brand-yellow-500 px-8 py-3.5 text-base font-black tracking-tight text-ink-900 hover:bg-brand-yellow-600 transition"
+                className="inline-flex items-center justify-center gap-2 border-2 border-brand-yellow-500 bg-brand-yellow-500 px-8 py-3.5 text-base font-black tracking-tight text-ink-900 hover:bg-brand-yellow-600 transition"
               >
                 <Phone className="h-5 w-5" />
                 03-6845-3624

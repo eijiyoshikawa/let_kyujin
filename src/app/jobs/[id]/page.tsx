@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/db"
 import { notFound } from "next/navigation"
+import { headers } from "next/headers"
 import Link from "next/link"
+import { getOrCreateSessionId } from "@/lib/session-id"
+import { recordJobView, extractUtmFromUrl } from "@/lib/tracking"
 import {
   MapPin,
   Money,
@@ -65,6 +68,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function JobDetailPage({ params }: Props) {
   const { id } = await params
+
+  // 匿名トラッキング: SID 発行 + JobView 記録（fire-and-forget）
+  // 失敗してもページ描画は妨げない。
+  const sessionId = await getOrCreateSessionId().catch(() => null)
+  const headerList = await headers()
+  const ua = headerList.get("user-agent") ?? null
+  const referer = headerList.get("referer") ?? null
+  const fwd = headerList.get("x-forwarded-for")
+  const ipAddress = fwd ? fwd.split(",")[0].trim() : null
+  // UTM は referer に乗ってこないので、現在の URL を組み立てて取り出す
+  const reqHost = headerList.get("host") ?? ""
+  const proto = headerList.get("x-forwarded-proto") ?? "https"
+  const fullUrl = referer && referer.includes(reqHost) ? referer : `${proto}://${reqHost}/jobs/${id}`
+  const utm = extractUtmFromUrl(fullUrl)
+  // ベストエフォート（失敗してもページ表示は阻害しない）
+  await recordJobView({
+    jobId: id,
+    sessionId,
+    userId: null,
+    ipAddress,
+    userAgent: ua,
+    referer,
+    utm,
+  }).catch(() => {})
+
   const job = await prisma.job.findUnique({
     where: { id },
     include: {
@@ -283,8 +311,8 @@ export default async function JobDetailPage({ params }: Props) {
                 )}
 
                 {job.company && (
-                  <div className="flex items-center gap-3 p-3 rounded border bg-white">
-                    <div className="h-10 w-10 flex items-center justify-center rounded bg-primary-50">
+                  <div className="flex items-center gap-3 p-3 border bg-white">
+                    <div className="h-10 w-10 flex items-center justify-center bg-primary-50">
                       <Buildings weight="duotone" className="h-5 w-5 text-primary-500" />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -424,7 +452,7 @@ export default async function JobDetailPage({ params }: Props) {
             {job.description && (
               <section
                 id="description"
-                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+                className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
                   <Briefcase weight="duotone" className="h-4 w-4 text-primary-500" />
@@ -438,7 +466,7 @@ export default async function JobDetailPage({ params }: Props) {
             {job.company?.pitchHighlights && (
               <section
                 id="pitch"
-                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+                className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
                   <Sparkle weight="duotone" className="h-4 w-4 text-primary-500" />
@@ -452,7 +480,7 @@ export default async function JobDetailPage({ params }: Props) {
             {job.company?.idealCandidate && (
               <section
                 id="ideal"
-                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+                className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
                   <UserFocus weight="duotone" className="h-4 w-4 text-primary-500" />
@@ -466,7 +494,7 @@ export default async function JobDetailPage({ params }: Props) {
             {job.company?.employeeVoice && (
               <section
                 id="voice"
-                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+                className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
                   <ChatCenteredDots weight="duotone" className="h-4 w-4 text-primary-500" />
@@ -480,7 +508,7 @@ export default async function JobDetailPage({ params }: Props) {
             {photos.length > 0 && (
               <section
                 id="photos"
-                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+                className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
                   <Camera weight="duotone" className="h-4 w-4 text-primary-500" />
@@ -613,7 +641,7 @@ export default async function JobDetailPage({ params }: Props) {
             {mapAddress && (
               <section
                 id="map"
-                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+                className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
                   <MapPin weight="duotone" className="h-4 w-4 text-primary-500" />
@@ -627,7 +655,7 @@ export default async function JobDetailPage({ params }: Props) {
             {job.company && (
               <section
                 id="company"
-                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+                className="border bg-white p-5 sm:p-6 shadow-sm space-y-4"
               >
                 <SectionHeading>
                   <Buildings weight="duotone" className="h-4 w-4 text-primary-500" />
@@ -695,7 +723,7 @@ export default async function JobDetailPage({ params }: Props) {
                     href={job.company.websiteUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded border border-primary-500 px-4 py-2 text-sm font-medium text-primary-700 hover:bg-primary-50 transition"
+                    className="inline-flex items-center gap-2 border border-primary-500 px-4 py-2 text-sm font-medium text-primary-700 hover:bg-primary-50 transition"
                   >
                     <Globe weight="duotone" className="h-4 w-4" />
                     {job.company.name} 公式 HP を見る

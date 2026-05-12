@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest"
 import {
   computeRankScore,
+  computeScoreBreakdown,
   type CompanyForRank,
   type JobForRank,
 } from "@/lib/ranking"
@@ -153,5 +154,103 @@ describe("computeRankScore", () => {
         tiktokUrl: "",
       })
     ).toBe(0)
+  })
+})
+
+describe("computeScoreBreakdown", () => {
+  it("空企業は全項目 0/max で done=false", () => {
+    const r = computeScoreBreakdown(emptyCompany)
+    expect(r.totalScore).toBe(0)
+    expect(r.maxScore).toBe(25 + 24 + 60 + 20)
+    expect(r.ratio).toBe(0)
+    expect(r.items).toHaveLength(4)
+    for (const item of r.items) {
+      expect(item.current).toBe(0)
+      expect(item.done).toBe(false)
+    }
+  })
+
+  it("SNS 3 個登録で SNS 項目が 15 点", () => {
+    const r = computeScoreBreakdown({
+      ...emptyCompany,
+      instagramUrl: "https://example.com",
+      tiktokUrl: "https://example.com",
+      xUrl: "https://example.com",
+    })
+    const sns = r.items.find((i) => i.id === "sns")!
+    expect(sns.current).toBe(15)
+    expect(sns.done).toBe(false)
+    expect(sns.hint).toMatch(/あと 2 個/)
+  })
+
+  it("SNS 5 個 全部登録で done=true", () => {
+    const r = computeScoreBreakdown({
+      ...emptyCompany,
+      instagramUrl: "x",
+      tiktokUrl: "x",
+      facebookUrl: "x",
+      xUrl: "x",
+      youtubeUrl: "x",
+    })
+    const sns = r.items.find((i) => i.id === "sns")!
+    expect(sns.current).toBe(25)
+    expect(sns.done).toBe(true)
+  })
+
+  it("写真 5 枚で 10 点、12 枚で done", () => {
+    const r5 = computeScoreBreakdown({
+      ...emptyCompany,
+      photos: ["a", "b", "c", "d", "e"],
+    })
+    expect(r5.items.find((i) => i.id === "photos")!.current).toBe(10)
+    expect(r5.items.find((i) => i.id === "photos")!.done).toBe(false)
+
+    const r12 = computeScoreBreakdown({
+      ...emptyCompany,
+      photos: Array(12).fill("x"),
+    })
+    expect(r12.items.find((i) => i.id === "photos")!.done).toBe(true)
+  })
+
+  it("テキスト 3000 文字で text 項目満点", () => {
+    const r = computeScoreBreakdown({
+      ...emptyCompany,
+      tagline: "a".repeat(200),
+      pitchHighlights: "a".repeat(1000),
+      idealCandidate: "a".repeat(800),
+      employeeVoice: "a".repeat(1000),
+    })
+    const text = r.items.find((i) => i.id === "text")!
+    expect(text.current).toBe(60)
+    expect(text.done).toBe(true)
+  })
+
+  it("90 日以内更新で freshness 20 点", () => {
+    const r = computeScoreBreakdown({
+      ...emptyCompany,
+      lastContentUpdatedAt: new Date(),
+    })
+    const fresh = r.items.find((i) => i.id === "freshness")!
+    expect(fresh.current).toBe(20)
+    expect(fresh.done).toBe(true)
+  })
+
+  it("180 日以内更新で freshness 10 点", () => {
+    const now = new Date("2026-05-12")
+    const lastUpdate = new Date("2026-01-12") // 約 120 日前
+    const r = computeScoreBreakdown(
+      { ...emptyCompany, lastContentUpdatedAt: lastUpdate },
+      now
+    )
+    expect(r.items.find((i) => i.id === "freshness")!.current).toBe(10)
+  })
+
+  it("ratio が現在/max と一致する", () => {
+    const r = computeScoreBreakdown({
+      ...emptyCompany,
+      instagramUrl: "x",
+      tiktokUrl: "x",
+    })
+    expect(r.ratio).toBeCloseTo(r.totalScore / r.maxScore, 5)
   })
 })

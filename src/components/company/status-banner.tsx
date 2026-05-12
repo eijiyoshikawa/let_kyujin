@@ -8,7 +8,7 @@ type Props = {
 export function CompanyStatusBanner({ status, rejectionReason }: Props) {
   if (status === "pending") {
     return (
-      <div className="mb-6 rounded-lg border border-yellow-300 bg-yellow-50 p-4">
+      <div className="mb-6 border border-yellow-300 bg-yellow-50 p-4">
         <div className="flex gap-3">
           <Clock className="h-5 w-5 shrink-0 text-yellow-600" />
           <div>
@@ -27,7 +27,7 @@ export function CompanyStatusBanner({ status, rejectionReason }: Props) {
 
   if (status === "rejected") {
     return (
-      <div className="mb-6 rounded-lg border border-red-300 bg-red-50 p-4">
+      <div className="mb-6 border border-red-300 bg-red-50 p-4">
         <div className="flex gap-3">
           <AlertCircle className="h-5 w-5 shrink-0 text-red-600" />
           <div>

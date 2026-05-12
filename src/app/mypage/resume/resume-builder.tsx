@@ -97,7 +97,7 @@ export function ResumeBuilder({ initialData }: { initialData: ResumeData }) {
       <div className="flex gap-2 mb-6">
         <button
           onClick={() => setActiveTab("resume")}
-          className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition ${
+          className={`flex items-center gap-1.5  px-4 py-2 text-sm font-medium transition ${
             activeTab === "resume"
               ? "bg-primary-600 text-white"
               : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -108,7 +108,7 @@ export function ResumeBuilder({ initialData }: { initialData: ResumeData }) {
         </button>
         <button
           onClick={() => setActiveTab("career")}
-          className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition ${
+          className={`flex items-center gap-1.5  px-4 py-2 text-sm font-medium transition ${
             activeTab === "career"
               ? "bg-primary-600 text-white"
               : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -132,7 +132,7 @@ export function ResumeBuilder({ initialData }: { initialData: ResumeData }) {
                 <select
                   value={data.gender}
                   onChange={(e) => updateField("gender", e.target.value)}
-                  className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                  className="mt-1 w-full border border-gray-300 px-3 py-2 text-sm"
                 >
                   <option value="">選択してください</option>
                   <option value="male">男性</option>
@@ -179,7 +179,7 @@ export function ResumeBuilder({ initialData }: { initialData: ResumeData }) {
               value={data.motivation}
               onChange={(e) => updateField("motivation", e.target.value)}
               rows={4}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+              className="w-full border border-gray-300 px-3 py-2 text-sm"
               placeholder="志望動機を入力してください"
             />
           </Section>
@@ -190,7 +190,7 @@ export function ResumeBuilder({ initialData }: { initialData: ResumeData }) {
               value={data.selfPr}
               onChange={(e) => updateField("selfPr", e.target.value)}
               rows={4}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+              className="w-full border border-gray-300 px-3 py-2 text-sm"
               placeholder="自己PRを入力してください"
             />
           </Section>
@@ -203,7 +203,7 @@ export function ResumeBuilder({ initialData }: { initialData: ResumeData }) {
               value={data.careerSummary}
               onChange={(e) => updateField("careerSummary", e.target.value)}
               rows={3}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+              className="w-full border border-gray-300 px-3 py-2 text-sm"
               placeholder="これまでの職務経歴を簡潔にまとめてください"
             />
           </Section>
@@ -243,7 +243,7 @@ export function ResumeBuilder({ initialData }: { initialData: ResumeData }) {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 rounded-lg bg-primary-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-700 transition disabled:opacity-50"
+            className="flex items-center gap-2 bg-primary-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-700 transition disabled:opacity-50"
           >
             <Save className="h-4 w-4" />
             {saving ? "保存中..." : "保存する"}
@@ -252,7 +252,7 @@ export function ResumeBuilder({ initialData }: { initialData: ResumeData }) {
             href="/api/users/me/resume/pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 rounded-lg border border-gray-300 px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
+            className="flex items-center gap-2 border border-gray-300 px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
           >
             <Download className="h-4 w-4" />
             PDF出力
@@ -270,7 +270,7 @@ export function ResumeBuilder({ initialData }: { initialData: ResumeData }) {
 
 function Section({ title, icon, children }: { title: string; icon?: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="rounded-lg border bg-white p-5">
+    <div className="border bg-white p-5">
       <h3 className="flex items-center gap-1.5 text-base font-bold text-gray-900 mb-4">
         {icon}
         {title}
@@ -293,7 +293,7 @@ function Input({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+        className="mt-1 w-full border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
       />
     </div>
   )
@@ -316,9 +316,9 @@ function HistoryList({
     <div className="space-y-2">
       {entries.map((entry, i) => (
         <div key={i} className="flex items-start gap-2">
-          <input type="number" value={entry.year} onChange={(e) => update(i, "year", e.target.value)} placeholder="年" className="w-20 rounded border border-gray-300 px-2 py-1.5 text-sm" />
-          <input type="number" value={entry.month} onChange={(e) => update(i, "month", e.target.value)} placeholder="月" className="w-16 rounded border border-gray-300 px-2 py-1.5 text-sm" />
-          <input value={entry.content} onChange={(e) => update(i, "content", e.target.value)} placeholder={placeholder} className="flex-1 rounded border border-gray-300 px-2 py-1.5 text-sm" />
+          <input type="number" value={entry.year} onChange={(e) => update(i, "year", e.target.value)} placeholder="年" className="w-20 border border-gray-300 px-2 py-1.5 text-sm" />
+          <input type="number" value={entry.month} onChange={(e) => update(i, "month", e.target.value)} placeholder="月" className="w-16 border border-gray-300 px-2 py-1.5 text-sm" />
+          <input value={entry.content} onChange={(e) => update(i, "content", e.target.value)} placeholder={placeholder} className="flex-1 border border-gray-300 px-2 py-1.5 text-sm" />
           <button onClick={() => remove(i)} className="p-1.5 text-gray-400 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
         </div>
       ))}
@@ -342,15 +342,15 @@ function LicenseList({ entries, onChange }: { entries: LicenseEntry[]; onChange:
     <div className="space-y-2">
       {entries.map((entry, i) => (
         <div key={i} className="flex items-start gap-2">
-          <input type="number" value={entry.year} onChange={(e) => update(i, "year", e.target.value)} placeholder="年" className="w-20 rounded border border-gray-300 px-2 py-1.5 text-sm" />
-          <input type="number" value={entry.month} onChange={(e) => update(i, "month", e.target.value)} placeholder="月" className="w-16 rounded border border-gray-300 px-2 py-1.5 text-sm" />
+          <input type="number" value={entry.year} onChange={(e) => update(i, "year", e.target.value)} placeholder="年" className="w-20 border border-gray-300 px-2 py-1.5 text-sm" />
+          <input type="number" value={entry.month} onChange={(e) => update(i, "month", e.target.value)} placeholder="月" className="w-16 border border-gray-300 px-2 py-1.5 text-sm" />
           <div className="flex-1 relative">
             <input
               value={entry.name}
               onChange={(e) => update(i, "name", e.target.value)}
               list={`license-suggestions-${i}`}
               placeholder="資格名"
-              className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm"
+              className="w-full border border-gray-300 px-2 py-1.5 text-sm"
             />
             <datalist id={`license-suggestions-${i}`}>
               {CONSTRUCTION_LICENSES.map((l) => <option key={l} value={l} />)}
@@ -378,14 +378,14 @@ function CareerDetailList({ entries, onChange }: { entries: CareerEntry[]; onCha
   return (
     <div className="space-y-4">
       {entries.map((entry, i) => (
-        <div key={i} className="rounded-lg border p-4 space-y-2 relative">
+        <div key={i} className="border p-4 space-y-2 relative">
           <button onClick={() => remove(i)} className="absolute top-2 right-2 p-1 text-gray-400 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
           <div className="grid gap-2 sm:grid-cols-2">
-            <input value={entry.company} onChange={(e) => update(i, "company", e.target.value)} placeholder="会社名" className="rounded border border-gray-300 px-2 py-1.5 text-sm" />
-            <input value={entry.period} onChange={(e) => update(i, "period", e.target.value)} placeholder="在籍期間（例: 2020年4月〜2024年3月）" className="rounded border border-gray-300 px-2 py-1.5 text-sm" />
+            <input value={entry.company} onChange={(e) => update(i, "company", e.target.value)} placeholder="会社名" className="border border-gray-300 px-2 py-1.5 text-sm" />
+            <input value={entry.period} onChange={(e) => update(i, "period", e.target.value)} placeholder="在籍期間（例: 2020年4月〜2024年3月）" className="border border-gray-300 px-2 py-1.5 text-sm" />
           </div>
-          <input value={entry.position} onChange={(e) => update(i, "position", e.target.value)} placeholder="役職・ポジション" className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm" />
-          <textarea value={entry.description} onChange={(e) => update(i, "description", e.target.value)} placeholder="業務内容" rows={3} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm" />
+          <input value={entry.position} onChange={(e) => update(i, "position", e.target.value)} placeholder="役職・ポジション" className="w-full border border-gray-300 px-2 py-1.5 text-sm" />
+          <textarea value={entry.description} onChange={(e) => update(i, "description", e.target.value)} placeholder="業務内容" rows={3} className="w-full border border-gray-300 px-2 py-1.5 text-sm" />
         </div>
       ))}
       <button onClick={add} className="flex items-center gap-1 text-sm text-primary-600 hover:text-primary-700">
@@ -412,7 +412,7 @@ function TagInput({ tags, onChange, placeholder, suggestions }: {
     <div>
       <div className="flex flex-wrap gap-2 mb-2">
         {tags.map((tag) => (
-          <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-3 py-1 text-xs font-medium text-primary-700">
+          <span key={tag} className="inline-flex items-center gap-1 bg-primary-100 px-3 py-1 text-xs font-medium text-primary-700">
             {tag}
             <button onClick={() => onChange(tags.filter((t) => t !== tag))} className="text-primary-400 hover:text-primary-600">&times;</button>
           </span>
@@ -425,9 +425,9 @@ function TagInput({ tags, onChange, placeholder, suggestions }: {
           onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), add())}
           list={suggestions ? "tag-suggestions" : undefined}
           placeholder={placeholder}
-          className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm"
+          className="flex-1 border border-gray-300 px-3 py-2 text-sm"
         />
-        <button onClick={add} className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-200">追加</button>
+        <button onClick={add} className="bg-gray-100 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-200">追加</button>
       </div>
       {suggestions && (
         <datalist id="tag-suggestions">

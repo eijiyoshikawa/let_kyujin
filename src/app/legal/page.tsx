@@ -59,8 +59,8 @@ const ROWS: Array<{
           <strong>求職者の方</strong>: 無料
         </li>
         <li>
-          <strong>求人掲載企業様</strong>: 求人掲載は無料。採用が決定した場合のみ
-          1 名あたり <strong>10万円〜</strong> の成果報酬が発生します（職種・経験により変動）。
+          <strong>求人掲載企業様</strong>: 求人掲載は <strong>無料キャンペーン中</strong>（期間中の新規掲載に限る）。
+          採用が決定した場合のみ 1 名あたり <strong>29.8 万円〜</strong> の成果報酬が発生します（職種・経験により変動）。
         </li>
       </ul>
     ),
@@ -123,7 +123,7 @@ export default function LegalPage() {
       </h1>
       <p className="mt-2 text-sm text-gray-500">最終更新日: 2026年5月9日</p>
 
-      <div className="mt-8 overflow-hidden rounded-lg border bg-white">
+      <div className="mt-8 overflow-hidden border bg-white">
         <dl className="divide-y">
           {ROWS.map((row) => (
             <div

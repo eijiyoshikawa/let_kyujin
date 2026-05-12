@@ -32,7 +32,7 @@ export async function HwMetaSummary() {
             <Link
               key={prefecture}
               href={`/hw-jobs?prefecture=${encodeURIComponent(prefecture)}`}
-              className="inline-flex items-center gap-1 rounded-full border border-primary-200 bg-white px-3 py-1 text-xs font-medium text-primary-600 hover:bg-primary-100 transition"
+              className="inline-flex items-center gap-1 border border-primary-200 bg-white px-3 py-1 text-xs font-medium text-primary-600 hover:bg-primary-100 transition"
             >
               <MapPin className="h-3 w-3" />
               {prefecture}

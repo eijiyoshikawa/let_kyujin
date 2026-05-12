@@ -92,7 +92,7 @@ export default async function CompanyScoutsPage({
             <a
               key={opt.value}
               href={`/company/scouts?tab=sent&status=${opt.value}`}
-              className={`rounded-full px-3 py-1 text-sm font-medium ${
+              className={` px-3 py-1 text-sm font-medium ${
                 statusFilter === opt.value
                   ? "bg-primary-600 text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -104,7 +104,7 @@ export default async function CompanyScoutsPage({
         </div>
 
         {scouts.length === 0 ? (
-          <div className="mt-6 rounded-lg border bg-white p-8 text-center shadow-sm">
+          <div className="mt-6 border bg-white p-8 text-center shadow-sm">
             <p className="text-gray-500">送信済みのスカウトはありません。</p>
           </div>
         ) : (
@@ -112,7 +112,7 @@ export default async function CompanyScoutsPage({
             {scouts.map((scout) => (
               <div
                 key={scout.id}
-                className="rounded-lg border bg-white p-4 shadow-sm"
+                className="border bg-white p-4 shadow-sm"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -197,7 +197,7 @@ export default async function CompanyScoutsPage({
         <select
           name="prefecture"
           defaultValue={prefectureFilter}
-          className="rounded-md border px-3 py-1.5 text-sm"
+          className="border px-3 py-1.5 text-sm"
         >
           <option value="">全都道府県</option>
           {PREFECTURES.map((p) => (
@@ -209,7 +209,7 @@ export default async function CompanyScoutsPage({
         <select
           name="category"
           defaultValue={categoryFilter}
-          className="rounded-md border px-3 py-1.5 text-sm"
+          className="border px-3 py-1.5 text-sm"
         >
           <option value="">全職種</option>
           {CATEGORIES.map((c) => (
@@ -220,14 +220,14 @@ export default async function CompanyScoutsPage({
         </select>
         <button
           type="submit"
-          className="rounded-md bg-primary-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-primary-700"
+          className="bg-primary-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-primary-700"
         >
           検索
         </button>
       </form>
 
       {candidates.length === 0 ? (
-        <div className="mt-6 rounded-lg border bg-white p-8 text-center shadow-sm">
+        <div className="mt-6 border bg-white p-8 text-center shadow-sm">
           <p className="text-gray-500">
             条件に合う候補者が見つかりませんでした。
           </p>
@@ -239,7 +239,7 @@ export default async function CompanyScoutsPage({
             return (
               <div
                 key={candidate.id}
-                className="rounded-lg border bg-white p-4 shadow-sm"
+                className="border bg-white p-4 shadow-sm"
               >
                 <div className="flex items-start justify-between">
                   <div>
@@ -256,7 +256,7 @@ export default async function CompanyScoutsPage({
                         {candidate.desiredCategories.map((cat) => (
                           <span
                             key={cat}
-                            className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600"
+                            className="bg-gray-100 px-2 py-0.5 text-xs text-gray-600"
                           >
                             {CATEGORIES.find((c) => c.value === cat)?.label ??
                               cat}
@@ -340,7 +340,7 @@ function ScoutStatusBadge({ status }: { status: string }) {
 
   return (
     <span
-      className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${className}`}
+      className={`inline-flex px-2 py-0.5 text-xs font-medium ${className}`}
     >
       {label}
     </span>

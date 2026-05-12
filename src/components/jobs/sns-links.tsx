@@ -104,7 +104,7 @@ export function SnsLinks({ sns }: { sns: Sns }) {
             rel="noopener noreferrer nofollow"
             aria-label={`${label} を開く`}
             title={label}
-            className={`inline-flex items-center justify-center h-9 w-9 rounded-full text-white shadow-sm transition hover:opacity-85 ${bg}`}
+            className={`inline-flex items-center justify-center h-9 w-9 text-white shadow-sm transition hover:opacity-85 ${bg}`}
           >
             {icon}
           </a>

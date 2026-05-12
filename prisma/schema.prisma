@@ -37,6 +37,7 @@ model User {
   resume            Resume?
   uploadedFiles     UploadedFile[]
   applicationClicks ApplicationClick[]
+  jobViews          JobView[]
 
   @@map("users")
 }
@@ -194,6 +195,8 @@ model Job {
   applications      Application[]
   scouts            Scout[]
   applicationClicks ApplicationClick[]
+  lineLeads         LineLead[]
+  jobViews          JobView[]
 
   @@index([prefecture, category, employmentType, status], name: "idx_jobs_search")
   @@index([salaryMin, salaryMax], name: "idx_jobs_salary")
@@ -235,6 +238,8 @@ model ApplicationClick {
   id        String   @id @default(uuid()) @db.Uuid
   jobId     String   @map("job_id") @db.Uuid
   userId    String?  @map("user_id") @db.Uuid
+  // 匿名ユーザーの追跡用 cookie (gc_sid) と GA4 client_id を紐付ける
+  sessionId String?  @map("session_id") @db.VarChar(50)
   source    String   @default("job_detail") @db.VarChar(20) // job_card | job_detail | apply_page
   ipAddress String?  @map("ip_address") @db.VarChar(45)
   userAgent String?  @map("user_agent") @db.VarChar(500)
@@ -247,6 +252,105 @@ model ApplicationClick {
   @@index([jobId, clickedAt(sort: Desc)], name: "idx_app_clicks_job_time")
   @@index([userId, clickedAt(sort: Desc)], name: "idx_app_clicks_user_time")
   @@map("application_clicks")
+}
+
+// ========================================
+// LINE 応募ミニフォームから生成されるリード
+// ========================================
+// 求人詳細から「LINE で応募」を押すと、まずミニフォーム（氏名 / 電話 / メール 必須）
+// を経由して当 LeadCapture に保存し、その後 LINE 公式アカウントへ遷移する。
+// LINE 友だち追加後の Webhook で lineUserId が後追いで紐付く。
+model LineLead {
+  id              String   @id @default(uuid()) @db.Uuid
+  jobId           String?  @map("job_id") @db.Uuid
+  name            String   @db.VarChar(100)
+  phone           String   @db.VarChar(30)
+  email           String   @db.VarChar(255)
+  prefecture      String?  @db.VarChar(10)
+  experienceYears Int?     @map("experience_years")
+  notes           String?
+  // 匿名ユーザーの追跡用 cookie (gc_sid)。閲覧履歴との照合に使う
+  sessionId       String?  @map("session_id") @db.VarChar(50)
+  // 流入分析: UTM パラメータをサーバ側でも保存
+  utmSource       String?  @map("utm_source") @db.VarChar(100)
+  utmMedium       String?  @map("utm_medium") @db.VarChar(100)
+  utmCampaign     String?  @map("utm_campaign") @db.VarChar(100)
+  referer         String?  @db.VarChar(500)
+  // 配信オプトアウト（true なら一括配信から除外）
+  optedOut        Boolean  @default(false) @map("opted_out")
+  optedOutAt      DateTime? @map("opted_out_at") @db.Timestamptz()
+  // 'admin' | 'webhook' | 'manual'
+  optedOutSource  String?  @map("opted_out_source") @db.VarChar(20)
+  // LINE 友だち追加後の Webhook でセットされる
+  lineUserId      String?  @map("line_user_id") @db.VarChar(50)
+  lineDisplayName String?  @map("line_display_name") @db.VarChar(100)
+  // pending | line_added | contacted | qualified | converted | rejected
+  status          String   @default("pending") @db.VarChar(20)
+  ipAddress       String?  @map("ip_address") @db.VarChar(45)
+  userAgent       String?  @map("user_agent") @db.VarChar(500)
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+  job Job? @relation(fields: [jobId], references: [id], onDelete: SetNull)
+
+  @@index([jobId, createdAt(sort: Desc)], name: "idx_line_leads_job")
+  @@index([lineUserId], name: "idx_line_leads_line_user")
+  @@index([status, createdAt(sort: Desc)], name: "idx_line_leads_status")
+  @@index([sessionId], name: "idx_line_leads_session")
+  @@map("line_leads")
+}
+
+// ========================================
+// 求人詳細ページの閲覧ログ
+// ========================================
+// 求人詳細ページ /jobs/[id] が表示されるたびに 1 行 INSERT。
+// 匿名ユーザーを sessionId (gc_sid cookie) で同一識別し、
+// lead 化前にどの求人を見ていたかをトラックする。
+// admin 画面で「この lead がこれまで見た求人」一覧を表示する用途。
+// 求人ごとの人気度集計にも使える。
+model JobView {
+  id          String   @id @default(uuid()) @db.Uuid
+  jobId       String   @map("job_id") @db.Uuid
+  sessionId   String?  @map("session_id") @db.VarChar(50)
+  userId      String?  @map("user_id") @db.Uuid
+  ipAddress   String?  @map("ip_address") @db.VarChar(45)
+  userAgent   String?  @map("user_agent") @db.VarChar(500)
+  referer     String?  @db.VarChar(500)
+  utmSource   String?  @map("utm_source") @db.VarChar(100)
+  utmMedium   String?  @map("utm_medium") @db.VarChar(100)
+  utmCampaign String?  @map("utm_campaign") @db.VarChar(100)
+  viewedAt    DateTime @default(now()) @map("viewed_at") @db.Timestamptz()
+
+  job  Job   @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([jobId, viewedAt(sort: Desc)], name: "idx_job_views_job_time")
+  @@index([sessionId, viewedAt(sort: Desc)], name: "idx_job_views_session_time")
+  @@map("job_views")
+}
+
+// ========================================
+// 一括 LINE Push 配信ログ
+// ========================================
+// admin から「セグメント配信」を実行したときの記録。
+// 配信パラメータ + 結果（成功 / 失敗 / スキップ数）を残す。
+model BroadcastLog {
+  id            String   @id @default(uuid()) @db.Uuid
+  // 配信時のセグメント条件（JSON: utm_source, category, prefecture, status, since, until 等）
+  segment       Json
+  // 配信対象求人 ID（最大 5 件）
+  jobIds        String[] @map("job_ids") @db.Uuid
+  freeText      String?  @map("free_text")
+  // 集計
+  targetCount   Int      @map("target_count")
+  successCount  Int      @map("success_count")
+  failureCount  Int      @map("failure_count")
+  skippedCount  Int      @map("skipped_count") // line bind 未済等
+  triggeredBy   String?  @map("triggered_by") @db.Uuid // 操作した admin user id
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  @@index([createdAt(sort: Desc)], name: "idx_broadcast_logs_time")
+  @@map("broadcast_logs")
 }
 
 // ========================================

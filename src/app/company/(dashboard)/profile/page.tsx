@@ -16,7 +16,7 @@ export default async function CompanyProfilePage() {
   const companyId = (session.user as { companyId?: string }).companyId
   if (!companyId) {
     return (
-      <div className="rounded border bg-red-50 border-red-200 p-4 text-sm text-red-800">
+      <div className="border bg-red-50 border-red-200 p-4 text-sm text-red-800">
         企業情報が見つかりません。サポートにお問い合わせください。
       </div>
     )
@@ -42,7 +42,7 @@ export default async function CompanyProfilePage() {
 
   if (!company) {
     return (
-      <div className="rounded border bg-red-50 border-red-200 p-4 text-sm text-red-800">
+      <div className="border bg-red-50 border-red-200 p-4 text-sm text-red-800">
         企業情報が見つかりません。
       </div>
     )

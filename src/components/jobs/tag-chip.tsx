@@ -21,7 +21,7 @@ export function TagChip({
       : "border-gray-200 text-gray-600 bg-gray-50"
   return (
     <span
-      className={`inline-flex items-center rounded border ${sizeCls} ${toneCls} font-medium leading-none whitespace-nowrap`}
+      className={`inline-flex items-center border ${sizeCls} ${toneCls} font-medium leading-none whitespace-nowrap`}
     >
       {children}
     </span>

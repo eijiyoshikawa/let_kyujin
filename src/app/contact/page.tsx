@@ -27,7 +27,7 @@ const faqs = [
   },
   {
     q: "企業側の求人掲載費用を教えてください。",
-    a: "掲載費用は無料です。採用が決まった場合のみ成果報酬（1人あたり10万円〜）が発生します。求人の掲載数に制限はありません。",
+    a: "現在、掲載料は無料キャンペーン中です（期間中の新規掲載に限る）。採用が決まった場合のみ成果報酬（1 名あたり 29.8 万円〜）が発生します。求人の掲載数に制限はありません。",
   },
   {
     q: "応募した企業から連絡がありません。",
@@ -200,7 +200,7 @@ export default function ContactPage() {
           {faqs.map((faq) => (
             <div key={faq.q} className="hover-lift  border bg-white p-5 shadow-sm">
               <h3 className="flex items-start gap-2 font-bold text-gray-900">
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-600 text-[10px] font-bold text-white">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center bg-primary-600 text-[10px] font-bold text-white">
                   Q
                 </span>
                 {faq.q}

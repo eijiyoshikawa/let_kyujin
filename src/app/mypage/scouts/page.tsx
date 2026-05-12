@@ -47,7 +47,7 @@ export default async function ScoutsPage() {
       </div>
 
       {scouts.length === 0 ? (
-        <div className="mt-8 rounded-lg border bg-white p-8 text-center shadow-sm">
+        <div className="mt-8 border bg-white p-8 text-center shadow-sm">
           <Mail className="mx-auto h-10 w-10 text-gray-300" />
           <p className="mt-3 text-gray-500">スカウトはまだ届いていません。</p>
           <p className="mt-1 text-sm text-gray-400">
@@ -65,13 +65,13 @@ export default async function ScoutsPage() {
           {scouts.map((scout) => (
             <div
               key={scout.id}
-              className={`rounded-lg border bg-white p-5 shadow-sm ${
+              className={` border bg-white p-5 shadow-sm ${
                 scout.status === "sent" ? "border-primary-200 bg-primary-50/30" : ""
               }`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100">
+                  <div className="flex h-10 w-10 items-center justify-center bg-primary-100">
                     <Building2 className="h-5 w-5 text-primary-600" />
                   </div>
                   <div>
@@ -135,7 +135,7 @@ function ScoutStatusBadge({ status }: { status: string }) {
 
   return (
     <span
-      className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${className}`}
+      className={`inline-flex px-2 py-0.5 text-xs font-medium ${className}`}
     >
       {label}
     </span>
