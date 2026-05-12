@@ -45,18 +45,9 @@ async function main() {
     process.exit(1)
   }
 
-  const jobs = await prisma.job.findMany({
-    where: { source: "hellowork" },
-    select: {
-      id: true,
-      title: true,
-      salaryType: true,
-      salaryMin: true,
-      rawData: true,
-    },
-  })
-
-  console.log(`対象 hellowork ジョブ総数: ${jobs.length}`)
+  const BATCH_SIZE = 500
+  let cursor: string | undefined = undefined
+  let scanned = 0
 
   const stats = {
     unchanged: 0,
@@ -69,29 +60,57 @@ async function main() {
   }
   const updates: Array<{ id: string; from: string | null; to: string }> = []
 
-  for (const j of jobs) {
-    const raw = j.rawData as Record<string, unknown> | null
-    const keitai =
-      typeof raw?.chgnkeitai === "string" ? (raw.chgnkeitai as string) : null
+  while (true) {
+    const batch = await prisma.job.findMany({
+      where: { source: "hellowork" },
+      select: {
+        id: true,
+        salaryType: true,
+        salaryMin: true,
+        rawData: true,
+      },
+      orderBy: { id: "asc" },
+      take: BATCH_SIZE,
+      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+    })
 
-    let inferred =
-      inferFromKeitai(keitai) ?? inferFromAmount(j.salaryMin ?? null)
+    if (batch.length === 0) break
 
-    if (!inferred || inferred === j.salaryType) {
-      stats.unchanged++
-      continue
+    for (const j of batch) {
+      const raw = j.rawData as Record<string, unknown> | null
+      const keitai =
+        typeof raw?.chgnkeitai === "string"
+          ? (raw.chgnkeitai as string)
+          : null
+
+      const inferred =
+        inferFromKeitai(keitai) ?? inferFromAmount(j.salaryMin ?? null)
+
+      if (!inferred || inferred === j.salaryType) {
+        stats.unchanged++
+        continue
+      }
+
+      updates.push({ id: j.id, from: j.salaryType, to: inferred })
+
+      if (keitai) stats.fixedFromKeitai++
+      else stats.fixedFromAmount++
+
+      if (inferred === "daily") stats.toDaily++
+      else if (inferred === "hourly") stats.toHourly++
+      else if (inferred === "annual") stats.toAnnual++
+      else stats.toMonthly++
     }
 
-    updates.push({ id: j.id, from: j.salaryType, to: inferred })
-
-    if (keitai) stats.fixedFromKeitai++
-    else stats.fixedFromAmount++
-
-    if (inferred === "daily") stats.toDaily++
-    else if (inferred === "hourly") stats.toHourly++
-    else if (inferred === "annual") stats.toAnnual++
-    else stats.toMonthly++
+    scanned += batch.length
+    cursor = batch[batch.length - 1].id
+    if (scanned % 2000 === 0 || batch.length < BATCH_SIZE) {
+      console.log(`  scanned: ${scanned}`)
+    }
+    if (batch.length < BATCH_SIZE) break
   }
+
+  console.log(`対象 hellowork ジョブ総数: ${scanned}`)
 
   console.log("\n--- 集計 ---")
   console.log(`変更なし: ${stats.unchanged}`)
