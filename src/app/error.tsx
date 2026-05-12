@@ -3,6 +3,7 @@
 import { useEffect } from "react"
 import Link from "next/link"
 import { AlertTriangle, RefreshCw, Home } from "lucide-react"
+import * as Sentry from "@sentry/nextjs"
 
 export default function ErrorPage({
   error,
@@ -13,6 +14,11 @@ export default function ErrorPage({
 }) {
   useEffect(() => {
     console.error(error)
+    // Sentry に手動レポート（自動キャプチャを補強 + tag 付与）
+    Sentry.captureException(error, {
+      tags: { boundary: "app-error" },
+      extra: { digest: error.digest },
+    })
   }, [error])
 
   return (
