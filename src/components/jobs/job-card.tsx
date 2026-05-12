@@ -12,6 +12,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr"
 import { getCategoryLabel } from "@/lib/categories"
 import { TagChip } from "./tag-chip"
+import { FavoriteButton } from "./favorite-button"
 
 type JobCardProps = {
   id: string
@@ -30,7 +31,15 @@ type JobCardProps = {
   company: { name: string; logoUrl: string | null } | null
 }
 
-export function JobCard({ job }: { job: JobCardProps }) {
+export function JobCard({
+  job,
+  isFavorite = false,
+  loggedIn = false,
+}: {
+  job: JobCardProps
+  isFavorite?: boolean
+  loggedIn?: boolean
+}) {
   const tagsToShow = job.tags.slice(0, 5)
 
   return (
@@ -140,8 +149,15 @@ export function JobCard({ job }: { job: JobCardProps }) {
         )}
       </div>
 
-      <div className="hidden sm:flex items-center">
-        <CaretRight weight="duotone" className="h-5 w-5 text-gray-300 group-hover:text-primary-500 transition" />
+      <div className="flex items-start sm:items-center gap-1">
+        <div onClick={(e) => e.stopPropagation()}>
+          <FavoriteButton
+            jobId={job.id}
+            initialIsFavorite={isFavorite}
+            loggedIn={loggedIn}
+          />
+        </div>
+        <CaretRight weight="duotone" className="hidden sm:block h-5 w-5 text-gray-300 group-hover:text-primary-500 transition" />
       </div>
     </Link>
   )
