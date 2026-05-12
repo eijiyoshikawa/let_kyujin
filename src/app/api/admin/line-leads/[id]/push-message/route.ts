@@ -14,11 +14,10 @@ import { type NextRequest } from "next/server"
 import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
-import { pushMessage, isMessagingConfigured } from "@/lib/line-messaging"
+import { pushMessage, isMessagingConfigured, type LineMessage } from "@/lib/line-messaging"
+import { buildJobRecommendationFlex } from "@/lib/line-flex-builders"
 
 export const dynamic = "force-dynamic"
-
-const SITE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://genbacareer.jp"
 
 const bodySchema = z.object({
   jobIds: z.array(z.string().uuid()).min(1).max(5),
@@ -80,6 +79,8 @@ export async function POST(
           salaryMin: true,
           salaryMax: true,
           salaryType: true,
+          category: true,
+          tags: true,
         },
       })
       .catch(() => []),
@@ -99,70 +100,22 @@ export async function POST(
     return Response.json({ error: "no_active_jobs" }, { status: 404 })
   }
 
-  const message = buildJobRecommendationText({
-    name: lead.name,
-    jobs,
-    freeText: parsed.freeText,
-  })
+  // テキスト挨拶 + Flex カルーセル の 2 通組で送る
+  const introLines = [`${lead.name} さんへ`]
+  if (parsed.freeText) introLines.push("", parsed.freeText)
+  introLines.push("", "ご希望に近いと思われる求人をお送りします👷‍♂️")
+
+  const messages: LineMessage[] = [
+    { type: "text", text: introLines.join("\n") },
+    buildJobRecommendationFlex({ jobs }),
+  ]
 
   try {
-    await pushMessage(lead.lineUserId, [{ type: "text", text: message }])
+    await pushMessage(lead.lineUserId, messages)
   } catch (e) {
     console.error(`[admin.push] ${e instanceof Error ? e.message : e}`)
     return Response.json({ error: "push_failed" }, { status: 502 })
   }
 
   return Response.json({ success: true, sentJobCount: jobs.length })
-}
-
-interface JobForMessage {
-  id: string
-  title: string
-  prefecture: string
-  city: string | null
-  salaryMin: number | null
-  salaryMax: number | null
-  salaryType: string | null
-}
-
-function buildJobRecommendationText({
-  name,
-  jobs,
-  freeText,
-}: {
-  name: string
-  jobs: JobForMessage[]
-  freeText?: string
-}): string {
-  const lines: string[] = []
-  lines.push(`${name} さんへ`)
-  lines.push("")
-  if (freeText) {
-    lines.push(freeText)
-    lines.push("")
-  }
-  lines.push("ご希望に近いと思われる求人を以下にお送りします👷‍♂️")
-  lines.push("")
-  for (const job of jobs) {
-    lines.push(`▼ ${job.title}`)
-    lines.push(`📍 ${job.prefecture}${job.city ? ` ${job.city}` : ""}`)
-    lines.push(`💰 ${formatSalary(job.salaryMin, job.salaryMax, job.salaryType)}`)
-    lines.push(`🔗 ${SITE_URL}/jobs/${job.id}`)
-    lines.push("")
-  }
-  lines.push("気になる求人があれば、URL を貼って一言メッセージください！")
-  return lines.join("\n")
-}
-
-function formatSalary(
-  min: number | null,
-  max: number | null,
-  type: string | null
-): string {
-  if (!min) return "応相談"
-  const unit = type === "hourly" ? "時給" : type === "annual" ? "年収" : "月給"
-  const fmt = (n: number) =>
-    n >= 10000 ? `${(n / 10000).toFixed(0)}万` : `${n.toLocaleString()}`
-  if (min && max) return `${unit} ${fmt(min)}〜${fmt(max)}円`
-  return `${unit} ${fmt(min)}円〜`
 }

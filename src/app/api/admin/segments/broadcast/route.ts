@@ -18,14 +18,14 @@ import { type NextRequest } from "next/server"
 import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
-import { isMessagingConfigured, pushMessage } from "@/lib/line-messaging"
+import { isMessagingConfigured, pushMessage, type LineMessage } from "@/lib/line-messaging"
+import { buildJobRecommendationFlex } from "@/lib/line-flex-builders"
 import { resolveSegment, type Segment } from "@/lib/segment"
 import { LEAD_STATUSES } from "@/lib/line-lead-status"
 
 export const dynamic = "force-dynamic"
 export const maxDuration = 60
 
-const SITE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://genbacareer.jp"
 
 const segmentSchema = z
   .object({
@@ -91,6 +91,8 @@ export async function POST(request: NextRequest) {
         salaryMin: true,
         salaryMax: true,
         salaryType: true,
+        category: true,
+        tags: true,
       },
     })
     .catch(() => [])
@@ -112,9 +114,9 @@ export async function POST(request: NextRequest) {
           skipped++
           return
         }
-        const message = buildMessage({ name: lead.name, jobs, freeText: body.freeText })
+        const messages = buildMessages(lead.name, jobs, body.freeText)
         try {
-          await pushMessage(lead.lineUserId, [{ type: "text", text: message }])
+          await pushMessage(lead.lineUserId, messages)
           success++
         } catch (e) {
           failure++
@@ -156,7 +158,7 @@ export async function POST(request: NextRequest) {
   })
 }
 
-interface JobForMessage {
+interface JobForBroadcast {
   id: string
   title: string
   prefecture: string
@@ -164,46 +166,20 @@ interface JobForMessage {
   salaryMin: number | null
   salaryMax: number | null
   salaryType: string | null
+  category: string
+  tags: string[]
 }
 
-function buildMessage({
-  name,
-  jobs,
-  freeText,
-}: {
-  name: string
-  jobs: JobForMessage[]
+function buildMessages(
+  name: string,
+  jobs: JobForBroadcast[],
   freeText?: string
-}): string {
-  const lines: string[] = []
-  lines.push(`${name} さんへ`)
-  lines.push("")
-  if (freeText) {
-    lines.push(freeText)
-    lines.push("")
-  }
-  lines.push("条件に合いそうな求人をピックアップしました👷‍♂️")
-  lines.push("")
-  for (const job of jobs) {
-    lines.push(`▼ ${job.title}`)
-    lines.push(`📍 ${job.prefecture}${job.city ? ` ${job.city}` : ""}`)
-    lines.push(`💰 ${formatSalary(job.salaryMin, job.salaryMax, job.salaryType)}`)
-    lines.push(`🔗 ${SITE_URL}/jobs/${job.id}`)
-    lines.push("")
-  }
-  lines.push("気になる求人があれば、URL を貼って一言ください！")
-  return lines.join("\n")
-}
-
-function formatSalary(
-  min: number | null,
-  max: number | null,
-  type: string | null
-): string {
-  if (!min) return "応相談"
-  const unit = type === "hourly" ? "時給" : type === "annual" ? "年収" : "月給"
-  const fmt = (n: number) =>
-    n >= 10000 ? `${(n / 10000).toFixed(0)}万` : `${n.toLocaleString()}`
-  if (min && max) return `${unit} ${fmt(min)}〜${fmt(max)}円`
-  return `${unit} ${fmt(min)}円〜`
+): LineMessage[] {
+  const intro: string[] = [`${name} さんへ`]
+  if (freeText) intro.push("", freeText)
+  intro.push("", "条件に合いそうな求人をお送りします👷‍♂️")
+  return [
+    { type: "text", text: intro.join("\n") },
+    buildJobRecommendationFlex({ jobs, altTextPrefix: "新着求人" }),
+  ]
 }
