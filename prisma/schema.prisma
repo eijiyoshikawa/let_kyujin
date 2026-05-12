@@ -29,6 +29,13 @@ model User {
   verificationTokenExpiry DateTime? @map("verification_token_expiry") @db.Timestamptz()
   resetToken        String?   @unique @map("reset_token") @db.VarChar(64)
   resetTokenExpiry  DateTime? @map("reset_token_expiry") @db.Timestamptz()
+  // active: 通常 / suspended: 凍結 (管理側で BAN) / deleted: 退会済 (個人情報匿名化済)
+  status            String    @default("active") @db.VarChar(20)
+  suspendedAt       DateTime? @map("suspended_at") @db.Timestamptz()
+  suspendedReason   String?   @map("suspended_reason") @db.VarChar(500)
+  deletedAt         DateTime? @map("deleted_at") @db.Timestamptz()
+  // 退会フォームで利用規約に同意した時刻 / 18 歳以上であることの確認時刻
+  termsAcceptedAt   DateTime? @map("terms_accepted_at") @db.Timestamptz()
   createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt         DateTime  @updatedAt @map("updated_at") @db.Timestamptz()
 
@@ -349,6 +356,8 @@ model Job {
   status         String    @default("active") @db.VarChar(20) // draft | active | closed
   publishedAt    DateTime? @map("published_at") @db.Timestamptz()
   expiresAt      DateTime? @map("expires_at") @db.Timestamptz()
+  // true: expiresAt 到達時に cron が +30 日延長して active 維持
+  autoRenew      Boolean   @default(false) @map("auto_renew")
   viewCount      Int       @default(0) @map("view_count")
   // 下書き状態でも社内チェック用に共有できるプレビュートークン（hex）。
   // 未設定なら「プレビュー URL を発行」ボタンで生成する。

@@ -18,6 +18,8 @@ import type { Metadata } from "next"
 import { getRecommendedJobs } from "@/lib/job-recommendations"
 import { JobCard } from "@/components/jobs/job-card"
 import { JobCardSkeletonGrid } from "@/components/ui/skeleton"
+import { calcProfileCompletion } from "@/lib/profile-completion"
+import { ProfileCompletionCard } from "@/components/mypage/profile-completion-card"
 
 export const metadata: Metadata = {
   title: "マイページ",
@@ -41,7 +43,14 @@ export default async function MyPage() {
       select: {
         name: true,
         email: true,
+        phone: true,
         prefecture: true,
+        city: true,
+        birthDate: true,
+        desiredCategories: true,
+        desiredSalaryMin: true,
+        resumeUrl: true,
+        emailVerified: true,
         createdAt: true,
       },
     }),
@@ -67,9 +76,18 @@ export default async function MyPage() {
 
   if (!user) redirect("/login")
 
+  const completion = calcProfileCompletion(user)
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
       <h1 className="text-2xl font-bold text-gray-900">マイページ</h1>
+
+      <div className="mt-6">
+        <ProfileCompletionCard
+          percent={completion.percent}
+          items={completion.items}
+        />
+      </div>
 
       {/* User Info */}
       <div className="mt-6  border bg-white p-6 shadow-sm">

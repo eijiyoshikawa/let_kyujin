@@ -11,7 +11,10 @@ export default function RegisterPage() {
     password: "",
     passwordConfirm: "",
     prefecture: "",
+    birthDate: "",
   });
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [agreeAge, setAgreeAge] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
@@ -19,6 +22,19 @@ export default function RegisterPage() {
   const updateField = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
+
+  function isAtLeast18(birthDate: string): boolean {
+    if (!birthDate) return false;
+    const d = new Date(birthDate);
+    if (isNaN(d.getTime())) return false;
+    const now = new Date();
+    const eighteenYearsAgo = new Date(
+      now.getFullYear() - 18,
+      now.getMonth(),
+      now.getDate()
+    );
+    return d.getTime() <= eighteenYearsAgo.getTime();
+  }
 
   const validate = (): string | null => {
     if (!form.name.trim()) return "氏名を入力してください。";
@@ -28,6 +44,13 @@ export default function RegisterPage() {
     if (form.password !== form.passwordConfirm)
       return "パスワードが一致しません。";
     if (!form.prefecture) return "都道府県を選択してください。";
+    if (!form.birthDate) return "生年月日を入力してください。";
+    if (!isAtLeast18(form.birthDate))
+      return "ご利用は18歳以上の方に限らせていただいております。";
+    if (!agreeTerms)
+      return "利用規約とプライバシーポリシーへの同意が必要です。";
+    if (!agreeAge)
+      return "18歳以上であることの確認にチェックを入れてください。";
     return null;
   };
 
@@ -52,6 +75,8 @@ export default function RegisterPage() {
           email: form.email,
           password: form.password,
           prefecture: form.prefecture,
+          birthDate: form.birthDate,
+          termsAccepted: agreeTerms && agreeAge,
         }),
       });
 
@@ -207,6 +232,69 @@ export default function RegisterPage() {
                   </option>
                 ))}
               </select>
+            </div>
+
+            <div>
+              <label
+                htmlFor="birthDate"
+                className="block text-sm font-medium text-gray-700"
+              >
+                生年月日 <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="birthDate"
+                type="date"
+                required
+                value={form.birthDate}
+                onChange={(e) => updateField("birthDate", e.target.value)}
+                max={new Date().toISOString().slice(0, 10)}
+                className="mt-1 block w-full border border-gray-300 px-3 py-2 text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                18 歳未満の方はご登録いただけません。
+              </p>
+            </div>
+
+            <div className="space-y-2 border-t border-gray-200 pt-4">
+              <label className="flex items-start gap-2 text-xs text-gray-700">
+                <input
+                  type="checkbox"
+                  checked={agreeAge}
+                  onChange={(e) => setAgreeAge(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0"
+                />
+                <span>
+                  私は 18 歳以上であることを確認します。
+                  <span className="text-red-500">*</span>
+                </span>
+              </label>
+              <label className="flex items-start gap-2 text-xs text-gray-700">
+                <input
+                  type="checkbox"
+                  checked={agreeTerms}
+                  onChange={(e) => setAgreeTerms(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0"
+                />
+                <span>
+                  <Link
+                    href="/terms"
+                    target="_blank"
+                    className="text-primary-600 underline hover:text-primary-700"
+                  >
+                    利用規約
+                  </Link>
+                  と
+                  <Link
+                    href="/privacy"
+                    target="_blank"
+                    className="ml-1 text-primary-600 underline hover:text-primary-700"
+                  >
+                    プライバシーポリシー
+                  </Link>
+                  に同意します。
+                  <span className="text-red-500">*</span>
+                </span>
+              </label>
             </div>
 
             <button

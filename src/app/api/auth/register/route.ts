@@ -12,7 +12,23 @@ const registerSchema = z.object({
   email: z.string().email("有効なメールアドレスを入力してください。"),
   password: z.string().min(8, "パスワードは8文字以上で入力してください。"),
   prefecture: z.enum(PREFECTURES, "有効な都道府県を選択してください。"),
+  birthDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "生年月日は YYYY-MM-DD 形式で入力してください。"),
+  termsAccepted: z.literal(true, {
+    message: "利用規約への同意が必要です。",
+  }),
 });
+
+function isAtLeast18(birthDate: Date): boolean {
+  const now = new Date();
+  const eighteenYearsAgo = new Date(
+    now.getFullYear() - 18,
+    now.getMonth(),
+    now.getDate()
+  );
+  return birthDate.getTime() <= eighteenYearsAgo.getTime();
+}
 
 // メール確認トークンの有効期限: 24 時間
 const VERIFICATION_TOKEN_EXPIRY_MS = 24 * 60 * 60 * 1000;
@@ -35,7 +51,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: firstError }, { status: 400 });
     }
 
-    const { name, email, password, prefecture } = parsed.data;
+    const { name, email, password, prefecture, birthDate } = parsed.data;
+
+    const birthDateObj = new Date(birthDate);
+    if (isNaN(birthDateObj.getTime())) {
+      return NextResponse.json(
+        { error: "生年月日の形式が正しくありません。" },
+        { status: 400 }
+      );
+    }
+    if (!isAtLeast18(birthDateObj)) {
+      return NextResponse.json(
+        { error: "ご利用は 18 歳以上の方に限らせていただいております。" },
+        { status: 400 }
+      );
+    }
 
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
@@ -57,8 +87,10 @@ export async function POST(request: Request) {
         email,
         passwordHash,
         prefecture,
+        birthDate: birthDateObj,
         verificationToken,
         verificationTokenExpiry,
+        termsAcceptedAt: new Date(),
       },
     });
 
