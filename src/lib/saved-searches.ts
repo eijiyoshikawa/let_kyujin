@@ -19,6 +19,8 @@ export type SavedSearchInput = {
   employmentType?: string | null
   salaryMin?: number | null
   source?: string | null
+  tags?: string[] | null
+  excludeKeywords?: string[] | null
 }
 
 export function buildJobWhere(input: SavedSearchInput, since?: Date) {
@@ -26,6 +28,25 @@ export function buildJobWhere(input: SavedSearchInput, since?: Date) {
     input.category && isConstructionCategory(input.category)
       ? { category: input.category }
       : { category: { in: [...CONSTRUCTION_CATEGORY_VALUES] } }
+
+  // 除外キーワード: title / description のどちらにも含まれていない（AND NOT）
+  const excludeFilters = (input.excludeKeywords ?? []).filter(Boolean).map(
+    (kw) => ({
+      AND: [
+        { title: { not: { contains: kw, mode: "insensitive" as const } } },
+        {
+          OR: [
+            { description: null },
+            {
+              description: {
+                not: { contains: kw, mode: "insensitive" as const },
+              },
+            },
+          ],
+        },
+      ],
+    })
+  )
 
   return {
     status: "active" as const,
@@ -39,6 +60,9 @@ export function buildJobWhere(input: SavedSearchInput, since?: Date) {
       ? { salaryMin: { gte: input.salaryMin } }
       : {}),
     ...(input.source ? { source: input.source } : {}),
+    ...(input.tags && input.tags.length > 0
+      ? { tags: { hasSome: input.tags } }
+      : {}),
     ...(input.q
       ? {
           OR: [
@@ -49,6 +73,7 @@ export function buildJobWhere(input: SavedSearchInput, since?: Date) {
           ],
         }
       : {}),
+    ...(excludeFilters.length > 0 ? { AND: excludeFilters } : {}),
     ...(since ? { publishedAt: { gte: since } } : {}),
   }
 }
@@ -66,6 +91,7 @@ export function toSearchQueryString(input: SavedSearchInput): string {
     params.set("employment_type", input.employmentType)
   if (input.salaryMin) params.set("salary_min", String(input.salaryMin / 10000))
   if (input.source) params.set("source", input.source)
+  if (input.tags && input.tags.length > 0) params.set("tags", input.tags.join(","))
   return params.toString()
 }
 
@@ -90,6 +116,10 @@ export function formatSearchLabel(input: SavedSearchInput): string {
   }
   if (input.source === "direct") parts.push("認定企業のみ")
   if (input.source === "hellowork") parts.push("HW のみ")
+  if (input.tags && input.tags.length > 0)
+    parts.push(`#${input.tags.join(" #")}`)
+  if (input.excludeKeywords && input.excludeKeywords.length > 0)
+    parts.push(`除外: ${input.excludeKeywords.join(", ")}`)
   return parts.length > 0 ? parts.join(" / ") : "すべての建設業求人"
 }
 
@@ -105,6 +135,8 @@ export async function findNewMatchingJobs(
     employmentType: string | null
     salaryMin: number | null
     source: string | null
+    tags?: string[]
+    excludeKeywords?: string[]
     lastNotifiedAt: Date | null
     createdAt: Date
   },

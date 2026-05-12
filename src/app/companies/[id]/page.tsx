@@ -3,7 +3,9 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { prisma } from "@/lib/db"
+import { auth } from "@/lib/auth"
 import { JobCard } from "@/components/jobs/job-card"
+import { CompanyFollowButton } from "@/components/companies/follow-button"
 import {
   MapPin,
   Buildings,
@@ -97,6 +99,23 @@ export default async function CompanyDetailPage({ params }: Props) {
   if (!company || company.status !== "approved" || company.source !== "direct") {
     notFound()
   }
+
+  // ログイン中のユーザーがこの企業をフォローしているか
+  const session = await auth().catch(() => null)
+  const loggedIn = !!session?.user?.id
+  const isFollowing = loggedIn
+    ? !!(await prisma.companyFollow
+        .findUnique({
+          where: {
+            userId_companyId: {
+              userId: session!.user!.id!,
+              companyId: company.id,
+            },
+          },
+          select: { userId: true },
+        })
+        .catch(() => null))
+    : false
 
   const jobs = await prisma.job
     .findMany({
@@ -211,9 +230,16 @@ export default async function CompanyDetailPage({ params }: Props) {
           )}
 
           <div className="min-w-0 flex-1">
-            <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
-              {company.name}
-            </h1>
+            <div className="flex flex-wrap items-start justify-between gap-2">
+              <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+                {company.name}
+              </h1>
+              <CompanyFollowButton
+                companyId={company.id}
+                initialFollowing={isFollowing}
+                loggedIn={loggedIn}
+              />
+            </div>
             {company.tagline && (
               <p className="mt-1 text-base font-semibold text-primary-700">
                 {company.tagline}
