@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { MessageCircle, Loader2, ExternalLink, User, Phone, Mail, Briefcase, Banknote, MapPin, ArrowRight, Building2 } from "lucide-react"
 import { gaTrackLead } from "@/lib/ga4"
+import { TemplateInserter } from "@/components/applications/template-inserter"
 
 interface RecommendedJob {
   id: string
@@ -238,9 +239,19 @@ export function LineApplyClient({
         onChange={(v) => setForm({ ...form, experienceYears: v })}
       />
       <div>
-        <label htmlFor="lead-notes" className="block text-xs font-bold text-gray-700">
-          ご質問・希望条件など <span className="text-gray-400">(任意)</span>
-        </label>
+        <div className="flex items-center justify-between">
+          <label htmlFor="lead-notes" className="block text-xs font-bold text-gray-700">
+            ご質問・希望条件など <span className="text-gray-400">(任意)</span>
+          </label>
+          <TemplateInserter
+            onInsert={(tpl) =>
+              setForm((prev) => ({
+                ...prev,
+                notes: prev.notes ? `${prev.notes}\n${tpl}` : tpl,
+              }))
+            }
+          />
+        </div>
         <textarea
           id="lead-notes"
           rows={3}
