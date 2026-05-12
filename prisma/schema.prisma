@@ -207,6 +207,13 @@ model CompanyUser {
   passwordHash String   @map("password_hash") @db.VarChar(255)
   name         String?  @db.VarChar(100)
   role         String   @default("member") @db.VarChar(20) // admin | member
+  // TOTP 2FA (RFC 6238). 有効化後はログイン時に 6 桁コードが必須。
+  // totpSecret は base32 エンコード（otplib のデフォルト）。
+  totpSecret      String?  @map("totp_secret") @db.VarChar(64)
+  totpEnabled     Boolean  @default(false) @map("totp_enabled")
+  totpEnabledAt   DateTime? @map("totp_enabled_at") @db.Timestamptz()
+  // 1 回限りのリカバリコード（ハッシュ化 [bcrypt] して保存。1 件 60 char 程度）
+  totpRecoveryCodes String[] @default([]) @map("totp_recovery_codes")
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz()
 
   company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
