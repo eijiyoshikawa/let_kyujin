@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { FileText, User, Pencil, Mail } from "lucide-react"
+import { FileText, User, Pencil, Mail, Bell } from "lucide-react"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -13,23 +13,27 @@ export default async function MyPage() {
   const session = await auth()
   if (!session?.user?.id) redirect("/login")
 
-  const [user, applicationCount, scoutCount] = await Promise.all([
-    prisma.user.findUnique({
-      where: { id: session.user.id },
-      select: {
-        name: true,
-        email: true,
-        prefecture: true,
-        createdAt: true,
-      },
-    }),
-    prisma.application.count({
-      where: { userId: session.user.id },
-    }),
-    prisma.scout.count({
-      where: { userId: session.user.id },
-    }),
-  ])
+  const [user, applicationCount, scoutCount, unreadNotifications] =
+    await Promise.all([
+      prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: {
+          name: true,
+          email: true,
+          prefecture: true,
+          createdAt: true,
+        },
+      }),
+      prisma.application.count({
+        where: { userId: session.user.id },
+      }),
+      prisma.scout.count({
+        where: { userId: session.user.id },
+      }),
+      prisma.notification
+        .count({ where: { userId: session.user.id, readAt: null } })
+        .catch(() => 0),
+    ])
 
   if (!user) redirect("/login")
 
@@ -69,6 +73,28 @@ export default async function MyPage() {
 
       {/* Quick Links */}
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        <Link
+          href="/mypage/notifications"
+          className="flex items-center gap-4 border bg-white p-5 shadow-sm transition hover:shadow-md"
+        >
+          <div className="relative flex h-10 w-10 items-center justify-center bg-amber-100">
+            <Bell className="h-5 w-5 text-amber-700" />
+            {unreadNotifications > 0 && (
+              <span className="absolute -top-1 -right-1 inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1 text-[10px] font-bold text-white bg-red-500">
+                {unreadNotifications > 99 ? "99+" : unreadNotifications}
+              </span>
+            )}
+          </div>
+          <div>
+            <p className="font-semibold text-gray-900">通知</p>
+            <p className="text-sm text-gray-500">
+              {unreadNotifications > 0
+                ? `未読 ${unreadNotifications} 件`
+                : "未読はありません"}
+            </p>
+          </div>
+        </Link>
+
         <Link
           href="/mypage/applications"
           className="flex items-center gap-4  border bg-white p-5 shadow-sm transition hover:shadow-md"
