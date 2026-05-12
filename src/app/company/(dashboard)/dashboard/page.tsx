@@ -6,10 +6,13 @@ import { Briefcase, Users, Eye, Plus, TrendingUp, Target } from "lucide-react"
 import type { Metadata } from "next"
 import {
   computeCompanyFunnel,
+  computeJobPerformance,
+  computeTimeSeries,
   isRangeKey,
   type RangeKey,
 } from "@/lib/company-funnel"
 import { FunnelChart } from "@/components/company/funnel-chart"
+import { TimeSeriesChart } from "@/components/company/timeseries-chart"
 
 export const metadata: Metadata = {
   title: "企業ダッシュボード",
@@ -35,33 +38,48 @@ export default async function CompanyDashboard({
   const params = await searchParams
   const range: RangeKey = isRangeKey(params.range) ? params.range : "30d"
 
-  const [company, jobStats, recentApplications, totalApplications, totalViews, funnel] =
-    await Promise.all([
-      prisma.company.findUnique({
-        where: { id: companyId },
-        select: { name: true },
-      }),
-      prisma.job.groupBy({
-        by: ["status"],
-        where: { companyId },
-        _count: true,
-      }),
-      prisma.application.findMany({
-        where: { companyId },
-        orderBy: { createdAt: "desc" },
-        take: 5,
-        include: {
-          job: { select: { title: true } },
-          user: { select: { name: true, email: true } },
-        },
-      }),
-      prisma.application.count({ where: { companyId } }),
-      prisma.job.aggregate({
-        where: { companyId },
-        _sum: { viewCount: true },
-      }),
-      computeCompanyFunnel(companyId, range),
-    ])
+  const [
+    company,
+    jobStats,
+    recentApplications,
+    totalApplications,
+    totalViews,
+    funnel,
+    jobPerformance,
+    timeSeries,
+  ] = await Promise.all([
+    prisma.company.findUnique({
+      where: { id: companyId },
+      select: { name: true },
+    }),
+    prisma.job.groupBy({
+      by: ["status"],
+      where: { companyId },
+      _count: true,
+    }),
+    prisma.application.findMany({
+      where: { companyId },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      include: {
+        job: { select: { title: true } },
+        user: { select: { name: true, email: true } },
+      },
+    }),
+    prisma.application.count({ where: { companyId } }),
+    prisma.job.aggregate({
+      where: { companyId },
+      _sum: { viewCount: true },
+    }),
+    computeCompanyFunnel(companyId, range),
+    computeJobPerformance(companyId, range, 10),
+    computeTimeSeries(companyId, range),
+  ])
+
+  // 求人別パフォーマンスは views 多い順にソート
+  const sortedJobPerformance = [...jobPerformance].sort(
+    (a, b) => b.views - a.views
+  )
 
   const activeJobs = jobStats.find((s) => s.status === "active")?._count ?? 0
   const totalJobs = jobStats.reduce((sum, s) => sum + s._count, 0)
@@ -193,6 +211,107 @@ export default async function CompanyDashboard({
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Time series */}
+      <section className="mt-6 border bg-white p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-gray-900">時系列推移</h2>
+        <p className="mt-1 text-xs text-gray-500">
+          {funnel.range.label} ・ 閲覧 / 応募 / 採用の件数推移（各系列は独立スケールで正規化）
+        </p>
+        <div className="mt-4">
+          <TimeSeriesChart data={timeSeries} />
+        </div>
+      </section>
+
+      {/* Per-job performance */}
+      <section className="mt-6 border bg-white p-6 shadow-sm">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-gray-900">求人別パフォーマンス</h2>
+          <Link
+            href="/company/jobs"
+            className="text-sm font-medium text-primary-600 hover:text-primary-700"
+          >
+            求人管理 →
+          </Link>
+        </div>
+        <p className="mt-1 text-xs text-gray-500">
+          {funnel.range.label} ・ 直近 10 件の求人で集計。閲覧数の多い順。
+        </p>
+        {sortedJobPerformance.length === 0 ? (
+          <p className="mt-4 text-sm text-gray-500">求人がまだありません。</p>
+        ) : (
+          <div className="mt-4 overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-3 py-2 text-left text-xs font-bold text-gray-500">
+                    求人
+                  </th>
+                  <th className="px-3 py-2 text-right text-xs font-bold text-gray-500">
+                    閲覧
+                  </th>
+                  <th className="px-3 py-2 text-right text-xs font-bold text-gray-500">
+                    応募
+                  </th>
+                  <th className="px-3 py-2 text-right text-xs font-bold text-gray-500">
+                    採用
+                  </th>
+                  <th className="px-3 py-2 text-right text-xs font-bold text-gray-500">
+                    閲覧→応募
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {sortedJobPerformance.map((row) => (
+                  <tr key={row.jobId} className="hover:bg-gray-50">
+                    <td className="px-3 py-2">
+                      <Link
+                        href={`/company/jobs/${row.jobId}/edit`}
+                        className="text-sm font-medium text-gray-900 hover:text-primary-700 line-clamp-1"
+                      >
+                        {row.title}
+                      </Link>
+                      <p className="text-[11px] text-gray-400 mt-0.5">
+                        {row.status === "active"
+                          ? "掲載中"
+                          : row.status === "draft"
+                            ? "下書き"
+                            : "終了"}
+                      </p>
+                    </td>
+                    <td className="px-3 py-2 text-right text-sm tabular-nums text-gray-700">
+                      {row.views.toLocaleString()}
+                    </td>
+                    <td className="px-3 py-2 text-right text-sm tabular-nums text-gray-700">
+                      {row.applications.toLocaleString()}
+                    </td>
+                    <td className="px-3 py-2 text-right text-sm tabular-nums text-gray-700">
+                      {row.hired.toLocaleString()}
+                    </td>
+                    <td className="px-3 py-2 text-right text-sm tabular-nums">
+                      {row.viewToApply === null ? (
+                        <span className="text-gray-300">—</span>
+                      ) : (
+                        <span
+                          className={
+                            row.viewToApply < 0.005
+                              ? "text-red-600 font-bold"
+                              : row.viewToApply < 0.02
+                                ? "text-amber-600 font-bold"
+                                : "text-emerald-700 font-bold"
+                          }
+                        >
+                          {(row.viewToApply * 100).toFixed(2)}%
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </section>
 
       {/* Recent applications */}
