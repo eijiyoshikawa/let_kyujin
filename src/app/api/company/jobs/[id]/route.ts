@@ -18,6 +18,7 @@ const updateJobSchema = z.object({
   address: z.string().nullable().optional(),
   benefits: z.array(z.string()).optional(),
   tags: z.array(z.string()).optional(),
+  videoUrls: z.array(z.string().url().max(500)).max(6).optional(),
   status: z.enum(["draft", "active", "closed"]).optional(),
 })
 
