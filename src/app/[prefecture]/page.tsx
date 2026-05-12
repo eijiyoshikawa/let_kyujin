@@ -78,8 +78,11 @@ type Props = {
   params: Promise<{ prefecture: string }>
 }
 
+// ビルド時に 47 都道府県を prerender すると DATABASE_URL がタイミングにより
+// 一時的に解決できないケースで build が落ちる。空配列を返し、初回リクエストで
+// オンデマンド SSR + ISR キャッシュさせる。
 export async function generateStaticParams() {
-  return Object.keys(PREFECTURES).map((prefecture) => ({ prefecture }))
+  return []
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -108,43 +111,48 @@ export default async function PrefecturePage({ params }: Props) {
     notFound()
   }
 
-  // 該当県の active 求人を取得（最新 100 件、建設業カテゴリのみ）
-  const jobs = await prisma.job.findMany({
-    where: {
-      status: "active",
-      prefecture: prefLabel,
-      category: { in: [...CONSTRUCTION_CATEGORY_VALUES] },
-    },
-    select: {
-      id: true,
-      title: true,
-      category: true,
-      employmentType: true,
-      salaryMin: true,
-      salaryMax: true,
-      salaryType: true,
-      prefecture: true,
-      city: true,
-      source: true,
-      tags: true,
-      company: {
-        select: { name: true, logoUrl: true },
-      },
-    },
-    orderBy: { publishedAt: "desc" },
-    take: 100,
-  })
-
-  // 同じ県でカテゴリ別の件数集計（active かつ建設業カテゴリのみ）
-  const categoryCounts = await prisma.job.groupBy({
-    by: ["category"],
-    where: {
-      status: "active",
-      prefecture: prefLabel,
-      category: { in: [...CONSTRUCTION_CATEGORY_VALUES] },
-    },
-    _count: { _all: true },
-  })
+  // DB 未到達でもページが落ちないよう、try/catch で空配列にフォールバック。
+  // ISR の revalidate で次回以降に正常データが取得される。
+  const [jobs, categoryCounts] = await Promise.all([
+    prisma.job
+      .findMany({
+        where: {
+          status: "active",
+          prefecture: prefLabel,
+          category: { in: [...CONSTRUCTION_CATEGORY_VALUES] },
+        },
+        select: {
+          id: true,
+          title: true,
+          category: true,
+          employmentType: true,
+          salaryMin: true,
+          salaryMax: true,
+          salaryType: true,
+          prefecture: true,
+          city: true,
+          source: true,
+          tags: true,
+          company: {
+            select: { name: true, logoUrl: true },
+          },
+        },
+        orderBy: { publishedAt: "desc" },
+        take: 100,
+      })
+      .catch(() => []),
+    prisma.job
+      .groupBy({
+        by: ["category"],
+        where: {
+          status: "active",
+          prefecture: prefLabel,
+          category: { in: [...CONSTRUCTION_CATEGORY_VALUES] },
+        },
+        _count: { _all: true },
+      })
+      .catch(() => [] as Array<{ category: string; _count: { _all: number } }>),
+  ])
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
