@@ -31,6 +31,11 @@ const SORT_OPTIONS = [
   { value: "popular", label: "閲覧数が多い順" },
 ] as const
 
+const SOURCE_OPTIONS = [
+  { value: "direct", label: "認定企業のみ" },
+  { value: "hellowork", label: "ハローワークのみ" },
+] as const
+
 const DATE_WITHIN_OPTIONS = [
   { value: "3", label: "3日以内" },
   { value: "7", label: "1週間以内" },
@@ -85,11 +90,17 @@ export default async function JobsPage({ searchParams }: Props) {
       ? { category: params.category }
       : { category: { in: [...CONSTRUCTION_CATEGORY_VALUES] } }
 
+  const sourceFilter =
+    params.source && SOURCE_OPTIONS.find((s) => s.value === params.source)
+      ? { source: params.source }
+      : {}
+
   const where = {
     status: "active" as const,
     ...(params.prefecture && { prefecture: params.prefecture }),
     ...(params.city && { city: params.city }),
     ...categoryFilter,
+    ...sourceFilter,
     ...(params.employment_type && { employmentType: params.employment_type }),
     ...(salaryMinYen !== null && { salaryMin: { gte: salaryMinYen } }),
     ...(salaryMaxYen !== null && { salaryMax: { lte: salaryMaxYen } }),
@@ -127,6 +138,7 @@ export default async function JobsPage({ searchParams }: Props) {
     params.salary_min ||
     params.salary_max ||
     params.date_within ||
+    params.source ||
     params.q
   )
 
@@ -226,6 +238,14 @@ export default async function JobsPage({ searchParams }: Props) {
                   />
 
                   <FilterSelect
+                    id="source"
+                    label="掲載元"
+                    name="source"
+                    defaultValue={params.source ?? ""}
+                    options={SOURCE_OPTIONS as readonly { value: string; label: string }[]}
+                  />
+
+                  <FilterSelect
                     id="date_within"
                     label="掲載期間"
                     name="date_within"
@@ -306,6 +326,13 @@ export default async function JobsPage({ searchParams }: Props) {
                   params={params}
                 />
               )}
+              {params.source && (
+                <FilterBadge
+                  label={sourceLabel(params.source)}
+                  paramName="source"
+                  params={params}
+                />
+              )}
               {(params.salary_min || params.salary_max) && (
                 <FilterBadge
                   label={salaryRangeLabel(params.salary_min, params.salary_max)}
@@ -374,9 +401,11 @@ function buildOrderBy(sort: string) {
       return { publishedAt: "desc" as const }
     case "recommended":
     default:
-      // SNS 登録数 / 文字量 / 写真数 / 3 ヶ月以内更新 を加点した rankScore で並べ替え。
+      // 出典 (direct = "d" < hellowork = "h") で direct を優先。
+      // 続いて SNS 登録数 / 文字量 / 写真数 / 3 ヶ月以内更新 を加点した rankScore。
       // 同点の場合は新しい求人を上位に。
       return [
+        { source: "asc" as const },
         { rankScore: "desc" as const },
         { publishedAt: "desc" as const },
       ]
@@ -503,6 +532,10 @@ function employmentTypeLabel(type: string): string {
 
 function dateWithinLabel(value: string): string {
   return DATE_WITHIN_OPTIONS.find((o) => o.value === value)?.label ?? `${value}日以内`
+}
+
+function sourceLabel(value: string): string {
+  return SOURCE_OPTIONS.find((o) => o.value === value)?.label ?? value
 }
 
 function salaryRangeLabel(min: string | undefined, max: string | undefined): string {
