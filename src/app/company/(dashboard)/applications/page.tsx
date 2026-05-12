@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { redirect } from "next/navigation"
+import Link from "next/link"
 import type { Metadata } from "next"
 import { ApplicationStatusSelect } from "@/components/company/application-status-select"
 import { Pagination } from "@/components/pagination"
@@ -113,6 +114,7 @@ export default async function CompanyApplicationsPage({
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">
                   応募日
                 </th>
+                <th className="px-4 py-3" />
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -152,6 +154,14 @@ export default async function CompanyApplicationsPage({
                   </td>
                   <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-500">
                     {app.createdAt.toLocaleDateString("ja-JP")}
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-3 text-right">
+                    <Link
+                      href={`/company/applications/${app.id}`}
+                      className="text-sm font-bold text-primary-700 hover:underline"
+                    >
+                      詳細 →
+                    </Link>
                   </td>
                 </tr>
               ))}
