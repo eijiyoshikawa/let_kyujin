@@ -4,18 +4,17 @@
  * LINE Messaging API の Webhook 受信エンドポイント。
  *
  * - X-Line-Signature を検証（HMAC-SHA256 + base64）
- * - イベント種別ごとに最小限の処理:
- *   - follow: 友だち追加 → グリーティング送信 + プロフィール取得
- *   - message(text): 自動応答（FAQ パターンマッチ）
- *   - unfollow / etc: ログのみ
+ * - イベント種別ごとの処理:
+ *   - follow: 友だち追加 → グリーティング + プロフィール保存 + 「ご応募時に入力した電話番号を送ってください」案内
+ *   - message(text):
+ *     - オプトアウト/イン キーワード判定
+ *     - 電話番号 / メールが含まれていれば近日中の lead と自動 bind
+ *     - FAQ パターン応答
+ *   - unfollow: lineUserId をクリア（取り消し対応）
  *
  * 環境変数:
  *   LINE_CHANNEL_ACCESS_TOKEN
  *   LINE_CHANNEL_SECRET
- *
- * LINE 側からの想定 URL: https://genbacareer.jp/api/line/webhook
- *
- * 200 を必ず即時返却すること（リトライ抑制のため）。
  */
 
 import { type NextRequest } from "next/server"
@@ -28,7 +27,6 @@ import {
 import { prisma } from "@/lib/db"
 
 export const dynamic = "force-dynamic"
-// 署名検証のため raw body を扱う必要がある
 export const runtime = "nodejs"
 
 interface LineEvent {
@@ -45,6 +43,10 @@ const GREETING_TEXT = [
   "ゲンバキャリア公式 LINE です。",
   "気になる求人があればお気軽にメッセージください。担当者が 1 営業日以内にご返信します。",
   "",
+  "▼ お申し込み済みの方へ",
+  "応募フォームでご入力いただいた電話番号 or メールアドレスをこのトークに送ってください。",
+  "応募内容と紐付けて、より早く担当者から折り返しできます。",
+  "",
   "▼ よくあるご質問",
   "・「求人」と送ると最新の求人をご案内",
   "・「料金」と送ると料金体系をご案内",
@@ -53,23 +55,94 @@ const GREETING_TEXT = [
 
 const SITE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://genbacareer.jp"
 
-/**
- * オプトアウト（配信停止）要求のキーワード判定。
- * 短いキーワードのみで完全一致 / 部分一致を取る（誤検出を避けるため文章内の含意は除外）。
- */
+// 直近 14 日以内の lead と自動 bind する
+const AUTO_BIND_WINDOW_DAYS = 14
+
 function isOptOutRequest(input: string): boolean {
   const normalized = input.replace(/\s+/g, "").toLowerCase()
-  if (normalized.length > 30) return false // 長文に含まれる「停止」等の誤検出回避
+  if (normalized.length > 30) return false
   return /^(配信停止|停止|ストップ|stop|unsubscribe|解除|配信解除)$/.test(normalized)
 }
-
-/**
- * 配信再開（オプトイン）要求のキーワード判定。
- */
 function isOptInRequest(input: string): boolean {
   const normalized = input.replace(/\s+/g, "").toLowerCase()
   if (normalized.length > 30) return false
   return /^(配信再開|再開|start|subscribe)$/.test(normalized)
+}
+
+// メッセージから電話番号らしき文字列を抽出（日本の番号、+81 形式も対応）
+const PHONE_REGEX = /(?:\+?81[-\s]?|0)\d{1,4}[-\s]?\d{1,4}[-\s]?\d{3,4}/g
+// メッセージから email を抽出
+const EMAIL_REGEX = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g
+
+/**
+ * 入力テキストから電話番号 or メールを抽出し、直近 N 日以内の未 bind lead と
+ * マッチさせて lineUserId を結合する。
+ *
+ * 戻り値: bind した lead の name（あれば挨拶に使う）or null
+ */
+async function tryAutoBind(
+  userId: string,
+  displayName: string | null,
+  text: string
+): Promise<{ leadName: string; jobTitle: string | null } | null> {
+  // 電話番号正規化: 数字とハイフン以外を除去
+  const phoneCandidates = (text.match(PHONE_REGEX) ?? []).map((p) =>
+    p.replace(/[\s+]/g, "")
+  )
+  const emailCandidates = text.match(EMAIL_REGEX) ?? []
+  if (phoneCandidates.length === 0 && emailCandidates.length === 0) return null
+
+  const since = new Date(Date.now() - AUTO_BIND_WINDOW_DAYS * 24 * 60 * 60 * 1000)
+
+  // Prisma で電話番号は正規化保存ではないので、保存フォーマット揺れに対応するため
+  // 最後 8 桁が一致するもので拾う（市外局番無し / 0 始まり / +81 など揺れ吸収）
+  const phoneLast8s = phoneCandidates
+    .map((p) => p.replace(/\D/g, ""))
+    .filter((p) => p.length >= 8)
+    .map((p) => p.slice(-8))
+
+  const candidates = await prisma.lineLead
+    .findMany({
+      where: {
+        lineUserId: null,
+        createdAt: { gte: since },
+        OR: [
+          ...(phoneLast8s.length > 0
+            ? phoneLast8s.map((tail) => ({
+                phone: { endsWith: tail },
+              }))
+            : []),
+          ...(emailCandidates.length > 0
+            ? [{ email: { in: emailCandidates } }]
+            : []),
+        ],
+      },
+      orderBy: { createdAt: "desc" },
+      take: 1,
+      select: {
+        id: true,
+        name: true,
+        job: { select: { title: true } },
+      },
+    })
+    .catch(() => [])
+
+  if (candidates.length === 0) return null
+  const lead = candidates[0]
+
+  try {
+    await prisma.lineLead.update({
+      where: { id: lead.id },
+      data: {
+        lineUserId: userId,
+        lineDisplayName: displayName,
+        status: "line_added",
+      },
+    })
+  } catch {
+    return null
+  }
+  return { leadName: lead.name, jobTitle: lead.job?.title ?? null }
 }
 
 function autoReplyText(input: string): string | null {
@@ -105,7 +178,6 @@ function autoReplyText(input: string): string | null {
 }
 
 export async function POST(request: NextRequest) {
-  // Messaging API 未設定時は 200 で握りつぶす（LINE 側のリトライ防止）
   if (!isMessagingConfigured()) {
     console.warn("[line.webhook] LINE_CHANNEL_ACCESS_TOKEN / SECRET が未設定のため処理をスキップ")
     return new Response(null, { status: 200 })
@@ -127,8 +199,6 @@ export async function POST(request: NextRequest) {
   }
 
   const events = payload.events ?? []
-
-  // 各イベントは独立して並列処理。1 件失敗しても 200 を返す。
   await Promise.allSettled(events.map((ev) => handleEvent(ev)))
 
   return new Response(null, { status: 200 })
@@ -138,35 +208,16 @@ async function handleEvent(ev: LineEvent): Promise<void> {
   try {
     if (ev.type === "follow") {
       const userId = ev.source?.userId
-      // プロフィール取得（任意。失敗してもグリーティングは送る）
       const profile = userId ? await getUserProfile(userId).catch(() => null) : null
 
-      // 直近 7 日以内に同じ電話 or メールで lead がある場合、line_user_id を後追いバインド
-      // 入力情報が無いので名前一致は行わず、最も古い pending を取る。
-      if (userId) {
+      // プロフィール取得済みなら、過去 14 日の lead に displayName を伝播
+      if (userId && profile) {
         await prisma.lineLead
           .updateMany({
-            where: {
-              lineUserId: null,
-              status: "pending",
-              createdAt: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) },
-            },
-            data: {
-              // ここでは全件は更新しない。最新 1 件のみ別途処理する設計だが、
-              // updateMany では LIMIT 不可。代替として、明示バインドは管理画面で運営が行う。
-            },
+            where: { lineUserId: userId },
+            data: { lineDisplayName: profile.displayName, status: "line_added" },
           })
           .catch(() => {})
-
-        // プロフィールが取得できた場合、display name を別途保存しておく（将来の手動バインドで参照）
-        if (profile) {
-          await prisma.lineLead
-            .updateMany({
-              where: { lineUserId: userId },
-              data: { lineDisplayName: profile.displayName, status: "line_added" },
-            })
-            .catch(() => {})
-        }
       }
 
       if (ev.replyToken) {
@@ -175,11 +226,25 @@ async function handleEvent(ev: LineEvent): Promise<void> {
       return
     }
 
+    if (ev.type === "unfollow") {
+      const userId = ev.source?.userId
+      // 友だち削除時は lineUserId をクリア（再追加時の混乱回避）
+      if (userId) {
+        await prisma.lineLead
+          .updateMany({
+            where: { lineUserId: userId },
+            data: { lineUserId: null },
+          })
+          .catch(() => {})
+      }
+      return
+    }
+
     if (ev.type === "message" && ev.message?.type === "text" && ev.replyToken) {
       const text = ev.message.text ?? ""
       const userId = ev.source?.userId
 
-      // オプトアウト要求の検出（業界標準キーワード）
+      // オプトアウト要求の検出
       if (isOptOutRequest(text) && userId) {
         const updated = await prisma.lineLead
           .updateMany({
@@ -199,16 +264,12 @@ async function handleEvent(ev: LineEvent): Promise<void> {
         return
       }
 
-      // オプトイン（再開）要求の検出
+      // オプトイン（再開）要求
       if (isOptInRequest(text) && userId) {
         await prisma.lineLead
           .updateMany({
             where: { lineUserId: userId, optedOut: true },
-            data: {
-              optedOut: false,
-              optedOutAt: null,
-              optedOutSource: null,
-            },
+            data: { optedOut: false, optedOutAt: null, optedOutSource: null },
           })
           .catch(() => {})
         await replyMessage(ev.replyToken, [
@@ -217,15 +278,32 @@ async function handleEvent(ev: LineEvent): Promise<void> {
         return
       }
 
+      // 自動 bind トライ（電話番号 / メールが含まれる場合）
+      if (userId) {
+        const profile = await getUserProfile(userId).catch(() => null)
+        const bound = await tryAutoBind(userId, profile?.displayName ?? null, text)
+        if (bound) {
+          const msg = [
+            `${bound.leadName} さん、応募内容と紐付けました🎉`,
+            "",
+            bound.jobTitle ? `▼ 応募求人\n${bound.jobTitle}` : "",
+            "",
+            "担当者より 1 営業日以内にこの LINE トークでご連絡いたします。",
+          ]
+            .filter(Boolean)
+            .join("\n")
+          await replyMessage(ev.replyToken, [{ type: "text", text: msg }])
+          return
+        }
+      }
+
+      // FAQ 応答
       const reply = autoReplyText(text)
       if (reply) {
         await replyMessage(ev.replyToken, [{ type: "text", text: reply }])
       }
-      // 自動応答に該当しない場合は無音（運営が個別対応）
       return
     }
-
-    // 他のイベントタイプはログのみ
   } catch (e) {
     console.error(`[line.webhook] handleEvent failed: ${e instanceof Error ? e.message : e}`)
   }
