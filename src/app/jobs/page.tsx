@@ -11,6 +11,8 @@ import {
   getCategoryLabel,
   isConstructionCategory,
 } from "@/lib/categories"
+import { auth } from "@/lib/auth"
+import { SaveSearchButton } from "@/components/jobs/save-search-button"
 import type { Metadata } from "next"
 
 type Props = {
@@ -74,6 +76,10 @@ export default async function JobsPage({ searchParams }: Props) {
   const params = await searchParams
   const page = Math.max(1, Number(params.page ?? "1"))
   const limit = 20
+
+  // 保存検索ボタン用にログイン状態だけ拾う（fail-safe）
+  const session = await auth().catch(() => null)
+  const loggedIn = !!session?.user?.id
 
   const salaryMinYen = parseManYenToYen(params.salary_min)
   const salaryMaxYen = parseManYenToYen(params.salary_max)
@@ -343,6 +349,19 @@ export default async function JobsPage({ searchParams }: Props) {
               <span className="ml-auto text-sm text-gray-500">
                 <span className="font-bold text-primary-600">{total.toLocaleString()}</span> 件
               </span>
+              {hasFilters && (
+                <SaveSearchButton
+                  loggedIn={loggedIn}
+                  defaultName={buildSearchName(params)}
+                  q={params.q}
+                  prefecture={params.prefecture}
+                  city={params.city}
+                  category={params.category}
+                  employmentType={params.employment_type}
+                  salaryMin={salaryMinYen ?? undefined}
+                  source={params.source}
+                />
+              )}
               <SortLink params={params} sort={sort} />
             </div>
 
@@ -536,6 +555,15 @@ function dateWithinLabel(value: string): string {
 
 function sourceLabel(value: string): string {
   return SOURCE_OPTIONS.find((o) => o.value === value)?.label ?? value
+}
+
+function buildSearchName(p: Record<string, string | undefined>): string {
+  const parts: string[] = []
+  if (p.prefecture) parts.push(p.prefecture)
+  if (p.city) parts.push(p.city)
+  if (p.category) parts.push(getCategoryLabel(p.category))
+  if (p.q) parts.push(`「${p.q}」`)
+  return parts.length > 0 ? parts.join(" / ") : "建設業求人"
 }
 
 function salaryRangeLabel(min: string | undefined, max: string | undefined): string {
