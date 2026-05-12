@@ -310,3 +310,41 @@ export function getTemplatesByCategory(
 export function findTemplate(id: string): JobTemplate | undefined {
   return JOB_TEMPLATES.find((t) => t.id === id)
 }
+
+// ============================================================================
+// DB-backed loader
+// ============================================================================
+// 管理者がテンプレを追加/編集できるよう DB 化した（schema: JobTemplate）。
+// 既存ファイル内の静的データは「初期 seed」「DB エラー時のフォールバック」として残す。
+
+import { prisma } from "@/lib/db"
+
+/**
+ * 管理者画面で編集された DB のテンプレを返す。
+ * - DB が空 → 静的データ（seed 前提）
+ * - DB エラー → 静的データ
+ * - DB に行があれば isActive のみを sortOrder 順で返す
+ */
+export async function loadActiveJobTemplates(): Promise<JobTemplate[]> {
+  try {
+    const rows = await prisma.jobTemplate.findMany({
+      where: { isActive: true },
+      orderBy: [{ sortOrder: "asc" }, { category: "asc" }, { name: "asc" }],
+    })
+    if (rows.length === 0) return JOB_TEMPLATES
+    return rows.map((r) => ({
+      id: r.slug,
+      name: r.name,
+      category: r.category as ConstructionCategoryValue,
+      description: r.description,
+      requirements: r.requirements ?? "",
+      benefits: r.benefits,
+      tags: r.tags,
+      salaryMin: r.salaryMin ?? undefined,
+      salaryMax: r.salaryMax ?? undefined,
+      hint: r.hint ?? undefined,
+    }))
+  } catch {
+    return JOB_TEMPLATES
+  }
+}
