@@ -1,10 +1,10 @@
 import {
   Clock,
-  CalendarDays,
+  Calendar,
   Train,
   ShieldCheck,
   CalendarCheck,
-} from "lucide-react"
+} from "@phosphor-icons/react/dist/ssr"
 import { extractWorkConditions } from "@/lib/job-enrichment"
 
 type StructuredFields = {
@@ -58,23 +58,23 @@ export function WorkConditionsBox({
       </h2>
       <dl className="mt-4 grid gap-3 sm:grid-cols-2">
         {workingHours && (
-          <Item icon={<Clock className="h-4 w-4 text-primary-500" />} label="勤務時間" value={workingHours} />
+          <Item icon={<Clock weight="duotone" className="h-4 w-4 text-primary-500" />} label="勤務時間" value={workingHours} />
         )}
         {holidays && (
-          <Item icon={<CalendarDays className="h-4 w-4 text-primary-500" />} label="休日" value={holidays} />
+          <Item icon={<Calendar weight="duotone" className="h-4 w-4 text-primary-500" />} label="休日" value={holidays} />
         )}
         {annualHolidays != null && (
           <Item
-            icon={<CalendarCheck className="h-4 w-4 text-primary-500" />}
+            icon={<CalendarCheck weight="duotone" className="h-4 w-4 text-primary-500" />}
             label="年間休日"
             value={`${annualHolidays}日`}
           />
         )}
         {accessNote && (
-          <Item icon={<Train className="h-4 w-4 text-primary-500" />} label="通勤" value={accessNote} />
+          <Item icon={<Train weight="duotone" className="h-4 w-4 text-primary-500" />} label="通勤" value={accessNote} />
         )}
         {insurance && (
-          <Item icon={<ShieldCheck className="h-4 w-4 text-primary-500" />} label="保険" value={insurance} />
+          <Item icon={<ShieldCheck weight="duotone" className="h-4 w-4 text-primary-500" />} label="保険" value={insurance} />
         )}
       </dl>
       <p className="mt-3 text-[11px] text-gray-400">
