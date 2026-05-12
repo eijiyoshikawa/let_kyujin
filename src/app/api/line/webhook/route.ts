@@ -25,6 +25,7 @@ import {
   isMessagingConfigured,
 } from "@/lib/line-messaging"
 import { prisma } from "@/lib/db"
+import { generateAiReply, isAiReplyConfigured } from "@/lib/ai-reply"
 
 export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
@@ -278,9 +279,11 @@ async function handleEvent(ev: LineEvent): Promise<void> {
         return
       }
 
+      // プロフィール取得（自動 bind と AI 応答で共用）
+      const profile = userId ? await getUserProfile(userId).catch(() => null) : null
+
       // 自動 bind トライ（電話番号 / メールが含まれる場合）
       if (userId) {
-        const profile = await getUserProfile(userId).catch(() => null)
         const bound = await tryAutoBind(userId, profile?.displayName ?? null, text)
         if (bound) {
           const msg = [
@@ -297,11 +300,23 @@ async function handleEvent(ev: LineEvent): Promise<void> {
         }
       }
 
-      // FAQ 応答
-      const reply = autoReplyText(text)
-      if (reply) {
-        await replyMessage(ev.replyToken, [{ type: "text", text: reply }])
+      // FAQ パターン応答（キーワード）
+      const faqReply = autoReplyText(text)
+      if (faqReply) {
+        await replyMessage(ev.replyToken, [{ type: "text", text: faqReply }])
+        return
       }
+
+      // AI フォールバック（ANTHROPIC_API_KEY 設定時のみ）
+      if (isAiReplyConfigured()) {
+        const aiReply = await generateAiReply(text, profile?.displayName ?? null)
+        if (aiReply) {
+          await replyMessage(ev.replyToken, [{ type: "text", text: aiReply }])
+          return
+        }
+      }
+
+      // どれにも該当しない場合は無音（運営が個別対応）
       return
     }
   } catch (e) {
