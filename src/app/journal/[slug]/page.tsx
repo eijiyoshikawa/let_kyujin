@@ -5,6 +5,9 @@ import { publishedArticleFilter } from "@/lib/articles"
 import { ChevronRight } from "lucide-react"
 import type { Metadata } from "next"
 
+// 記事詳細は 1 時間単位の ISR で十分（更新頻度低）。
+export const revalidate = 3600
+
 type Props = {
   params: Promise<{ slug: string }>
 }

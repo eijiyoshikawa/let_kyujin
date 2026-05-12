@@ -29,6 +29,10 @@ import {
 import { CATEGORY_LABELS } from "@/lib/article-categories"
 import type { Metadata } from "next"
 
+// トップページは特集記事 + おすすめ求人など、5 分単位のフレッシュさで十分。
+// ISR でレンダリング結果をキャッシュし、初回表示までの TTFB を削減。
+export const revalidate = 300
+
 export const metadata: Metadata = {
   title: "ゲンバキャリア | 建築・土木・電気・内装の求人サイト",
   description:
