@@ -15,6 +15,7 @@
     "db:seed-help": "tsx prisma/seed-data/seed-help-articles.ts"
   },
   "dependencies": {
+    "@line/liff": "^2.28.0",
     "@prisma/client": "6.19.3",
     "@supabase/supabase-js": "^2.101.1",
     "@vercel/analytics": "^2.0.1",
