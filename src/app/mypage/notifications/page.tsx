@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import type { Metadata } from "next"
+import { WebPushToggle } from "@/components/web-push-toggle"
 import { Bell, CircleCheck } from "lucide-react"
 import { NotificationList } from "./notification-list"
 
@@ -100,6 +101,11 @@ export default async function NotificationsPage({
         >
           未読のみ {unreadCount > 0 && `(${unreadCount})`}
         </Link>
+      </div>
+
+      {/* Web Push 通知の購読切替 */}
+      <div className="mt-4">
+        <WebPushToggle />
       </div>
 
       {/* List */}
