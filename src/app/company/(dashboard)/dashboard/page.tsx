@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { Briefcase, Users, Eye, Plus, TrendingUp, Target } from "lucide-react"
+import { Briefcase, Users, Eye, Plus, TrendingUp, Target, Download } from "lucide-react"
 import type { Metadata } from "next"
 import {
   computeCompanyFunnel,
@@ -90,13 +90,22 @@ export default async function CompanyDashboard({
         <h1 className="text-2xl font-bold text-gray-900">
           {company?.name ?? "企業"} ダッシュボード
         </h1>
-        <Link
-          href="/company/jobs/new"
-          className="inline-flex items-center gap-2 bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
-        >
-          <Plus className="h-4 w-4" />
-          新規求人作成
-        </Link>
+        <div className="flex items-center gap-2">
+          <a
+            href={`/api/company/dashboard/export?range=${range}`}
+            className="inline-flex items-center gap-1.5 border border-gray-300 bg-white hover:bg-gray-50 px-3 py-2 text-sm font-bold text-gray-700"
+          >
+            <Download className="h-4 w-4" />
+            CSV エクスポート
+          </a>
+          <Link
+            href="/company/jobs/new"
+            className="inline-flex items-center gap-2 bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
+          >
+            <Plus className="h-4 w-4" />
+            新規求人作成
+          </Link>
+        </div>
       </div>
 
       {/* Stats */}
