@@ -3,13 +3,18 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { prisma } from "@/lib/db"
 import { JobCard } from "@/components/jobs/job-card"
-import { CONSTRUCTION_CATEGORY_VALUES } from "@/lib/categories"
+import {
+  CATEGORIES,
+  CONSTRUCTION_CATEGORY_VALUES,
+  isConstructionCategory,
+} from "@/lib/categories"
 
 export const revalidate = 21600 // 6 hours ISR
 
 const SITE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://genbacareer.jp"
 
-const PREFECTURES: Record<string, string> = {
+// 全国 47 都道府県（県別件数を表示するため src/app/[prefecture]/page.tsx と同じセット）
+const PREFECTURE_SLUG_TO_LABEL: Record<string, string> = {
   hokkaido: "北海道",
   aomori: "青森県",
   iwate: "岩手県",
@@ -59,71 +64,47 @@ const PREFECTURES: Record<string, string> = {
   okinawa: "沖縄県",
 }
 
-const CATEGORY_LABELS: Record<string, string> = {
-  construction: "建築・躯体工事",
-  civil: "土木工事",
-  electrical: "電気・設備工事",
-  interior: "内装・仕上げ工事",
-  demolition: "解体・産廃",
-  driver: "ドライバー・重機",
-  management: "施工管理・現場監督",
-  survey: "測量・設計",
-  manufacturing: "製造・工場",
-  office: "事務",
-  sales: "営業・販売",
-  service: "サービス・接客",
-  it: "IT・エンジニア",
-  other: "その他",
-}
+const PREFECTURE_LABEL_TO_SLUG: Record<string, string> = Object.fromEntries(
+  Object.entries(PREFECTURE_SLUG_TO_LABEL).map(([slug, label]) => [label, slug])
+)
 
 type Props = {
-  params: Promise<{ prefecture: string }>
+  params: Promise<{ category: string }>
 }
 
-// ビルド時に 47 都道府県を prerender すると DATABASE_URL がタイミングにより
-// 一時的に解決できないケースで build が落ちる。空配列を返し、初回リクエストで
-// オンデマンド SSR + ISR キャッシュさせる。
 export async function generateStaticParams() {
-  return []
+  return CONSTRUCTION_CATEGORY_VALUES.map((value) => ({ category: value }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { prefecture } = await params
-  const prefLabel = PREFECTURES[prefecture]
-
-  if (!prefLabel) {
+  const { category } = await params
+  const cat = CATEGORIES.find((c) => c.value === category)
+  if (!cat || !isConstructionCategory(category)) {
     return { title: "ページが見つかりません" }
   }
 
-  const title = `${prefLabel}の求人一覧`
-  const description = `${prefLabel}で募集中の建設・土木・ドライバー・製造業など、ノンデスク産業の求人情報を職種別に検索できます。`
+  const title = `全国の${cat.label}求人 | ゲンバキャリア`
+  const description = `全国の${cat.label}求人を職種ごとにご紹介。給与・勤務地・雇用形態など詳細条件で検索できます。建設業特化の求人サイト「ゲンバキャリア」。`
 
   return {
     title,
     description,
-    alternates: { canonical: `/${prefecture}` },
+    alternates: { canonical: `/categories/${category}` },
     openGraph: { title, description },
   }
 }
 
-export default async function PrefecturePage({ params }: Props) {
-  const { prefecture } = await params
-  const prefLabel = PREFECTURES[prefecture]
-
-  if (!prefLabel) {
+export default async function CategoryPage({ params }: Props) {
+  const { category } = await params
+  const cat = CATEGORIES.find((c) => c.value === category)
+  if (!cat || !isConstructionCategory(category)) {
     notFound()
   }
 
-  // DB 未到達でもページが落ちないよう、try/catch で空配列にフォールバック。
-  // ISR の revalidate で次回以降に正常データが取得される。
-  const [jobs, categoryCounts] = await Promise.all([
+  const [jobs, prefectureCounts, totalCount] = await Promise.all([
     prisma.job
       .findMany({
-        where: {
-          status: "active",
-          prefecture: prefLabel,
-          category: { in: [...CONSTRUCTION_CATEGORY_VALUES] },
-        },
+        where: { status: "active", category },
         select: {
           id: true,
           title: true,
@@ -136,32 +117,37 @@ export default async function PrefecturePage({ params }: Props) {
           city: true,
           source: true,
           tags: true,
-          company: {
-            select: { name: true, logoUrl: true },
-          },
+          company: { select: { name: true, logoUrl: true } },
         },
         orderBy: { publishedAt: "desc" },
-        take: 100,
+        take: 50,
       })
       .catch(() => []),
     prisma.job
       .groupBy({
-        by: ["category"],
-        where: {
-          status: "active",
-          prefecture: prefLabel,
-          category: { in: [...CONSTRUCTION_CATEGORY_VALUES] },
-        },
+        by: ["prefecture"],
+        where: { status: "active", category },
         _count: { _all: true },
       })
-      .catch(() => [] as Array<{ category: string; _count: { _all: number } }>),
+      .catch(
+        () => [] as Array<{ prefecture: string | null; _count: { _all: number } }>
+      ),
+    prisma.job
+      .count({ where: { status: "active", category } })
+      .catch(() => 0),
   ])
 
+  // BreadcrumbList structured data
   const breadcrumb = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "トップ", item: SITE_URL },
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "トップ",
+        item: SITE_URL,
+      },
       {
         "@type": "ListItem",
         position: 2,
@@ -171,8 +157,8 @@ export default async function PrefecturePage({ params }: Props) {
       {
         "@type": "ListItem",
         position: 3,
-        name: prefLabel,
-        item: `${SITE_URL}/${prefecture}`,
+        name: cat.label,
+        item: `${SITE_URL}/categories/${category}`,
       },
     ],
   }
@@ -193,35 +179,41 @@ export default async function PrefecturePage({ params }: Props) {
           求人一覧
         </Link>
         <span className="mx-1">/</span>
-        <span className="text-gray-900">{prefLabel}</span>
+        <span className="text-gray-900">{cat.label}</span>
       </nav>
 
       <h1 className="text-2xl font-bold text-gray-900">
-        {prefLabel}の求人
+        全国の{cat.label}求人
       </h1>
       <p className="mt-2 text-gray-600">
-        {prefLabel}で現在募集中の求人は{" "}
-        <span className="font-semibold text-primary-600">{jobs.length}</span> 件です。
+        全国で現在募集中の{cat.label}の求人は{" "}
+        <span className="font-semibold text-primary-600">{totalCount}</span>{" "}
+        件です。
       </p>
 
-      {/* カテゴリ別ナビ */}
-      {categoryCounts.length > 0 && (
+      {/* 都道府県別ナビ */}
+      {prefectureCounts.length > 0 && (
         <section className="mt-8">
-          <h2 className="text-lg font-semibold text-gray-900">職種から探す</h2>
+          <h2 className="text-lg font-semibold text-gray-900">
+            都道府県から探す
+          </h2>
           <ul className="mt-3 grid gap-2 sm:grid-cols-2 md:grid-cols-3">
-            {categoryCounts
+            {prefectureCounts
+              .slice()
               .sort((a, b) => b._count._all - a._count._all)
-              .map((cat) => {
-                const label = CATEGORY_LABELS[cat.category] ?? cat.category
+              .map((p) => {
+                if (!p.prefecture) return null
+                const slug = PREFECTURE_LABEL_TO_SLUG[p.prefecture]
+                if (!slug) return null
                 return (
-                  <li key={cat.category}>
+                  <li key={p.prefecture}>
                     <Link
-                      href={`/${prefecture}/${cat.category}`}
+                      href={`/${slug}/${category}`}
                       className="flex items-center justify-between border bg-white px-4 py-3 text-sm hover:bg-gray-50"
                     >
-                      <span className="text-gray-800">{label}</span>
+                      <span className="text-gray-800">{p.prefecture}</span>
                       <span className="text-gray-500">
-                        {cat._count._all} 件
+                        {p._count._all} 件
                       </span>
                     </Link>
                   </li>
@@ -233,11 +225,13 @@ export default async function PrefecturePage({ params }: Props) {
 
       {/* 求人一覧 */}
       <section className="mt-10">
-        <h2 className="text-lg font-semibold text-gray-900">最新の求人</h2>
+        <h2 className="text-lg font-semibold text-gray-900">
+          最新の{cat.label}求人
+        </h2>
         {jobs.length === 0 ? (
           <div className="mt-6 text-center">
             <p className="text-gray-500">
-              現在、{prefLabel}の求人は掲載されていません。
+              現在、{cat.label}の求人は掲載されていません。
             </p>
             <Link
               href="/jobs"
@@ -253,6 +247,29 @@ export default async function PrefecturePage({ params }: Props) {
             ))}
           </div>
         )}
+      </section>
+
+      {/* 他カテゴリへのナビ */}
+      <section className="mt-12 border-t pt-8">
+        <h2 className="text-lg font-semibold text-gray-900">他の職種を探す</h2>
+        <ul className="mt-3 flex flex-wrap gap-2">
+          {CONSTRUCTION_CATEGORY_VALUES.filter((v) => v !== category).map(
+            (value) => {
+              const other = CATEGORIES.find((c) => c.value === value)
+              if (!other) return null
+              return (
+                <li key={value}>
+                  <Link
+                    href={`/categories/${value}`}
+                    className="inline-block border bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
+                  >
+                    {other.label}
+                  </Link>
+                </li>
+              )
+            }
+          )}
+        </ul>
       </section>
     </div>
   )
