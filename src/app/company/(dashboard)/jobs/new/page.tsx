@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { JobForm } from "@/components/company/job-form"
+import { JobWizard } from "@/components/company/job-wizard"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -17,8 +17,11 @@ export default async function NewJobPage() {
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-900">新規求人作成</h1>
+      <p className="mt-1 text-sm text-gray-500">
+        4 ステップで入力。AI 提案と下書き自動保存に対応しています。
+      </p>
       <div className="mt-6">
-        <JobForm companyId={companyId} />
+        <JobWizard companyId={companyId} />
       </div>
     </div>
   )

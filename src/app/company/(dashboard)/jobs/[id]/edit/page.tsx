@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { redirect, notFound } from "next/navigation"
-import { JobForm } from "@/components/company/job-form"
+import { JobWizard } from "@/components/company/job-wizard"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -50,7 +50,7 @@ export default async function EditJobPage({
     <div>
       <h1 className="text-2xl font-bold text-gray-900">求人編集</h1>
       <div className="mt-6">
-        <JobForm companyId={companyId} initialData={job} />
+        <JobWizard companyId={companyId} initialData={job} />
       </div>
     </div>
   )
