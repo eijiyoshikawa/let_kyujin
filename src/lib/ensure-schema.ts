@@ -91,24 +91,38 @@ const STATEMENTS: ReadonlyArray<string> = [
     ADD COLUMN IF NOT EXISTS "opted_out_at" TIMESTAMPTZ,
     ADD COLUMN IF NOT EXISTS "opted_out_source" VARCHAR(20)`,
  `CREATE INDEX IF NOT EXISTS "idx_line_leads_opted_out" ON "line_leads" ("opted_out")`,
+ // pg_trgm: 求人 q 検索の類似度ベース高速化（lib/job-search.ts が利用）
+ // CREATE EXTENSION は superuser 権限が必要だが Supabase なら通る。
+ // 失敗してもループ全体は止まらず、後段の CREATE INDEX のみ警告で skip される。
+ `CREATE EXTENSION IF NOT EXISTS pg_trgm`,
+ `CREATE INDEX IF NOT EXISTS "idx_jobs_title_trgm" ON "jobs" USING GIN (title gin_trgm_ops)`,
+ `CREATE INDEX IF NOT EXISTS "idx_jobs_description_trgm" ON "jobs" USING GIN (description gin_trgm_ops)`,
+ `CREATE INDEX IF NOT EXISTS "idx_companies_name_trgm" ON "companies" USING GIN (name gin_trgm_ops)`,
 ]
 
 let inflight: Promise<boolean> | null = null
 
 // 一度だけ実行され、結果を Promise でキャッシュ。成功/失敗いずれも以後 await が即解決する。
 // 戻り値: 全 ALTER が成功したかどうか（失敗時は防御クエリへフォールバック判断に使う）。
+//
+// pg_trgm のように権限不足で失敗しうる文があるため、各 SQL は個別 try/catch。
+// 1 つ落ちても残りは適用される。
 export function ensureSchema(): Promise<boolean> {
  if (!inflight) {
  inflight = (async () => {
- try {
+ let allOk = true
  for (const sql of STATEMENTS) {
+ try {
  await prisma.$executeRawUnsafe(sql)
- }
- return true
  } catch (e) {
- console.warn("[ensureSchema] auto-migration skipped:", e instanceof Error ? e.message : e)
- return false
+ allOk = false
+ console.warn(
+ "[ensureSchema] statement skipped:",
+ e instanceof Error ? e.message : e
+ )
  }
+ }
+ return allOk
  })()
  }
  return inflight

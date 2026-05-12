@@ -15,6 +15,13 @@ const nextConfig: NextConfig = {
         pathname: "/storage/v1/object/public/**",
       },
     ],
+    // AVIF を優先（同等の見た目で WebP より 30% 程度小さい）。
+    // 古いブラウザは WebP に自動フォールバックする。q や w は変更しないので
+    // ロスレス改善 — 視覚品質はそのままにファイルサイズだけ縮む。
+    formats: ["image/avif", "image/webp"],
+    // 最適化後の画像を 7 日キャッシュ（Vercel エッジ）。
+    // ソース URL に q/w が含まれているため再 fetch リスクは低い。
+    minimumCacheTTL: 60 * 60 * 24 * 7,
   },
 };
 

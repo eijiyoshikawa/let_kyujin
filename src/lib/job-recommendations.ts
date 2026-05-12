@@ -37,10 +37,16 @@ export type RecommendedJob = {
 }
 
 /**
- * userId からシグナルを集約し、興味カテゴリ/都道府県を返す。
+ * userId または sessionId からシグナルを集約し、興味カテゴリ/都道府県を返す。
  * シグナルゼロのユーザーには空配列を返す。
+ *
+ * - userId 指定: JobFavorite + Application + JobView をクロス参照
+ * - sessionId 指定 (匿名): JobView のみを参照（Cookie ベース）
  */
-async function gatherUserSignals(userId: string): Promise<{
+async function gatherUserSignals(input: {
+  userId?: string | null
+  sessionId?: string | null
+}): Promise<{
   preferredCategories: string[]
   preferredPrefectures: string[]
   excludeIds: Set<string>
@@ -48,31 +54,42 @@ async function gatherUserSignals(userId: string): Promise<{
   const since = new Date(Date.now() - RECENT_DAYS * 24 * 60 * 60 * 1000)
 
   const [favorites, applications, views] = await Promise.all([
-    prisma.jobFavorite
-      .findMany({
-        where: { userId },
-        select: {
-          jobId: true,
-          job: { select: { category: true, prefecture: true } },
-        },
-        orderBy: { createdAt: "desc" },
-        take: 30,
-      })
-      .catch(() => []),
-    prisma.application
-      .findMany({
-        where: { userId },
-        select: {
-          jobId: true,
-          job: { select: { category: true, prefecture: true } },
-        },
-        orderBy: { createdAt: "desc" },
-        take: 30,
-      })
-      .catch(() => []),
+    input.userId
+      ? prisma.jobFavorite
+          .findMany({
+            where: { userId: input.userId },
+            select: {
+              jobId: true,
+              job: { select: { category: true, prefecture: true } },
+            },
+            orderBy: { createdAt: "desc" },
+            take: 30,
+          })
+          .catch(() => [])
+      : Promise.resolve([]),
+    input.userId
+      ? prisma.application
+          .findMany({
+            where: { userId: input.userId },
+            select: {
+              jobId: true,
+              job: { select: { category: true, prefecture: true } },
+            },
+            orderBy: { createdAt: "desc" },
+            take: 30,
+          })
+          .catch(() => [])
+      : Promise.resolve([]),
     prisma.jobView
       .findMany({
-        where: { userId, viewedAt: { gte: since } },
+        where: {
+          viewedAt: { gte: since },
+          ...(input.userId
+            ? { userId: input.userId }
+            : input.sessionId
+              ? { sessionId: input.sessionId, userId: null }
+              : { id: "__never__" }),
+        },
         select: {
           jobId: true,
           job: { select: { category: true, prefecture: true } },
@@ -132,14 +149,29 @@ async function gatherUserSignals(userId: string): Promise<{
  *
  * 戦略:
  *   1. シグナルから興味カテゴリ + 都道府県を抽出
+ *      - ログイン: JobFavorite + Application + JobView
+ *      - 匿名 (sessionId 渡し): JobView のみ
  *   2. (category IN preferred) AND (prefecture IN preferred) でハイスコア順検索
  *   3. 不足分は (category IN preferred) のみで補完
  *   4. それでも不足なら全建設業 rankScore desc で補完
+ *
+ * 第 2 引数は後方互換のため number (limit) を直接渡しても動く。
  */
 export async function getRecommendedJobs(
-  userId: string | null | undefined,
+  userIdOrInput:
+    | string
+    | null
+    | undefined
+    | { userId?: string | null; sessionId?: string | null },
   limit = 6
 ): Promise<RecommendedJob[]> {
+  const input =
+    typeof userIdOrInput === "object" && userIdOrInput !== null
+      ? userIdOrInput
+      : { userId: userIdOrInput ?? null, sessionId: null }
+  const userId = input.userId ?? null
+  const sessionId = input.sessionId ?? null
+
   const select = {
     id: true,
     title: true,
@@ -160,8 +192,8 @@ export async function getRecommendedJobs(
     category: { in: [...CONSTRUCTION_CATEGORY_VALUES] },
   }
 
-  // 未ログイン or シグナルなしユーザー → グローバル人気求人
-  if (!userId) {
+  // userId も sessionId も無い → グローバル人気求人
+  if (!userId && !sessionId) {
     return prisma.job
       .findMany({
         where: baseFilter,
@@ -173,7 +205,7 @@ export async function getRecommendedJobs(
   }
 
   const { preferredCategories, preferredPrefectures, excludeIds } =
-    await gatherUserSignals(userId)
+    await gatherUserSignals({ userId, sessionId })
 
   // シグナルが全くない (新規ユーザー) → グローバル人気求人
   if (preferredCategories.length === 0 && preferredPrefectures.length === 0) {

@@ -70,6 +70,12 @@ export default async function RootLayout({
 
   return (
     <html lang="ja" className={`h-full antialiased ${notoSansJP.variable}`}>
+      <head>
+        {/* 画像 CDN へ TLS ハンドシェイクを先回り。LCP 候補のヒーロー画像が
+            初回ロードで 100〜300ms 早く到達する（視覚品質は変わらない） */}
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+      </head>
       <body className="min-h-full flex flex-col font-sans bg-white">
         <GoogleAnalytics />
         <script
