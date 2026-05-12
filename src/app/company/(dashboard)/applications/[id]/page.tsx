@@ -5,6 +5,7 @@ import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import type { Metadata } from "next"
 import { ApplicationActionPanel } from "@/components/company/application-action-panel"
+import { ScoutRecommendationPanel } from "@/components/company/scout-recommendation-panel"
 
 export const metadata: Metadata = {
   title: "応募者詳細",
@@ -207,7 +208,7 @@ export default async function ApplicationDetailPage({
         </div>
 
         {/* Right column: action panel */}
-        <aside>
+        <aside className="space-y-4">
           <ApplicationActionPanel
             applicationId={app.id}
             currentStatus={app.status}
@@ -215,6 +216,7 @@ export default async function ApplicationDetailPage({
             interviewAt={app.interviewAt ? app.interviewAt.toISOString() : null}
             interviewVenue={app.interviewVenue ?? ""}
           />
+          <ScoutRecommendationPanel applicationId={app.id} />
         </aside>
       </div>
     </div>
