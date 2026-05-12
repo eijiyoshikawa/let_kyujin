@@ -13,6 +13,7 @@ import { z } from "zod"
 import { prisma } from "@/lib/db"
 import { buildLineApplyUrl, isLineConfigured } from "@/lib/line"
 import { checkRateLimit, getClientIp, rateLimitResponse } from "@/lib/rate-limit"
+import { notifyNewLead } from "@/lib/lead-notifications"
 
 export const dynamic = "force-dynamic"
 
@@ -89,6 +90,22 @@ export async function POST(request: NextRequest) {
       select: { id: true },
     })
     leadId = lead.id
+
+    // 新規 lead 通知（Slack / メール）。失敗してもユーザー体験は阻害しない。
+    void notifyNewLead({
+      leadId: lead.id,
+      name: parsed.name,
+      phone: parsed.phone,
+      email: parsed.email,
+      experienceYears: parsed.experienceYears ?? null,
+      notes: parsed.notes ?? null,
+      job: {
+        id: job.id,
+        title: job.title,
+        prefecture: job.prefecture,
+        city: job.city,
+      },
+    })
   } catch (e) {
     // line_leads テーブル未作成などのケースは ensure-schema が走れば次回成功する。
     // この場合でも LINE 遷移は妨げず、ユーザー体験を優先する。
