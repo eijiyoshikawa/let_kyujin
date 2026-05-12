@@ -58,18 +58,54 @@ export default async function CompanyApplicationsPage({
 
   const totalPages = Math.ceil(total / perPage)
 
-  const exportQuery = statusFilter !== "all" ? `?status=${statusFilter}` : ""
+  const baseQuery = statusFilter !== "all" ? `?status=${statusFilter}` : ""
+  const atsBase = `/api/company/applications/export-ats${
+    baseQuery ? `${baseQuery}&` : "?"
+  }format=`
 
   return (
     <div>
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <h1 className="text-2xl font-bold text-gray-900">応募者管理</h1>
-        <a
-          href={`/api/company/applications/export${exportQuery}`}
-          className="inline-flex items-center gap-1.5 border border-gray-300 bg-white hover:bg-gray-50 px-3 py-2 text-sm font-bold text-gray-700"
-        >
-          CSV エクスポート
-        </a>
+        <div className="flex flex-wrap items-center gap-2">
+          <a
+            href={`/api/company/applications/export${baseQuery}`}
+            className="inline-flex items-center gap-1.5 border border-gray-300 bg-white hover:bg-gray-50 px-3 py-2 text-sm font-bold text-gray-700"
+          >
+            CSV エクスポート
+          </a>
+          <details className="relative">
+            <summary className="press inline-flex cursor-pointer items-center gap-1.5 border border-gray-300 bg-white hover:bg-gray-50 px-3 py-2 text-sm font-bold text-gray-700 list-none">
+              ATS 連携 ▾
+            </summary>
+            <div className="absolute right-0 top-full mt-1 z-20 w-56 border bg-white shadow-lg">
+              <a
+                href={`${atsBase}hrmos`}
+                className="block px-3 py-2 text-sm hover:bg-gray-50"
+              >
+                HRMOS Talent (CSV)
+              </a>
+              <a
+                href={`${atsBase}herp`}
+                className="block px-3 py-2 text-sm hover:bg-gray-50"
+              >
+                herp ATS (CSV)
+              </a>
+              <a
+                href={`${atsBase}csv`}
+                className="block px-3 py-2 text-sm hover:bg-gray-50"
+              >
+                汎用 CSV (全カラム)
+              </a>
+              <a
+                href={`${atsBase}json`}
+                className="block px-3 py-2 text-sm hover:bg-gray-50"
+              >
+                JSON (API 連携)
+              </a>
+            </div>
+          </details>
+        </div>
       </div>
 
       {/* Status filter */}
