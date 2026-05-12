@@ -3,7 +3,7 @@ import Image from "next/image"
 import type { Metadata } from "next"
 import { prisma } from "@/lib/db"
 import { publishedArticleFilter } from "@/lib/articles"
-import { Newspaper, Search, ChevronRight, ArrowRight } from "lucide-react"
+import { Newspaper, Search, ChevronRight } from "lucide-react"
 import { Pagination } from "@/components/pagination"
 
 export const metadata: Metadata = {

@@ -159,6 +159,7 @@ export async function getHwJob(kjno: string): Promise<HwJobDetailResponse> {
 
 export async function getHwEmployerJobs(
   _hojinno: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _params: HwEmployerJobsParams = {}
 ): Promise<HwEmployerJobsResponse> {
   // hojinno は Prisma Job に保持していないので空集合を返す
