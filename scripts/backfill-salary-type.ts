@@ -74,7 +74,7 @@ async function main() {
     const keitai =
       typeof raw?.chgnkeitai === "string" ? (raw.chgnkeitai as string) : null
 
-    let inferred =
+    const inferred =
       inferFromKeitai(keitai) ?? inferFromAmount(j.salaryMin ?? null)
 
     if (!inferred || inferred === j.salaryType) {

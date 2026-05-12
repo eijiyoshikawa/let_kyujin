@@ -2,7 +2,6 @@ import Link from "next/link"
 import {
   ArrowRight,
   Phone,
-  Building2,
   Users,
   Award,
   Briefcase,

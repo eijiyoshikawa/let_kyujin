@@ -392,7 +392,6 @@ function parseManYenToYen(raw: string | undefined): number | null {
 
 function computeDateWithinThreshold(days: number | null): Date | null {
   if (days === null) return null
-  // eslint-disable-next-line react-hooks/purity
   const now = Date.now()
   return new Date(now - days * 86_400_000)
 }
