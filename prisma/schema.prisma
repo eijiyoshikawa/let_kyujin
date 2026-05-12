@@ -41,6 +41,7 @@ model User {
   notifications     Notification[]
   savedSearches     SavedSearch[]
   messageTemplates  ApplicationMessageTemplate[]
+  jobFavorites      JobFavorite[]
 
   @@map("users")
 }
@@ -63,6 +64,23 @@ model ApplicationMessageTemplate {
 
   @@index([userId, sortOrder], name: "idx_app_msg_tpl_user")
   @@map("application_message_templates")
+}
+
+// ========================================
+// 求人お気に入り（保存して後で見る）
+// ========================================
+model JobFavorite {
+  userId    String   @map("user_id") @db.Uuid
+  jobId     String   @map("job_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job  Job  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@id([userId, jobId])
+  @@index([userId, createdAt(sort: Desc)], name: "idx_job_favorites_user")
+  @@index([jobId], name: "idx_job_favorites_job")
+  @@map("job_favorites")
 }
 
 // ========================================
@@ -350,6 +368,7 @@ model Job {
   applicationClicks ApplicationClick[]
   lineLeads         LineLead[]
   jobViews          JobView[]
+  favorites         JobFavorite[]
 
   @@index([prefecture, category, employmentType, status], name: "idx_jobs_search")
   @@index([salaryMin, salaryMax], name: "idx_jobs_salary")

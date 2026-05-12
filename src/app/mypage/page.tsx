@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { FileText, User, Pencil, Mail, Bell, Bookmark } from "lucide-react"
+import { FileText, User, Pencil, Mail, Bell, Bookmark, BookmarkCheck } from "lucide-react"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -13,30 +13,39 @@ export default async function MyPage() {
   const session = await auth()
   if (!session?.user?.id) redirect("/login")
 
-  const [user, applicationCount, scoutCount, unreadNotifications, savedSearchCount] =
-    await Promise.all([
-      prisma.user.findUnique({
-        where: { id: session.user.id },
-        select: {
-          name: true,
-          email: true,
-          prefecture: true,
-          createdAt: true,
-        },
-      }),
-      prisma.application.count({
-        where: { userId: session.user.id },
-      }),
-      prisma.scout.count({
-        where: { userId: session.user.id },
-      }),
-      prisma.notification
-        .count({ where: { userId: session.user.id, readAt: null } })
-        .catch(() => 0),
-      prisma.savedSearch
-        .count({ where: { userId: session.user.id } })
-        .catch(() => 0),
-    ])
+  const [
+    user,
+    applicationCount,
+    scoutCount,
+    unreadNotifications,
+    savedSearchCount,
+    favoriteCount,
+  ] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: {
+        name: true,
+        email: true,
+        prefecture: true,
+        createdAt: true,
+      },
+    }),
+    prisma.application.count({
+      where: { userId: session.user.id },
+    }),
+    prisma.scout.count({
+      where: { userId: session.user.id },
+    }),
+    prisma.notification
+      .count({ where: { userId: session.user.id, readAt: null } })
+      .catch(() => 0),
+    prisma.savedSearch
+      .count({ where: { userId: session.user.id } })
+      .catch(() => 0),
+    prisma.jobFavorite
+      .count({ where: { userId: session.user.id } })
+      .catch(() => 0),
+  ])
 
   if (!user) redirect("/login")
 
@@ -109,6 +118,21 @@ export default async function MyPage() {
             <p className="font-semibold text-gray-900">応募一覧</p>
             <p className="text-sm text-gray-500">
               {applicationCount} 件の応募
+            </p>
+          </div>
+        </Link>
+
+        <Link
+          href="/mypage/favorites"
+          className="flex items-center gap-4 border bg-white p-5 shadow-sm transition hover:shadow-md"
+        >
+          <div className="flex h-10 w-10 items-center justify-center bg-amber-100">
+            <BookmarkCheck className="h-5 w-5 text-amber-700" />
+          </div>
+          <div>
+            <p className="font-semibold text-gray-900">お気に入り</p>
+            <p className="text-sm text-gray-500">
+              {favoriteCount > 0 ? `${favoriteCount} 件保存中` : "気になる求人を保存"}
             </p>
           </div>
         </Link>

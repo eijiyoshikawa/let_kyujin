@@ -176,6 +176,23 @@ export default async function JobsPage({ searchParams }: Props) {
       : prisma.job.count({ where }),
   ])
 
+  // ログイン中ならお気に入り Set を取得（カードの星表示用）
+  const favoriteIds = loggedIn
+    ? new Set(
+        (
+          await prisma.jobFavorite
+            .findMany({
+              where: {
+                userId: session!.user!.id!,
+                jobId: { in: jobs.map((j) => j.id) },
+              },
+              select: { jobId: true },
+            })
+            .catch(() => [])
+        ).map((f) => f.jobId)
+      )
+    : new Set<string>()
+
   const totalPages = Math.ceil(total / limit)
   const cities = params.prefecture ? AREAS[params.prefecture] ?? [] : []
   const hasFilters = !!(
@@ -428,7 +445,14 @@ export default async function JobsPage({ searchParams }: Props) {
                   </p>
                 </div>
               ) : (
-                jobs.map((job) => <JobCard key={job.id} job={job} />)
+                jobs.map((job) => (
+                  <JobCard
+                    key={job.id}
+                    job={job}
+                    isFavorite={favoriteIds.has(job.id)}
+                    loggedIn={loggedIn}
+                  />
+                ))
               )}
             </div>
 
