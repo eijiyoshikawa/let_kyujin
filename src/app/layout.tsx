@@ -3,6 +3,8 @@ import { Noto_Sans_JP } from "next/font/google";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { GoogleAnalytics } from "@/components/analytics";
+import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import {
   generateOrganizationSchema,
   generateWebSiteSchema,
@@ -80,6 +82,8 @@ export default async function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <VercelAnalytics />
+        <SpeedInsights />
       </body>
     </html>
   );
