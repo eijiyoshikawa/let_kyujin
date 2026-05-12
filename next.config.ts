@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
   images: {
@@ -17,4 +18,11 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// SENTRY_DSN が未設定なら sentry config は完全に no-op で動作する
+// authToken 未設定時は source maps アップロードがスキップされ警告のみ
+export default withSentryConfig(nextConfig, {
+  silent: true,
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+})
