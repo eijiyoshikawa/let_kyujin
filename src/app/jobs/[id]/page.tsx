@@ -53,6 +53,7 @@ import { MapEmbed } from "@/components/jobs/map-embed"
 
 type Props = {
   params: Promise<{ id: string }>
+  searchParams?: Promise<Record<string, string | undefined>>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -68,8 +69,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function JobDetailPage({ params }: Props) {
+export default async function JobDetailPage({ params, searchParams }: Props) {
   const { id } = await params
+  const sp = (await searchParams) ?? {}
+  const isPreview = sp.preview === "1"
 
   // 匿名トラッキング: SID 発行 + JobView 記録（fire-and-forget）
   // 失敗してもページ描画は妨げない。
@@ -84,16 +87,19 @@ export default async function JobDetailPage({ params }: Props) {
   const proto = headerList.get("x-forwarded-proto") ?? "https"
   const fullUrl = referer && referer.includes(reqHost) ? referer : `${proto}://${reqHost}/jobs/${id}`
   const utm = extractUtmFromUrl(fullUrl)
-  // ベストエフォート（失敗してもページ表示は阻害しない）
-  await recordJobView({
-    jobId: id,
-    sessionId,
-    userId: null,
-    ipAddress,
-    userAgent: ua,
-    referer,
-    utm,
-  }).catch(() => {})
+  // ベストエフォート（失敗してもページ表示は阻害しない）。
+  // プレビューモードでは社内チェックを実トラフィックに混ぜないため記録しない。
+  if (!isPreview) {
+    await recordJobView({
+      jobId: id,
+      sessionId,
+      userId: null,
+      ipAddress,
+      userAgent: ua,
+      referer,
+      utm,
+    }).catch(() => {})
+  }
 
   const job = await prisma.job.findUnique({
     where: { id },
@@ -127,9 +133,12 @@ export default async function JobDetailPage({ params }: Props) {
 
   if (!job) notFound()
 
-  prisma.job
-    .update({ where: { id }, data: { viewCount: { increment: 1 } } })
-    .catch(() => {})
+  // プレビューモードではトラッキングを行わない（社内チェックを実件数に混ぜないため）
+  if (!isPreview) {
+    prisma.job
+      .update({ where: { id }, data: { viewCount: { increment: 1 } } })
+      .catch(() => {})
+  }
 
   const jsonLd = generateJobPostingSchema({
     id: job.id,
@@ -262,6 +271,17 @@ export default async function JobDetailPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
       />
+
+      {isPreview && (
+        <div className="bg-amber-100 border-b border-amber-300">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2 flex items-center gap-2 text-xs font-bold text-amber-900">
+            <span className="inline-flex items-center px-2 py-0.5 bg-amber-300 text-amber-900">
+              PREVIEW
+            </span>
+            このページは社内チェック用のプレビュー URL からアクセスされています。検索エンジンや一般公開には掲載されません（求人ステータス: {job.status}）。
+          </div>
+        </div>
+      )}
 
       {/* Breadcrumb */}
       <div className="border-b bg-white">

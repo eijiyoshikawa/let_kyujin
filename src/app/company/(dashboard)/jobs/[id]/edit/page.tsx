@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { redirect, notFound } from "next/navigation"
 import { JobWizard } from "@/components/company/job-wizard"
+import { PreviewUrlPanel } from "@/components/company/preview-url-panel"
 import { loadActiveJobTemplates } from "@/lib/job-templates"
 import type { Metadata } from "next"
 
@@ -43,6 +44,7 @@ export default async function EditJobPage({
       tags: true,
       videoUrls: true,
       status: true,
+      previewToken: true,
     },
   })
 
@@ -53,6 +55,9 @@ export default async function EditJobPage({
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-900">求人編集</h1>
+      <div className="mt-4">
+        <PreviewUrlPanel jobId={job.id} initialToken={job.previewToken} />
+      </div>
       <div className="mt-6">
         <JobWizard
           companyId={companyId}

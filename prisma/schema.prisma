@@ -242,6 +242,9 @@ model Job {
   publishedAt    DateTime? @map("published_at") @db.Timestamptz()
   expiresAt      DateTime? @map("expires_at") @db.Timestamptz()
   viewCount      Int       @default(0) @map("view_count")
+  // 下書き状態でも社内チェック用に共有できるプレビュートークン（hex）。
+  // 未設定なら「プレビュー URL を発行」ボタンで生成する。
+  previewToken   String?   @unique @map("preview_token") @db.VarChar(64)
   // 求人一覧の「おすすめ順」で使うスコア。
   // 内容量・SNS 登録数・写真数・3 ヶ月以内更新を加点で評価する（ranking.ts 参照）。
   // 取り込み時 / 企業プロフィール保存時に再計算される。
