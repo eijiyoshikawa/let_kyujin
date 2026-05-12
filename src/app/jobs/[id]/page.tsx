@@ -22,6 +22,8 @@ import {
   Cigarette,
   Factory,
   ShieldCheck,
+  CalendarClock,
+  AlertCircle,
 } from "lucide-react"
 import type { Metadata } from "next"
 import {
@@ -148,6 +150,7 @@ export default async function JobDetailPage({ params }: Props) {
     job.occupationCategoryName ||
     job.jobTypeName
   )
+  const validUntilInfo = computeValidUntilInfo(job.validUntil)
 
   const hasSns = !!(
     job.company?.instagramUrl ||
@@ -176,6 +179,7 @@ export default async function JobDetailPage({ params }: Props) {
       !!job.insurance,
     hasSalaryDetail,
     hasBenefits,
+    hasNotes: !!job.jobConditionNotes,
     hasRequirements,
     hasMap: !!mapAddress,
     hasCompany: !!job.company,
@@ -310,6 +314,45 @@ export default async function JobDetailPage({ params }: Props) {
                         {job.occupationTitle ??
                           job.occupationCategoryName ??
                           job.jobTypeName}
+                        {job.occupationCategoryName &&
+                          job.occupationTitle &&
+                          job.occupationCategoryName !== job.occupationTitle && (
+                            <span className="ml-1.5 text-xs text-gray-500">
+                              （{job.occupationCategoryName}）
+                            </span>
+                          )}
+                      </dd>
+                    </div>
+                  )}
+                  {validUntilInfo && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <CalendarClock
+                        className={`h-4 w-4 ${
+                          validUntilInfo.isUrgent
+                            ? "text-red-500"
+                            : "text-primary-500"
+                        }`}
+                      />
+                      <dt className="text-gray-500 mr-1">応募締切:</dt>
+                      <dd
+                        className={`font-medium ${
+                          validUntilInfo.isUrgent
+                            ? "text-red-600"
+                            : "text-gray-900"
+                        }`}
+                      >
+                        {validUntilInfo.label}
+                        {validUntilInfo.daysLeft != null && (
+                          <span
+                            className={`ml-1.5 text-xs font-bold ${
+                              validUntilInfo.isUrgent
+                                ? "text-red-600"
+                                : "text-gray-500"
+                            }`}
+                          >
+                            （あと {validUntilInfo.daysLeft}日）
+                          </span>
+                        )}
                       </dd>
                     </div>
                   )}
@@ -468,6 +511,22 @@ export default async function JobDetailPage({ params }: Props) {
               </section>
             )}
 
+            {/* 求人条件の特記事項 */}
+            {job.jobConditionNotes && (
+              <section
+                id="notes"
+                className="rounded border bg-white p-5 sm:p-6 shadow-sm space-y-4"
+              >
+                <SectionHeading>
+                  <AlertCircle className="h-4 w-4 text-primary-500" />
+                  求人条件の特記事項
+                </SectionHeading>
+                <p className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed">
+                  {job.jobConditionNotes}
+                </p>
+              </section>
+            )}
+
             {/* 応募要件・採用情報 */}
             {hasRequirements && (
               <section
@@ -623,9 +682,16 @@ export default async function JobDetailPage({ params }: Props) {
 
             {/* HW notice */}
             {job.source === "hellowork" && (
-              <p className="text-xs text-gray-400 leading-relaxed">
-                この求人はハローワークインターネットサービスより転載しています。最新の情報はハローワークでご確認ください。
-              </p>
+              <div className="space-y-1 text-xs text-gray-400 leading-relaxed">
+                {job.receivedDate && (
+                  <p>
+                    ハローワーク受理日: {formatDate(job.receivedDate)}
+                  </p>
+                )}
+                <p>
+                  この求人はハローワークインターネットサービスより転載しています。最新の情報はハローワークでご確認ください。
+                </p>
+              </div>
             )}
 
             {/* Back link */}
@@ -690,6 +756,32 @@ function DlItem({
   )
 }
 
+function formatDate(date: Date): string {
+  return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}`
+}
+
+/**
+ * 応募締切（validUntil）を表示用ラベルと残日数に整形する。
+ * 期限切れ・無効値の場合は null を返す。残日数 7 日以下は urgent 扱い。
+ */
+function computeValidUntilInfo(validUntil: Date | null): {
+  label: string
+  daysLeft: number | null
+  isUrgent: boolean
+} | null {
+  if (!validUntil) return null
+  const now = Date.now()
+  const target = validUntil.getTime()
+  const diffMs = target - now
+  if (diffMs < 0) return null // 期限切れ
+  const daysLeft = Math.ceil(diffMs / (24 * 60 * 60 * 1000))
+  return {
+    label: formatDate(validUntil),
+    daysLeft,
+    isUrgent: daysLeft <= 7,
+  }
+}
+
 function formatSalary(
   min: number | null,
   max: number | null,
@@ -738,6 +830,7 @@ function buildTocItems(flags: {
   hasWorkConditions: boolean
   hasSalaryDetail: boolean
   hasBenefits: boolean
+  hasNotes: boolean
   hasRequirements: boolean
   hasMap: boolean
   hasCompany: boolean
@@ -759,6 +852,7 @@ function buildTocItems(flags: {
     items.push({ id: "salary-detail", label: "給与・手当" })
   if (flags.hasBenefits)
     items.push({ id: "benefits", label: "待遇・福利厚生" })
+  if (flags.hasNotes) items.push({ id: "notes", label: "特記事項" })
   if (flags.hasRequirements)
     items.push({ id: "requirements", label: "応募要件" })
   if (flags.hasMap) items.push({ id: "map", label: "勤務地の地図" })
