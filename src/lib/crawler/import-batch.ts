@@ -126,6 +126,38 @@ function toJobRecord(
     rankScore,
     status: "active" as const,
     publishedAt: new Date(),
+    expiresAt: job.validUntil,
+
+    // ハローワーク API 拡張フィールド
+    occupationTitle: truncate(job.occupationTitle, 100),
+    jobConditionNotes: job.jobConditionNotes,
+    industryCode: truncate(job.industryCode, 10),
+    industryMajorCode: truncate(job.industryMajorCode, 5),
+    occupationCode: truncate(job.occupationCode, 10),
+    occupationCategoryName: truncate(job.occupationCategoryName, 50),
+    jobTypeName: truncate(job.jobTypeName, 20),
+    baseSalary: truncate(job.baseSalary, 50),
+    bonus: truncate(job.bonus, 100),
+    commuteAllowance: truncate(job.commuteAllowance, 50),
+    fixedOvertime: truncate(job.fixedOvertime, 100),
+    workHours: truncate(job.workHours, 100),
+    workHoursNotes: truncate(job.workHoursNotes, 255),
+    holidays: truncate(job.holidays, 50),
+    holidaysOther: truncate(job.holidaysOther, 200),
+    annualHolidays: job.annualHolidays,
+    insurance: truncate(job.insurance, 50),
+    smokingPolicy: truncate(job.smokingPolicy, 20),
+    trialPeriod: truncate(job.trialPeriod, 100),
+    requiredExperience: truncate(job.requiredExperience, 500),
+    education: truncate(job.education, 50),
+    recruitmentCount: truncate(job.recruitmentCount, 10),
+    recruitmentReason: truncate(job.recruitmentReason, 20),
+    companyFeatures: job.companyFeatures,
+    businessContent: job.businessContent,
+    companyUrl: truncate(job.companyUrl, 255),
+    validUntil: job.validUntil,
+    receivedDate: job.receivedDate,
+    rawData: job.rawData,
   }
 }
 
@@ -182,18 +214,45 @@ function truncate<T extends string | null | undefined>(
 }
 
 /**
- * 求人タイトル・説明文から建設業カテゴリを推定する。
+ * ハローワーク API の産業大分類コード（`skgybruicode1_dai_c`）のうち
+ * 建設業に該当するもの。JSIC 2013 では大分類 D = 建設業。
  *
- * `src/lib/categories.ts` で定義された建設業 9 カテゴリ（"other" を除く 8 つ）
- * のいずれかに該当するキーワードが含まれていれば該当カテゴリを返す。
- * いずれにも該当しなければ `null` を返し、呼び出し側はそのジョブを取り込まずスキップする。
+ * NOTE: API が返す具体的なコード体系が未確定なので、観測される
+ *       コード値を見ながら随時追加する。"D" / "06"〜"08" を初期候補とする。
+ */
+const CONSTRUCTION_INDUSTRY_MAJOR_CODES = new Set(["D", "06", "07", "08"])
+
+/**
+ * 産業大分類コードが建設業を示すかを判定する。
+ * 既知の建設業コードに含まれていれば true。
+ */
+function isConstructionIndustryCode(
+  industryMajorCode: string | null | undefined
+): boolean {
+  if (!industryMajorCode) return false
+  const normalized = industryMajorCode.trim().toUpperCase()
+  if (CONSTRUCTION_INDUSTRY_MAJOR_CODES.has(normalized)) return true
+  // 中分類フォーマット（"D06" 等）にも一応対応
+  return /^D(0?[678])?$/.test(normalized)
+}
+
+/**
+ * 産業コード優先で建設業 9 カテゴリ（"other" を除く 8 つ）を推定する。
+ *
+ * 判定順:
+ *   1. 産業大分類コード（`industryMajorCode`）が建設業を示す
+ *      → タイトル・説明文のキーワードでサブカテゴリを推定
+ *   2. industryMajorCode が未取得 / 建設業以外
+ *      → 従来通りキーワードマッチでカテゴリ推定（フォールバック）
+ *   3. どちらにも該当しなければ null（取り込み対象外）
  *
  * パターン優先度: より具体的な業種（civil, electrical, ...）を construction より先に評価し、
  * 「土木 + 建築」のような複合キーワードを取りこぼさないようにする。
  */
 export function inferCategory(
   title: string,
-  description: string | null | undefined
+  description: string | null | undefined,
+  industryMajorCode?: string | null
 ): CategoryValue | null {
   const text = `${title} ${description ?? ""}`.toLowerCase()
 
@@ -223,8 +282,20 @@ export function inferCategory(
     },
   ]
 
-  for (const { category, pattern } of patterns) {
-    if (pattern.test(text)) return category
+  // 1. 産業コード優先: 建設業コードに該当すればサブカテゴリをテキストで推定
+  if (isConstructionIndustryCode(industryMajorCode)) {
+    for (const { category, pattern } of patterns) {
+      if (pattern.test(text)) return category
+    }
+    // 建設業だがサブカテゴリ不明 → 既定で construction
+    return "construction"
+  }
+
+  // 2. industryMajorCode が無い / 建設業以外: 従来のテキスト判定にフォールバック
+  if (industryMajorCode == null || industryMajorCode === "") {
+    for (const { category, pattern } of patterns) {
+      if (pattern.test(text)) return category
+    }
   }
 
   return null
@@ -293,7 +364,11 @@ export async function importHelloworkJobs(
   for (const job of jobs) {
     try {
       // 建設業 9 カテゴリのいずれにも該当しないジョブは取り込まない
-      const category = inferCategory(job.title, job.description)
+      const category = inferCategory(
+        job.title,
+        job.description,
+        job.industryMajorCode
+      )
       if (category === null) {
         skipped++
         continue
@@ -337,6 +412,37 @@ export async function importHelloworkJobs(
           tags: data.tags,
           rankScore: data.rankScore,
           status: "active",
+          expiresAt: data.expiresAt,
+          // ハローワーク API 拡張フィールド
+          occupationTitle: data.occupationTitle,
+          jobConditionNotes: data.jobConditionNotes,
+          industryCode: data.industryCode,
+          industryMajorCode: data.industryMajorCode,
+          occupationCode: data.occupationCode,
+          occupationCategoryName: data.occupationCategoryName,
+          jobTypeName: data.jobTypeName,
+          baseSalary: data.baseSalary,
+          bonus: data.bonus,
+          commuteAllowance: data.commuteAllowance,
+          fixedOvertime: data.fixedOvertime,
+          workHours: data.workHours,
+          workHoursNotes: data.workHoursNotes,
+          holidays: data.holidays,
+          holidaysOther: data.holidaysOther,
+          annualHolidays: data.annualHolidays,
+          insurance: data.insurance,
+          smokingPolicy: data.smokingPolicy,
+          trialPeriod: data.trialPeriod,
+          requiredExperience: data.requiredExperience,
+          education: data.education,
+          recruitmentCount: data.recruitmentCount,
+          recruitmentReason: data.recruitmentReason,
+          companyFeatures: data.companyFeatures,
+          businessContent: data.businessContent,
+          companyUrl: data.companyUrl,
+          validUntil: data.validUntil,
+          receivedDate: data.receivedDate,
+          rawData: data.rawData,
           // updatedAt は Prisma が自動更新する
         },
       })
