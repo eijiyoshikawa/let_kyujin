@@ -242,6 +242,11 @@ model LineLead {
   utmMedium       String?  @map("utm_medium") @db.VarChar(100)
   utmCampaign     String?  @map("utm_campaign") @db.VarChar(100)
   referer         String?  @db.VarChar(500)
+  // 配信オプトアウト（true なら一括配信から除外）
+  optedOut        Boolean  @default(false) @map("opted_out")
+  optedOutAt      DateTime? @map("opted_out_at") @db.Timestamptz()
+  // 'admin' | 'webhook' | 'manual'
+  optedOutSource  String?  @map("opted_out_source") @db.VarChar(20)
   // LINE 友だち追加後の Webhook でセットされる
   lineUserId      String?  @map("line_user_id") @db.VarChar(50)
   lineDisplayName String?  @map("line_display_name") @db.VarChar(100)

@@ -85,6 +85,12 @@ const STATEMENTS: ReadonlyArray<string> = [
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
   )`,
  `CREATE INDEX IF NOT EXISTS "idx_broadcast_logs_time" ON "broadcast_logs" ("created_at" DESC)`,
+ // PR #43: オプトアウト管理
+ `ALTER TABLE "line_leads"
+    ADD COLUMN IF NOT EXISTS "opted_out" BOOLEAN NOT NULL DEFAULT false,
+    ADD COLUMN IF NOT EXISTS "opted_out_at" TIMESTAMPTZ,
+    ADD COLUMN IF NOT EXISTS "opted_out_source" VARCHAR(20)`,
+ `CREATE INDEX IF NOT EXISTS "idx_line_leads_opted_out" ON "line_leads" ("opted_out")`,
 ]
 
 let inflight: Promise<boolean> | null = null

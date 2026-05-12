@@ -58,6 +58,7 @@ export default async function AdminLineLeadsPage({ searchParams }: Props) {
           status: true,
           lineUserId: true,
           lineDisplayName: true,
+          optedOut: true,
           job: {
             select: { id: true, title: true, prefecture: true, city: true },
           },
@@ -113,6 +114,7 @@ export default async function AdminLineLeadsPage({ searchParams }: Props) {
     status: (isLeadStatus(l.status) ? l.status : "pending") as LeadStatus,
     lineUserId: l.lineUserId,
     lineDisplayName: l.lineDisplayName,
+    optedOut: l.optedOut,
     job: l.job,
   }))
 

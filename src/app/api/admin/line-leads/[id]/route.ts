@@ -1,8 +1,8 @@
 /**
  * PATCH /api/admin/line-leads/[id]
  *
- * 管理者専用: lead のステータス更新 + メモ追加。
- * Body: { status?: LeadStatus; notes?: string | null }
+ * 管理者専用: lead のステータス更新 + メモ追加 + オプトアウト切替。
+ * Body: { status?: LeadStatus; notes?: string | null; optedOut?: boolean }
  */
 
 import { type NextRequest } from "next/server"
@@ -16,6 +16,7 @@ export const dynamic = "force-dynamic"
 const bodySchema = z.object({
   status: z.enum(LEAD_STATUSES).optional(),
   notes: z.string().max(2000).nullable().optional(),
+  optedOut: z.boolean().optional(),
 })
 
 async function requireAdmin() {
@@ -47,18 +48,27 @@ export async function PATCH(
     )
   }
 
-  if (body.status === undefined && body.notes === undefined) {
+  if (body.status === undefined && body.notes === undefined && body.optedOut === undefined) {
     return Response.json({ error: "no_changes" }, { status: 400 })
   }
 
   try {
+    const optedOutFields =
+      body.optedOut !== undefined
+        ? {
+            optedOut: body.optedOut,
+            optedOutAt: body.optedOut ? new Date() : null,
+            optedOutSource: body.optedOut ? "admin" : null,
+          }
+        : {}
     const updated = await prisma.lineLead.update({
       where: { id },
       data: {
         ...(body.status !== undefined && { status: body.status }),
         ...(body.notes !== undefined && { notes: body.notes }),
+        ...optedOutFields,
       },
-      select: { id: true, status: true, notes: true, updatedAt: true },
+      select: { id: true, status: true, notes: true, optedOut: true, updatedAt: true },
     })
     return Response.json({ success: true, lead: updated })
   } catch (e) {

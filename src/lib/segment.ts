@@ -51,7 +51,8 @@ export async function resolveSegment(
   segment: Segment,
   limit = 500
 ): Promise<LeadRowForBroadcast[]> {
-  const where: Prisma.LineLeadWhereInput = {}
+  // 配信オプトアウト済みは常に除外（運用上の鉄則）
+  const where: Prisma.LineLeadWhereInput = { optedOut: false }
 
   if (segment.utmSource) where.utmSource = segment.utmSource
   if (segment.status) where.status = segment.status
