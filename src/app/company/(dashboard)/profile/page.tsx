@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { ProfileForm } from "./profile-form"
 import { Settings } from "lucide-react"
+import { parseSchedulingUrls } from "@/lib/scheduling-urls"
 
 export default async function CompanyProfilePage() {
   const session = await auth()
@@ -32,6 +33,7 @@ export default async function CompanyProfilePage() {
       employeeVoice: true,
       logoUrl: true,
       photos: true,
+      schedulingUrls: true,
       instagramUrl: true,
       tiktokUrl: true,
       facebookUrl: true,
@@ -70,6 +72,7 @@ export default async function CompanyProfilePage() {
           employeeVoice: company.employeeVoice ?? "",
           logoUrl: company.logoUrl ?? "",
           photos: company.photos ?? [],
+          schedulingUrls: parseSchedulingUrls(company.schedulingUrls),
           instagramUrl: company.instagramUrl ?? "",
           tiktokUrl: company.tiktokUrl ?? "",
           facebookUrl: company.facebookUrl ?? "",

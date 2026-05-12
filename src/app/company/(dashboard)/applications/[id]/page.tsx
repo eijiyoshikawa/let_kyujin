@@ -6,6 +6,8 @@ import { ArrowLeft } from "lucide-react"
 import type { Metadata } from "next"
 import { ApplicationActionPanel } from "@/components/company/application-action-panel"
 import { ScoutRecommendationPanel } from "@/components/company/scout-recommendation-panel"
+import { SchedulingUrlsPanel } from "@/components/company/scheduling-urls-panel"
+import { parseSchedulingUrls } from "@/lib/scheduling-urls"
 
 export const metadata: Metadata = {
   title: "応募者詳細",
@@ -56,6 +58,7 @@ export default async function ApplicationDetailPage({
       updatedAt: true,
       companyId: true,
       job: { select: { id: true, title: true } },
+      company: { select: { schedulingUrls: true } },
       user: {
         select: {
           name: true,
@@ -78,6 +81,8 @@ export default async function ApplicationDetailPage({
   const history = Array.isArray(app.statusHistory)
     ? (app.statusHistory as unknown as StatusHistoryEntry[])
     : []
+
+  const schedulingUrls = parseSchedulingUrls(app.company?.schedulingUrls)
 
   return (
     <div className="space-y-6">
@@ -217,6 +222,7 @@ export default async function ApplicationDetailPage({
             interviewVenue={app.interviewVenue ?? ""}
           />
           <ScoutRecommendationPanel applicationId={app.id} />
+          <SchedulingUrlsPanel urls={schedulingUrls} />
         </aside>
       </div>
     </div>
