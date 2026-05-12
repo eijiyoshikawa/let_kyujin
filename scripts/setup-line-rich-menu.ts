@@ -25,7 +25,7 @@
  * 既存の Rich Menu は削除して作り直す。
  */
 
-import { readFileSync, existsSync } from "node:fs"
+import { readFileSync, existsSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 import {
   createRichMenu,
@@ -81,6 +81,67 @@ const richMenuDef = {
   ],
 }
 
+/**
+ * 画像が存在しなければ、SVG ベースで自動生成 → sharp で PNG に変換して保存。
+ * Canva 等で差し替えたい場合は手動で scripts/rich-menu.png を上書きすればこの分岐はスキップされる。
+ */
+async function ensureImage() {
+  if (existsSync(IMAGE_PATH)) {
+    console.log(`→ 既存画像を使用: ${IMAGE_PATH}`)
+    return
+  }
+  console.log("→ Rich Menu 画像が無いので SVG から自動生成します…")
+
+  const cells = [
+    { label: "求人を探す",  sub: "JOBS",     bg: "#fff7ed", emoji: "🔍" },
+    { label: "マガジン",    sub: "MAGAZINE", bg: "#fffbeb", emoji: "📰" },
+    { label: "料金",        sub: "PRICING",  bg: "#fff7ed", emoji: "💴" },
+    { label: "運営会社",    sub: "COMPANY",  bg: "#ffffff", emoji: "🏢" },
+    { label: "お問い合わせ", sub: "CONTACT",  bg: "#ffffff", emoji: "💬" },
+    { label: "公式 SNS",    sub: "SNS",      bg: "#ffffff", emoji: "📷" },
+  ]
+
+  const W = WIDTH, H = HEIGHT, cw = COL_W, ch = ROW_H
+  const cellSvg = cells
+    .map((c, i) => {
+      const col = i % 3
+      const row = Math.floor(i / 3)
+      const x = col * cw
+      const y = row * ch
+      return `
+    <g transform="translate(${x}, ${y})">
+      <rect width="${cw}" height="${ch}" fill="${c.bg}" stroke="#e7e5e4" stroke-width="4"/>
+      <text x="${cw / 2}" y="${ch / 2 - 110}" text-anchor="middle"
+        font-family="-apple-system, 'Hiragino Sans', 'Yu Gothic', Meiryo, sans-serif"
+        font-size="200" fill="#f37524">${c.emoji}</text>
+      <text x="${cw / 2}" y="${ch / 2 + 70}" text-anchor="middle"
+        font-family="-apple-system, 'Hiragino Sans', 'Yu Gothic', Meiryo, sans-serif"
+        font-size="56" fill="#c2410c" font-weight="700" letter-spacing="3">${c.sub}</text>
+      <text x="${cw / 2}" y="${ch / 2 + 170}" text-anchor="middle"
+        font-family="-apple-system, 'Hiragino Sans', 'Yu Gothic', Meiryo, sans-serif"
+        font-size="92" fill="#14181b" font-weight="900">${c.label}</text>
+    </g>`
+    })
+    .join("")
+
+  const svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+  <rect width="${W}" height="${H}" fill="#ffffff"/>
+  ${cellSvg}
+  <!-- 上下に brand yellow ストライプを差してフラット感を破る -->
+  <rect x="0" y="0" width="${W}" height="14" fill="#f5b400"/>
+  <rect x="0" y="${H - 14}" width="${W}" height="14" fill="#f5b400"/>
+</svg>`
+
+  // sharp は SVG の <text> をシステムフォントで render する。
+  // ローカル実行（macOS / Windows / Linux）でシステムに sans 日本語フォントがあれば描画される。
+  const sharp = (await import("sharp")).default
+  const buffer = await sharp(Buffer.from(svg), { density: 72 }).png().toBuffer()
+  writeFileSync(IMAGE_PATH, buffer)
+  console.log(`  ✓ 自動生成完了: ${IMAGE_PATH}`)
+  console.log("    （Canva 等で差し替えたい場合は同パスを上書きしてください）")
+}
+
 async function main() {
   if (!isMessagingConfigured()) {
     console.error("✖ LINE_CHANNEL_ACCESS_TOKEN / LINE_CHANNEL_SECRET が未設定です")
@@ -88,12 +149,7 @@ async function main() {
     process.exit(1)
   }
 
-  if (!existsSync(IMAGE_PATH)) {
-    console.error(`✖ Rich Menu 画像が見つかりません: ${IMAGE_PATH}`)
-    console.error("  2500x1686 px の PNG を上記パスに配置してください")
-    console.error("  （Canva / Figma などで 2 行 3 列のボタン画像を作成）")
-    process.exit(1)
-  }
+  await ensureImage()
 
   // 既存メニュー削除（重複定義を避ける）
   console.log("→ 既存 Rich Menu を確認…")
