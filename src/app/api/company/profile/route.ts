@@ -27,6 +27,17 @@ const profileSchema = z.object({
     .max(12)
     .optional()
     .default([]),
+  schedulingUrls: z
+    .array(
+      z.object({
+        name: z.string().min(1).max(60),
+        url: z.string().url().max(500),
+        primary: z.boolean().optional(),
+      })
+    )
+    .max(10)
+    .optional()
+    .default([]),
   instagramUrl: urlOrEmpty(),
   tiktokUrl: urlOrEmpty(),
   facebookUrl: urlOrEmpty(),
@@ -80,6 +91,7 @@ export async function PATCH(request: NextRequest) {
       employeeVoice: emptyToNull(body.employeeVoice),
       logoUrl: emptyToNull(body.logoUrl),
       photos: body.photos ?? [],
+      schedulingUrls: (body.schedulingUrls ?? []) as unknown as object,
       instagramUrl: emptyToNull(body.instagramUrl),
       tiktokUrl: emptyToNull(body.tiktokUrl),
       facebookUrl: emptyToNull(body.facebookUrl),
@@ -94,6 +106,7 @@ export async function PATCH(request: NextRequest) {
       employeeVoice: true,
       logoUrl: true,
       photos: true,
+      schedulingUrls: true,
       instagramUrl: true,
       tiktokUrl: true,
       facebookUrl: true,

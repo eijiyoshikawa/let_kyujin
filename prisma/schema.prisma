@@ -254,6 +254,11 @@ model Company {
   // 3 ヶ月以内に更新されているかが「活性企業」の指標になる。
   lastContentUpdatedAt DateTime? @map("last_content_updated_at") @db.Timestamptz()
 
+  // 面接調整ツールへのリンク（Google Cal / TimeRex / Calendly / 役員専用 等）。
+  // 形式: [{ name: string, url: string, primary?: boolean }]
+  // 役員専用 URL も含めて自由に複数登録できる。
+  schedulingUrls Json @default("[]") @map("scheduling_urls")
+
   companyUsers  CompanyUser[]
   jobs          Job[]
   scouts        Scout[]

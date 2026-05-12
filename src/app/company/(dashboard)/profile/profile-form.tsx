@@ -32,6 +32,10 @@ import {
   ImageUploader,
   MultiImageUploader,
 } from "@/components/company/image-uploader"
+import {
+  SchedulingUrlsEditor,
+  type SchedulingUrl,
+} from "@/components/company/scheduling-urls-editor"
 
 type ProfileData = {
   tagline: string
@@ -40,6 +44,7 @@ type ProfileData = {
   employeeVoice: string
   logoUrl: string
   photos: string[]
+  schedulingUrls: SchedulingUrl[]
   instagramUrl: string
   tiktokUrl: string
   facebookUrl: string
@@ -447,6 +452,12 @@ export function ProfileForm({
           </ul>
         )}
       </section>
+
+      {/* 面接調整ツール ===================================================== */}
+      <SchedulingUrlsEditor
+        value={data.schedulingUrls}
+        onChange={(next) => update("schedulingUrls", next)}
+      />
 
       {/* SNS ============================================================== */}
       <section className="accent-l border bg-white p-5 pl-6 shadow-sm space-y-3">
