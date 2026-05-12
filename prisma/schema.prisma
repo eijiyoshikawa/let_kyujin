@@ -291,6 +291,30 @@ model JobView {
 }
 
 // ========================================
+// 一括 LINE Push 配信ログ
+// ========================================
+// admin から「セグメント配信」を実行したときの記録。
+// 配信パラメータ + 結果（成功 / 失敗 / スキップ数）を残す。
+model BroadcastLog {
+  id            String   @id @default(uuid()) @db.Uuid
+  // 配信時のセグメント条件（JSON: utm_source, category, prefecture, status, since, until 等）
+  segment       Json
+  // 配信対象求人 ID（最大 5 件）
+  jobIds        String[] @map("job_ids") @db.Uuid
+  freeText      String?  @map("free_text")
+  // 集計
+  targetCount   Int      @map("target_count")
+  successCount  Int      @map("success_count")
+  failureCount  Int      @map("failure_count")
+  skippedCount  Int      @map("skipped_count") // line bind 未済等
+  triggeredBy   String?  @map("triggered_by") @db.Uuid // 操作した admin user id
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  @@index([createdAt(sort: Desc)], name: "idx_broadcast_logs_time")
+  @@map("broadcast_logs")
+}
+
+// ========================================
 // スカウト
 // ========================================
 model Scout {
