@@ -18,11 +18,17 @@ import crypto from "node:crypto"
 const API_BASE = "https://api.line.me"
 const DATA_API_BASE = "https://api-data.line.me"
 
-const TOKEN = process.env.LINE_CHANNEL_ACCESS_TOKEN ?? ""
-const SECRET = process.env.LINE_CHANNEL_SECRET ?? ""
+// 環境変数はモジュール読み込み時にキャプチャせず、呼び出し時に毎回参照する。
+// （スクリプトから .env.local を後から読み込むパターンを正しく扱うため）
+function getToken(): string {
+  return process.env.LINE_CHANNEL_ACCESS_TOKEN ?? ""
+}
+function getSecret(): string {
+  return process.env.LINE_CHANNEL_SECRET ?? ""
+}
 
 export function isMessagingConfigured(): boolean {
-  return !!TOKEN && !!SECRET
+  return !!getToken() && !!getSecret()
 }
 
 /**
@@ -31,8 +37,8 @@ export function isMessagingConfigured(): boolean {
  * @param signature ヘッダから取り出した X-Line-Signature 値
  */
 export function verifyWebhookSignature(rawBody: string, signature: string | null): boolean {
-  if (!SECRET || !signature) return false
-  const hmac = crypto.createHmac("sha256", SECRET)
+  if (!getSecret() || !signature) return false
+  const hmac = crypto.createHmac("sha256", getSecret())
   hmac.update(rawBody)
   const expected = hmac.digest("base64")
   // timingSafeEqual は等長必須。長さ不一致は即 false。
@@ -54,7 +60,7 @@ async function callApi(path: string, init: RequestInit, base = API_BASE): Promis
   return fetch(`${base}${path}`, {
     ...init,
     headers: {
-      Authorization: `Bearer ${TOKEN}`,
+      Authorization: `Bearer ${getToken()}`,
       ...(init.headers ?? {}),
     },
   })
@@ -62,7 +68,7 @@ async function callApi(path: string, init: RequestInit, base = API_BASE): Promis
 
 /** replyToken に対して返信する。Webhook 受信から 30 秒以内が有効期限。 */
 export async function replyMessage(replyToken: string, messages: LineMessage[]): Promise<void> {
-  if (!TOKEN) return
+  if (!getToken()) return
   const res = await callApi("/v2/bot/message/reply", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -75,7 +81,7 @@ export async function replyMessage(replyToken: string, messages: LineMessage[]):
 
 /** 任意の LINE ユーザーへプッシュ送信（要 Messaging API 有効化 + 同意済み友だち）。 */
 export async function pushMessage(to: string, messages: LineMessage[]): Promise<void> {
-  if (!TOKEN) return
+  if (!getToken()) return
   const res = await callApi("/v2/bot/message/push", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -94,7 +100,7 @@ export interface LineUserProfile {
 }
 
 export async function getUserProfile(userId: string): Promise<LineUserProfile | null> {
-  if (!TOKEN) return null
+  if (!getToken()) return null
   const res = await callApi(`/v2/bot/profile/${encodeURIComponent(userId)}`, {
     method: "GET",
   })
@@ -128,7 +134,7 @@ export interface RichMenuDefinition {
 }
 
 export async function createRichMenu(def: RichMenuDefinition): Promise<string | null> {
-  if (!TOKEN) return null
+  if (!getToken()) return null
   const res = await callApi("/v2/bot/richmenu", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -147,13 +153,13 @@ export async function uploadRichMenuImage(
   imageBuffer: Buffer,
   contentType: "image/png" | "image/jpeg" = "image/png"
 ): Promise<boolean> {
-  if (!TOKEN) return false
+  if (!getToken()) return false
   const res = await fetch(
     `${DATA_API_BASE}/v2/bot/richmenu/${encodeURIComponent(richMenuId)}/content`,
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${TOKEN}`,
+        Authorization: `Bearer ${getToken()}`,
         "Content-Type": contentType,
       },
       // Node.js fetch は Buffer をそのまま受け付ける
@@ -169,7 +175,7 @@ export async function uploadRichMenuImage(
 
 /** 全員に同じ Rich Menu を適用するデフォルト割り当て。 */
 export async function setDefaultRichMenu(richMenuId: string): Promise<boolean> {
-  if (!TOKEN) return false
+  if (!getToken()) return false
   const res = await callApi(`/v2/bot/user/all/richmenu/${encodeURIComponent(richMenuId)}`, {
     method: "POST",
   })
@@ -181,7 +187,7 @@ export async function setDefaultRichMenu(richMenuId: string): Promise<boolean> {
 }
 
 export async function listRichMenus(): Promise<Array<{ richMenuId: string; name: string }>> {
-  if (!TOKEN) return []
+  if (!getToken()) return []
   const res = await callApi("/v2/bot/richmenu/list", { method: "GET" })
   if (!res.ok) return []
   const json = (await res.json()) as { richmenus: Array<{ richMenuId: string; name: string }> }
@@ -189,7 +195,7 @@ export async function listRichMenus(): Promise<Array<{ richMenuId: string; name:
 }
 
 export async function deleteRichMenu(richMenuId: string): Promise<boolean> {
-  if (!TOKEN) return false
+  if (!getToken()) return false
   const res = await callApi(`/v2/bot/richmenu/${encodeURIComponent(richMenuId)}`, {
     method: "DELETE",
   })
