@@ -7,6 +7,8 @@ import {
   CaretRight,
   CalendarCheck,
   ShieldCheck,
+  SealCheck,
+  Bank,
 } from "@phosphor-icons/react/dist/ssr"
 import { getCategoryLabel } from "@/lib/categories"
 import { TagChip } from "./tag-chip"
@@ -41,8 +43,25 @@ export function JobCard({ job }: { job: JobCardProps }) {
       </div>
 
       <div className="flex-1 min-w-0">
-        {/* メタ: カテゴリ + 雇用形態 + 出典 */}
+        {/* メタ: 出典バッジ + カテゴリ + 雇用形態 */}
         <div className="flex items-center gap-2 flex-wrap">
+          {job.source === "direct" ? (
+            <span
+              className="inline-flex items-center gap-1 bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-800"
+              title="掲載企業から直接募集中の認定求人。応募内容は LINE で当社経由で企業に届きます。"
+            >
+              <SealCheck weight="fill" className="h-3.5 w-3.5" />
+              認定企業
+            </span>
+          ) : (
+            <span
+              className="inline-flex items-center gap-1 bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600"
+              title="ハローワーク公開求人。応募は当社経由でハローワークの手続き案内が届きます。"
+            >
+              <Bank weight="duotone" className="h-3.5 w-3.5" />
+              ハローワーク
+            </span>
+          )}
           <span className="inline-flex items-center gap-1 bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700">
             {getCategoryLabel(job.category)}
           </span>

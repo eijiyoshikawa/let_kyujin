@@ -294,8 +294,17 @@ export default async function JobDetailPage({ params }: Props) {
               <HeroBanner category={job.category} />
 
               <div className="space-y-3">
-                {/* Category badge */}
+                {/* Source + Category badges */}
                 <div className="flex items-center gap-2 flex-wrap text-xs">
+                  {job.source === "direct" ? (
+                    <span className="inline-flex items-center gap-1 bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-800">
+                      認定企業
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+                      ハローワーク
+                    </span>
+                  )}
                   <TagChip size="sm">{getCategoryLabel(job.category)}</TagChip>
                 </div>
 
