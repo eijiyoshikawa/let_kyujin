@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db"
 import { JobCard } from "@/components/jobs/job-card"
+import { CompareCart } from "@/components/jobs/compare-cart"
 import { Briefcase, Search, SlidersHorizontal } from "lucide-react"
 import Link from "next/link"
 import { Pagination } from "@/components/pagination"
@@ -468,6 +469,7 @@ export default async function JobsPage({ searchParams }: Props) {
           </div>
         </div>
       </div>
+      <CompareCart />
     </div>
   )
 }
