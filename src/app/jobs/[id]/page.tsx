@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/db"
 import { notFound } from "next/navigation"
+import { headers } from "next/headers"
 import Link from "next/link"
+import { getOrCreateSessionId } from "@/lib/session-id"
+import { recordJobView, extractUtmFromUrl } from "@/lib/tracking"
 import {
   MapPin,
   Banknote,
@@ -55,6 +58,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function JobDetailPage({ params }: Props) {
   const { id } = await params
+
+  // 匿名トラッキング: SID 発行 + JobView 記録（fire-and-forget）
+  // 失敗してもページ描画は妨げない。
+  const sessionId = await getOrCreateSessionId().catch(() => null)
+  const headerList = await headers()
+  const ua = headerList.get("user-agent") ?? null
+  const referer = headerList.get("referer") ?? null
+  const fwd = headerList.get("x-forwarded-for")
+  const ipAddress = fwd ? fwd.split(",")[0].trim() : null
+  // UTM は referer に乗ってこないので、現在の URL を組み立てて取り出す
+  const reqHost = headerList.get("host") ?? ""
+  const proto = headerList.get("x-forwarded-proto") ?? "https"
+  const fullUrl = referer && referer.includes(reqHost) ? referer : `${proto}://${reqHost}/jobs/${id}`
+  const utm = extractUtmFromUrl(fullUrl)
+  // ベストエフォート（失敗してもページ表示は阻害しない）
+  await recordJobView({
+    jobId: id,
+    sessionId,
+    userId: null,
+    ipAddress,
+    userAgent: ua,
+    referer,
+    utm,
+  }).catch(() => {})
+
   const job = await prisma.job.findUnique({
     where: { id },
     include: {
