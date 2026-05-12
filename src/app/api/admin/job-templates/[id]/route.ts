@@ -8,6 +8,7 @@ import { type NextRequest } from "next/server"
 import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
+import { logAudit, buildActorFromSession } from "@/lib/audit-log"
 
 export const dynamic = "force-dynamic"
 
@@ -77,6 +78,15 @@ export async function PATCH(
       where: { id },
       data: parsed.data,
     })
+    const actor = await buildActorFromSession()
+    void logAudit({
+      ...actor,
+      resourceType: "job_template",
+      resourceId: id,
+      action: "update",
+      summary: `テンプレ「${updated.name}」を更新`,
+      diff: parsed.data,
+    })
     return Response.json({ template: updated })
   } catch {
     return Response.json({ error: "not found" }, { status: 404 })
@@ -92,7 +102,19 @@ export async function DELETE(
   }
   const { id } = await params
   try {
+    const before = await prisma.jobTemplate
+      .findUnique({ where: { id }, select: { name: true, slug: true } })
+      .catch(() => null)
     await prisma.jobTemplate.delete({ where: { id } })
+    const actor = await buildActorFromSession()
+    void logAudit({
+      ...actor,
+      resourceType: "job_template",
+      resourceId: id,
+      action: "delete",
+      summary: `テンプレ「${before?.name ?? id}」を削除`,
+      diff: before ?? undefined,
+    })
     return Response.json({ ok: true })
   } catch {
     return Response.json({ error: "not found" }, { status: 404 })

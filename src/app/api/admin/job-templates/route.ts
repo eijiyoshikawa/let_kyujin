@@ -9,6 +9,7 @@ import { type NextRequest } from "next/server"
 import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
+import { logAudit, buildActorFromSession } from "@/lib/audit-log"
 
 export const dynamic = "force-dynamic"
 
@@ -95,6 +96,15 @@ export async function POST(request: NextRequest) {
         sortOrder: data.sortOrder,
         isActive: data.isActive,
       },
+    })
+    const actor = await buildActorFromSession()
+    void logAudit({
+      ...actor,
+      resourceType: "job_template",
+      resourceId: created.id,
+      action: "create",
+      summary: `テンプレ「${created.name}」を作成`,
+      diff: { slug: created.slug, category: created.category },
     })
     return Response.json({ template: created }, { status: 201 })
   } catch (e) {

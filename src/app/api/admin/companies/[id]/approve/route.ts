@@ -10,6 +10,7 @@ import { type NextRequest } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { sendCompanyApprovalEmail } from "@/lib/email"
+import { logAudit, buildActorFromSession } from "@/lib/audit-log"
 
 async function requireAdmin() {
   const session = await auth()
@@ -54,6 +55,17 @@ export async function POST(
       rejectedAt: null,
       rejectionReason: null,
     },
+  })
+
+  // 監査ログ
+  const actor = await buildActorFromSession()
+  void logAudit({
+    ...actor,
+    resourceType: "company",
+    resourceId: id,
+    action: "approve",
+    summary: `企業「${company.name}」を承認`,
+    diff: { previousStatus: company.status, newStatus: "approved" },
   })
 
   // メール失敗で承認自体を巻き戻さない（管理者は手動で再送できる）
