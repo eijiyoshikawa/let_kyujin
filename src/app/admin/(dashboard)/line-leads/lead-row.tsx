@@ -28,6 +28,7 @@ export interface LeadRowData {
   status: LeadStatus
   lineUserId: string | null
   lineDisplayName: string | null
+  optedOut: boolean
   job: { id: string; title: string; prefecture: string; city: string | null } | null
 }
 
@@ -69,7 +70,7 @@ export function LeadRow({ lead, expanded: initiallyExpanded }: { lead: LeadRowDa
   const [tab, setTab] = useState<"detail" | "history">("detail")
   const [pushOpen, setPushOpen] = useState(false)
 
-  async function save(changes: { status?: LeadStatus; notes?: string }) {
+  async function save(changes: { status?: LeadStatus; notes?: string; optedOut?: boolean }) {
     setSaving(true)
     setResult(null)
     try {
@@ -111,6 +112,11 @@ export function LeadRow({ lead, expanded: initiallyExpanded }: { lead: LeadRowDa
         <span className={`inline-block px-2 py-0.5 text-[10px] font-bold border ${meta.classes}`}>
           {meta.label}
         </span>
+        {lead.optedOut && (
+          <span className="inline-block px-2 py-0.5 text-[10px] font-bold border bg-gray-200 text-gray-700 border-gray-300">
+            配信停止
+          </span>
+        )}
         <div className="flex-1 min-w-0">
           <p className="text-sm font-bold text-gray-900 truncate">
             {lead.name}
@@ -148,9 +154,28 @@ export function LeadRow({ lead, expanded: initiallyExpanded }: { lead: LeadRowDa
             <div className="flex-1" />
             <button
               type="button"
+              onClick={() => save({ optedOut: !lead.optedOut })}
+              disabled={saving}
+              title={lead.optedOut ? "配信再開（一括 push の対象に戻す）" : "配信停止（一括 push から除外）"}
+              className={`press inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold border ${
+                lead.optedOut
+                  ? "bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200"
+                  : "bg-white text-amber-700 border-amber-300 hover:bg-amber-50"
+              }`}
+            >
+              {lead.optedOut ? "配信再開" : "配信停止"}
+            </button>
+            <button
+              type="button"
               onClick={() => setPushOpen(true)}
-              disabled={!lead.lineUserId}
-              title={lead.lineUserId ? "LINE Push 送信" : "LINE と未紐付け（lineUserId が無い）"}
+              disabled={!lead.lineUserId || lead.optedOut}
+              title={
+                lead.optedOut
+                  ? "配信停止中の lead には送信できません"
+                  : lead.lineUserId
+                    ? "LINE Push 送信"
+                    : "LINE と未紐付け（lineUserId が無い）"
+              }
               className="press inline-flex items-center gap-1 bg-[#06C755] hover:bg-[#05A847] disabled:bg-gray-300 disabled:cursor-not-allowed px-3 py-1.5 text-xs font-bold text-white"
             >
               <MessageCircle className="h-3.5 w-3.5" />

@@ -53,6 +53,25 @@ const GREETING_TEXT = [
 
 const SITE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://genbacareer.jp"
 
+/**
+ * オプトアウト（配信停止）要求のキーワード判定。
+ * 短いキーワードのみで完全一致 / 部分一致を取る（誤検出を避けるため文章内の含意は除外）。
+ */
+function isOptOutRequest(input: string): boolean {
+  const normalized = input.replace(/\s+/g, "").toLowerCase()
+  if (normalized.length > 30) return false // 長文に含まれる「停止」等の誤検出回避
+  return /^(配信停止|停止|ストップ|stop|unsubscribe|解除|配信解除)$/.test(normalized)
+}
+
+/**
+ * 配信再開（オプトイン）要求のキーワード判定。
+ */
+function isOptInRequest(input: string): boolean {
+  const normalized = input.replace(/\s+/g, "").toLowerCase()
+  if (normalized.length > 30) return false
+  return /^(配信再開|再開|start|subscribe)$/.test(normalized)
+}
+
 function autoReplyText(input: string): string | null {
   const normalized = input.replace(/\s+/g, "").toLowerCase()
   if (/求人|もとめる|求める|探/.test(normalized)) {
@@ -158,6 +177,46 @@ async function handleEvent(ev: LineEvent): Promise<void> {
 
     if (ev.type === "message" && ev.message?.type === "text" && ev.replyToken) {
       const text = ev.message.text ?? ""
+      const userId = ev.source?.userId
+
+      // オプトアウト要求の検出（業界標準キーワード）
+      if (isOptOutRequest(text) && userId) {
+        const updated = await prisma.lineLead
+          .updateMany({
+            where: { lineUserId: userId, optedOut: false },
+            data: {
+              optedOut: true,
+              optedOutAt: new Date(),
+              optedOutSource: "webhook",
+            },
+          })
+          .catch(() => ({ count: 0 }))
+        const ack =
+          updated.count > 0
+            ? "配信停止を承りました。今後の一括配信は届きません。\n再開希望時は「再開」とお送りください。"
+            : "配信停止のリクエストを受け付けました。"
+        await replyMessage(ev.replyToken, [{ type: "text", text: ack }])
+        return
+      }
+
+      // オプトイン（再開）要求の検出
+      if (isOptInRequest(text) && userId) {
+        await prisma.lineLead
+          .updateMany({
+            where: { lineUserId: userId, optedOut: true },
+            data: {
+              optedOut: false,
+              optedOutAt: null,
+              optedOutSource: null,
+            },
+          })
+          .catch(() => {})
+        await replyMessage(ev.replyToken, [
+          { type: "text", text: "配信を再開しました。今後新着求人をお送りします。" },
+        ])
+        return
+      }
+
       const reply = autoReplyText(text)
       if (reply) {
         await replyMessage(ev.replyToken, [{ type: "text", text: reply }])
