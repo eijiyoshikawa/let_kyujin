@@ -2,7 +2,20 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { MessageCircle, Loader2, ExternalLink, User, Phone, Mail, Briefcase } from "lucide-react"
+import { MessageCircle, Loader2, ExternalLink, User, Phone, Mail, Briefcase, Banknote, MapPin, ArrowRight, Building2 } from "lucide-react"
+
+interface RecommendedJob {
+  id: string
+  title: string
+  category: string
+  prefecture: string
+  city: string | null
+  salaryMin: number | null
+  salaryMax: number | null
+  salaryType: string | null
+  tags: string[]
+  companyName: string | null
+}
 
 /**
  * 「LINE で応募」のミニフォーム + 遷移コンポーネント。
@@ -24,6 +37,7 @@ export function LineApplyClient({
 }) {
   const [submitting, setSubmitting] = useState(false)
   const [lineUrl, setLineUrl] = useState<string | null>(null)
+  const [recommendedJobs, setRecommendedJobs] = useState<RecommendedJob[]>([])
   const [error, setError] = useState<string | null>(null)
   const [form, setForm] = useState({
     name: "",
@@ -57,8 +71,12 @@ export function LineApplyClient({
         return
       }
       setLineUrl(json.lineUrl)
+      if (Array.isArray(json.recommendedJobs)) {
+        setRecommendedJobs(json.recommendedJobs as RecommendedJob[])
+      }
       // モバイル: 自動遷移（短いディレイを挟む）
-      if (isMobileGuess) {
+      // ただしレコメンドが出る場合はユーザーに見せたいのでスキップ
+      if (isMobileGuess && (!json.recommendedJobs || json.recommendedJobs.length === 0)) {
         setTimeout(() => {
           window.location.href = json.lineUrl
         }, 600)
@@ -106,6 +124,56 @@ export function LineApplyClient({
             <p className="mt-2 text-[10px] text-gray-400">
               LINE 公式アカウント ID: {lineOaId || "（未設定）"}
             </p>
+          </div>
+        )}
+
+        {/* あなたへのおすすめ求人 */}
+        {recommendedJobs.length > 0 && (
+          <div className="mt-8 border-t pt-6">
+            <h3 className="flex items-center gap-2 text-base font-extrabold text-gray-900 section-bar">
+              他にも気になる求人はありませんか？
+            </h3>
+            <p className="text-xs text-gray-500 mt-1">
+              ご応募の傾向に近い建設業の求人です。気になる求人があれば、続けて LINE でお送りください。
+            </p>
+            <ul className="mt-3 space-y-2">
+              {recommendedJobs.map((rec) => (
+                <li key={rec.id}>
+                  <Link
+                    href={`/jobs/${rec.id}`}
+                    className="press group block accent-l border bg-white p-3 pl-4 hover:border-primary-400 hover:shadow-sm transition"
+                  >
+                    <p className="text-sm font-bold text-gray-900 line-clamp-2 group-hover:text-primary-600">
+                      {rec.title}
+                    </p>
+                    {rec.companyName && (
+                      <p className="mt-0.5 text-[11px] text-gray-500 line-clamp-1">
+                        <Building2 className="inline h-3 w-3 mr-1 text-gray-400" />
+                        {rec.companyName}
+                      </p>
+                    )}
+                    <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-[11px]">
+                      <span className="inline-flex items-center gap-1 text-primary-700 font-bold">
+                        <Banknote className="h-3 w-3" />
+                        {formatSalary(rec.salaryMin, rec.salaryMax, rec.salaryType)}
+                      </span>
+                      <span className="inline-flex items-center gap-1 text-gray-600">
+                        <MapPin className="h-3 w-3 text-gray-400" />
+                        {rec.prefecture}
+                        {rec.city ? ` ${rec.city}` : ""}
+                      </span>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/jobs"
+              className="press mt-3 inline-flex items-center gap-1 text-sm font-bold text-primary-600 hover:text-primary-700"
+            >
+              他の求人も探す
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         )}
       </div>
@@ -260,4 +328,17 @@ function Field({
       </div>
     </div>
   )
+}
+
+function formatSalary(
+  min: number | null,
+  max: number | null,
+  type: string | null
+): string {
+  if (!min) return "応相談"
+  const unit = type === "hourly" ? "時給" : type === "annual" ? "年収" : "月給"
+  const fmt = (n: number) =>
+    n >= 10000 ? `${(n / 10000).toFixed(0)}万` : `${n.toLocaleString()}`
+  if (min && max) return `${unit} ${fmt(min)}〜${fmt(max)}円`
+  return `${unit} ${fmt(min)}円〜`
 }
