@@ -121,17 +121,59 @@ export default async function JobsPage({ searchParams }: Props) {
 
   const orderBy = buildOrderBy(sort)
 
+  // 検索クエリがあり、デフォルトの「おすすめ順」の場合は pg_trgm で類似度順に並べる
+  const useFuzzy = !!params.q && sort === "recommended"
+  let fuzzyIds: string[] | null = null
+  if (useFuzzy) {
+    const { fuzzySearchJobs } = await import("@/lib/job-search")
+    const rows = await fuzzySearchJobs({
+      q: params.q!,
+      prefecture: params.prefecture,
+      city: params.city,
+      category: params.category,
+      employmentType: params.employment_type,
+      source: params.source,
+      salaryMin: salaryMinYen ?? undefined,
+      salaryMax: salaryMaxYen ?? undefined,
+      publishedSince: dateWithinThreshold ?? undefined,
+      limit: limit * 5, // 後でページング切り出すため多めに取得
+    })
+    if (rows && rows.length > 0) {
+      fuzzyIds = rows.map((r) => r.id)
+    }
+  }
+
   const [jobs, total] = await Promise.all([
-    prisma.job.findMany({
-      where,
-      orderBy,
-      skip: (page - 1) * limit,
-      take: limit,
-      include: {
-        company: { select: { id: true, name: true, logoUrl: true } },
-      },
-    }),
-    prisma.job.count({ where }),
+    fuzzyIds
+      ? prisma.job
+          .findMany({
+            where: { id: { in: fuzzyIds } },
+            include: {
+              company: { select: { id: true, name: true, logoUrl: true } },
+            },
+          })
+          // fuzzy で返ってきた id 順を維持
+          .then((rows) => {
+            const order = new Map(fuzzyIds!.map((id, i) => [id, i]))
+            return rows.sort(
+              (a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0)
+            )
+          })
+          .then((rows) =>
+            rows.slice((page - 1) * limit, (page - 1) * limit + limit)
+          )
+      : prisma.job.findMany({
+          where,
+          orderBy,
+          skip: (page - 1) * limit,
+          take: limit,
+          include: {
+            company: { select: { id: true, name: true, logoUrl: true } },
+          },
+        }),
+    fuzzyIds
+      ? Promise.resolve(fuzzyIds.length)
+      : prisma.job.count({ where }),
   ])
 
   const totalPages = Math.ceil(total / limit)
