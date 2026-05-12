@@ -97,6 +97,37 @@ model SavedSearch {
 }
 
 // ========================================
+// 管理者・企業ユーザーの監査ログ
+// ========================================
+// 重要な操作（求人の承認/却下、テンプレ編集、企業情報更新、応募ステータス変更 等）
+// を時系列で保存する。
+//   - actorType: admin | company_user | system
+//   - resourceType: company | job | job_template | application | line_lead | scout | ...
+//   - action: create | update | delete | approve | reject | login | …（自由形式 VarChar）
+//   - diff: 任意のスナップショット / 差分 JSON
+model AuditLog {
+  id           String   @id @default(uuid()) @db.Uuid
+  actorType    String   @map("actor_type") @db.VarChar(20)
+  actorId      String?  @map("actor_id") @db.VarChar(64)
+  actorEmail   String?  @map("actor_email") @db.VarChar(255)
+  resourceType String   @map("resource_type") @db.VarChar(40)
+  resourceId   String?  @map("resource_id") @db.VarChar(64)
+  action       String   @db.VarChar(40)
+  // 1 行サマリ（一覧に出すラベル）
+  summary      String?  @db.VarChar(500)
+  // 任意の追加情報・差分（前後の値、IP、UA など）
+  diff         Json?
+  ipAddress    String?  @map("ip_address") @db.VarChar(45)
+  userAgent    String?  @map("user_agent") @db.VarChar(500)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  @@index([resourceType, resourceId, createdAt(sort: Desc)], name: "idx_audit_resource")
+  @@index([actorType, actorId, createdAt(sort: Desc)], name: "idx_audit_actor")
+  @@index([createdAt(sort: Desc)], name: "idx_audit_created")
+  @@map("audit_logs")
+}
+
+// ========================================
 // 求人投稿テンプレート（管理者運用）
 // ========================================
 // 求人投稿ウィザードで利用できるカテゴリ別ひな型。

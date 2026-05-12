@@ -11,6 +11,7 @@ import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { sendCompanyRejectionEmail } from "@/lib/email"
+import { logAudit, buildActorFromSession } from "@/lib/audit-log"
 
 const schema = z.object({
   reason: z.string().max(500).optional(),
@@ -72,6 +73,16 @@ export async function POST(
       rejectionReason: reason,
       approvedAt: null,
     },
+  })
+
+  const actor = await buildActorFromSession()
+  void logAudit({
+    ...actor,
+    resourceType: "company",
+    resourceId: id,
+    action: "reject",
+    summary: `企業「${company.name}」を却下`,
+    diff: { previousStatus: company.status, newStatus: "rejected", reason },
   })
 
   if (company.contactEmail) {
