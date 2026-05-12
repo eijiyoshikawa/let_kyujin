@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { MessageCircle, Loader2, ExternalLink, User, Phone, Mail, Briefcase, Banknote, MapPin, ArrowRight, Building2 } from "lucide-react"
+import { gaTrackLead } from "@/lib/ga4"
 
 interface RecommendedJob {
   id: string
@@ -62,6 +63,8 @@ export function LineApplyClient({
           email: form.email.trim(),
           experienceYears: form.experienceYears ? Number(form.experienceYears) : null,
           notes: form.notes.trim() || null,
+          // 流入分析用に現在ページの URL を一緒に送る（UTM が乗ってくる）
+          pageUrl: typeof window !== "undefined" ? window.location.href : undefined,
         }),
       })
       const json = await res.json()
@@ -74,6 +77,8 @@ export function LineApplyClient({
       if (Array.isArray(json.recommendedJobs)) {
         setRecommendedJobs(json.recommendedJobs as RecommendedJob[])
       }
+      // GA4 conversion イベント
+      gaTrackLead({ leadId: json.leadId ?? null, jobId })
       // モバイル: 自動遷移（短いディレイを挟む）
       // ただしレコメンドが出る場合はユーザーに見せたいのでスキップ
       if (isMobileGuess && (!json.recommendedJobs || json.recommendedJobs.length === 0)) {

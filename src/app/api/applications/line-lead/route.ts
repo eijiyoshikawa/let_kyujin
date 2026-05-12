@@ -15,6 +15,8 @@ import { buildLineApplyUrl, isLineConfigured } from "@/lib/line"
 import { checkRateLimit, getClientIp, rateLimitResponse } from "@/lib/rate-limit"
 import { notifyNewLead } from "@/lib/lead-notifications"
 import { findRelatedJobs } from "@/lib/job-matching"
+import { getSessionIdIfExists } from "@/lib/session-id"
+import { extractUtmFromUrl } from "@/lib/tracking"
 
 export const dynamic = "force-dynamic"
 
@@ -31,6 +33,8 @@ const bodySchema = z.object({
   email: z.email("メールアドレスの形式が正しくありません").max(255),
   experienceYears: z.number().int().min(0).max(60).nullable().optional(),
   notes: z.string().max(2000).nullable().optional(),
+  // クライアントから渡された参照元 URL（GA4 と DB の流入分析を揃えるため）
+  pageUrl: z.string().url().optional(),
 })
 
 export async function POST(request: NextRequest) {
@@ -74,6 +78,11 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "job_not_found" }, { status: 404 })
   }
 
+  // 流入トラッキング: SID Cookie + UTM パラメータ + Referer を保存
+  const sessionId = await getSessionIdIfExists().catch(() => null)
+  const referer = request.headers.get("referer")
+  const utm = extractUtmFromUrl(parsed.pageUrl ?? referer ?? "")
+
   // リード保存。失敗しても致命的ではないが、原則必須なので await する。
   let leadId: string | null = null
   try {
@@ -87,6 +96,11 @@ export async function POST(request: NextRequest) {
         notes: parsed.notes ?? null,
         ipAddress: ip,
         userAgent: request.headers.get("user-agent")?.slice(0, 500) ?? null,
+        sessionId,
+        utmSource: utm.source,
+        utmMedium: utm.medium,
+        utmCampaign: utm.campaign,
+        referer: referer?.slice(0, 500) ?? null,
       },
       select: { id: true },
     })

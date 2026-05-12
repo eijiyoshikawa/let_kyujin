@@ -14,6 +14,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { buildLineApplyUrl, isLineConfigured } from "@/lib/line"
 import { checkRateLimit, getClientIp, rateLimitResponse } from "@/lib/rate-limit"
+import { getSessionIdIfExists } from "@/lib/session-id"
 
 export const dynamic = "force-dynamic"
 
@@ -73,12 +74,15 @@ export async function POST(
       ? session.user.id
       : null
 
+  const sessionId = await getSessionIdIfExists().catch(() => null)
+
   // クリック記録（fire-and-log: 失敗してもユーザー体験は阻害しない）
   prisma.applicationClick
     .create({
       data: {
         jobId: job.id,
         userId,
+        sessionId,
         source: parsed.source,
         ipAddress: ip,
         userAgent: request.headers.get("user-agent")?.slice(0, 500) ?? null,

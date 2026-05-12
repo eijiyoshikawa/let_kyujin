@@ -45,6 +45,32 @@ const STATEMENTS: ReadonlyArray<string> = [
  `CREATE INDEX IF NOT EXISTS "idx_line_leads_job" ON "line_leads" ("job_id", "created_at" DESC)`,
  `CREATE INDEX IF NOT EXISTS "idx_line_leads_line_user" ON "line_leads" ("line_user_id")`,
  `CREATE INDEX IF NOT EXISTS "idx_line_leads_status" ON "line_leads" ("status", "created_at" DESC)`,
+ // PR #37: 流入・閲覧トラッキング列
+ `ALTER TABLE "application_clicks" ADD COLUMN IF NOT EXISTS "session_id" VARCHAR(50)`,
+ `ALTER TABLE "line_leads"
+    ADD COLUMN IF NOT EXISTS "session_id" VARCHAR(50),
+    ADD COLUMN IF NOT EXISTS "utm_source" VARCHAR(100),
+    ADD COLUMN IF NOT EXISTS "utm_medium" VARCHAR(100),
+    ADD COLUMN IF NOT EXISTS "utm_campaign" VARCHAR(100),
+    ADD COLUMN IF NOT EXISTS "referer" VARCHAR(500)`,
+ `CREATE INDEX IF NOT EXISTS "idx_line_leads_session" ON "line_leads" ("session_id")`,
+ `CREATE TABLE IF NOT EXISTS "job_views" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+    "job_id" UUID NOT NULL,
+    "session_id" VARCHAR(50),
+    "user_id" UUID,
+    "ip_address" VARCHAR(45),
+    "user_agent" VARCHAR(500),
+    "referer" VARCHAR(500),
+    "utm_source" VARCHAR(100),
+    "utm_medium" VARCHAR(100),
+    "utm_campaign" VARCHAR(100),
+    "viewed_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT "job_views_job_id_fkey" FOREIGN KEY ("job_id") REFERENCES "jobs"("id") ON DELETE CASCADE,
+    CONSTRAINT "job_views_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE SET NULL
+  )`,
+ `CREATE INDEX IF NOT EXISTS "idx_job_views_job_time" ON "job_views" ("job_id", "viewed_at" DESC)`,
+ `CREATE INDEX IF NOT EXISTS "idx_job_views_session_time" ON "job_views" ("session_id", "viewed_at" DESC)`,
 ]
 
 let inflight: Promise<boolean> | null = null
