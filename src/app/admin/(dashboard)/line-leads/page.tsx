@@ -56,6 +56,7 @@ export default async function AdminLineLeadsPage({ searchParams }: Props) {
           experienceYears: true,
           notes: true,
           status: true,
+          lineUserId: true,
           lineDisplayName: true,
           job: {
             select: { id: true, title: true, prefecture: true, city: true },
@@ -110,6 +111,7 @@ export default async function AdminLineLeadsPage({ searchParams }: Props) {
     experienceYears: l.experienceYears,
     notes: l.notes,
     status: (isLeadStatus(l.status) ? l.status : "pending") as LeadStatus,
+    lineUserId: l.lineUserId,
     lineDisplayName: l.lineDisplayName,
     job: l.job,
   }))
