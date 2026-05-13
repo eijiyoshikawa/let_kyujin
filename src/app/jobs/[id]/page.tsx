@@ -138,6 +138,14 @@ export default async function JobDetailPage({ params, searchParams }: Props) {
     holidays: job.holidays,
     requiredExperience: job.requiredExperience,
     education: job.education,
+    helloworkId: job.helloworkId,
+    requirements: job.requirements,
+    benefits: job.benefits,
+    tags: job.tags,
+    expiresAt: job.expiresAt,
+    validUntil: job.validUntil,
+    businessContent: job.businessContent,
+    bonus: job.bonus,
     company: job.company
       ? {
           name: job.company.name,

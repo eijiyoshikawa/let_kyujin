@@ -2,27 +2,41 @@ import type { HwJob } from "@/lib/jobs-api"
 
 /**
  * Google for Jobs 用 JSON-LD（schema.org JobPosting）。
- * 値は connector から取得した原文をそのまま入れる（改変禁止）。
+ * HelloWork API 由来の求人。要求された必須・推奨フィールドを網羅する。
+ *
+ * @see https://developers.google.com/search/docs/appearance/structured-data/job-posting
  */
 export function HwJobStructuredData({ job }: { job: HwJob }) {
   const baseSalary = buildBaseSalary(job)
-  const data = {
+  const datePosted = job.dates.receivedAt
+  // validThrough は明示値 > 受付期限 > 受付日+90 日 の優先度
+  const validThrough =
+    job.dates.applyBy ??
+    job.dates.validUntil ??
+    (datePosted ? addDays(datePosted, 90) : undefined)
+
+  const data: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "JobPosting",
     title: job.title ?? job.occupation ?? "求人",
-    description: job.description ?? "",
-    datePosted: job.dates.receivedAt ?? undefined,
-    validThrough: job.dates.applyBy ?? job.dates.validUntil ?? undefined,
-    employmentType: job.employmentType ?? job.jobType ?? undefined,
+    description: buildDescription(job),
+    ...(datePosted && { datePosted }),
+    ...(validThrough && { validThrough }),
+    employmentType: mapEmploymentType(job.employmentType ?? job.jobType),
     hiringOrganization: job.company.name
       ? {
           "@type": "Organization",
           name: job.company.name,
-          ...(job.company.website ? { sameAs: job.company.website } : {}),
+          ...(job.company.website ? { sameAs: [job.company.website] } : {}),
         }
-      : undefined,
+      : { "@type": "Organization", name: "非公開" },
     jobLocation: buildJobLocation(job),
+    applicantLocationRequirements: {
+      "@type": "Country",
+      name: "JP",
+    },
     ...(baseSalary ? { baseSalary } : {}),
+    directApply: true,
     identifier: {
       "@type": "PropertyValue",
       name: "ハローワーク求人番号",
@@ -36,6 +50,36 @@ export function HwJobStructuredData({ job }: { job: HwJob }) {
       dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
     />
   )
+}
+
+/** 日本語雇用形態文字列を Google for Jobs vocab にマッピング */
+function mapEmploymentType(value: string | null | undefined): string {
+  if (!value) return "OTHER"
+  if (/正社員|フルタイム/i.test(value)) return "FULL_TIME"
+  if (/パート|アルバイト/i.test(value)) return "PART_TIME"
+  if (/契約|嘱託/i.test(value)) return "CONTRACTOR"
+  if (/派遣/i.test(value)) return "TEMPORARY"
+  if (/インターン/i.test(value)) return "INTERN"
+  if (/日雇い/i.test(value)) return "PER_DIEM"
+  return "OTHER"
+}
+
+function buildDescription(job: HwJob): string {
+  if (job.description && job.description.trim().length >= 20) {
+    return job.description
+  }
+  // 説明が空 / 短い場合はタイトル + 勤務地 + 業務内容で補完
+  const parts: string[] = []
+  parts.push(job.title ?? job.occupation ?? "求人")
+  if (job.location.prefecture) parts.push(`勤務地: ${job.location.prefecture}`)
+  if (job.occupation) parts.push(`職種: ${job.occupation}`)
+  return parts.join("。 ")
+}
+
+function addDays(iso: string, days: number): string {
+  const d = new Date(iso)
+  d.setUTCDate(d.getUTCDate() + days)
+  return d.toISOString()
 }
 
 function buildJobLocation(job: HwJob) {
