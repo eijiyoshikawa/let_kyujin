@@ -62,6 +62,19 @@
 
 ## 🟡 中優先（リリース後 1 週間以内）
 
+### 7-pre. Playwright E2E スモークテストを 1 回実行
+
+PR #103 で `e2e/` 配下にスモークテストを追加済み。初回のみブラウザバイナリ取得が必要:
+
+```bash
+pnpm test:e2e:install   # Chromium バイナリを取得 (初回のみ)
+pnpm dev                # 別ターミナルで dev サーバ
+pnpm test:e2e           # 全テスト実行
+pnpm test:e2e:ui        # UI モード（ステップ追跡）
+```
+
+CI でも実行したい場合は `PLAYWRIGHT_BASE_URL=https://genbacareer.jp pnpm test:e2e` で本番に対しても回せます。
+
 ### 7. Google Analytics 4 / Vercel Analytics 接続確認
 
 - [ ] `NEXT_PUBLIC_GA_ID` を Vercel に設定（既存の `<GoogleAnalytics />` が読む）
