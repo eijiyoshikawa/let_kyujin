@@ -127,7 +127,7 @@ export function LineApplyClient({
               className="mx-auto mt-3"
               loading="lazy"
             />
-            <p className="mt-2 text-[10px] text-gray-400">
+            <p className="mt-2 text-xs text-gray-400">
               LINE 公式アカウント ID: {lineOaId || "（未設定）"}
             </p>
           </div>
@@ -153,12 +153,12 @@ export function LineApplyClient({
                       {rec.title}
                     </p>
                     {rec.companyName && (
-                      <p className="mt-0.5 text-[11px] text-gray-500 line-clamp-1">
+                      <p className="mt-0.5 text-xs text-gray-500 line-clamp-1">
                         <Building2 className="inline h-3 w-3 mr-1 text-gray-400" />
                         {rec.companyName}
                       </p>
                     )}
-                    <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-[11px]">
+                    <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-xs">
                       <span className="inline-flex items-center gap-1 text-primary-700 font-bold">
                         <Banknote className="h-3 w-3" />
                         {formatSalary(rec.salaryMin, rec.salaryMax, rec.salaryType)}
@@ -286,7 +286,7 @@ export function LineApplyClient({
         )}
       </button>
 
-      <p className="text-[10px] text-gray-400 leading-relaxed">
+      <p className="text-xs text-gray-400 leading-relaxed">
         「LINE で送る」を押すと、ご入力情報を当社に送信し、続いて LINE 公式アカウントが
         起動します。LINE のチャット画面で送信ボタンを押すと応募が完了します。
         <br />

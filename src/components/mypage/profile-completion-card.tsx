@@ -65,7 +65,7 @@ export function ProfileCompletionCard({
               </li>
             ))}
             {undone.length > 4 && (
-              <li className="text-[11px] text-gray-400">
+              <li className="text-xs text-gray-400">
                 ほか {undone.length - 4} 項目
               </li>
             )}

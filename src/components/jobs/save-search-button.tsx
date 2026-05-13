@@ -133,7 +133,7 @@ export function SaveSearchButton({
               キャンセル
             </button>
           </div>
-          <p className="mt-2 text-[11px] text-gray-400">
+          <p className="mt-2 text-xs text-gray-400">
             新着求人があれば通知をお送りします。
           </p>
         </div>

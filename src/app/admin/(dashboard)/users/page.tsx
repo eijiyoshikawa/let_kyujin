@@ -141,24 +141,24 @@ export default async function AdminUsersPage({
                 </td>
                 <td className="px-3 py-2">
                   {u.status === "active" && (
-                    <span className="inline-flex items-center gap-1 bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-700">
+                    <span className="inline-flex items-center gap-1 bg-emerald-50 px-2 py-0.5 text-xs font-bold text-emerald-700">
                       <ShieldCheck className="h-3 w-3" />
                       通常
                     </span>
                   )}
                   {u.status === "suspended" && (
-                    <span className="inline-flex items-center gap-1 bg-red-50 px-2 py-0.5 text-[11px] font-bold text-red-700">
+                    <span className="inline-flex items-center gap-1 bg-red-50 px-2 py-0.5 text-xs font-bold text-red-700">
                       <ShieldAlert className="h-3 w-3" />
                       凍結中
                     </span>
                   )}
                   {u.status === "deleted" && (
-                    <span className="bg-gray-100 px-2 py-0.5 text-[11px] font-bold text-gray-500">
+                    <span className="bg-gray-100 px-2 py-0.5 text-xs font-bold text-gray-500">
                       退会済
                     </span>
                   )}
                   {u.suspendedReason && (
-                    <p className="mt-1 text-[10px] text-gray-500">
+                    <p className="mt-1 text-xs text-gray-500">
                       理由: {u.suspendedReason}
                     </p>
                   )}

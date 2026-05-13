@@ -200,7 +200,7 @@ export default function ContactPage() {
           {faqs.map((faq) => (
             <div key={faq.q} className="hover-lift  border bg-white p-5 shadow-sm">
               <h3 className="flex items-start gap-2 font-bold text-gray-900">
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center bg-primary-600 text-[10px] font-bold text-white">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center bg-primary-600 text-xs font-bold text-white">
                   Q
                 </span>
                 {faq.q}

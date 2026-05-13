@@ -98,7 +98,7 @@ export function TemplateInserter({
                     className="block w-full text-left px-3 py-2 hover:bg-primary-50"
                   >
                     <p className="text-sm font-bold text-gray-900">{t.name}</p>
-                    <p className="mt-0.5 text-[11px] text-gray-500 line-clamp-2">
+                    <p className="mt-0.5 text-xs text-gray-500 line-clamp-2">
                       {t.body}
                     </p>
                   </button>

@@ -41,7 +41,7 @@ export async function HwJobsLatest({ limit = 6 }: { limit?: number }) {
                 href={`/hw-jobs/${encodeURIComponent(job.kjno)}`}
                 className="group  border bg-white p-4 shadow-sm transition hover:border-primary-300 hover:shadow-md"
               >
-                <div className="flex flex-wrap items-center gap-1.5 text-[10px]">
+                <div className="flex flex-wrap items-center gap-1.5 text-xs">
                   <span className=" bg-brand-yellow-500 px-1.5 py-0.5 font-bold text-ink-900">
                     HW
                   </span>

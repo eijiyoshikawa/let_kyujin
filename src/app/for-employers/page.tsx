@@ -222,7 +222,7 @@ export default function ForEmployersPage() {
                   <Phone className="h-4 w-4 text-primary-600" />
                   03-6845-3624
                 </p>
-                <p className="text-[10px] text-gray-400">平日 10:00〜19:00（土日祝除く）</p>
+                <p className="text-xs text-gray-400">平日 10:00〜19:00（土日祝除く）</p>
               </div>
             </div>
           </div>

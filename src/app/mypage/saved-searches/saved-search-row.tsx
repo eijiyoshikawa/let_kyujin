@@ -110,7 +110,7 @@ export function SavedSearchRow({
             <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition" />
           </p>
           <p className="mt-0.5 text-xs text-gray-500 line-clamp-2">{label}</p>
-          <p className="mt-0.5 text-[11px] text-gray-400">
+          <p className="mt-0.5 text-xs text-gray-400">
             保存日: {new Date(createdAt).toLocaleDateString("ja-JP")}
           </p>
         </Link>

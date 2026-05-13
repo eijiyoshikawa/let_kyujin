@@ -136,11 +136,11 @@ export default async function CompanyLineLeadsPage({ searchParams }: Props) {
             return (
               <li key={lead.id} className="border border-gray-200 bg-white p-4">
                 <div className="flex items-start gap-3 flex-wrap">
-                  <span className={`inline-block px-2 py-0.5 text-[10px] font-bold border ${meta.classes}`}>
+                  <span className={`inline-block px-2 py-0.5 text-xs font-bold border ${meta.classes}`}>
                     {meta.label}
                   </span>
                   {lead.optedOut && (
-                    <span className="inline-block px-2 py-0.5 text-[10px] font-bold border bg-gray-200 text-gray-700 border-gray-300">
+                    <span className="inline-block px-2 py-0.5 text-xs font-bold border bg-gray-200 text-gray-700 border-gray-300">
                       配信停止
                     </span>
                   )}
@@ -223,7 +223,7 @@ export default async function CompanyLineLeadsPage({ searchParams }: Props) {
       />
 
       {/* 補足 */}
-      <p className="text-[11px] text-gray-400 leading-relaxed border-t pt-3">
+      <p className="text-xs text-gray-400 leading-relaxed border-t pt-3">
         ※ LINE 応募者の選考状況は当社運営側で管理しています。応募者と直接やり取りされる場合は、
         電話 / メール / LINE のいずれかでご連絡ください。
       </p>

@@ -197,7 +197,7 @@ export function ApplicationActionPanel({
                 </button>
               ))}
             </div>
-            <p className="mt-3 text-[11px] text-gray-500 leading-relaxed">
+            <p className="mt-3 text-xs text-gray-500 leading-relaxed">
               ステータス変更時に、求職者へ自動メール通知が送信されます。
             </p>
           </>

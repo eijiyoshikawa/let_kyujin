@@ -109,11 +109,11 @@ export function LeadRow({ lead, expanded: initiallyExpanded }: { lead: LeadRowDa
         onClick={() => setExpanded((v) => !v)}
         className="press w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50"
       >
-        <span className={`inline-block px-2 py-0.5 text-[10px] font-bold border ${meta.classes}`}>
+        <span className={`inline-block px-2 py-0.5 text-xs font-bold border ${meta.classes}`}>
           {meta.label}
         </span>
         {lead.optedOut && (
-          <span className="inline-block px-2 py-0.5 text-[10px] font-bold border bg-gray-200 text-gray-700 border-gray-300">
+          <span className="inline-block px-2 py-0.5 text-xs font-bold border bg-gray-200 text-gray-700 border-gray-300">
             配信停止
           </span>
         )}
@@ -211,7 +211,7 @@ export function LeadRow({ lead, expanded: initiallyExpanded }: { lead: LeadRowDa
                 className="press inline-flex items-center gap-1.5 border border-primary-300 bg-primary-50 px-3 py-1.5 text-xs font-bold text-primary-700 hover:bg-primary-100"
               >
                 {lead.job.title}
-                <span className="text-[10px] font-normal text-primary-600">
+                <span className="text-xs font-normal text-primary-600">
                   ({lead.job.prefecture}
                   {lead.job.city ? ` ${lead.job.city}` : ""})
                 </span>
@@ -277,7 +277,7 @@ export function LeadRow({ lead, expanded: initiallyExpanded }: { lead: LeadRowDa
               placeholder="折り返し連絡 / ヒアリング内容 / 次回アクション …"
               className="mt-1 w-full border border-gray-300 px-3 py-2 text-xs focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             />
-            <p className="text-[10px] text-gray-400 mt-0.5">入力欄から外れたタイミングで自動保存します</p>
+            <p className="text-xs text-gray-400 mt-0.5">入力欄から外れたタイミングで自動保存します</p>
           </div>
           </>
           )}
@@ -369,7 +369,7 @@ function HistoryPanel({ leadId }: { leadId: string }) {
 
   return (
     <div className="space-y-4">
-      <p className="text-[11px] text-gray-500">
+      <p className="text-xs text-gray-500">
         sessionId: <code className="font-mono">{data.sessionId ?? "（無し: 紐付け不可）"}</code>
       </p>
 
@@ -393,7 +393,7 @@ function HistoryPanel({ leadId }: { leadId: string }) {
                   rel="noopener noreferrer"
                   className="press group flex items-start gap-2 border bg-white p-2 hover:border-primary-300"
                 >
-                  <span className="text-[10px] text-gray-400 tabular-nums shrink-0 mt-0.5">
+                  <span className="text-xs text-gray-400 tabular-nums shrink-0 mt-0.5">
                     {new Date(v.viewedAt).toLocaleString("ja-JP", {
                       month: "numeric",
                       day: "numeric",
@@ -405,7 +405,7 @@ function HistoryPanel({ leadId }: { leadId: string }) {
                     <p className="text-xs font-bold text-gray-900 line-clamp-1 group-hover:text-primary-600">
                       {v.job.title}
                     </p>
-                    <p className="text-[10px] text-gray-500 line-clamp-1">
+                    <p className="text-xs text-gray-500 line-clamp-1">
                       {v.job.prefecture}
                       {v.job.city ? ` ${v.job.city}` : ""}
                       {v.utm.source && ` · utm_source=${v.utm.source}`}
@@ -434,7 +434,7 @@ function HistoryPanel({ leadId }: { leadId: string }) {
                   rel="noopener noreferrer"
                   className="press group flex items-start gap-2 border bg-white p-2 hover:border-primary-300"
                 >
-                  <span className="text-[10px] text-gray-400 tabular-nums shrink-0 mt-0.5">
+                  <span className="text-xs text-gray-400 tabular-nums shrink-0 mt-0.5">
                     {new Date(c.clickedAt).toLocaleString("ja-JP", {
                       month: "numeric",
                       day: "numeric",
@@ -446,7 +446,7 @@ function HistoryPanel({ leadId }: { leadId: string }) {
                     <p className="text-xs font-bold text-gray-900 line-clamp-1 group-hover:text-primary-600">
                       {c.job.title}
                     </p>
-                    <p className="text-[10px] text-gray-500 line-clamp-1">
+                    <p className="text-xs text-gray-500 line-clamp-1">
                       {c.job.prefecture}
                       {c.job.city ? ` ${c.job.city}` : ""} · source={c.source}
                     </p>
@@ -471,7 +471,7 @@ function HistoryPanel({ leadId }: { leadId: string }) {
                 key={l.id}
                 className="flex items-start gap-2 border bg-white p-2"
               >
-                <span className="text-[10px] text-gray-400 tabular-nums shrink-0 mt-0.5">
+                <span className="text-xs text-gray-400 tabular-nums shrink-0 mt-0.5">
                   {new Date(l.createdAt).toLocaleString("ja-JP", {
                     month: "numeric",
                     day: "numeric",
@@ -481,10 +481,10 @@ function HistoryPanel({ leadId }: { leadId: string }) {
                 </span>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-bold text-gray-900 line-clamp-1">
-                    {l.name} <span className="text-[10px] text-gray-500 font-normal">({l.status})</span>
+                    {l.name} <span className="text-xs text-gray-500 font-normal">({l.status})</span>
                   </p>
                   {l.job && (
-                    <p className="text-[10px] text-gray-500 line-clamp-1">{l.job.title}</p>
+                    <p className="text-xs text-gray-500 line-clamp-1">{l.job.title}</p>
                   )}
                 </div>
               </li>
@@ -576,7 +576,7 @@ function LinePushModal({
               <Send className="h-5 w-5 text-[#06C755]" />
               LINE Push: {leadName} さんへ送信
             </h3>
-            <p className="text-[11px] text-gray-500 mt-0.5">求人を 1〜5 件選んで Push できます</p>
+            <p className="text-xs text-gray-500 mt-0.5">求人を 1〜5 件選んで Push できます</p>
           </div>
           <button
             type="button"
@@ -639,7 +639,7 @@ function LinePushModal({
                       </span>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-bold text-gray-900 line-clamp-2">{r.title}</p>
-                        <p className="text-[11px] text-gray-500 line-clamp-1">
+                        <p className="text-xs text-gray-500 line-clamp-1">
                           {r.prefecture}
                           {r.city ? ` ${r.city}` : ""}
                         </p>
@@ -718,7 +718,7 @@ function DefLabel({
 }) {
   return (
     <div>
-      <dt className="text-[10px] font-bold text-gray-500 uppercase tracking-wide">{label}</dt>
+      <dt className="text-xs font-bold text-gray-500 uppercase tracking-wide">{label}</dt>
       <dd className="text-xs text-gray-900">
         {link ? (
           <a href={link} className="text-primary-700 hover:underline">

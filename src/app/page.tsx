@@ -279,13 +279,13 @@ export default async function HomePage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-ink-900/95 via-ink-900/40 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-4">
-                  <span className="inline-block bg-brand-yellow-500 text-ink-900 px-2 py-0.5 text-[10px] font-extrabold tracking-wide">
+                  <span className="inline-block bg-brand-yellow-500 text-ink-900 px-2 py-0.5 text-xs font-extrabold tracking-wide">
                     {b.badge}
                   </span>
                   <p className="mt-2 text-base font-extrabold text-white leading-tight drop-shadow">
                     {b.title}
                   </p>
-                  <p className="mt-1 text-[11px] text-white/85 leading-relaxed line-clamp-2">
+                  <p className="mt-1 text-xs text-white/85 leading-relaxed line-clamp-2">
                     {b.desc}
                   </p>
                 </div>
@@ -319,7 +319,7 @@ export default async function HomePage() {
                   <p className="text-sm font-bold text-gray-900 group-hover:text-primary-600">
                     {label}
                   </p>
-                  <p className="mt-0.5 text-[11px] text-gray-500 line-clamp-1">{sub}</p>
+                  <p className="mt-0.5 text-xs text-gray-500 line-clamp-1">{sub}</p>
                   <p className="mt-2 text-xs font-extrabold text-primary-600">
                     {count.toLocaleString()} 件
                   </p>
@@ -382,7 +382,7 @@ export default async function HomePage() {
                   href={`/jobs/${job.id}`}
                   className="press group relative accent-l border bg-white p-4 pl-5 hover:border-primary-400 hover:shadow-sm transition"
                 >
-                  <span className="absolute top-2 right-2 inline-flex h-6 w-6 items-center justify-center bg-primary-600 text-[11px] font-extrabold text-white">
+                  <span className="absolute top-2 right-2 inline-flex h-6 w-6 items-center justify-center bg-primary-600 text-xs font-extrabold text-white">
                     {i + 1}
                   </span>
                   <h3 className="text-sm font-bold text-gray-900 line-clamp-2 group-hover:text-primary-600 pr-7">
@@ -410,7 +410,7 @@ export default async function HomePage() {
                       {job.tags.slice(0, 3).map((t) => (
                         <span
                           key={t}
-                          className="inline-flex items-center border border-primary-200 bg-white px-1.5 py-0.5 text-[10px] text-primary-700"
+                          className="inline-flex items-center border border-primary-200 bg-white px-1.5 py-0.5 text-xs text-primary-700"
                         >
                           {t}
                         </span>
@@ -492,7 +492,7 @@ export default async function HomePage() {
                           </div>
                         )}
                         <div className="min-w-0">
-                          <p className="text-[10px] font-bold text-primary-600 uppercase tracking-wide">
+                          <p className="text-xs font-bold text-primary-600 uppercase tracking-wide">
                             {CATEGORY_LABELS[a.category] ?? a.category}
                           </p>
                           <p className="mt-0.5 text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-primary-600">

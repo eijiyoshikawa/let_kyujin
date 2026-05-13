@@ -28,7 +28,7 @@ export function FunnelChart({ stages }: { stages: FunnelStage[] }) {
             <div className="relative h-6 bg-gray-100">
               <div
                 style={{ width: `${widthPct}%` }}
-                className={`absolute inset-y-0 left-0 flex items-center justify-end px-2 text-[11px] font-bold text-white tabular-nums ${
+                className={`absolute inset-y-0 left-0 flex items-center justify-end px-2 text-xs font-bold text-white tabular-nums ${
                   BAR_COLORS[i] ?? "bg-gray-500"
                 }`}
               >

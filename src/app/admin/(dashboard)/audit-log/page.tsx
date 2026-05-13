@@ -134,13 +134,13 @@ export default async function AdminAuditLogPage({
                   <td className="px-3 py-2 text-xs">
                     <p className="font-mono text-gray-700">{log.resourceType}</p>
                     {log.resourceId && (
-                      <p className="text-[10px] font-mono text-gray-400 break-all">
+                      <p className="text-xs font-mono text-gray-400 break-all">
                         {log.resourceId}
                       </p>
                     )}
                   </td>
                   <td className="px-3 py-2">
-                    <span className="inline-flex px-2 py-0.5 text-[11px] font-bold bg-primary-100 text-primary-800">
+                    <span className="inline-flex px-2 py-0.5 text-xs font-bold bg-primary-100 text-primary-800">
                       {ACTION_LABEL[log.action] ?? log.action}
                     </span>
                   </td>
@@ -148,10 +148,10 @@ export default async function AdminAuditLogPage({
                     {log.summary ?? <span className="text-gray-300">—</span>}
                     {log.diff != null && (
                       <details className="mt-1">
-                        <summary className="cursor-pointer text-[10px] text-gray-400 hover:text-gray-600">
+                        <summary className="cursor-pointer text-xs text-gray-400 hover:text-gray-600">
                           詳細
                         </summary>
-                        <pre className="mt-1 max-w-xl overflow-auto bg-gray-50 border p-2 text-[10px] font-mono whitespace-pre-wrap">
+                        <pre className="mt-1 max-w-xl overflow-auto bg-gray-50 border p-2 text-xs font-mono whitespace-pre-wrap">
                           {JSON.stringify(log.diff, null, 2)}
                         </pre>
                       </details>

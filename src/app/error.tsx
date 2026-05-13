@@ -38,7 +38,7 @@ export default function ErrorPage({
           時間をおいて再度お試しください。
         </p>
         {error.digest && (
-          <p className="mt-3 inline-block bg-gray-100 px-2 py-1 text-[10px] font-mono text-gray-500">
+          <p className="mt-3 inline-block bg-gray-100 px-2 py-1 text-xs font-mono text-gray-500">
             ref: {error.digest}
           </p>
         )}

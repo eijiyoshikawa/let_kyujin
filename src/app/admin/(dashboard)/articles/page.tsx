@@ -151,7 +151,7 @@ export default async function AdminArticlesPage({
                   <td className="px-4 py-3">
                     <p className="text-sm font-medium text-gray-900 line-clamp-1">
                       {a.featured && (
-                        <span className="mr-1 inline-block bg-yellow-100 px-1.5 py-0.5 text-[10px] font-semibold text-yellow-800">
+                        <span className="mr-1 inline-block bg-yellow-100 px-1.5 py-0.5 text-xs font-semibold text-yellow-800">
                           注目
                         </span>
                       )}

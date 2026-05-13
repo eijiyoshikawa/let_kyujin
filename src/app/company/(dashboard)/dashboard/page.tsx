@@ -286,7 +286,7 @@ export default async function CompanyDashboard({
                       >
                         {row.title}
                       </Link>
-                      <p className="text-[11px] text-gray-400 mt-0.5">
+                      <p className="text-xs text-gray-400 mt-0.5">
                         {row.status === "active"
                           ? "掲載中"
                           : row.status === "draft"

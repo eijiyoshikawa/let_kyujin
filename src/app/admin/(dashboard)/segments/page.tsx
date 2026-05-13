@@ -82,7 +82,7 @@ export default async function SegmentsPage() {
                     })}
                   </td>
                   <td className="text-gray-700">
-                    <code className="text-[10px] font-mono">
+                    <code className="text-xs font-mono">
                       {summarizeSegment(log.segment as Record<string, unknown>)}
                     </code>
                   </td>

@@ -172,7 +172,7 @@ export function SearchSuggest({
                 <button
                   type="button"
                   onClick={clearHistory}
-                  className="text-[10px] text-gray-400 hover:text-red-600"
+                  className="text-xs text-gray-400 hover:text-red-600"
                 >
                   すべて削除
                 </button>

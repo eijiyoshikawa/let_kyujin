@@ -119,7 +119,7 @@ export function CompareCart() {
       <ul className="divide-y px-3 py-2 text-xs">
         {ids.map((id) => (
           <li key={id} className="flex items-center justify-between gap-2 py-1.5">
-            <span className="font-mono text-[11px] text-gray-500 truncate">
+            <span className="font-mono text-xs text-gray-500 truncate">
               {id.slice(0, 8)}...
             </span>
             <button
