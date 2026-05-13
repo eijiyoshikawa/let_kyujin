@@ -66,6 +66,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: job.title,
     description: `${job.prefecture}の${job.title}の求人詳細。建設業界特化の求人ポータル。`,
+    alternates: { canonical: `/jobs/${id}` },
   }
 }
 
