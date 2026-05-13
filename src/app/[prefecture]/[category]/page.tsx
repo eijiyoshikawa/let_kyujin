@@ -139,7 +139,7 @@ export default async function PrefectureCategoryPage({ params }: Props) {
         source: true,
         tags: true,
         company: {
-          select: { name: true, logoUrl: true },
+          select: { name: true, logoUrl: true, gbizData: true },
         },
       },
       orderBy: { publishedAt: "desc" },

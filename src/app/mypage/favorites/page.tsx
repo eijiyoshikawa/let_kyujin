@@ -22,7 +22,7 @@ export default async function FavoritesPage() {
       include: {
         job: {
           include: {
-            company: { select: { id: true, name: true, logoUrl: true } },
+            company: { select: { id: true, name: true, logoUrl: true, gbizData: true } },
           },
         },
       },

@@ -48,6 +48,7 @@ export async function EmptyJobsState({ params, favoriteIds, loggedIn }: Props) {
           name: true,
           logoUrl: true,
           tagline: true,
+          gbizData: true,
         },
       },
     },

@@ -208,3 +208,15 @@ export function hasGbizData(snapshot: unknown): snapshot is GbizSnapshot {
     "fetchedAt" in snapshot
   )
 }
+
+/**
+ * 任意の gbizData 値（JSONB / null / undefined）から「建設業許可保有か」を
+ * 1 行で判定するヘルパー。
+ *
+ * 各 page.tsx の prisma クエリで company.gbizData を select しておき、
+ * JobCard に渡す company の hasConstructionPermit に流し込む用途。
+ */
+export function computeHasConstructionPermit(gbizData: unknown): boolean {
+  if (!hasGbizData(gbizData)) return false
+  return extractConstructionPermits(gbizData).length > 0
+}
