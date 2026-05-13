@@ -14,6 +14,9 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:install": "playwright install --with-deps chromium",
+    "check:env": "tsx scripts/check-env.ts",
+    "gen:secret": "tsx scripts/generate-secrets.ts",
+    "preflight": "tsx scripts/preflight.ts",
     "db:seed-articles": "tsx prisma/seed-data/seed-articles.ts",
     "db:seed-help": "tsx prisma/seed-data/seed-help-articles.ts"
   },
