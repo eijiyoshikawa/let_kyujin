@@ -8,6 +8,8 @@ export function ContactForm() {
     email: "",
     subject: "",
     message: "",
+    /** Honeypot field — 通常ユーザは触らない。bot だけが埋める。 */
+    website: "",
   })
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -123,6 +125,34 @@ export function ContactForm() {
         <p className="mt-1 text-xs text-gray-400">
           {form.message.length} / 5000 文字
         </p>
+      </div>
+
+      {/*
+        Honeypot — 画面外に配置し、bot のみが埋める想定。
+        通常ユーザは無視できるが、aria-hidden + tabIndex=-1 で
+        スクリーンリーダ / キーボードも無視する。
+      */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          left: "-9999px",
+          width: "1px",
+          height: "1px",
+          overflow: "hidden",
+        }}
+      >
+        <label>
+          Website (この欄は触らないでください)
+          <input
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            value={form.website}
+            onChange={(e) => update("website", e.target.value)}
+          />
+        </label>
       </div>
 
       <button
