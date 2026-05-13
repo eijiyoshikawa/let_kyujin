@@ -62,13 +62,15 @@ export async function POST(request: Request) {
   try {
     await prisma.$transaction(async (tx) => {
       // PII を匿名化
+      // name は "退会済みユーザー" としておくと、企業側 UI に残る Application
+      // 履歴で「名前未設定 (= 未入力)」と「退会済み (= 退会)」を区別できる。
       await tx.user.update({
         where: { id: userId },
         data: {
           status: "deleted",
           deletedAt: new Date(),
           email: `deleted+${userId}@deleted.local`,
-          name: null,
+          name: "退会済みユーザー",
           phone: null,
           prefecture: null,
           city: null,
@@ -89,6 +91,10 @@ export async function POST(request: Request) {
         tx.savedSearch.deleteMany({ where: { userId } }).catch(() => null),
         tx.jobFavorite.deleteMany({ where: { userId } }).catch(() => null),
         tx.notification.deleteMany({ where: { userId } }).catch(() => null),
+        // メッセージテンプレートはユーザー固有の PII を含むため削除
+        tx.applicationMessageTemplate
+          .deleteMany({ where: { userId } })
+          .catch(() => null),
         // CompanyFollow / Resume が存在する場合は同様に削除
         tx.$executeRawUnsafe(
           `DELETE FROM "company_follows" WHERE "user_id" = $1::uuid`,
