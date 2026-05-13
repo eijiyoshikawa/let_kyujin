@@ -39,7 +39,7 @@
 
 `DATABASE_URL` / `NEXTAUTH_SECRET` 等を Production にしか設定してない場合、Preview デプロイが落ちる。
 - [ ] Vercel → Settings → Environment Variables を開き、各変数の Environment に `Preview` チェックを追加
-- 対象: `DATABASE_URL` / `DIRECT_URL` / `NEXTAUTH_*` / `LINE_*` / `STRIPE_*` / `RESEND_API_KEY` / `SENTRY_*` / `VAPID_*`
+- 対象: `DATABASE_URL` / `DIRECT_URL` / `NEXTAUTH_*` / `LINE_*` / `STRIPE_*` / `SMTP_*` / `MAIL_FROM` / `SENTRY_*` / `VAPID_*`
 
 ### 4. Supabase パスワードのローテーション（漏洩リスク対応）
 
@@ -96,11 +96,22 @@ CI でも実行したい場合は `PLAYWRIGHT_BASE_URL=https://genbacareer.jp pn
 - [ ] チャネルアクセストークン / シークレットを `LINE_CHANNEL_*` に
 - [ ] リッチメニュー登録: `pnpm tsx scripts/setup-line-rich-menu.ts`
 
-### 9. Stripe / MoneyForward 請求書連携
+### 9. Stripe Invoicing 連携（成果報酬の請求書発行）
 
-- [ ] Stripe ダッシュボード → Webhooks: `https://genbacareer.jp/api/webhooks/stripe`
-- [ ] イベント `customer.subscription.*` `invoice.payment_succeeded` をサブスクライブ
-- [ ] Webhook secret を `STRIPE_WEBHOOK_SECRET` に
+採用 1 件あたり成果報酬 ¥50,000 を Stripe Invoicing で発行する設計。
+**月額サブスクリプションは使いません**（コードも対応済み）。
+
+- [ ] Stripe Dashboard でアカウント作成 + 法人 KYC（1〜2 営業日）
+- [ ] **Settings → Invoicing → Send via email** を有効化（顧客にメールで請求書送付）
+- [ ] **Developers → API keys → Secret key** をコピー
+- [ ] `STRIPE_SECRET_KEY=sk_live_...` を Vercel に設定（Production / Preview）
+- [ ] **Developers → Webhooks → Add endpoint**
+  - URL: `https://genbacareer.jp/api/webhooks/stripe`
+  - Events: `invoice.payment_succeeded` / `invoice.payment_failed` / `invoice.finalized`
+- [ ] Signing secret `whsec_...` をコピーして `STRIPE_WEBHOOK_SECRET` に設定
+
+代替: **MoneyForward クラウド請求書** を使う場合は `MONEYFORWARD_API_TOKEN` を設定。
+両方無効化したい場合は環境変数を入れず、admin が手動で請求書を発行する運用にできます。
 
 ### 10. Sentry プロジェクト作成
 
@@ -112,10 +123,19 @@ CI でも実行したい場合は `PLAYWRIGHT_BASE_URL=https://genbacareer.jp pn
 
 ## 🟢 低優先（リリース後 1 ヶ月以内）
 
-### 11. メール（Resend）テンプレート確認
+### 11. メール送信（Gmail SMTP）設定
 
-- [ ] `RESEND_API_KEY` 設定
-- [ ] テストモードで signup / 応募完了 / スカウト受信メールを送信してみる
+`genbacareer@let-inc.net` を Workspace アカウントとして nodemailer 経由で送信。
+
+- [ ] https://myaccount.google.com/security で **2 段階認証を有効化**（必須）
+- [ ] https://myaccount.google.com/apppasswords で **アプリパスワード**を発行（16 桁）
+- [ ] Vercel 環境変数:
+  - `SMTP_USER=genbacareer@let-inc.net`
+  - `SMTP_PASS=xxxx xxxx xxxx xxxx`（16 桁、空白あり）
+  - `MAIL_FROM="ゲンバキャリア <genbacareer@let-inc.net>"`（任意）
+- [ ] テスト: signup / 応募完了 / スカウト受信メールが届くか確認
+
+送信枠: Workspace 2,000 通/日。これを超える運用になれば SES / SendGrid 等を別途検討。
 
 ### 12. PWA アイコン / OGP 画像の最終版
 
