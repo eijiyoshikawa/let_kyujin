@@ -7,16 +7,23 @@
 
 ## 🔴 最優先（今すぐ着手 — リードタイムが長いもの）
 
-### 1. GbizINFO API キー申請 ⏳ 3 営業日
+### 1. GbizINFO API キー取得 ✅ 完了
 
-- [ ] https://info.gbiz.go.jp/hojin/Api にアクセス
-- [ ] 「API キーの取得」から申請（無料、商用利用可）
-- [ ] 取得した API キーを Vercel 環境変数 `GBIZ_API_TOKEN` に追加
-  - Production / Preview 両方に設定
-- [ ] 取得後、私に「GbizINFO API キー取得完了」と教えてください
-  - 完了次第、`/lib/gbizinfo.ts` を本実装に切り替えて、求人カード / 企業詳細に建設業許可・表彰歴を表示します（追加 2〜3 日）
+- [x] API キー取得
+- [ ] **Vercel 環境変数 `GBIZ_API_TOKEN` を設定**（Production / Preview / Development）
+  - Vercel Dashboard → Settings → Environment Variables → New
+  - Name: `GBIZ_API_TOKEN`  Value: 取得したトークン  Environments: 全部チェック
+- [ ] 設定後、`/company/gbizinfo` で 13 桁の法人番号を入力して保存ボタン → GbizINFO から自動取り込み
 
-**取得できる主なデータ**: 建設業許可 28 業種 / 表彰歴（健康経営優良法人など）/ 設立年月 / 資本金 / 従業員数 / 補助金獲得歴
+**実装済み機能** (PR #104):
+- `/company/gbizinfo` 管理画面: 法人番号入力 + 取り込み / 再取得 / 削除ボタン
+- `/companies/[id]` 公開ページ: 建設業許可・設立年月・資本金・従業員数・表彰歴を自動表示
+- 24h CDN キャッシュで API 負荷を最小化
+
+**follow-up（リリース後）**:
+- [ ] JobCard に「建設業許可あり」バッジを追加（クエリ更新点 9 ファイル）
+- [ ] Cron で月次自動再取得（`/api/cron/refresh-gbiz`）
+- [ ] 求人投稿時に法人番号入力が無ければ admin にリマインド通知
 
 ---
 
