@@ -14,6 +14,7 @@ import { getCategoryLabel } from "@/lib/categories"
 import { TagChip } from "./tag-chip"
 import { FavoriteButton } from "./favorite-button"
 import { CompareAddButton } from "./compare-add-button"
+import { JobCardActions } from "./job-card-actions"
 
 type JobCardProps = {
   id: string
@@ -151,14 +152,14 @@ export function JobCard({
       </div>
 
       <div className="flex flex-col items-end justify-between gap-1 sm:items-center sm:flex-row">
-        <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+        <JobCardActions>
           <CompareAddButton jobId={job.id} />
           <FavoriteButton
             jobId={job.id}
             initialIsFavorite={isFavorite}
             loggedIn={loggedIn}
           />
-        </div>
+        </JobCardActions>
         <CaretRight weight="duotone" className="hidden sm:block h-5 w-5 text-gray-300 group-hover:text-primary-500 transition" />
       </div>
     </Link>
