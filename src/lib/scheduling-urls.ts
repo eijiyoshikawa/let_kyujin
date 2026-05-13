@@ -12,7 +12,30 @@ export type SchedulingUrl = {
 }
 
 const MAX_URLS = 10
-const URL_RE = /^https?:\/\/[\w\-.]+/i
+
+/**
+ * URL の安全性検証:
+ * - HTTPS のみ許可（http / javascript: / data: / file: は拒否）
+ * - new URL() でパース可能であること
+ * - hostname が localhost / private IP でないこと
+ * - 最大 500 文字
+ */
+function isSafeSchedulingUrl(value: string): boolean {
+  if (value.length === 0 || value.length > 500) return false
+  let parsed: URL
+  try {
+    parsed = new URL(value)
+  } catch {
+    return false
+  }
+  if (parsed.protocol !== "https:") return false
+  const host = parsed.hostname.toLowerCase()
+  if (host === "localhost" || host === "127.0.0.1" || host === "::1") return false
+  if (/^10\./.test(host)) return false
+  if (/^172\.(1[6-9]|2[0-9]|3[01])\./.test(host)) return false
+  if (/^192\.168\./.test(host)) return false
+  return true
+}
 
 export function parseSchedulingUrls(raw: unknown): SchedulingUrl[] {
   if (!Array.isArray(raw)) return []
@@ -23,7 +46,7 @@ export function parseSchedulingUrls(raw: unknown): SchedulingUrl[] {
     const name = typeof obj.name === "string" ? obj.name.trim() : ""
     const url = typeof obj.url === "string" ? obj.url.trim() : ""
     if (!name || !url) continue
-    if (!URL_RE.test(url)) continue
+    if (!isSafeSchedulingUrl(url)) continue
     items.push({
       name: name.slice(0, 60),
       url: url.slice(0, 500),
