@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db"
 import { auth } from "@/lib/auth"
 import { JobCard } from "@/components/jobs/job-card"
 import { CompanyFollowButton } from "@/components/companies/follow-button"
+import { isValidUuid } from "@/lib/uuid"
 import {
   MapPin,
   Buildings,
@@ -24,6 +25,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params
+  if (!isValidUuid(id)) return { title: "企業が見つかりません" }
   const company = await prisma.company
     .findUnique({
       where: { id },
@@ -64,6 +66,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CompanyDetailPage({ params }: Props) {
   const { id } = await params
+  if (!isValidUuid(id)) notFound()
 
   const company = await prisma.company
     .findUnique({
