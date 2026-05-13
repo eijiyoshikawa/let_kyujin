@@ -19,7 +19,9 @@
     "preflight": "tsx scripts/preflight.ts",
     "smoke": "bash scripts/smoke.sh",
     "db:seed-articles": "tsx prisma/seed-data/seed-articles.ts",
-    "db:seed-help": "tsx prisma/seed-data/seed-help-articles.ts"
+    "db:seed-help": "tsx prisma/seed-data/seed-help-articles.ts",
+    "db:seed-companies": "tsx prisma/seed-data/seed-direct-companies.ts",
+    "db:seed-jobs": "tsx prisma/seed-data/seed-direct-jobs.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.95.2",
