@@ -172,3 +172,39 @@ export async function fetchSnapshot(
     fetchedAt: new Date().toISOString(),
   }
 }
+
+/**
+ * GbizINFO snapshot から建設業許可を抽出する。
+ *
+ * - basic.qualificationGrade: 「東京都知事許可（般-3）第12345号」のような文字列配列
+ * - certifications[]: 「建設業許可」を含む title / name のもの
+ */
+export function extractConstructionPermits(snapshot: GbizSnapshot): string[] {
+  const permits: string[] = []
+
+  // 1) basic.qualificationGrade — 既に建設業許可の正規化文字列
+  if (snapshot.basic?.qualificationGrade) {
+    permits.push(...snapshot.basic.qualificationGrade.filter(Boolean))
+  }
+
+  // 2) certifications で「建設業」を含むもの
+  for (const c of snapshot.certifications) {
+    const label = c.description || c.name
+    if (label && /建設業/.test(label)) {
+      permits.push(label)
+    }
+  }
+
+  // 重複除去
+  return Array.from(new Set(permits))
+}
+
+/** snapshot が GbizINFO から取得した有効データかをチェック */
+export function hasGbizData(snapshot: unknown): snapshot is GbizSnapshot {
+  return (
+    !!snapshot &&
+    typeof snapshot === "object" &&
+    "basic" in snapshot &&
+    "fetchedAt" in snapshot
+  )
+}

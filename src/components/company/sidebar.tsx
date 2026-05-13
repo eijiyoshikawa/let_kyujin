@@ -22,6 +22,7 @@ const navItems = [
   { href: "/company/scouts", label: "スカウト", icon: Send },
   { href: "/company/billing", label: "課金履歴", icon: CreditCard },
   { href: "/company/profile", label: "企業情報・SNS", icon: Settings },
+  { href: "/company/gbizinfo", label: "法人番号・建設業許可", icon: Building2 },
   { href: "/company/security", label: "セキュリティ", icon: Shield },
 ]
 

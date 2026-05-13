@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db"
 import { auth } from "@/lib/auth"
 import { JobCard } from "@/components/jobs/job-card"
 import { CompanyFollowButton } from "@/components/companies/follow-button"
+import { CompanyGbizSection } from "@/components/companies/gbiz-section"
 import { isValidUuid } from "@/lib/uuid"
 import {
   MapPin,
@@ -94,6 +95,10 @@ export default async function CompanyDetailPage({ params }: Props) {
         facebookUrl: true,
         xUrl: true,
         youtubeUrl: true,
+        // GbizINFO 取得済みデータ
+        corporateNumber: true,
+        gbizData: true,
+        gbizSyncedAt: true,
       },
     })
     .catch(() => null)
@@ -292,6 +297,12 @@ export default async function CompanyDetailPage({ params }: Props) {
           </p>
         )}
       </section>
+
+      {/* GbizINFO 由来の企業情報（建設業許可・表彰歴） */}
+      <CompanyGbizSection
+        gbizData={company.gbizData}
+        gbizSyncedAt={company.gbizSyncedAt}
+      />
 
       {/* SNS */}
       {(company.instagramUrl ||
