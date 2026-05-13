@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { CirclePlay, Camera } from "lucide-react"
 import { BrandLogo } from "./brand-logo"
+import { LinkButton } from "@/components/ui/button"
 
 export function Footer() {
   return (
@@ -18,20 +19,24 @@ export function Footer() {
             </p>
           </div>
 
-          <div className="flex items-start gap-3">
-            <Link
+          <div className="flex flex-wrap items-start gap-3">
+            <LinkButton
               href="/register"
-              className="press bg-primary-500 px-5 py-2 text-sm font-medium text-white hover:bg-primary-600 transition"
+              variant="primary"
+              size="md"
+              className="bg-primary-500 hover:bg-primary-600"
             >
               会員登録（無料）
-            </Link>
-            <Link
+            </LinkButton>
+            <LinkButton
               href="/contact"
+              variant="secondary"
+              size="md"
               prefetch={false}
-              className="press border border-gray-500 px-5 py-2 text-sm font-medium text-gray-300 hover:bg-stone-800 transition"
+              className="border-gray-500 bg-transparent text-gray-300 hover:bg-stone-800 hover:text-white"
             >
               ヘルプ・お問い合わせ
-            </Link>
+            </LinkButton>
           </div>
         </div>
 
@@ -82,11 +87,23 @@ export function Footer() {
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
             <div className="flex items-center gap-2">
               <span className="text-xs font-medium text-gray-500">公式SNS</span>
-              <a href="https://youtube.com/@let-kensetsu" target="_blank" rel="noopener noreferrer" className="flex h-8 w-8 items-center justify-center bg-stone-700 text-gray-300 hover:bg-red-600 hover:text-white transition" aria-label="YouTube">
-                <CirclePlay className="h-4 w-4" />
+              <a
+                href="https://youtube.com/@let-kensetsu"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-10 w-10 items-center justify-center bg-stone-700 text-gray-300 hover:bg-red-600 hover:text-white transition"
+                aria-label="YouTube"
+              >
+                <CirclePlay className="h-5 w-5" />
               </a>
-              <a href="https://instagram.com/let_kensetsu" target="_blank" rel="noopener noreferrer" className="flex h-8 w-8 items-center justify-center bg-stone-700 text-gray-300 hover:bg-pink-600 hover:text-white transition" aria-label="Instagram">
-                <Camera className="h-4 w-4" />
+              <a
+                href="https://instagram.com/let_kensetsu"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-10 w-10 items-center justify-center bg-stone-700 text-gray-300 hover:bg-pink-600 hover:text-white transition"
+                aria-label="Instagram"
+              >
+                <Camera className="h-5 w-5" />
               </a>
             </div>
             <div className="text-center sm:text-right">

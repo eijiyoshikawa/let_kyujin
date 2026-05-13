@@ -28,6 +28,7 @@ import {
 } from "lucide-react"
 import { CATEGORY_LABELS } from "@/lib/article-categories"
 import { RecommendedForYou } from "@/components/jobs/recommended-for-you"
+import { Section } from "@/components/ui/section"
 import { getCategoryCounts } from "@/lib/job-stats"
 import type { Metadata } from "next"
 
@@ -216,41 +217,63 @@ export default async function HomePage() {
         <div aria-hidden className="absolute inset-0 bg-gradient-to-r from-ink-900/95 via-ink-900/70 to-ink-900/30 pointer-events-none" />
 
         {/* コンテンツは必ず最前面（フォーム/ボタンのクリックを確実に通す） */}
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 sm:py-24">
           <div className="max-w-2xl">
             <p className="inline-flex items-center gap-1.5 bg-brand-yellow-500 text-ink-900 px-3 py-1 text-xs font-extrabold">
               <Sparkles className="h-3.5 w-3.5" />
               20〜30 代の若手も活躍中
             </p>
-            <h1 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight drop-shadow">
+            <h1 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight drop-shadow-lg">
               建設業の求人を、
               <br className="hidden sm:block" />
               <span className="text-brand-yellow-300">スマホで気軽に探せる</span>
             </h1>
-            <p className="mt-3 text-sm sm:text-base text-white/95 leading-relaxed drop-shadow">
+            <p className="mt-4 text-sm sm:text-base text-white/95 leading-relaxed drop-shadow">
               {totalJobs > 0 ? `${totalJobs.toLocaleString()}件の求人を掲載中。` : "全国の建設業求人を掲載中。"}
               履歴書なし、LINE で気軽に応募できます。
             </p>
 
-            <form action="/jobs" className="mt-6">
-              <div className="flex flex-col sm:flex-row gap-2 bg-white p-2 shadow-2xl border-l-4 border-brand-yellow-500">
-                <div className="flex items-center gap-2 flex-1 px-3 py-2">
-                  <Search className="h-5 w-5 text-primary-500 shrink-0" />
+            {/* 検索フォーム — 白パネルを浮かせて視覚階層を強化 */}
+            <form action="/jobs" className="mt-7" role="search">
+              <div className="flex flex-col gap-2 bg-white p-3 shadow-2xl border-l-4 border-brand-yellow-500 sm:flex-row sm:items-stretch sm:p-2 sm:gap-2">
+                <label className="flex items-center gap-2 flex-1 min-w-0 px-3 py-1 sm:py-0">
+                  <Search className="h-5 w-5 text-primary-500 shrink-0" aria-hidden />
+                  <span className="sr-only">職種・キーワード</span>
                   <input
                     type="text"
                     name="q"
                     placeholder="職種・キーワード（例: 鳶、施工管理）"
-                    className="flex-1 min-w-0 bg-transparent text-base text-gray-900 placeholder:text-gray-400 focus:outline-none"
+                    className="h-11 flex-1 min-w-0 bg-transparent text-base text-gray-900 placeholder:text-gray-400 focus:outline-none"
+                    autoComplete="off"
                   />
-                </div>
+                </label>
                 <button
                   type="submit"
-                  className="inline-flex items-center justify-center gap-1.5 bg-primary-600 px-6 py-3 text-base font-extrabold text-white shadow hover:bg-primary-700"
+                  className="press inline-flex h-12 items-center justify-center gap-1.5 bg-primary-600 px-6 text-base font-extrabold text-white shadow hover:bg-primary-700 sm:h-auto sm:min-w-[160px]"
                 >
-                  <Search className="h-5 w-5" />
+                  <Search className="h-5 w-5" aria-hidden />
                   求人を探す
                 </button>
               </div>
+              {/* よく使われる絞り込み（クイックチップ） */}
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {[
+                  { label: "未経験OK", q: "未経験" },
+                  { label: "資格取得支援", q: "資格" },
+                  { label: "寮あり", q: "寮" },
+                  { label: "週休2日", q: "週休2日" },
+                  { label: "日払い", q: "日払い" },
+                ].map((c) => (
+                  <li key={c.q}>
+                    <Link
+                      href={`/jobs?q=${encodeURIComponent(c.q)}`}
+                      className="press inline-flex items-center bg-white/15 hover:bg-white/25 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-sm border border-white/30"
+                    >
+                      #{c.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </form>
           </div>
         </div>
@@ -258,7 +281,7 @@ export default async function HomePage() {
       </section>
 
       {/* === 注目特集（写真バナー 3 つ）======================================== */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+      <Section size="md">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-5 section-bar">
           注目特集
         </h2>
@@ -293,17 +316,16 @@ export default async function HomePage() {
             </Link>
           ))}
         </div>
-      </section>
+      </Section>
 
       {/* === 職種から探す ===================================================== */}
-      <section className="bg-warm-100 border-y border-gray-200">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex items-end justify-between mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 section-bar">
-              職種から探す
-            </h2>
-            <p className="text-xs text-gray-500">8 カテゴリ</p>
-          </div>
+      <Section variant="warm" bordered>
+        <div className="flex items-end justify-between mb-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 section-bar">
+            職種から探す
+          </h2>
+          <p className="text-xs text-gray-500">8 カテゴリ</p>
+        </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {categoriesWithCounts.map(({ key, label, sub, icon: Icon, bg, count }) => (
@@ -327,11 +349,10 @@ export default async function HomePage() {
               </Link>
             ))}
           </div>
-        </div>
-      </section>
+      </Section>
 
       {/* === 働き方から探す（マイナビ「働き方から探す」相当）================== */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+      <Section size="md">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-5 section-bar">
           働き方から探す
         </h2>
@@ -349,23 +370,20 @@ export default async function HomePage() {
             </Link>
           ))}
         </div>
-      </section>
+      </Section>
 
       {/* === あなたへのおすすめ (匿名 JobView から差し込み) =================== */}
-      <section className="border-y border-gray-200 bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-          <RecommendedForYou limit={6} />
-        </div>
-      </section>
+      <Section bordered size="md">
+        <RecommendedForYou limit={6} />
+      </Section>
 
       {/* === 注目の求人ランキング ============================================== */}
       {recommendedJobs.length > 0 && (
-        <section className="bg-warm-100 border-y border-gray-200">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-            <div className="flex items-end justify-between mb-6">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 section-bar">
-                注目の求人ランキング
-              </h2>
+        <Section variant="warm" bordered>
+          <div className="flex items-end justify-between mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 section-bar">
+              注目の求人ランキング
+            </h2>
               <Link
                 href="/jobs"
                 className="press inline-flex items-center gap-1 text-sm font-bold text-primary-600 hover:text-primary-700"
@@ -420,12 +438,11 @@ export default async function HomePage() {
                 </Link>
               ))}
             </div>
-          </div>
-        </section>
+        </Section>
       )}
 
       {/* === 都道府県から探す ================================================== */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+      <Section size="md">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 section-bar">
           都道府県から探す
         </h2>
@@ -447,14 +464,13 @@ export default async function HomePage() {
             検索ページから他県も見る →
           </Link>
         </p>
-      </section>
+      </Section>
 
       {/* === お役立ちコンテンツ（マガジン + 体験談）=========================== */}
-      <section className="bg-warm-100 border-y border-gray-200">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 section-bar">
-            お役立ちコンテンツ
-          </h2>
+      <Section variant="warm" bordered>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 section-bar">
+          お役立ちコンテンツ
+        </h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* マガジン */}
             <div className="bg-white border accent-t p-5">
@@ -553,8 +569,7 @@ export default async function HomePage() {
               </ul>
             </div>
           </div>
-        </div>
-      </section>
+      </Section>
 
       {/* === CTA ============================================================== */}
       <section className="bg-gradient-to-r from-primary-600 to-orange-700 text-white">
