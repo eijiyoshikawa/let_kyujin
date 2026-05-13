@@ -9,6 +9,11 @@
 
 import { prisma } from "@/lib/db"
 import { CONSTRUCTION_CATEGORY_VALUES } from "@/lib/categories"
+import {
+  checkRateLimit,
+  getClientIp,
+  rateLimitResponse,
+} from "@/lib/rate-limit"
 import type { NextRequest } from "next/server"
 
 export const dynamic = "force-dynamic"
@@ -28,6 +33,14 @@ const POPULAR_TAGS = [
 ]
 
 export async function GET(request: NextRequest) {
+  // スクレイピング対策: 1 IP あたり 60 リクエスト/分
+  const rl = checkRateLimit({
+    key: `jobs-suggest:${getClientIp(request)}`,
+    limit: 60,
+    windowMs: 60 * 1000,
+  })
+  if (!rl.allowed) return rateLimitResponse(rl)
+
   const q = (request.nextUrl.searchParams.get("q") ?? "").trim().slice(0, 50)
   if (q.length < 1) {
     // 空入力時は人気タグを返す
