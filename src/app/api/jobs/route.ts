@@ -3,9 +3,22 @@ import {
   CONSTRUCTION_CATEGORY_VALUES,
   isConstructionCategory,
 } from "@/lib/categories"
+import {
+  checkRateLimit,
+  getClientIp,
+  rateLimitResponse,
+} from "@/lib/rate-limit"
 import { type NextRequest } from "next/server"
 
 export async function GET(request: NextRequest) {
+  // スクレイピング対策: 公開求人検索 API は 1 分 90 リクエスト / IP
+  const rl = checkRateLimit({
+    key: `jobs-list:${getClientIp(request)}`,
+    limit: 90,
+    windowMs: 60 * 1000,
+  })
+  if (!rl.allowed) return rateLimitResponse(rl)
+
   const searchParams = request.nextUrl.searchParams
 
   const prefecture = searchParams.get("prefecture")

@@ -1,6 +1,11 @@
 import { z } from "zod"
 import { getHwJob } from "@/lib/jobs-api"
 import { badRequest, runProxy } from "@/lib/jobs-api/proxy"
+import {
+  checkRateLimit,
+  getClientIp,
+  rateLimitResponse,
+} from "@/lib/rate-limit"
 
 const paramsSchema = z.object({
   kjno: z
@@ -11,9 +16,17 @@ const paramsSchema = z.object({
 })
 
 export async function GET(
-  _request: Request,
+  request: Request,
   context: { params: Promise<{ kjno: string }> },
 ) {
+  // 1 分 60 リクエスト / IP
+  const rl = checkRateLimit({
+    key: `hw-job-detail:${getClientIp(request)}`,
+    limit: 60,
+    windowMs: 60 * 1000,
+  })
+  if (!rl.allowed) return rateLimitResponse(rl)
+
   const params = await context.params
   const parsed = paramsSchema.safeParse(params)
   if (!parsed.success) {
