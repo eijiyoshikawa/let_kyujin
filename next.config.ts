@@ -14,6 +14,15 @@ const nextConfig: NextConfig = {
         hostname: "*.supabase.co",
         pathname: "/storage/v1/object/public/**",
       },
+      // picsum.photos: 記事サムネのプレースホルダー（dev / seed データで使用）
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
+      },
+      {
+        protocol: "https",
+        hostname: "fastly.picsum.photos",
+      },
     ],
     // AVIF を優先（同等の見た目で WebP より 30% 程度小さい）。
     // 古いブラウザは WebP に自動フォールバックする。q や w は変更しないので
