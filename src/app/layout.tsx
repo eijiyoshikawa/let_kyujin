@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Noto_Sans_JP } from "next/font/google";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -54,12 +54,18 @@ export const metadata: Metadata = {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ?? undefined,
   },
   manifest: "/manifest.webmanifest",
-  themeColor: "#0F766E",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "ゲンバキャリア",
   },
+};
+
+// Next.js 16 では themeColor / colorScheme / viewport は viewport export へ
+export const viewport: Viewport = {
+  themeColor: "#0F766E",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default async function RootLayout({
