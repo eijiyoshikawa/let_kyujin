@@ -12,6 +12,11 @@
 import { auth } from "@/lib/auth"
 import { getSessionIdIfExists } from "@/lib/session-id"
 import { recordJobView, extractUtmFromUrl } from "@/lib/tracking"
+import {
+  checkRateLimit,
+  getClientIp,
+  rateLimitResponse,
+} from "@/lib/rate-limit"
 import type { NextRequest } from "next/server"
 
 export const dynamic = "force-dynamic"
@@ -21,6 +26,15 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // 異常高速閲覧の検出: 1 分 120 リクエスト / IP
+  // ボット的なスクレイパーがビーコンを叩いて閲覧数を水増しするのも防ぐ
+  const rl = checkRateLimit({
+    key: `job-view:${getClientIp(request)}`,
+    limit: 120,
+    windowMs: 60 * 1000,
+  })
+  if (!rl.allowed) return rateLimitResponse(rl)
+
   const { id } = await params
   if (!id || !/^[0-9a-f-]{36}$/i.test(id)) {
     return Response.json({ ok: false }, { status: 400 })
