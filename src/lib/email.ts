@@ -1,9 +1,19 @@
 /**
  * メール送信ヘルパー
  *
- * 本番環境では SendGrid API を使用。
- * 開発環境では console.log にフォールバック。
+ * 本番環境では SMTP (Gmail Workspace 想定) を使用。
+ * 開発環境 / 認証情報が無いときは console.log にフォールバック。
+ *
+ * 必要な env vars:
+ *   - SMTP_USER: 送信元 Gmail (例: genbacareer@let-inc.net)
+ *   - SMTP_PASS: アプリパスワード (16 桁、Google アカウント設定で発行)
+ *   - SMTP_HOST: smtp.gmail.com (省略可)
+ *   - SMTP_PORT: 587 (省略可)
+ *   - MAIL_FROM: 表示名付きアドレス
+ *                (例: "ゲンバキャリア <genbacareer@let-inc.net>")
  */
+
+import nodemailer from "nodemailer"
 
 interface SendEmailParams {
   to: string
@@ -11,41 +21,54 @@ interface SendEmailParams {
   html: string
 }
 
-export async function sendEmail({ to, subject, html }: SendEmailParams) {
-  const apiKey = process.env.SENDGRID_API_KEY
+let cachedTransporter: nodemailer.Transporter | null = null
 
-  if (!apiKey) {
+function getTransporter(): nodemailer.Transporter | null {
+  const user = process.env.SMTP_USER
+  const pass = process.env.SMTP_PASS
+  if (!user || !pass) return null
+  if (cachedTransporter) return cachedTransporter
+
+  const host = process.env.SMTP_HOST ?? "smtp.gmail.com"
+  const port = Number(process.env.SMTP_PORT ?? "587")
+  cachedTransporter = nodemailer.createTransport({
+    host,
+    port,
+    // 587 は STARTTLS, 465 は SSL
+    secure: port === 465,
+    auth: { user, pass },
+  })
+  return cachedTransporter
+}
+
+export async function sendEmail({ to, subject, html }: SendEmailParams) {
+  const transporter = getTransporter()
+
+  if (!transporter) {
     // Development fallback
     console.log(`[email] To: ${to}`)
     console.log(`[email] Subject: ${subject}`)
-    console.log(`[email] Body: ${html}`)
+    console.log(`[email] Body: ${html.slice(0, 200)}...`)
     return { success: true, dev: true }
   }
 
-  const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      personalizations: [{ to: [{ email: to }] }],
-      from: {
-        email: process.env.EMAIL_FROM ?? "noreply@genbacareer.jp",
-        name: "ゲンバキャリア",
-      },
+  const from =
+    process.env.MAIL_FROM ??
+    `ゲンバキャリア <${process.env.SMTP_USER ?? "noreply@genbacareer.jp"}>`
+
+  try {
+    await transporter.sendMail({
+      from,
+      to,
       subject,
-      content: [{ type: "text/html", value: html }],
-    }),
-  })
-
-  if (!response.ok) {
-    const error = await response.text()
-    console.error(`[email] SendGrid error: ${error}`)
-    throw new Error(`Failed to send email: ${response.status}`)
+      html,
+    })
+    return { success: true }
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e)
+    console.error(`[email] SMTP error: ${msg}`)
+    throw new Error(`Failed to send email: ${msg}`)
   }
-
-  return { success: true }
 }
 
 /** メール確認メール送信（求職者サインアップ時） */

@@ -72,9 +72,23 @@ const ENV_DEFS: EnvDef[] = [
   },
   // ----- 外部サービス -----
   {
-    name: "RESEND_API_KEY",
+    name: "SMTP_USER",
     required: ["production"],
-    description: "メール送信 (応募完了通知 / 招待 等)",
+    description: "Gmail Workspace 送信元 (例: genbacareer@let-inc.net)",
+  },
+  {
+    name: "SMTP_PASS",
+    required: ["production"],
+    description: "Gmail アプリパスワード (16 桁、2 段階認証必須)",
+    validate: (v) =>
+      v.replace(/\s/g, "").length === 16 ||
+      "Gmail アプリパスワードは 16 文字（半角・空白許容）です",
+  },
+  {
+    name: "MAIL_FROM",
+    required: [],
+    description:
+      'メール From ヘッダ (任意、未設定なら SMTP_USER から自動生成)',
   },
   {
     name: "LINE_CHANNEL_ID",
