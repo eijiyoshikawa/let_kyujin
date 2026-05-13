@@ -4,6 +4,62 @@ import type { NextRequest } from "next/server"
 const SESSION_COOKIE_NAME = "gc_sid"
 const SESSION_MAX_AGE = 365 * 24 * 60 * 60
 
+/**
+ * スクレイピング防止: 明らかにブラウザを偽装していない UA を 403 で弾く。
+ *
+ * 通常のブラウザは "Mozilla/" で始まるため、それ以外の主要なデータ収集ツール
+ * (curl, wget, python-requests, axios, Go-http-client, java HttpURLConnection など)
+ * は名前で判定して拒否する。
+ *
+ * Googlebot や Bingbot の正規 SE クローラはこのリストに含めない（公式 UA が
+ * "Mozilla/5.0 (compatible; Googlebot/2.1; ...)" のように Mozilla プレフィクスを
+ * 持つため通過する）。
+ *
+ * AI 学習系クローラ（GPTBot 等）は robots.txt で disallow + ここでも UA 名で拒否。
+ */
+const BLOCKED_UA_PATTERNS: ReadonlyArray<RegExp> = [
+  // 開発者ツール / スクリプト系（典型的なスクレイピングツール）
+  /\bcurl\//i,
+  /\bwget\//i,
+  /\bpython-requests\b/i,
+  /\bpython-urllib\b/i,
+  /\bGo-http-client\b/i,
+  /\baxios\/(?!.*Mozilla)/i,
+  /\bnode-fetch\b/i,
+  /\bokhttp\b/i,
+  /\bRESTSharp\b/i,
+  /\bJava\/[\d.]+$/i,
+  /\bRuby\b/i,
+  /\bphp\/[\d.]+\b/i,
+  /\bScrapy\b/i,
+  /\bcolly\b/i,
+  // ヘッドレス / 自動化ツール
+  /\bHeadlessChrome\b/i,
+  /\bPhantomJS\b/i,
+  /\bSlimerJS\b/i,
+  /\bElectron\b/i,
+  // AI 学習・データ収集ボット（robots.txt と重複でも UA レベルでブロック）
+  /\bGPTBot\b/i,
+  /\bChatGPT-User\b/i,
+  /\bClaudeBot\b/i,
+  /\banthropic-ai\b/i,
+  /\bPerplexityBot\b/i,
+  /\bCCBot\b/i,
+  /\bBytespider\b/i,
+  /\bDataForSeoBot\b/i,
+  /\bAhrefsBot\b/i,
+  /\bSemrushBot\b/i,
+  /\bMJ12bot\b/i,
+  /\bDotBot\b/i,
+  /\bPetalBot\b/i,
+]
+
+/** UA がブロック対象かどうか */
+function isBlockedUA(ua: string | null): boolean {
+  if (!ua) return true // UA なしも怪しいので拒否
+  return BLOCKED_UA_PATTERNS.some((p) => p.test(ua))
+}
+
 /** UUID v4 を crypto から生成（Edge Runtime 互換） */
 function generateSessionId(): string {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
@@ -20,6 +76,30 @@ function generateSessionId(): string {
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+
+  // ============================================================
+  // 0) スクレイピング防止: 公開コンテンツに対する明らかな bot UA を 403。
+  //    Googlebot 等の正規 SE は "Mozilla/" で始まるため通過する。
+  //    認証エリア (/mypage 等) や API は別系統で守られているのでここでは
+  //    公開ページのみガード（/jobs, /companies, /journal, /, /[prefecture] 等）。
+  // ============================================================
+  const ua = request.headers.get("user-agent")
+  // LINE webhook / Stripe webhook 等は自前 UA なので /api/webhooks は除外。
+  // /api/cron も Bearer 認証で守られているので除外。
+  const isExempt =
+    pathname.startsWith("/api/webhooks") ||
+    pathname.startsWith("/api/cron") ||
+    pathname.startsWith("/api/health") ||
+    pathname.startsWith("/api/auth")
+  if (!isExempt && isBlockedUA(ua)) {
+    return new NextResponse("Forbidden", {
+      status: 403,
+      headers: {
+        "X-Robots-Tag": "noindex, nofollow",
+        "Cache-Control": "no-store",
+      },
+    })
+  }
 
   // ============================================================
   // 1) 匿名トラッキング: gc_sid cookie 発行（未発行ユーザーのみ）
@@ -84,6 +164,14 @@ export function middleware(request: NextRequest) {
       pathname.includes("/preview/")
     ) {
       res.headers.set("X-Robots-Tag", "noindex, nofollow")
+    } else {
+      // 公開ページ: Google にはインデックスさせるが、
+      // Wayback Machine / Common Crawl / アーカイブ系には保存させない
+      // (noarchive)。スニペット長も制限してデータ流出を抑制。
+      res.headers.set(
+        "X-Robots-Tag",
+        "index, follow, noarchive, max-snippet:160"
+      )
     }
     return res
   }
