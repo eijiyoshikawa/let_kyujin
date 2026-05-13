@@ -48,6 +48,7 @@ import { PhotoGallery } from "@/components/jobs/photo-gallery"
 import { VideoGallery } from "@/components/jobs/video-gallery"
 import { ClientErrorBoundary } from "@/components/error-boundary"
 import { MapEmbed } from "@/components/jobs/map-embed"
+import { isValidUuid } from "@/lib/uuid"
 
 type Props = {
   params: Promise<{ id: string }>
@@ -56,6 +57,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params
+  if (!isValidUuid(id)) return { title: "求人が見つかりません" }
   const job = await prisma.job.findUnique({
     where: { id },
     select: { title: true, prefecture: true, category: true },
@@ -69,6 +71,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function JobDetailPage({ params, searchParams }: Props) {
   const { id } = await params
+  // 不正な UUID（メールアドレス等を ID 部分に放り込んだスクレイパー対策）。
+  // Prisma に渡す前に弾いて 404 を返す。
+  if (!isValidUuid(id)) notFound()
   const sp = (await searchParams) ?? {}
   const isPreview = sp.preview === "1"
   // 閲覧記録はクライアント beacon (<JobViewBeacon />) 経由で行う。
