@@ -17,6 +17,7 @@
     "check:env": "tsx scripts/check-env.ts",
     "gen:secret": "tsx scripts/generate-secrets.ts",
     "preflight": "tsx scripts/preflight.ts",
+    "smoke": "bash scripts/smoke.sh",
     "db:seed-articles": "tsx prisma/seed-data/seed-articles.ts",
     "db:seed-help": "tsx prisma/seed-data/seed-help-articles.ts"
   },

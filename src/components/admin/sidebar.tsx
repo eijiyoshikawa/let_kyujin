@@ -14,10 +14,12 @@ import {
   Send,
   FileStack,
   History,
+  Activity,
 } from "lucide-react"
 
 const navItems = [
   { href: "/admin", label: "ダッシュボード", icon: LayoutDashboard, exact: true },
+  { href: "/admin/status", label: "システム状態", icon: Activity },
   { href: "/admin/analytics", label: "分析", icon: BarChart3 },
   { href: "/admin/line-leads", label: "LINE リード", icon: MessageCircle },
   { href: "/admin/segments", label: "セグメント配信", icon: Send },
