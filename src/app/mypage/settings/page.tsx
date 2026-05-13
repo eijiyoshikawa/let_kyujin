@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { Settings, Mail, KeyRound, Trash2, ChevronRight } from "lucide-react"
+import { Settings, Mail, KeyRound, Trash2, ChevronRight, Download } from "lucide-react"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -37,6 +37,12 @@ export default async function SettingsPage() {
       icon: KeyRound,
       title: "パスワード変更",
       desc: "パスワード再設定メールを送信",
+    },
+    {
+      href: "/api/users/me/export",
+      icon: Download,
+      title: "個人データのダウンロード",
+      desc: "登録情報・応募履歴等を JSON 形式で取得（個人情報保護法 第 33 条）",
     },
     {
       href: "/mypage/settings/delete-account",

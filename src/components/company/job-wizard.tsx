@@ -6,6 +6,7 @@ import { PREFECTURES } from "@/lib/constants"
 import { CATEGORIES } from "@/lib/categories"
 import { Sparkles, Loader2, Eye, ChevronRight, ChevronLeft, Save, Check, FileStack } from "lucide-react"
 import { JobCard } from "@/components/jobs/job-card"
+import { ComplianceWarnings } from "@/components/company/compliance-warnings"
 import { type JobTemplate } from "@/lib/job-templates"
 
 const EMPLOYMENT_TYPES = [
@@ -594,6 +595,13 @@ export function JobWizard({
                 placeholder="必要な資格・経験など"
               />
             </div>
+
+            {/* コンプライアンス警告 — 差別表現の検出 */}
+            <ComplianceWarnings
+              title={form.title}
+              description={form.description}
+              requirements={form.requirements}
+            />
           </div>
         )}
 
