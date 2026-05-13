@@ -137,7 +137,7 @@ export default async function JournalPage({ searchParams }: Props) {
                 )}
                 {!a.imageUrl && (
                   <div className="p-4">
-                    <span className="text-[10px] font-medium text-primary-600">{CATEGORY_LABELS[a.category] ?? a.category}</span>
+                    <span className="text-xs font-medium text-primary-600">{CATEGORY_LABELS[a.category] ?? a.category}</span>
                     <p className="mt-1 text-sm font-medium text-gray-900 group-hover:text-primary-600">{a.title}</p>
                   </div>
                 )}
@@ -176,7 +176,7 @@ export default async function JournalPage({ searchParams }: Props) {
                     )}
                     <div className="flex-1 min-w-0 py-0.5">
                       <div className="flex items-center gap-2">
-                        <span className="bg-primary-50 px-2 py-0.5 text-[10px] font-medium text-primary-600">
+                        <span className="bg-primary-50 px-2 py-0.5 text-xs font-medium text-primary-600">
                           {CATEGORY_LABELS[a.category] ?? a.category}
                         </span>
                         {a.publishedAt && (

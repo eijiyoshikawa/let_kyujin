@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { Search, Menu, X, Newspaper, Building2, MessageCircle } from "lucide-react"
 import { BrandLogo } from "./brand-logo"
+import { LinkButton } from "@/components/ui/button"
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -38,26 +39,32 @@ export function Header() {
             >
               企業の方
             </Link>
-            <Link
+            <LinkButton
               href="/login"
-              className="press ml-1 inline-flex items-center gap-1.5 border border-primary-600 px-4 py-2 text-sm font-bold text-primary-600 hover:bg-primary-50 transition"
+              variant="secondary"
+              size="md"
+              className="ml-1 border-primary-600 text-primary-600 hover:bg-primary-50"
             >
               ログイン
-            </Link>
-            <Link
+            </LinkButton>
+            <LinkButton
               href="/register"
-              className="press inline-flex items-center gap-1.5 bg-primary-500 px-5 py-2 text-sm font-bold text-white shadow-sm hover:bg-primary-600 transition"
+              variant="primary"
+              size="md"
+              className="bg-primary-500 hover:bg-primary-600 shadow-sm"
             >
               <MessageCircle className="h-4 w-4" />
               無料で始める
-            </Link>
+            </LinkButton>
           </nav>
 
-          {/* Mobile menu button */}
+          {/* Mobile menu button — 44px タップ領域 */}
           <button
+            type="button"
             onClick={() => setMenuOpen(!menuOpen)}
-            className="flex md:hidden items-center justify-center p-2 text-gray-600 hover:bg-gray-100"
+            className="flex md:hidden h-11 w-11 items-center justify-center text-gray-700 hover:bg-gray-100"
             aria-label="メニューを開く"
+            aria-expanded={menuOpen}
           >
             {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -93,20 +100,26 @@ export function Header() {
               企業の方
             </Link>
             <div className="border-t pt-3 mt-2 grid grid-cols-2 gap-2">
-              <Link
+              <LinkButton
                 href="/login"
+                variant="secondary"
+                size="lg"
+                fullWidth
                 onClick={() => setMenuOpen(false)}
-                className="press border border-primary-600 py-2.5 text-center text-sm font-bold text-primary-600"
+                className="border-primary-600 text-primary-600 hover:bg-primary-50"
               >
                 ログイン
-              </Link>
-              <Link
+              </LinkButton>
+              <LinkButton
                 href="/register"
+                variant="primary"
+                size="lg"
+                fullWidth
                 onClick={() => setMenuOpen(false)}
-                className="press bg-primary-500 py-2.5 text-center text-sm font-bold text-white"
+                className="bg-primary-500 hover:bg-primary-600"
               >
                 無料で始める
-              </Link>
+              </LinkButton>
             </div>
           </nav>
         </div>

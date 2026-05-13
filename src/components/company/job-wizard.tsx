@@ -441,7 +441,7 @@ export function JobWizard({
                           {t.name}
                         </p>
                         {t.hint && (
-                          <p className="mt-0.5 text-[11px] text-gray-500 line-clamp-2">
+                          <p className="mt-0.5 text-xs text-gray-500 line-clamp-2">
                             {t.hint}
                           </p>
                         )}

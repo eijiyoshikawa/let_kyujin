@@ -432,7 +432,7 @@ function JobPickerModal({
                     </span>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-bold line-clamp-2">{r.title}</p>
-                      <p className="text-[11px] text-gray-500">{r.prefecture}</p>
+                      <p className="text-xs text-gray-500">{r.prefecture}</p>
                     </div>
                   </button>
                 </li>

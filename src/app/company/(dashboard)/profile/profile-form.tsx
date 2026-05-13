@@ -202,7 +202,7 @@ export function ProfileForm({
             )}
           </div>
           <div className="flex flex-col items-end">
-            <p className="text-[10px] font-bold text-gray-500 tracking-wide">入力スコア</p>
+            <p className="text-xs font-bold text-gray-500 tracking-wide">入力スコア</p>
             <p className="text-2xl font-black text-primary-600 tabular-nums leading-tight">
               {breakdown.totalScore}
               <span className="text-sm text-gray-400 font-normal"> / {breakdown.maxScore}</span>
@@ -217,7 +217,7 @@ export function ProfileForm({
             style={{ width: `${Math.round(breakdown.ratio * 100)}%` }}
           />
         </div>
-        <p className="mt-1 text-[11px] text-gray-500">
+        <p className="mt-1 text-xs text-gray-500">
           {Math.round(breakdown.ratio * 100)}% 充実 / 求人一覧の表示順位に直接影響します
         </p>
 
@@ -239,9 +239,9 @@ export function ProfileForm({
               )}
               <div className="flex-1 min-w-0">
                 <p className="font-bold text-gray-900 text-xs leading-tight">{item.label}</p>
-                <p className="text-[11px] text-gray-500 leading-tight mt-0.5">{item.hint}</p>
+                <p className="text-xs text-gray-500 leading-tight mt-0.5">{item.hint}</p>
               </div>
-              <span className="text-[10px] font-bold text-primary-600 tabular-nums shrink-0">
+              <span className="text-xs font-bold text-primary-600 tabular-nums shrink-0">
                 {item.current}/{item.max}
               </span>
             </li>
@@ -255,7 +255,7 @@ export function ProfileForm({
           <Sparkles className="inline h-3.5 w-3.5 mr-1 text-primary-500" />
           テンプレートの業種を選ぶ
         </label>
-        <p className="text-[11px] text-gray-500 mt-0.5">
+        <p className="text-xs text-gray-500 mt-0.5">
           各項目右上の「テンプレ」ボタンから業種に合った文面を 1 クリックで挿入できます。
         </p>
         <select
@@ -440,7 +440,7 @@ export function ProfileForm({
                   <button
                     type="button"
                     onClick={() => removePhoto(idx)}
-                    className="press inline-flex items-center gap-1 self-start text-[11px] text-red-600 hover:text-red-700"
+                    className="press inline-flex items-center gap-1 self-start text-xs text-red-600 hover:text-red-700"
                     aria-label={`写真 ${idx + 1} を削除`}
                   >
                     <Trash2 className="h-3 w-3" />
@@ -623,7 +623,7 @@ function TemplatePicker({
       </button>
       {open && (
         <div className="absolute right-0 top-full mt-1 z-10 w-72 border border-gray-200 bg-white shadow-xl">
-          <p className="px-3 py-2 text-[10px] font-bold text-gray-500 border-b bg-warm-50 tracking-wider uppercase">
+          <p className="px-3 py-2 text-xs font-bold text-gray-500 border-b bg-warm-50 tracking-wider uppercase">
             テンプレートを選択（クリックで挿入 / 上書き）
           </p>
           <ul className="max-h-80 overflow-y-auto">
@@ -638,7 +638,7 @@ function TemplatePicker({
                   className="press w-full text-left px-3 py-2 hover:bg-primary-50 border-b border-gray-100 last:border-0"
                 >
                   <p className="text-xs font-bold text-gray-900">{t.label}</p>
-                  <p className="text-[11px] text-gray-500 line-clamp-2 mt-0.5">
+                  <p className="text-xs text-gray-500 line-clamp-2 mt-0.5">
                     {t.text.slice(0, 60)}
                     {t.text.length > 60 ? "…" : ""}
                   </p>
@@ -686,7 +686,7 @@ function UrlField({
 
 function CharCount({ value, max }: { value: string; max?: number }) {
   return (
-    <p className="text-[11px] text-gray-400 mt-1 text-right tabular-nums">
+    <p className="text-xs text-gray-400 mt-1 text-right tabular-nums">
       {value.length.toLocaleString()}
       {max ? ` / ${max}` : ""} 文字
     </p>
@@ -798,7 +798,7 @@ function UnsplashPickerModal({
               <ImageIcon className="h-5 w-5 text-primary-500" />
               素材ライブラリから選ぶ
             </h3>
-            <p className="text-[11px] text-gray-500 mt-0.5">
+            <p className="text-xs text-gray-500 mt-0.5">
               Unsplash の無料写真をプロフィールに追加できます。あと {slotsLeft} 枚まで選択可能。
             </p>
           </div>
@@ -849,7 +849,7 @@ function UnsplashPickerModal({
                   setQuery(preset)
                   runSearch(preset)
                 }}
-                className="press border border-gray-300 bg-white px-2 py-0.5 text-[11px] text-gray-700 hover:bg-primary-50 hover:border-primary-300"
+                className="press border border-gray-300 bg-white px-2 py-0.5 text-xs text-gray-700 hover:bg-primary-50 hover:border-primary-300"
               >
                 {preset}
               </button>
@@ -902,12 +902,12 @@ function UnsplashPickerModal({
                         loading="lazy"
                       />
                       {isSelected && (
-                        <div className="absolute top-1.5 right-1.5 bg-primary-600 text-white text-[10px] font-extrabold px-1.5 py-0.5">
+                        <div className="absolute top-1.5 right-1.5 bg-primary-600 text-white text-xs font-extrabold px-1.5 py-0.5">
                           ✓ 選択中
                         </div>
                       )}
                     </button>
-                    <p className="mt-1 text-[10px] text-gray-500 line-clamp-1">
+                    <p className="mt-1 text-xs text-gray-500 line-clamp-1">
                       Photo by{" "}
                       <a
                         href={`${p.user.profileUrl}?utm_source=genbacareer&utm_medium=referral`}

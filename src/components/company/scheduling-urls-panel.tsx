@@ -58,7 +58,7 @@ export function SchedulingUrlsPanel({
           </li>
         ))}
       </ul>
-      <p className="mt-2 text-[11px] text-gray-500">
+      <p className="mt-2 text-xs text-gray-500">
         ★ はメインに設定されたツールです。
       </p>
     </section>

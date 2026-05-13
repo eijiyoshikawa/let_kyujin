@@ -108,7 +108,7 @@ export default async function AdminJobTemplatesPage() {
                   </td>
                   <td className="px-3 py-2">
                     <p className="text-sm font-bold text-gray-900">{t.name}</p>
-                    <p className="text-[11px] text-gray-400">{t.slug}</p>
+                    <p className="text-xs text-gray-400">{t.slug}</p>
                   </td>
                   <td className="px-3 py-2 text-sm text-gray-700">
                     {CATEGORY_LABELS[t.category] ?? t.category}

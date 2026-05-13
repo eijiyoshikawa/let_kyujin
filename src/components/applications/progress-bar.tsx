@@ -78,7 +78,7 @@ export function ApplicationProgressBar({
               />
             )}
             <span
-              className={`relative z-10 flex ${dotSize} items-center justify-center text-[10px] font-bold ${dotClass}`}
+              className={`relative z-10 flex ${dotSize} items-center justify-center text-xs font-bold ${dotClass}`}
             >
               {isDone ? (
                 <Check className="h-3 w-3" strokeWidth={3} />
@@ -86,7 +86,7 @@ export function ApplicationProgressBar({
                 <span>{i + 1}</span>
               )}
             </span>
-            <span className={`mt-1.5 text-[11px] ${labelClass}`}>
+            <span className={`mt-1.5 text-xs ${labelClass}`}>
               {step.label}
             </span>
           </li>

@@ -138,7 +138,7 @@ export function SchedulingUrlsEditor({ value, onChange }: Props) {
         </div>
       )}
 
-      <p className="mt-2 text-[11px] text-gray-500 leading-relaxed">
+      <p className="mt-2 text-xs text-gray-500 leading-relaxed">
         ★ マークが付いた URL がメインとして応募者管理画面の初期候補に表示されます。
       </p>
     </section>

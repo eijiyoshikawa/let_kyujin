@@ -161,14 +161,14 @@ function FunnelCard({ funnel }: { funnel: FunnelStats }) {
             <li key={r.label} className="flex items-center gap-3">
               <div className="w-40 shrink-0">
                 <p className="text-xs font-bold text-gray-700">{r.label}</p>
-                {r.sub && <p className="text-[10px] text-gray-500">{r.sub}</p>}
+                {r.sub && <p className="text-xs text-gray-500">{r.sub}</p>}
               </div>
               <div className="flex-1 h-7 bg-gray-100 overflow-hidden">
                 <div
                   className={`h-full ${r.color} flex items-center px-2 transition-all`}
                   style={{ width: `${Math.max(pct, 2)}%` }}
                 >
-                  <span className="text-[11px] font-bold text-white tabular-nums whitespace-nowrap">
+                  <span className="text-xs font-bold text-white tabular-nums whitespace-nowrap">
                     {r.value.toLocaleString()} ({pct}%)
                   </span>
                 </div>

@@ -202,7 +202,7 @@ export function TotpPanel({
             />
             <div className="text-xs text-gray-600">
               <p>QR が読み取れない場合は下記のシークレットを手動入力:</p>
-              <pre className="mt-1 bg-gray-50 border p-2 font-mono text-[11px] break-all whitespace-pre-wrap">
+              <pre className="mt-1 bg-gray-50 border p-2 font-mono text-xs break-all whitespace-pre-wrap">
                 {secret}
               </pre>
               <p className="mt-2">サービス名: ゲンバキャリア</p>

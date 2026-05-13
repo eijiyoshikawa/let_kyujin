@@ -42,7 +42,7 @@ export default async function LiffApplyPage({ params }: Props) {
     <div className="min-h-screen bg-warm-50">
       <div className="mx-auto max-w-md p-4">
         <header className="bg-[#06C755] text-white p-4 mb-4">
-          <p className="text-[10px] tracking-wider font-bold opacity-80">LINE 応募</p>
+          <p className="text-xs tracking-wider font-bold opacity-80">LINE 応募</p>
           <h1 className="mt-0.5 text-lg font-extrabold leading-tight">{job.title}</h1>
           <p className="mt-1 text-xs opacity-90">
             {job.company?.name ?? "（企業非公開）"} / {job.prefecture}

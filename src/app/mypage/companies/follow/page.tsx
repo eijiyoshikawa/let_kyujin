@@ -104,7 +104,7 @@ export default async function FollowedCompaniesPage() {
                   ) : (
                     <p className="text-sm font-bold text-gray-500">
                       {c.name}
-                      <span className="ml-2 text-[11px] font-normal text-gray-400">
+                      <span className="ml-2 text-xs font-normal text-gray-400">
                         (非公開中)
                       </span>
                     </p>
@@ -112,7 +112,7 @@ export default async function FollowedCompaniesPage() {
                   <p className="mt-0.5 text-xs text-gray-500">
                     {[c.industry, c.prefecture, c.city].filter(Boolean).join(" / ")}
                   </p>
-                  <p className="mt-0.5 text-[11px] text-gray-400">
+                  <p className="mt-0.5 text-xs text-gray-400">
                     募集中 {c._count.jobs} 件・フォロー開始{" "}
                     {f.createdAt.toLocaleDateString("ja-JP")}
                   </p>

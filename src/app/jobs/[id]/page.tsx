@@ -288,7 +288,7 @@ export default async function JobDetailPage({ params, searchParams }: Props) {
               href={`/jobs/${job.id}/print?auto=1`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[11px] font-bold text-gray-600 hover:text-primary-700"
+              className="inline-flex items-center gap-1 text-xs font-bold text-gray-600 hover:text-primary-700"
               title="ブラウザの「PDF として保存」で求人情報を出力"
             >
               PDF で保存

@@ -94,7 +94,7 @@ export function ScoutRecommendationPanel({
                       <p className="text-sm font-bold text-gray-900">
                         {c.name ?? "（氏名未設定）"}
                       </p>
-                      <p className="text-[11px] text-gray-500">
+                      <p className="text-xs text-gray-500">
                         {c.prefecture}
                         {c.city ? ` ${c.city}` : ""}
                       </p>
@@ -102,7 +102,7 @@ export function ScoutRecommendationPanel({
                         {c.reasons.map((r) => (
                           <li
                             key={r}
-                            className="inline-block bg-primary-50 text-primary-700 border border-primary-100 px-1.5 py-0.5 text-[10px]"
+                            className="inline-block bg-primary-50 text-primary-700 border border-primary-100 px-1.5 py-0.5 text-xs"
                           >
                             {r}
                           </li>

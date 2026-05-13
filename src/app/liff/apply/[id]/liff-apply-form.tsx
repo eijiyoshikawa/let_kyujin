@@ -175,7 +175,7 @@ export function LiffApplyForm({
                     <p className="text-sm font-bold text-gray-900 line-clamp-2">
                       {r.title}
                     </p>
-                    <p className="text-[11px] text-gray-500">
+                    <p className="text-xs text-gray-500">
                       {r.prefecture}
                       {r.city ? ` ${r.city}` : ""}
                     </p>
@@ -206,7 +206,7 @@ export function LiffApplyForm({
             LINE で連携済み:{" "}
             <span className="font-bold">{profile.displayName}</span>
           </p>
-          <p className="text-[10px] text-gray-500 mt-0.5">
+          <p className="text-xs text-gray-500 mt-0.5">
             返信は LINE のトークに直接届きます
           </p>
         </div>
@@ -293,7 +293,7 @@ export function LiffApplyForm({
           </>
         )}
       </button>
-      <p className="text-[10px] text-gray-400 leading-relaxed">
+      <p className="text-xs text-gray-400 leading-relaxed">
         ご入力情報は応募対応以外の目的で使用しません。
       </p>
     </form>

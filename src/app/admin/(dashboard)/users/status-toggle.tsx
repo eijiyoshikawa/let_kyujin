@@ -51,7 +51,7 @@ export function UserStatusToggle({
       type="button"
       onClick={toggle}
       disabled={busy}
-      className={`press inline-flex items-center gap-1 px-2 py-1 text-[11px] font-bold disabled:opacity-50 ${
+      className={`press inline-flex items-center gap-1 px-2 py-1 text-xs font-bold disabled:opacity-50 ${
         currentStatus === "active"
           ? "border border-red-300 text-red-700 hover:bg-red-50"
           : "border border-emerald-300 text-emerald-700 hover:bg-emerald-50"

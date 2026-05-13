@@ -117,19 +117,19 @@ export function ImageUploader({
               削除
             </button>
           )}
-          <p className="text-[11px] text-gray-500">JPEG / PNG / WebP 5MB まで</p>
-          {error && <p className="text-[11px] text-red-600">{error}</p>}
+          <p className="text-xs text-gray-500">JPEG / PNG / WebP 5MB まで</p>
+          {error && <p className="text-xs text-red-600">{error}</p>}
         </div>
       </div>
 
       {value && (
-        <details className="mt-2 text-[11px] text-gray-500">
+        <details className="mt-2 text-xs text-gray-500">
           <summary className="cursor-pointer">直接 URL を入力（高度）</summary>
           <input
             type="url"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="mt-1 block w-full border px-2 py-1 font-mono text-[11px]"
+            className="mt-1 block w-full border px-2 py-1 font-mono text-xs"
           />
         </details>
       )}
@@ -219,7 +219,7 @@ export function MultiImageUploader({
                 unoptimized
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-[10px] text-gray-400">
+              <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
                 空
               </div>
             )}
