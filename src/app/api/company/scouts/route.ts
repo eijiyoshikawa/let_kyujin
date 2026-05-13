@@ -4,6 +4,11 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { sendScoutNotificationEmail } from "@/lib/email"
 import { requireCompanyAuth, isCompanyAuthError } from "@/lib/company-auth"
+import {
+  checkRateLimit,
+  getClientIp,
+  rateLimitResponse,
+} from "@/lib/rate-limit"
 
 const scoutSchema = z.object({
   userId: z.string().uuid(),
@@ -61,6 +66,14 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: ctx.error }, { status: ctx.status })
   }
   const { companyId } = ctx
+
+  // スパム抑止: 同一企業から 1 時間に 50 件まで
+  const rl = checkRateLimit({
+    key: `scout:${companyId}:${getClientIp(request)}`,
+    limit: 50,
+    windowMs: 60 * 60 * 1000,
+  })
+  if (!rl.allowed) return rateLimitResponse(rl)
 
   let body: unknown
   try {

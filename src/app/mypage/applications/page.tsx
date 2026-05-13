@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Building2, MapPin } from "lucide-react"
 import { Pagination } from "@/components/pagination"
 import { ApplicationProgressBar } from "@/components/applications/progress-bar"
+import { WithdrawButton } from "@/components/applications/withdraw-button"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -39,6 +40,10 @@ const statusConfig: Record<string, { label: string; className: string }> = {
   rejected: {
     label: "不採用",
     className: "bg-red-100 text-red-700",
+  },
+  withdrawn: {
+    label: "取り消し済み",
+    className: "bg-gray-200 text-gray-600",
   },
 }
 
@@ -145,9 +150,16 @@ export default async function ApplicationsPage({ searchParams }: Props) {
                   <ApplicationProgressBar status={app.status} />
                 </div>
 
-                <p className="mt-3 text-xs text-gray-400">
-                  応募日: {app.createdAt.toLocaleDateString("ja-JP")}
-                </p>
+                <div className="mt-3 flex items-center justify-between gap-2">
+                  <p className="text-xs text-gray-400">
+                    応募日: {app.createdAt.toLocaleDateString("ja-JP")}
+                  </p>
+                  <WithdrawButton
+                    applicationId={app.id}
+                    status={app.status}
+                    createdAt={app.createdAt.toISOString()}
+                  />
+                </div>
               </Link>
             )
           })}

@@ -4,6 +4,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { NavigationProgress } from "@/components/navigation-progress";
 import { GoogleAnalytics } from "@/components/analytics";
+import { CookieConsentBanner } from "@/components/cookie-consent";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import {
@@ -52,6 +53,13 @@ export const metadata: Metadata = {
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ?? undefined,
   },
+  manifest: "/manifest.webmanifest",
+  themeColor: "#0F766E",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "ゲンバキャリア",
+  },
 };
 
 export default async function RootLayout({
@@ -90,6 +98,7 @@ export default async function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <CookieConsentBanner />
         <VercelAnalytics />
         <SpeedInsights />
       </body>

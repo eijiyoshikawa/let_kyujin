@@ -90,6 +90,14 @@ providers.push(
 
         if (!user || !user.passwordHash) return null
 
+        // 凍結 / 退会済アカウントはログイン拒否
+        if (user.status === "suspended") {
+          throw new Error("ACCOUNT_SUSPENDED")
+        }
+        if (user.status === "deleted") {
+          throw new Error("ACCOUNT_DELETED")
+        }
+
         const isValid = await compare(
           credentials.password as string,
           user.passwordHash

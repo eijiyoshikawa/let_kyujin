@@ -98,6 +98,21 @@ const STATEMENTS: ReadonlyArray<string> = [
  `CREATE INDEX IF NOT EXISTS "idx_jobs_title_trgm" ON "jobs" USING GIN (title gin_trgm_ops)`,
  `CREATE INDEX IF NOT EXISTS "idx_jobs_description_trgm" ON "jobs" USING GIN (description gin_trgm_ops)`,
  `CREATE INDEX IF NOT EXISTS "idx_companies_name_trgm" ON "companies" USING GIN (name gin_trgm_ops)`,
+ // PR #88: User BAN / 退会 / 規約同意
+ `ALTER TABLE "users"
+    ADD COLUMN IF NOT EXISTS "status" VARCHAR(20) NOT NULL DEFAULT 'active',
+    ADD COLUMN IF NOT EXISTS "suspended_at" TIMESTAMPTZ,
+    ADD COLUMN IF NOT EXISTS "suspended_reason" VARCHAR(500),
+    ADD COLUMN IF NOT EXISTS "deleted_at" TIMESTAMPTZ,
+    ADD COLUMN IF NOT EXISTS "terms_accepted_at" TIMESTAMPTZ`,
+ `CREATE INDEX IF NOT EXISTS "idx_users_status" ON "users" ("status")`,
+ // PR #88: 求人の自動再掲載期限
+ `ALTER TABLE "jobs"
+    ADD COLUMN IF NOT EXISTS "expires_at" TIMESTAMPTZ,
+    ADD COLUMN IF NOT EXISTS "auto_renew" BOOLEAN NOT NULL DEFAULT false`,
+ `CREATE INDEX IF NOT EXISTS "idx_jobs_expires_at" ON "jobs" ("expires_at") WHERE status = 'active'`,
+ // PR #88: 応募取り消し（status enum 拡張）— status は VARCHAR なので DDL 不要、
+ // アプリ層のバリデーションのみで担保。
 ]
 
 let inflight: Promise<boolean> | null = null
