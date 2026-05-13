@@ -107,15 +107,17 @@ const ENV_DEFS: EnvDef[] = [
   },
   {
     name: "STRIPE_SECRET_KEY",
-    required: ["production"],
-    description: "Stripe API (掲載課金)",
+    required: [],
+    description:
+      "Stripe API (成果報酬を Stripe Invoicing で発行する場合のみ。MoneyForward 一本ならスキップ可)",
     validate: (v) =>
       v.startsWith("sk_") || "sk_ で始まる Stripe Secret Key",
   },
   {
     name: "STRIPE_WEBHOOK_SECRET",
-    required: ["production"],
-    description: "Stripe Webhook 認証",
+    required: [],
+    description:
+      "Stripe Webhook 認証 (STRIPE_SECRET_KEY を使う場合は必須)",
   },
   // ----- 分析 -----
   {
