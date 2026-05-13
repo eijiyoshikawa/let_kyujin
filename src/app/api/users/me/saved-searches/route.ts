@@ -19,6 +19,8 @@ const createSchema = z.object({
   employmentType: z.string().max(20).nullable().optional(),
   salaryMin: z.number().int().min(0).nullable().optional(),
   source: z.enum(["direct", "hellowork"]).nullable().optional(),
+  tags: z.array(z.string().min(1).max(50)).max(20).optional(),
+  excludeKeywords: z.array(z.string().min(1).max(50)).max(20).optional(),
   alertEnabled: z.boolean().optional(),
 })
 
@@ -84,6 +86,8 @@ export async function POST(request: NextRequest) {
       employmentType: parsed.data.employmentType ?? null,
       salaryMin: parsed.data.salaryMin ?? null,
       source: parsed.data.source ?? null,
+      tags: parsed.data.tags ?? [],
+      excludeKeywords: parsed.data.excludeKeywords ?? [],
       alertEnabled: parsed.data.alertEnabled ?? true,
     },
   })

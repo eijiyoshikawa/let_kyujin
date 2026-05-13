@@ -2,7 +2,16 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { FileText, User, Pencil, Mail, Bell, Bookmark, BookmarkCheck } from "lucide-react"
+import {
+  FileText,
+  User,
+  Pencil,
+  Mail,
+  Bell,
+  Bookmark,
+  BookmarkCheck,
+  Star,
+} from "lucide-react"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -20,6 +29,7 @@ export default async function MyPage() {
     unreadNotifications,
     savedSearchCount,
     favoriteCount,
+    companyFollowCount,
   ] = await Promise.all([
     prisma.user.findUnique({
       where: { id: session.user.id },
@@ -43,6 +53,9 @@ export default async function MyPage() {
       .count({ where: { userId: session.user.id } })
       .catch(() => 0),
     prisma.jobFavorite
+      .count({ where: { userId: session.user.id } })
+      .catch(() => 0),
+    prisma.companyFollow
       .count({ where: { userId: session.user.id } })
       .catch(() => 0),
   ])
@@ -150,6 +163,23 @@ export default async function MyPage() {
               {savedSearchCount > 0
                 ? `${savedSearchCount} 件 — 新着があれば通知`
                 : "条件を保存して新着通知を受け取る"}
+            </p>
+          </div>
+        </Link>
+
+        <Link
+          href="/mypage/companies/follow"
+          className="flex items-center gap-4 border bg-white p-5 shadow-sm transition hover:shadow-md"
+        >
+          <div className="flex h-10 w-10 items-center justify-center bg-amber-100">
+            <Star className="h-5 w-5 text-amber-600" />
+          </div>
+          <div>
+            <p className="font-semibold text-gray-900">フォロー企業</p>
+            <p className="text-sm text-gray-500">
+              {companyFollowCount > 0
+                ? `${companyFollowCount} 社 — 新着求人があれば通知`
+                : "気になる企業をフォロー"}
             </p>
           </div>
         </Link>

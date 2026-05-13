@@ -42,8 +42,29 @@ model User {
   savedSearches     SavedSearch[]
   messageTemplates  ApplicationMessageTemplate[]
   jobFavorites      JobFavorite[]
+  companyFollows    CompanyFollow[]
 
   @@map("users")
+}
+
+// ========================================
+// 企業フォロー
+// ========================================
+// 求職者が気になる企業をフォロー → その企業の新着求人が出たら通知される。
+model CompanyFollow {
+  userId    String   @map("user_id") @db.Uuid
+  companyId String   @map("company_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  // 最後にスキャンした時刻（saved-search-alerts cron で更新）
+  lastNotifiedAt DateTime? @map("last_notified_at") @db.Timestamptz()
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@id([userId, companyId])
+  @@index([userId, createdAt(sort: Desc)], name: "idx_company_follows_user")
+  @@index([companyId], name: "idx_company_follows_company")
+  @@map("company_follows")
 }
 
 // ========================================
@@ -100,6 +121,10 @@ model SavedSearch {
   employmentType String?  @map("employment_type") @db.VarChar(20)
   salaryMin      Int?     @map("salary_min")
   source         String?  @db.VarChar(20) // direct | hellowork、null なら両方
+  // 求人の tags のいずれかが含まれる場合にマッチ（OR）
+  tags           String[] @default([])
+  // 求人の title / description にこれらの語が含まれる場合は除外（AND NOT）
+  excludeKeywords String[] @default([]) @map("exclude_keywords")
   // 通知設定
   alertEnabled   Boolean  @default(true) @map("alert_enabled")
   // 最後にスキャンした時刻。これより新しい publishedAt を新着とみなす。
@@ -264,6 +289,7 @@ model Company {
   scouts        Scout[]
   billingEvents BillingEvent[]
   applications  Application[]
+  followers     CompanyFollow[]
 
   @@unique([source, name], name: "company_source_name_unique")
   @@index([status], name: "idx_companies_status")

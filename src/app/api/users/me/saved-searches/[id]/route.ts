@@ -13,6 +13,8 @@ export const dynamic = "force-dynamic"
 const updateSchema = z.object({
   name: z.string().min(1).max(100).optional(),
   alertEnabled: z.boolean().optional(),
+  tags: z.array(z.string().min(1).max(50)).max(20).optional(),
+  excludeKeywords: z.array(z.string().min(1).max(50)).max(20).optional(),
 })
 
 async function requireOwner(id: string) {

@@ -69,6 +69,8 @@ export default async function SavedSearchesPage() {
               label={formatSearchLabel(s)}
               href={`/jobs?${toSearchQueryString(s)}`}
               createdAt={s.createdAt.toISOString()}
+              tags={s.tags ?? []}
+              excludeKeywords={s.excludeKeywords ?? []}
             />
           ))}
         </ul>
