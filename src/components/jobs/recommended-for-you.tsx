@@ -44,13 +44,17 @@ export function RecommendedForYou({
   >({ kind: "loading" })
 
   useEffect(() => {
-    let aborted = false
+    const ctrl = new AbortController()
+    // INP 保護: API 応答が 2 秒以上かかったら諦めて非表示にし、
+    // メインスレッドのアイドル時間を確保する。
+    const timeoutId = setTimeout(() => ctrl.abort(), 2000)
+
     fetch(`/api/recommendations?limit=${limit}`, {
       credentials: "same-origin",
+      signal: ctrl.signal,
     })
       .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
       .then((data) => {
-        if (aborted) return
         setState({
           kind: "ready",
           jobs: data.jobs ?? [],
@@ -58,10 +62,14 @@ export function RecommendedForYou({
         })
       })
       .catch(() => {
-        if (!aborted) setState({ kind: "error" })
+        setState({ kind: "error" })
+      })
+      .finally(() => {
+        clearTimeout(timeoutId)
       })
     return () => {
-      aborted = true
+      clearTimeout(timeoutId)
+      ctrl.abort()
     }
   }, [limit])
 

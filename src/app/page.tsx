@@ -286,7 +286,7 @@ export default async function HomePage() {
           注目特集
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {FEATURE_BANNERS.map((b) => (
+          {FEATURE_BANNERS.map((b, i) => (
             <Link
               key={b.title}
               href={b.href}
@@ -297,6 +297,10 @@ export default async function HomePage() {
                   src={b.image}
                   alt=""
                   fill
+                  // モバイルでは 1 番目が above-the-fold に入ることが多いので
+                  // 1 番目のみ priority、他は lazy。
+                  priority={i === 0}
+                  loading={i === 0 ? undefined : "lazy"}
                   sizes="(max-width: 640px) 100vw, 33vw"
                   className="object-cover opacity-70 group-hover:opacity-80 group-hover:scale-105 transition duration-300"
                 />

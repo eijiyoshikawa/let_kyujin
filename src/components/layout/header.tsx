@@ -1,14 +1,16 @@
-"use client"
-
-import { useState } from "react"
 import Link from "next/link"
-import { Search, Menu, X, Newspaper, Building2, MessageCircle } from "lucide-react"
+import { Search, Newspaper, MessageCircle } from "lucide-react"
 import { BrandLogo } from "./brand-logo"
 import { LinkButton } from "@/components/ui/button"
+import { HeaderMobileMenu } from "./header-mobile-menu"
 
+/**
+ * サイト共通ヘッダー。
+ *
+ * 全ページに乗るため Server Component で実装し、Hydration コストを抑える。
+ * モバイルメニューの開閉だけ <HeaderMobileMenu> に切り出して Client 化。
+ */
 export function Header() {
-  const [menuOpen, setMenuOpen] = useState(false)
-
   return (
     <header className="bg-white sticky top-0 z-50 border-b border-gray-100">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -17,7 +19,7 @@ export function Header() {
             <BrandLogo />
           </Link>
 
-          {/* Desktop nav — シンプル化 */}
+          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1">
             <Link
               href="/jobs"
@@ -58,72 +60,9 @@ export function Header() {
             </LinkButton>
           </nav>
 
-          {/* Mobile menu button — 44px タップ領域 */}
-          <button
-            type="button"
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="flex md:hidden h-11 w-11 items-center justify-center text-gray-700 hover:bg-gray-100"
-            aria-label="メニューを開く"
-            aria-expanded={menuOpen}
-          >
-            {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          <HeaderMobileMenu />
         </div>
       </div>
-
-      {/* Mobile menu drawer */}
-      {menuOpen && (
-        <div className="md:hidden border-t border-gray-100 bg-white">
-          <nav className="mx-auto max-w-7xl px-4 py-3 space-y-1">
-            <Link
-              href="/jobs"
-              onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary-50"
-            >
-              <Search className="h-4 w-4 text-primary-500" />
-              求人を探す
-            </Link>
-            <Link
-              href="/journal"
-              onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary-50"
-            >
-              <Newspaper className="h-4 w-4 text-primary-500" />
-              マガジン
-            </Link>
-            <Link
-              href="/for-employers"
-              onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary-50"
-            >
-              <Building2 className="h-4 w-4 text-primary-500" />
-              企業の方
-            </Link>
-            <div className="border-t pt-3 mt-2 grid grid-cols-2 gap-2">
-              <LinkButton
-                href="/login"
-                variant="secondary"
-                size="lg"
-                fullWidth
-                onClick={() => setMenuOpen(false)}
-                className="border-primary-600 text-primary-600 hover:bg-primary-50"
-              >
-                ログイン
-              </LinkButton>
-              <LinkButton
-                href="/register"
-                variant="primary"
-                size="lg"
-                fullWidth
-                onClick={() => setMenuOpen(false)}
-                className="bg-primary-500 hover:bg-primary-600"
-              >
-                無料で始める
-              </LinkButton>
-            </div>
-          </nav>
-        </div>
-      )}
     </header>
   )
 }
