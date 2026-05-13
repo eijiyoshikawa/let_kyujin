@@ -61,18 +61,31 @@ async function main() {
   const updates: Array<{ id: string; from: string | null; to: string }> = []
 
   while (true) {
-    const batch = await prisma.job.findMany({
-      where: { source: "hellowork" },
-      select: {
-        id: true,
-        salaryType: true,
-        salaryMin: true,
-        rawData: true,
-      },
-      orderBy: { id: "asc" },
-      take: BATCH_SIZE,
-      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
-    })
+    const batch = cursor
+      ? await prisma.job.findMany({
+          where: { source: "hellowork" },
+          select: {
+            id: true,
+            salaryType: true,
+            salaryMin: true,
+            rawData: true,
+          },
+          orderBy: { id: "asc" },
+          take: BATCH_SIZE,
+          cursor: { id: cursor },
+          skip: 1,
+        })
+      : await prisma.job.findMany({
+          where: { source: "hellowork" },
+          select: {
+            id: true,
+            salaryType: true,
+            salaryMin: true,
+            rawData: true,
+          },
+          orderBy: { id: "asc" },
+          take: BATCH_SIZE,
+        })
 
     if (batch.length === 0) break
 
