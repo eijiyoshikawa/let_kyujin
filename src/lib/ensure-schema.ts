@@ -113,6 +113,13 @@ const STATEMENTS: ReadonlyArray<string> = [
  `CREATE INDEX IF NOT EXISTS "idx_jobs_expires_at" ON "jobs" ("expires_at") WHERE status = 'active'`,
  // PR #88: 応募取り消し（status enum 拡張）— status は VARCHAR なので DDL 不要、
  // アプリ層のバリデーションのみで担保。
+ // 法人番号 / GbizINFO API 連携準備
+ `ALTER TABLE "companies"
+    ADD COLUMN IF NOT EXISTS "corporate_number" VARCHAR(13),
+    ADD COLUMN IF NOT EXISTS "gbiz_synced_at" TIMESTAMPTZ,
+    ADD COLUMN IF NOT EXISTS "gbiz_data" JSONB`,
+ `CREATE UNIQUE INDEX IF NOT EXISTS "idx_companies_corporate_number"
+    ON "companies" ("corporate_number") WHERE "corporate_number" IS NOT NULL`,
 ]
 
 let inflight: Promise<boolean> | null = null
