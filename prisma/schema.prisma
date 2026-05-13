@@ -245,6 +245,12 @@ model Company {
   // 掲載元: direct(自社掲載企業) | hellowork(HelloWork API 由来の参照データ)
   source           String   @default("direct") @db.VarChar(20)
   name             String   @db.VarChar(200)
+  // 13 桁の法人番号（国税庁 / GbizINFO API 連携用、本登録は任意）
+  corporateNumber  String?  @unique @map("corporate_number") @db.VarChar(13)
+  // GbizINFO から最後に取得した日時（バッチで定期更新）
+  gbizSyncedAt     DateTime? @map("gbiz_synced_at") @db.Timestamptz()
+  // GbizINFO 取得結果のキャッシュ（建設業許可・表彰歴等を JSON で保持）
+  gbizData         Json?    @map("gbiz_data")
   industry         String?  @db.VarChar(100)
   prefecture       String?  @db.VarChar(10)
   city             String?  @db.VarChar(50)
