@@ -104,6 +104,20 @@ export async function PUT(
     },
   })
 
+  // GbizINFO リマインダー: draft → active への初回公開で法人番号未登録なら
+  // 観測ログ。UI バナーで既に注意喚起しているため、ここでは記録のみ。
+  if (publishedAt) {
+    const company = await prisma.company.findUnique({
+      where: { id: existing.companyId ?? "" },
+      select: { corporateNumber: true, name: true },
+    })
+    if (company && !company.corporateNumber) {
+      console.info(
+        `[gbiz-reminder] job published without corporateNumber: companyId=${existing.companyId} name=${company.name} jobId=${id}`
+      )
+    }
+  }
+
   return Response.json({ job })
 }
 

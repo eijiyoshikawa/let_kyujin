@@ -13,6 +13,7 @@ import {
 } from "@/lib/company-funnel"
 import { FunnelChart } from "@/components/company/funnel-chart"
 import { TimeSeriesChart } from "@/components/company/timeseries-chart"
+import { GbizReminderBanner } from "@/components/company/gbiz-reminder-banner"
 import { ClientErrorBoundary } from "@/components/error-boundary"
 
 export const metadata: Metadata = {
@@ -51,7 +52,7 @@ export default async function CompanyDashboard({
   ] = await Promise.all([
     prisma.company.findUnique({
       where: { id: companyId },
-      select: { name: true },
+      select: { name: true, corporateNumber: true },
     }),
     prisma.job.groupBy({
       by: ["status"],
@@ -107,6 +108,13 @@ export default async function CompanyDashboard({
             新規求人作成
           </Link>
         </div>
+      </div>
+
+      {/* GbizINFO 法人番号 未登録時のリマインダー */}
+      <div className="mt-4">
+        <GbizReminderBanner
+          corporateNumber={company?.corporateNumber ?? null}
+        />
       </div>
 
       {/* Stats */}
