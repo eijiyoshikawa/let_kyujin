@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "特定商取引法に基づく表記",
   description:
     "ゲンバキャリアの特定商取引法に基づく表記。販売事業者・所在地・連絡先・料金・支払方法等の表示。",
+  alternates: { canonical: "/legal" },
 }
 
 const ROWS: Array<{
