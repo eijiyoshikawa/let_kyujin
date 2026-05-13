@@ -140,7 +140,7 @@ export default async function CompanyDetailPage({ params }: Props) {
         city: true,
         source: true,
         tags: true,
-        company: { select: { name: true, logoUrl: true } },
+        company: { select: { name: true, logoUrl: true, gbizData: true } },
       },
       orderBy: { publishedAt: "desc" },
       take: 30,

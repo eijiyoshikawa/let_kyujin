@@ -11,6 +11,7 @@ import {
   Bank,
 } from "@phosphor-icons/react/dist/ssr"
 import { getCategoryLabel } from "@/lib/categories"
+import { computeHasConstructionPermit } from "@/lib/gbizinfo"
 import { TagChip } from "./tag-chip"
 import { FavoriteButton } from "./favorite-button"
 import { CompareAddButton } from "./compare-add-button"
@@ -30,7 +31,19 @@ type JobCardProps = {
   tags: string[]
   annualHolidays?: number | null
   insurance?: string | null
-  company: { name: string; logoUrl: string | null } | null
+  company:
+    | {
+        name: string
+        logoUrl: string | null
+        /**
+         * GbizINFO 由来の JSONB データ。
+         * 渡すと JobCard 内で建設業許可の有無を判定して、保有時は
+         * バッジを表示する。callsite は prisma select で
+         * `company: { select: { ..., gbizData: true } }` を追加するだけで OK。
+         */
+        gbizData?: unknown
+      }
+    | null
 }
 
 export function JobCard({
@@ -43,6 +56,9 @@ export function JobCard({
   loggedIn?: boolean
 }) {
   const tagsToShow = job.tags.slice(0, 5)
+  const hasConstructionPermit = computeHasConstructionPermit(
+    job.company?.gbizData
+  )
 
   return (
     <Link
@@ -108,11 +124,20 @@ export function JobCard({
           </span>
         </div>
 
-        {/* 会社名（小さく） */}
+        {/* 会社名（小さく） + 建設業許可バッジ */}
         {job.company && (
-          <p className="mt-1.5 flex items-center gap-1 text-xs text-gray-500">
+          <p className="mt-1.5 flex items-center gap-1.5 text-xs text-gray-500">
             <Buildings weight="duotone" className="h-3.5 w-3.5 shrink-0" />
-            {job.company.name}
+            <span className="truncate">{job.company.name}</span>
+            {hasConstructionPermit && (
+              <span
+                className="ml-1 inline-flex shrink-0 items-center gap-0.5 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 text-xs font-bold text-emerald-700"
+                title="GbizINFO で建設業許可を確認済みの企業です"
+              >
+                <SealCheck weight="fill" className="h-3 w-3" />
+                建設業許可
+              </span>
+            )}
           </p>
         )}
 

@@ -33,7 +33,12 @@ export type RecommendedJob = {
   employmentType: string | null
   source: string
   tags: string[]
-  company: { name: string; logoUrl: string | null } | null
+  company: {
+    name: string
+    logoUrl: string | null
+    /** GbizINFO JSONB（JobCard 内で建設業許可バッジ判定に使用） */
+    gbizData?: unknown
+  } | null
 }
 
 /**
@@ -184,7 +189,7 @@ export async function getRecommendedJobs(
     employmentType: true,
     source: true,
     tags: true,
-    company: { select: { name: true, logoUrl: true } },
+    company: { select: { name: true, logoUrl: true, gbizData: true } },
   } as const
 
   const baseFilter = {

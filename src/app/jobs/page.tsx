@@ -151,7 +151,7 @@ export default async function JobsPage({ searchParams }: Props) {
           .findMany({
             where: { id: { in: fuzzyIds } },
             include: {
-              company: { select: { id: true, name: true, logoUrl: true } },
+              company: { select: { id: true, name: true, logoUrl: true, gbizData: true } },
             },
           })
           // fuzzy で返ってきた id 順を維持
@@ -170,7 +170,7 @@ export default async function JobsPage({ searchParams }: Props) {
           skip: (page - 1) * limit,
           take: limit,
           include: {
-            company: { select: { id: true, name: true, logoUrl: true } },
+            company: { select: { id: true, name: true, logoUrl: true, gbizData: true } },
           },
         }),
     fuzzyIds

@@ -17,7 +17,12 @@ type RecommendedJob = {
   employmentType: string | null
   source: string
   tags: string[]
-  company: { name: string; logoUrl: string | null } | null
+  company: {
+    name: string
+    logoUrl: string | null
+    /** GbizINFO JSONB（あれば建設業許可バッジ表示） */
+    gbizData?: unknown
+  } | null
 }
 
 /**

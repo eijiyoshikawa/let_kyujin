@@ -20,9 +20,9 @@
 - `/companies/[id]` 公開ページ: 建設業許可・設立年月・資本金・従業員数・表彰歴を自動表示
 - 24h CDN キャッシュで API 負荷を最小化
 
-**follow-up（リリース後）**:
-- [ ] JobCard に「建設業許可あり」バッジを追加（クエリ更新点 9 ファイル）
-- [ ] Cron で月次自動再取得（`/api/cron/refresh-gbiz`）
+**follow-up**:
+- [x] JobCard に「建設業許可あり」バッジを追加（PR #106）
+- [x] Cron で月次自動再取得 `/api/cron/refresh-gbiz`（PR #106）
 - [ ] 求人投稿時に法人番号入力が無ければ admin にリマインド通知
 
 ---
@@ -49,14 +49,15 @@
 - [ ] Vercel 環境変数（Production / Preview）も更新
 - [ ] Vercel で Redeploy
 
-### 5. Cron Job の Vercel 登録（実装は済み）
+### 5. Cron Job の Vercel 登録（vercel.json に登録済み）
 
-`vercel.json` に追加するか、Vercel Dashboard → Cron Jobs から:
-- [ ] `POST /api/cron/refresh-mv` — 10 分間隔
-- [ ] `POST /api/cron/expire-jobs` — 日次（毎日 04:00 JST）
-- [ ] `POST /api/cron/saved-search-alerts` — 日次（毎日 08:00 JST）
-- [ ] `POST /api/cron/hellowork-import` — 2 時間ごと（既存）
-- 各 Cron には `Authorization: Bearer ${CRON_SECRET}` を付与
+`vercel.json` で以下を Vercel Cron Jobs に登録済み:
+- [x] `POST /api/cron/expire-jobs` — 毎日 03:00 UTC
+- [x] `POST /api/cron/hellowork-import?pages=5` — 毎時 0 分
+- [x] `POST /api/cron/saved-search-alerts` — 毎日 09:00 UTC
+- [x] `POST /api/cron/refresh-gbiz` — **毎月 1 日 03:00 UTC（GbizINFO 月次更新）**
+- [ ] 環境変数 `CRON_SECRET` を Vercel に設定（未設定だと認証スキップで誰でも叩ける）
+- 各 Cron には `Authorization: Bearer ${CRON_SECRET}` を Vercel が自動付与
 
 ### 6. Google Search Console 登録
 
