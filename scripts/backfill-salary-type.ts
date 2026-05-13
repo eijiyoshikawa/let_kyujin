@@ -46,7 +46,7 @@ async function main() {
   }
 
   const BATCH_SIZE = 500
-  let cursor: string | undefined = undefined
+  let cursorId: string | null = null
   let scanned = 0
 
   const stats = {
@@ -60,32 +60,37 @@ async function main() {
   }
   const updates: Array<{ id: string; from: string | null; to: string }> = []
 
+  const fetchBatch = async (afterId: string | null) => {
+    if (afterId === null) {
+      return prisma.job.findMany({
+        where: { source: "hellowork" },
+        select: {
+          id: true,
+          salaryType: true,
+          salaryMin: true,
+          rawData: true,
+        },
+        orderBy: { id: "asc" },
+        take: BATCH_SIZE,
+      })
+    }
+    return prisma.job.findMany({
+      where: { source: "hellowork" },
+      select: {
+        id: true,
+        salaryType: true,
+        salaryMin: true,
+        rawData: true,
+      },
+      orderBy: { id: "asc" },
+      take: BATCH_SIZE,
+      cursor: { id: afterId },
+      skip: 1,
+    })
+  }
+
   while (true) {
-    const batch = cursor
-      ? await prisma.job.findMany({
-          where: { source: "hellowork" },
-          select: {
-            id: true,
-            salaryType: true,
-            salaryMin: true,
-            rawData: true,
-          },
-          orderBy: { id: "asc" },
-          take: BATCH_SIZE,
-          cursor: { id: cursor },
-          skip: 1,
-        })
-      : await prisma.job.findMany({
-          where: { source: "hellowork" },
-          select: {
-            id: true,
-            salaryType: true,
-            salaryMin: true,
-            rawData: true,
-          },
-          orderBy: { id: "asc" },
-          take: BATCH_SIZE,
-        })
+    const batch = await fetchBatch(cursorId)
 
     if (batch.length === 0) break
 
@@ -116,7 +121,7 @@ async function main() {
     }
 
     scanned += batch.length
-    cursor = batch[batch.length - 1].id
+    cursorId = batch[batch.length - 1].id
     if (scanned % 2000 === 0 || batch.length < BATCH_SIZE) {
       console.log(`  scanned: ${scanned}`)
     }
