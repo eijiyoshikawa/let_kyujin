@@ -19,6 +19,8 @@ const schema = z.object({
   email: z.string().email("有効なメールアドレスを入力してください"),
   subject: z.string().min(1, "件名を入力してください").max(200),
   message: z.string().min(1, "お問い合わせ内容を入力してください").max(5000),
+  // Honeypot — bot のみが埋める想定。値があれば silent reject
+  website: z.string().max(200).optional(),
 })
 
 export async function POST(request: NextRequest) {
@@ -45,6 +47,14 @@ export async function POST(request: NextRequest) {
     const firstError =
       parsed.error.issues[0]?.message ?? "入力内容に誤りがあります"
     return Response.json({ error: firstError }, { status: 400 })
+  }
+
+  // Honeypot 反応: bot からの送信は silent reject (200 を返してログ記録)
+  if (parsed.data.website && parsed.data.website.length > 0) {
+    console.info(
+      `[contact] honeypot triggered ip=${getClientIp(request)} email=${parsed.data.email}`
+    )
+    return Response.json({ ok: true, message: "送信しました" })
   }
 
   const { name, email, subject, message } = parsed.data

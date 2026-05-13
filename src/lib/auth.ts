@@ -4,6 +4,40 @@ import Google from "next-auth/providers/google"
 import type { Provider } from "next-auth/providers"
 import { compare } from "bcryptjs"
 import { prisma } from "./db"
+import { checkRateLimit } from "./rate-limit"
+
+/**
+ * ログイン試行レート制限。
+ *
+ * 同一 IP から 15 分間に 10 回失敗するとそれ以上の試行を拒否。
+ * 連続失敗の brute force / credential stuffing を抑止する。
+ *
+ * NextAuth v5 では authorize の第 2 引数で Request を受け取れる。
+ * x-forwarded-for ヘッダから IP を抽出して使用。
+ */
+function getIpFromRequest(req: Request | undefined): string {
+  if (!req) return "unknown"
+  const fwd = req.headers.get("x-forwarded-for")
+  if (fwd) return fwd.split(",")[0].trim()
+  const real = req.headers.get("x-real-ip")
+  return real ?? "unknown"
+}
+
+/**
+ * 認証 rate-limit を確認。引っかかると Error を throw して NextAuth に
+ * "RATE_LIMITED" として返す。
+ */
+function assertAuthRateLimit(req: Request | undefined, scope: string) {
+  const ip = getIpFromRequest(req)
+  const rl = checkRateLimit({
+    key: `auth:${scope}:${ip}`,
+    limit: 10,
+    windowMs: 15 * 60 * 1000,
+  })
+  if (!rl.allowed) {
+    throw new Error("RATE_LIMITED")
+  }
+}
 
 // Build providers list dynamically based on available env vars
 const providers: Provider[] = []
@@ -51,7 +85,8 @@ if (process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD_HASH) {
         email: { label: "メールアドレス", type: "email" },
         password: { label: "パスワード", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
+        assertAuthRateLimit(req, "admin")
         if (!credentials?.email || !credentials?.password) return null
         if (credentials.email !== process.env.ADMIN_EMAIL) return null
 
@@ -81,7 +116,8 @@ providers.push(
         email: { label: "メールアドレス", type: "email" },
         password: { label: "パスワード", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
+        assertAuthRateLimit(req, "seeker")
         if (!credentials?.email || !credentials?.password) return null
 
         const user = await prisma.user.findUnique({
@@ -120,7 +156,8 @@ providers.push(
         password: { label: "パスワード", type: "password" },
         totp: { label: "認証コード", type: "text" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
+        assertAuthRateLimit(req, "company")
         if (!credentials?.email || !credentials?.password) return null
 
         const companyUser = await prisma.companyUser.findUnique({
@@ -180,6 +217,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     strategy: "jwt",
   },
   callbacks: {
+    /**
+     * Open Redirect 防御。NextAuth デフォルトでもある程度は弾くが、
+     * callbackUrl=//evil.com 形式や user:pass@example.com 形式の悪用を
+     * 明示的に拒否し、ホスト一致しない URL は baseUrl にフォールバック。
+     */
+    async redirect({ url, baseUrl }) {
+      try {
+        // 相対パス（ / で始まり // ではない）は内部遷移として許可
+        if (url.startsWith("/") && !url.startsWith("//")) {
+          return `${baseUrl}${url}`
+        }
+        // 絶対 URL は baseUrl と origin が一致するときのみ許可
+        const target = new URL(url)
+        const base = new URL(baseUrl)
+        if (target.origin === base.origin) {
+          return target.toString()
+        }
+        // 上記以外（外部 URL / 不正形式）は baseUrl へフォールバック
+        return baseUrl
+      } catch {
+        return baseUrl
+      }
+    },
     async signIn({ user, account }) {
       // Auto-create user record for OAuth sign-ins
       if (account?.provider && account.provider !== "seeker-credentials" && account.provider !== "company-credentials") {
