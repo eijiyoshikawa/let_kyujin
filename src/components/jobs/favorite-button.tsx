@@ -1,12 +1,13 @@
 "use client"
 
 import { useState, useTransition } from "react"
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Bookmark, BookmarkCheck, Loader2 } from "lucide-react"
 
 /**
  * 求人カード / 求人詳細 に置くお気に入りトグルボタン。
- * 未ログインは「ログインして保存」リンクに切替。
+ * 未ログインは「ログインして保存」ボタンに切替（親カードが <Link> を
+ * 内包する場合、<a> のネストを避けるため <Link> ではなく <button> + router.push を使う）。
  */
 export function FavoriteButton({
   jobId,
@@ -19,6 +20,7 @@ export function FavoriteButton({
   loggedIn: boolean
   size?: "sm" | "md"
 }) {
+  const router = useRouter()
   const [isFav, setIsFav] = useState(initialIsFavorite)
   const [busy, setBusy] = useState(false)
   const [, startTransition] = useTransition()
@@ -27,15 +29,19 @@ export function FavoriteButton({
 
   if (!loggedIn) {
     return (
-      <Link
-        href={`/login?callbackUrl=/jobs/${jobId}`}
-        onClick={(e) => e.stopPropagation()}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          router.push(`/login?callbackUrl=/jobs/${jobId}`)
+        }}
         className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-primary-700"
         aria-label="ログインしてお気に入り"
         title="ログインしてお気に入り"
       >
         <Bookmark className={sizeCls} />
-      </Link>
+      </button>
     )
   }
 
