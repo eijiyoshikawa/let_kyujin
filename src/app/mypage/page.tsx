@@ -11,8 +11,13 @@ import {
   Bookmark,
   BookmarkCheck,
   Star,
+  Sparkles,
 } from "lucide-react"
+import { Suspense } from "react"
 import type { Metadata } from "next"
+import { getRecommendedJobs } from "@/lib/job-recommendations"
+import { JobCard } from "@/components/jobs/job-card"
+import { JobCardSkeletonGrid } from "@/components/ui/skeleton"
 
 export const metadata: Metadata = {
   title: "マイページ",
@@ -250,6 +255,40 @@ export default async function MyPage() {
           </div>
         </Link>
       </div>
+
+      {/* あなたへのおすすめ求人 (パーソナライズ) */}
+      <section className="mt-10">
+        <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900">
+          <Sparkles className="h-5 w-5 text-amber-500" />
+          あなたへのおすすめ求人
+        </h2>
+        <p className="mt-1 text-xs text-gray-500">
+          お気に入り・応募・閲覧履歴から、興味に合いそうな求人を選んでいます。
+        </p>
+        <div className="mt-4">
+          <Suspense fallback={<JobCardSkeletonGrid count={4} cols="sm:grid-cols-2" />}>
+            <RecommendedJobsSection userId={session.user.id} />
+          </Suspense>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+async function RecommendedJobsSection({ userId }: { userId: string }) {
+  const jobs = await getRecommendedJobs(userId, 6)
+  if (jobs.length === 0) {
+    return (
+      <div className="border bg-warm-50 p-6 text-center text-sm text-gray-600">
+        まだ募集中の建設業求人がありません。
+      </div>
+    )
+  }
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      {jobs.map((job) => (
+        <JobCard key={job.id} job={job} loggedIn />
+      ))}
     </div>
   )
 }

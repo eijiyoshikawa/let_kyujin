@@ -58,7 +58,7 @@ export function middleware(request: NextRequest) {
   const isCompanyRoute = companyRoutes.some((r) => pathname.startsWith(r))
   const isAdminRoute = adminRoutes.some((r) => pathname.startsWith(r))
 
-  /** すべての応答に gc_sid Cookie を確実に乗せるヘルパー。 */
+  /** すべての応答に gc_sid Cookie + 必要なら noindex ヘッダを乗せるヘルパー。 */
   function withTrackingCookie(res: NextResponse): NextResponse {
     if (trackingSetCookie) {
       res.cookies.set({
@@ -70,6 +70,20 @@ export function middleware(request: NextRequest) {
         path: "/",
         maxAge: SESSION_MAX_AGE,
       })
+    }
+    // 認証必須エリア / プレビュー / API は検索エンジンインデックス対象外。
+    // <meta name="robots"> より速く確実なので CDN レベルで X-Robots-Tag を出す。
+    if (
+      pathname.startsWith("/mypage") ||
+      pathname.startsWith("/company") ||
+      pathname.startsWith("/admin") ||
+      pathname.startsWith("/api/") ||
+      pathname.startsWith("/login") ||
+      pathname.startsWith("/signup") ||
+      pathname.startsWith("/liff") ||
+      pathname.includes("/preview/")
+    ) {
+      res.headers.set("X-Robots-Tag", "noindex, nofollow")
     }
     return res
   }

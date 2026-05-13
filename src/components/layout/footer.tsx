@@ -27,6 +27,7 @@ export function Footer() {
             </Link>
             <Link
               href="/contact"
+              prefetch={false}
               className="press border border-gray-500 px-5 py-2 text-sm font-medium text-gray-300 hover:bg-stone-800 transition"
             >
               ヘルプ・お問い合わせ
@@ -34,32 +35,33 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Links */}
+        {/* Links — フッターは常時可視のため、主要 CTA 以外は prefetch を無効化して
+            初回バンドルとアイドル時のネットワーク使用量を抑える */}
         <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-4">
           <div>
             <h3 className="text-sm font-semibold text-white">求職者の方へ</h3>
             <ul className="mt-3 space-y-2">
               <li><Link href="/jobs" className="text-xs text-gray-400 hover:text-primary-300 transition">求人検索</Link></li>
               <li><Link href="/register" className="text-xs text-gray-400 hover:text-primary-300 transition">会員登録</Link></li>
-              <li><Link href="/login" className="text-xs text-gray-400 hover:text-primary-300 transition">ログイン</Link></li>
-              <li><Link href="/faq" className="text-xs text-gray-400 hover:text-primary-300 transition">よくある質問</Link></li>
+              <li><Link href="/login" prefetch={false} className="text-xs text-gray-400 hover:text-primary-300 transition">ログイン</Link></li>
+              <li><Link href="/faq" prefetch={false} className="text-xs text-gray-400 hover:text-primary-300 transition">よくある質問</Link></li>
             </ul>
           </div>
           <div>
             <h3 className="text-sm font-semibold text-white">企業の方へ</h3>
             <ul className="mt-3 space-y-2">
-              <li><Link href="/for-employers" className="text-xs text-gray-400 hover:text-primary-300 transition">掲載について</Link></li>
-              <li><Link href="/company/register" className="text-xs text-gray-400 hover:text-primary-300 transition">企業登録</Link></li>
+              <li><Link href="/for-employers" prefetch={false} className="text-xs text-gray-400 hover:text-primary-300 transition">掲載について</Link></li>
+              <li><Link href="/company/register" prefetch={false} className="text-xs text-gray-400 hover:text-primary-300 transition">企業登録</Link></li>
             </ul>
           </div>
           <div>
             <h3 className="text-sm font-semibold text-white">コンテンツ</h3>
             <ul className="mt-3 space-y-2">
               <li><Link href="/journal" className="text-xs text-gray-400 hover:text-primary-300 transition">マガジン</Link></li>
-              <li><Link href="/about" className="text-xs text-gray-400 hover:text-primary-300 transition">サイトについて</Link></li>
-              <li><Link href="/terms" className="text-xs text-gray-400 hover:text-primary-300 transition">利用規約</Link></li>
-              <li><Link href="/privacy" className="text-xs text-gray-400 hover:text-primary-300 transition">プライバシーポリシー</Link></li>
-              <li><Link href="/legal" className="text-xs text-gray-400 hover:text-primary-300 transition">特定商取引法に基づく表記</Link></li>
+              <li><Link href="/about" prefetch={false} className="text-xs text-gray-400 hover:text-primary-300 transition">サイトについて</Link></li>
+              <li><Link href="/terms" prefetch={false} className="text-xs text-gray-400 hover:text-primary-300 transition">利用規約</Link></li>
+              <li><Link href="/privacy" prefetch={false} className="text-xs text-gray-400 hover:text-primary-300 transition">プライバシーポリシー</Link></li>
+              <li><Link href="/legal" prefetch={false} className="text-xs text-gray-400 hover:text-primary-300 transition">特定商取引法に基づく表記</Link></li>
             </ul>
           </div>
           <div>

@@ -6,6 +6,9 @@ import { publishedArticleFilter } from "@/lib/articles"
 import { Newspaper, Search, ChevronRight } from "lucide-react"
 import { Pagination } from "@/components/pagination"
 
+// 記事一覧は 30 分単位の更新で十分。
+export const revalidate = 1800
+
 export const metadata: Metadata = {
   title: "建設業マガジン | ゲンバキャリア",
   description:

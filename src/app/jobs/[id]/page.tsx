@@ -1,9 +1,7 @@
 import { prisma } from "@/lib/db"
 import { notFound } from "next/navigation"
-import { headers } from "next/headers"
 import Link from "next/link"
-import { getOrCreateSessionId } from "@/lib/session-id"
-import { recordJobView, extractUtmFromUrl } from "@/lib/tracking"
+import { JobViewBeacon } from "@/components/jobs/job-view-beacon"
 import {
   MapPin,
   Money,
@@ -73,33 +71,8 @@ export default async function JobDetailPage({ params, searchParams }: Props) {
   const { id } = await params
   const sp = (await searchParams) ?? {}
   const isPreview = sp.preview === "1"
-
-  // 匿名トラッキング: SID 発行 + JobView 記録（fire-and-forget）
-  // 失敗してもページ描画は妨げない。
-  const sessionId = await getOrCreateSessionId().catch(() => null)
-  const headerList = await headers()
-  const ua = headerList.get("user-agent") ?? null
-  const referer = headerList.get("referer") ?? null
-  const fwd = headerList.get("x-forwarded-for")
-  const ipAddress = fwd ? fwd.split(",")[0].trim() : null
-  // UTM は referer に乗ってこないので、現在の URL を組み立てて取り出す
-  const reqHost = headerList.get("host") ?? ""
-  const proto = headerList.get("x-forwarded-proto") ?? "https"
-  const fullUrl = referer && referer.includes(reqHost) ? referer : `${proto}://${reqHost}/jobs/${id}`
-  const utm = extractUtmFromUrl(fullUrl)
-  // ベストエフォート（失敗してもページ表示は阻害しない）。
-  // プレビューモードでは社内チェックを実トラフィックに混ぜないため記録しない。
-  if (!isPreview) {
-    await recordJobView({
-      jobId: id,
-      sessionId,
-      userId: null,
-      ipAddress,
-      userAgent: ua,
-      referer,
-      utm,
-    }).catch(() => {})
-  }
+  // 閲覧記録はクライアント beacon (<JobViewBeacon />) 経由で行う。
+  // SSR 中に DB 書き込みを行わないことで、TTFB と将来の ISR 化を可能にする。
 
   const job = await prisma.job.findUnique({
     where: { id },
@@ -263,6 +236,7 @@ export default async function JobDetailPage({ params, searchParams }: Props) {
 
   return (
     <div className="bg-gray-50 min-h-screen pb-24 sm:pb-28">
+      <JobViewBeacon jobId={job.id} enabled={!isPreview} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

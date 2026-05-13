@@ -27,7 +27,13 @@ import {
   Users,
 } from "lucide-react"
 import { CATEGORY_LABELS } from "@/lib/article-categories"
+import { RecommendedForYou } from "@/components/jobs/recommended-for-you"
+import { getCategoryCounts } from "@/lib/job-stats"
 import type { Metadata } from "next"
+
+// トップページは特集記事 + おすすめ求人など、5 分単位のフレッシュさで十分。
+// ISR でレンダリング結果をキャッシュし、初回表示までの TTFB を削減。
+export const revalidate = 300
 
 export const metadata: Metadata = {
   title: "ゲンバキャリア | 建築・土木・電気・内装の求人サイト",
@@ -127,13 +133,8 @@ export default async function HomePage() {
     magazineArticles,
     interviewArticles,
   ] = await Promise.all([
-    prisma.job
-      .groupBy({
-        by: ["category"],
-        where: baseConstructionFilter,
-        _count: true,
-      })
-      .catch(() => []),
+    // materialized view から件数を取得（未作成時は groupBy にフォールバック）
+    getCategoryCounts(),
     prisma.job
       .findMany({
         where: baseConstructionFilter,
@@ -192,10 +193,10 @@ export default async function HomePage() {
       .catch(() => []),
   ])
 
-  const totalJobs = categoryCounts.reduce((sum, c) => sum + (c._count ?? 0), 0)
+  const totalJobs = categoryCounts.reduce((sum, c) => sum + c.count, 0)
   const categoriesWithCounts = categories.map((c) => ({
     ...c,
-    count: categoryCounts.find((cc) => cc.category === c.key)?._count ?? 0,
+    count: categoryCounts.find((cc) => cc.category === c.key)?.count ?? 0,
   }))
 
   return (
@@ -347,6 +348,13 @@ export default async function HomePage() {
               <span className="text-xs font-bold text-gray-700 leading-tight">{label}</span>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* === あなたへのおすすめ (匿名 JobView から差し込み) =================== */}
+      <section className="border-y border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+          <RecommendedForYou limit={6} />
         </div>
       </section>
 
