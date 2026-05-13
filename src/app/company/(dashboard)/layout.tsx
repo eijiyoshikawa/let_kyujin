@@ -4,6 +4,9 @@ import { CompanySidebar } from "@/components/company/sidebar"
 import { CompanyStatusBanner } from "@/components/company/status-banner"
 import { prisma } from "@/lib/db"
 
+// /company 配下は全て認証必須。build 時 prerender を回避。
+export const dynamic = "force-dynamic"
+
 export default async function CompanyLayout({
   children,
 }: {
