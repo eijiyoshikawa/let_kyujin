@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db"
 import { JobCard } from "@/components/jobs/job-card"
+import { EmptyJobsState } from "@/components/jobs/empty-jobs-state"
 import { CompareCart } from "@/components/jobs/compare-cart"
 import { Briefcase, Search, SlidersHorizontal } from "lucide-react"
 import Link from "next/link"
@@ -428,23 +429,17 @@ export default async function JobsPage({ searchParams }: Props) {
             {/* Job list */}
             <div className="mt-4 space-y-3">
               {jobs.length === 0 ? (
-                <div className=" border bg-white p-12 text-center">
-                  <Search className="mx-auto h-10 w-10 text-gray-300" />
-                  <p className="mt-3 text-gray-500">条件に合う求人が見つかりませんでした。</p>
-                  <Link
-                    href="/jobs"
-                    className="mt-3 inline-block text-sm font-medium text-primary-600 hover:text-primary-700"
-                  >
-                    条件を変更して再検索 →
-                  </Link>
-                  <p className="mt-4 text-xs text-gray-400">
-                    ハローワーク求人もあわせて{" "}
-                    <Link href="/hw-jobs" className="text-primary-600 hover:underline">
-                      こちら
-                    </Link>{" "}
-                    から検索できます。
-                  </p>
-                </div>
+                <EmptyJobsState
+                  params={{
+                    q: params.q,
+                    category: params.category,
+                    prefecture: params.prefecture,
+                    city: params.city,
+                    employment_type: params.employment_type,
+                  }}
+                  favoriteIds={favoriteIds}
+                  loggedIn={loggedIn}
+                />
               ) : (
                 jobs.map((job) => (
                   <JobCard
