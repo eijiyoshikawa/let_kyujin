@@ -18,10 +18,14 @@ const STATUS_LABEL: Record<string, { text: string; className: string }> = {
 
 export default async function AdminCompanyDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>
+  searchParams?: Promise<Record<string, string | undefined>>
 }) {
   const { id } = await params
+  const sp = (await searchParams) ?? {}
+  const justCreated = sp.created === "1"
 
   const company = await prisma.company.findUnique({
     where: { id },
@@ -58,6 +62,11 @@ export default async function AdminCompanyDetailPage({
 
   return (
     <div className="space-y-6">
+      {justCreated && (
+        <div className="border border-green-300 bg-green-50 px-4 py-3 text-sm text-green-900">
+          企業を登録しました。下記の「ログイン情報を発行」から担当者を招待してください。
+        </div>
+      )}
       <div>
         <Link
           href="/admin/companies"
