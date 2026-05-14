@@ -15,6 +15,11 @@ import {
 } from "@/lib/categories"
 import { auth } from "@/lib/auth"
 import { SaveSearchButton } from "@/components/jobs/save-search-button"
+import {
+  GuestSignupCta,
+  GuestTrialBanner,
+} from "@/components/jobs/guest-signup-cta"
+import { GUEST_LIMIT } from "@/lib/guest-job-access"
 import type { Metadata } from "next"
 
 type Props = {
@@ -76,12 +81,16 @@ export async function generateMetadata({
 
 export default async function JobsPage({ searchParams }: Props) {
   const params = await searchParams
-  const page = Math.max(1, Number(params.page ?? "1"))
-  const limit = 20
 
   // 保存検索ボタン用にログイン状態だけ拾う（fail-safe）
   const session = await auth().catch(() => null)
   const loggedIn = !!session?.user?.id
+
+  // 未登録ユーザーには「お試し検索」として上位 GUEST_LIMIT 件のみ。
+  // ページネーションも無効化し、`page` パラメータは無視する。
+  const rawPage = Math.max(1, Number(params.page ?? "1"))
+  const page = loggedIn ? rawPage : 1
+  const limit = loggedIn ? 20 : GUEST_LIMIT
 
   const salaryMinYen = parseManYenToYen(params.salary_min)
   const salaryMaxYen = parseManYenToYen(params.salary_max)
@@ -426,6 +435,13 @@ export default async function JobsPage({ searchParams }: Props) {
               <SortLink params={params} sort={sort} />
             </div>
 
+            {/* お試し閲覧バナー（未登録 & ヒットあり時のみ） */}
+            {!loggedIn && total > 0 && (
+              <div className="mt-4">
+                <GuestTrialBanner limit={GUEST_LIMIT} total={total} />
+              </div>
+            )}
+
             {/* Job list */}
             <div className="mt-4 space-y-3">
               {jobs.length === 0 ? (
@@ -452,15 +468,28 @@ export default async function JobsPage({ searchParams }: Props) {
               )}
             </div>
 
-            {/* Pagination */}
-            <div className="mt-8">
-              <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                basePath="/jobs"
-                searchParams={params}
-              />
-            </div>
+            {/* 未登録ユーザーの上限到達時 CTA */}
+            {!loggedIn && total > GUEST_LIMIT && (
+              <div className="mt-4">
+                <GuestSignupCta
+                  total={total}
+                  shown={jobs.length}
+                  callbackUrl={buildCallbackUrl(params)}
+                />
+              </div>
+            )}
+
+            {/* Pagination（ログイン時のみ） */}
+            {loggedIn && (
+              <div className="mt-8">
+                <Pagination
+                  currentPage={page}
+                  totalPages={totalPages}
+                  basePath="/jobs"
+                  searchParams={params}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -627,6 +656,16 @@ function buildSearchName(p: Record<string, string | undefined>): string {
   if (p.category) parts.push(getCategoryLabel(p.category))
   if (p.q) parts.push(`「${p.q}」`)
   return parts.length > 0 ? parts.join(" / ") : "建設業求人"
+}
+
+/** 登録後に戻ってくる /jobs?... URL を組み立てる（page パラメータは除外） */
+function buildCallbackUrl(params: Record<string, string | undefined>): string {
+  const sp = new URLSearchParams()
+  for (const [k, v] of Object.entries(params)) {
+    if (!v || k === "page") continue
+    sp.set(k, v)
+  }
+  return sp.toString() ? `/jobs?${sp.toString()}` : "/jobs"
 }
 
 function salaryRangeLabel(min: string | undefined, max: string | undefined): string {

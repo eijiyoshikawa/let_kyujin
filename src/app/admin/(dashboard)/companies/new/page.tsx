@@ -73,7 +73,9 @@ export default function AdminCompanyNewPage() {
         setError(data.error || "登録に失敗しました")
         return
       }
-      router.push("/admin/companies")
+      // 作成直後にそのまま「ログイン情報を発行」UI に到達できるよう詳細へ遷移
+      const newId = data?.company?.id
+      router.push(newId ? `/admin/companies/${newId}?created=1` : "/admin/companies")
       router.refresh()
     } catch {
       setError("登録中にエラーが発生しました")

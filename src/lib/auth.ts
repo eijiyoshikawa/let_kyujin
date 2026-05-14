@@ -206,6 +206,7 @@ providers.push(
           name: companyUser.name,
           role: companyUser.role === "admin" ? "company_admin" : "company_member",
           companyId: companyUser.companyId,
+          mustChangePassword: companyUser.mustChangePassword,
         }
       },
     }),
@@ -275,11 +276,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return true
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
         token.id = user.id
         token.role = (user as { role: string }).role
         token.companyId = (user as { companyId?: string }).companyId
+        token.mustChangePassword =
+          (user as { mustChangePassword?: boolean }).mustChangePassword ?? false
+      }
+      // PW 変更後の update() 呼び出しでフラグを下げる
+      if (trigger === "update") {
+        token.mustChangePassword = false
       }
       return token
     },
@@ -289,6 +296,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         ;(session.user as { role: string }).role = token.role as string
         ;(session.user as { companyId?: string }).companyId =
           token.companyId as string | undefined
+        ;(session.user as { mustChangePassword?: boolean }).mustChangePassword =
+          (token.mustChangePassword as boolean | undefined) ?? false
       }
       return session
     },

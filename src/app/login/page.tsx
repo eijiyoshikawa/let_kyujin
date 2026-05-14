@@ -31,7 +31,8 @@ export default function LoginPage() {
       if (result?.error) {
         setError("メールアドレスまたはパスワードが正しくありません。");
       } else if (result?.ok) {
-        window.location.href = activeTab === "seeker" ? "/mypage" : "/company";
+        window.location.href =
+          activeTab === "seeker" ? "/mypage" : "/company/dashboard";
       }
     } catch {
       setError("ログイン中にエラーが発生しました。もう一度お試しください。");

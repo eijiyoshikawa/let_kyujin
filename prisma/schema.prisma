@@ -302,6 +302,7 @@ model Company {
   schedulingUrls Json @default("[]") @map("scheduling_urls")
 
   companyUsers  CompanyUser[]
+  invitations   CompanyInvitation[]
   jobs          Job[]
   scouts        Scout[]
   billingEvents BillingEvent[]
@@ -332,11 +333,34 @@ model CompanyUser {
   totpEnabledAt   DateTime? @map("totp_enabled_at") @db.Timestamptz()
   // 1 回限りのリカバリコード（ハッシュ化 [bcrypt] して保存。1 件 60 char 程度）
   totpRecoveryCodes String[] @default([]) @map("totp_recovery_codes")
+  // 直接発行 (admin が仮 PW 手渡し) で作成された場合 true。
+  // 初回ログイン直後に /company/change-password へ強制リダイレクト。
+  mustChangePassword Boolean @default(false) @map("must_change_password")
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz()
 
   company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
   @@map("company_users")
+}
+
+// 企業ユーザー招待。admin が /admin/companies/[id] から発行する。
+// token は 64 桁 hex。期限 7 日。accept されると acceptedAt がセットされる。
+model CompanyInvitation {
+  id          String    @id @default(uuid()) @db.Uuid
+  companyId   String    @map("company_id") @db.Uuid
+  email       String    @db.VarChar(255)
+  token       String    @unique @db.VarChar(64)
+  role        String    @default("admin") @db.VarChar(20) // admin | member
+  expiresAt   DateTime  @map("expires_at") @db.Timestamptz()
+  acceptedAt  DateTime? @map("accepted_at") @db.Timestamptz()
+  invitedById String?   @map("invited_by_id") @db.Uuid
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId], name: "idx_company_invitations_company_id")
+  @@index([email], name: "idx_company_invitations_email")
+  @@map("company_invitations")
 }
 
 // ========================================

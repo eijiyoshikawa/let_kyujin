@@ -136,7 +136,8 @@ export function middleware(request: NextRequest) {
 
   const isSeekerRoute = seekerRoutes.some((r) => pathname.startsWith(r))
   const isCompanyRoute = companyRoutes.some((r) => pathname.startsWith(r))
-  const isAdminRoute = adminRoutes.some((r) => pathname.startsWith(r))
+  const isAdminRoute =
+    adminRoutes.some((r) => pathname.startsWith(r)) && pathname !== "/admin/login"
 
   /** すべての応答に gc_sid Cookie + 必要なら noindex ヘッダを乗せるヘルパー。 */
   function withTrackingCookie(res: NextResponse): NextResponse {
