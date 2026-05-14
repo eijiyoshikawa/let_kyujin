@@ -1,0 +1,236 @@
+# セッション引き継ぎノート (2026-05-13)
+
+新しい Claude Code セッションを開始するときに、このファイルを最初に読むよう指示してください。
+プロジェクト全体の経緯と、未完了の作業が把握できます。
+
+---
+
+## このセッションで完了したこと
+
+### 1. ブランド / デザイン整備（PR #95–#96）
+- 共通 UI コンポーネント `<Section>` `<Button>` 作成（`src/components/ui/`）
+- Header を Server Component 化（モバイルメニューだけ Client）
+- Hero ファーストビュー強化（検索フォームの白パネル + クイックチップ 5 種）
+- Footer ボタン統一、SNS アイコン拡大
+- 極小フォント `text-[10px]` `text-[11px]` 全 94 箇所を `text-xs` に統一
+
+### 2. スクレイピング / セキュリティ対策（PR #97 / #110 / #111）
+- `robots.txt` で AI クローラ 25 種を Disallow（GPTBot / ClaudeBot / Google-Extended など）
+- middleware で `curl` `python-requests` `Go-http-client` 等の bot UA を 403
+- 公開 API 全て rate-limit 化（`/api/jobs` 90req/min, `/api/jobs/[id]` 60req/min など）
+- `X-Robots-Tag: noarchive` で Wayback Machine から退避
+- セキュリティヘッダ全部入り (HSTS / X-Frame-Options / CSP / Permissions-Policy)
+- 認証 endpoints に rate-limit (10 attempts / 15 min)
+- Open Redirect 防御 (`auth.ts` の `redirect` callback)
+- お問い合わせフォームに honeypot
+
+### 3. SEO / Core Web Vitals（PR #100 / #102 / #109）
+- **Google for Jobs 完全対応** — JobPosting JSON-LD 強化、必須・推奨フィールド網羅
+- 構造化データ: `identifier` / `applicantLocationRequirements` / `qualifications` / `keywords` / `jobBenefits` 追加
+- HelloWork 由来の構造化データも同等水準に
+- Header の `"use client"` 削除（モバイルメニューだけ別 Client）
+- Feature Banner の 1 番目だけ `priority`、他は `loading="lazy"`
+- `RecommendedForYou` に 2s タイムアウト
+- canonical URL を主要 6 ページに設定
+- `/api/health?full=1` エンドポイント強化（DB ping + env vars + deploy info）
+
+### 4. UX / エラー処理（PR #101 / #112 / #118）
+- 404 ページに人気カテゴリ・都道府県の導線追加
+- 検索 0 件時の `<EmptyJobsState>` 新設（条件緩和提案 + 最新求人 6 件 SSR）
+- 画像アップロード: magic byte 検証 + サイズ制限 + 拡張子安全化
+- 求人編集の楽観ロック（`expectedUpdatedAt` で同時編集検出 → 409）
+- スケジューリング URL の厳格化（HTTPS のみ、private IP 拒否）
+- 退会フロー: ApplicationMessageTemplate 削除追加 + 「退会済みユーザー」表示
+
+### 5. GbizINFO 統合（PR #98 / #105 / #106 / #107）
+- **完全実装**: 法人番号入力 → 自動取り込み → 求人カードに「✓ 建設業許可」バッジ
+- `/company/gbizinfo` 管理画面（取込 / 再取得 / 削除）
+- `/companies/[id]` 公開ページに公式データセクション
+- 月次自動再取得 Cron `/api/cron/refresh-gbiz`（毎月 1 日 03:00 UTC）
+- 法人番号未登録時のリマインドバナー（dashboard / 求人投稿画面）
+- ライブラリ `src/lib/gbizinfo.ts` 完備
+
+### 6. コンプライアンス（PR #113 / #117）
+- 求人広告の差別表現検出 `src/lib/job-compliance.ts`
+  - 雇用対策法 / 男女雇用機会均等法 / 職業安定法 違反パターンを正規表現で検出
+- JobWizard 内でリアルタイム警告 `<ComplianceWarnings>`
+- `/api/users/me/export` — 個人データの JSON エクスポート（個人情報保護法 第 33 条 / GDPR 第 15 条）
+- プライバシーポリシー大幅補強（保管期間 / 越境移転 / 業務委託先 / データ可搬性）
+- 利用規約大幅補強（成果報酬モデル明記 / スクレイピング禁止 / 退会条文）
+
+### 7. メール送信（PR #114 / #115）
+- Resend / SendGrid → **Gmail SMTP (nodemailer)** に切替
+- env vars: `SMTP_USER` / `SMTP_PASS` / `MAIL_FROM`
+- Stripe は **既存実装が成果報酬 + Invoicing** 設計だったので、ドキュメントのみ整理
+
+### 8. テスト・運用ツール（PR #103 / #108 / #116 / #119 / #120）
+- **Playwright E2E** 整備（5 spec / Chromium + Pixel 7）
+- スクリプト群:
+  - `pnpm gen:secret` — シークレット生成
+  - `pnpm check:env [--env=production]` — env 検証
+  - `pnpm preflight` — typecheck/lint/test/env/build を一括
+  - `pnpm smoke` — 本番 smoke test (curl ベース)
+- `/admin/status` — システム状態ダッシュボード
+- `/api/admin/sentry-test` — Sentry 接続確認エンドポイント
+- 初期 seed データ: 企業 5 社 + 求人 7 件 (`pnpm db:seed-companies` / `db:seed-jobs`)
+- `LAUNCH_CHECKLIST.md` — リリース直前 13 セクション検証手順
+- 単体テスト 127 → **149 passed (+22)**
+
+---
+
+## マージ済み PR 一覧（番号順）
+
+| # | テーマ |
+|---|---|
+| 95 | デザイン Phase 1 (UI components / fonts / tap area) |
+| 96 | デザイン Phase 2 (Hero / Section wrap / Footer) |
+| 97 | スクレイピング防止 (robots.txt / UA ブロック / rate-limit) |
+| 98 | GbizINFO 下準備 + RELEASE_TODO.md |
+| 100 | Google for Jobs 構造化データ強化 |
+| 101 | 404 / 検索 0 件ページの導線強化 |
+| 102 | Core Web Vitals 改善 |
+| 103 | Playwright E2E スモークテスト |
+| 105 | GbizINFO 本実装 (UI + 詳細ページ) |
+| 106 | GbizINFO follow-up (JobCard バッジ + 月次 Cron) |
+| 107 | GbizINFO リマインダーバナー + 公開時ログ |
+| 108 | preflight CLI 群 (gen:secret / check:env / preflight) |
+| 109 | /api/health 強化 + canonical URL 整備 |
+| 110 | セキュリティヘッダ + 認証 rate-limit + Open Redirect 防御 |
+| 111 | 公開 API rate-limit 全面適用 |
+| 112 | 企業側エラー検査強化 (magic byte / 楽観ロック / URL 厳格化) |
+| 113 | 求人コンプラ警告 + 個人情報エクスポート |
+| 114 | Gmail SMTP (nodemailer) 切替 |
+| 115 | Stripe Invoicing 専用化 docs |
+| 116 | admin/status + Sentry 接続テスト + smoke.sh |
+| 117 | プライバシー / 利用規約 業界標準補強 |
+| 118 | 退会フロー検証 + UI 文言修正 |
+| 119 | 初期 seed データ (企業 5 社 + 求人 7 件) |
+| 120 | LINE 署名検証ユニットテスト + LAUNCH_CHECKLIST.md |
+
+---
+
+## 環境変数 設定状況（前回時点）
+
+### ✅ 設定済み（ユーザー報告）
+- Supabase 一式 (`DATABASE_URL` / `DIRECT_URL` / `SUPABASE_*`)
+- NextAuth 基本 (`NEXTAUTH_SECRET` / `NEXTAUTH_URL` / `NEXT_PUBLIC_BASE_URL`)
+- `GBIZ_API_TOKEN`
+- LINE Messaging API (`LINE_CHANNEL_*`)
+- ドメイン (genbacareer.jp)
+
+### 🟡 ユーザーが手動で残している（手順案内済み）
+- `CRON_SECRET` (要 `pnpm gen:secret`)
+- `ADMIN_EMAIL` / `ADMIN_PASSWORD_HASH` ← ユーザー側で完了報告あり
+- `NEXT_PUBLIC_GA_ID = G-3KX8BLPXJZ` ← GA4 取得済み、Vercel 登録待ち
+- `SENTRY_DSN` / `NEXT_PUBLIC_SENTRY_DSN` / `SENTRY_PROJECT` ← Sentry 取得済み
+- `SENTRY_ORG` ← **ユーザー側で値を確認中**（前回ここで打ち止め）
+
+### ⏸ 会議後の方針決定待ち
+- **メール送信 (SMTP)**: Gmail Workspace + nodemailer の方向で実装済みだが、最終運用方針は会議後
+- **Stripe Invoicing**: 月額課金なし・成果報酬請求書発行（実装済）、運用方針は会議後
+
+### 📋 GSC は DNS で所有権確認済み
+- `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` は **不要**（DNS 確認済みのため）
+
+---
+
+## 次のセッションで進めること（優先順）
+
+### 🔴 最優先（リリース前 必須）
+1. **`SENTRY_ORG` 値をユーザーから取得 → Vercel に登録**
+2. **GSC: サイトマップ `https://genbacareer.jp/sitemap.xml` を送信**
+3. **Vercel デプロイ後 `pnpm smoke` でセキュリティヘッダ等を最終確認**
+
+### 🟠 会議後に方針確定したら
+4. **メール送信 (SMTP)** の方針確定後、Gmail Workspace アプリパスワードを Vercel に
+5. **Stripe Invoicing** の方針確定後、Stripe Dashboard 設定 + `STRIPE_*` env vars 登録
+
+### 🟡 リリース後早めに
+6. **企業 ID/PASS の admin 発行フロー** 実装
+   - **質問への回答済み**: 現状は CompanyUser 自己登録のみ。admin から発行する機能は未実装
+   - 提案: メール送信実装後に **招待メール方式** で実装するのが自然
+   - 触る予定ファイル: `/admin/companies/[id]/page.tsx`, 新規 `/admin/companies/[id]/invite/page.tsx`, 新規 `src/app/api/admin/companies/[id]/invite/route.ts`
+
+### 🟢 リリース後ゆっくり
+7. **法務最終確認**: terms / privacy / legal を顧問弁護士チェック
+8. **Lighthouse 実機計測** (LAUNCH_CHECKLIST.md セクション 9)
+9. **本番企業データ投入** + サンプル企業（example.com URL）の `--reset` 削除
+
+---
+
+## 重要ファイル / コマンド早見表
+
+### ドキュメント
+- `RELEASE_TODO.md` — 手作業項目チェックリスト
+- `LAUNCH_CHECKLIST.md` — リリース直前検証手順
+- `CLAUDE.md` — プロジェクト全体ルール
+- `eijiyoshikawa/agents/agents/tech_lead/architecture_xwork_clone.json` — アーキテクチャ設計
+
+### スクリプト (`package.json`)
+```bash
+pnpm dev                    # 開発サーバ
+pnpm build                  # 本番ビルド
+pnpm test                   # vitest
+pnpm test:e2e               # Playwright (要 pnpm test:e2e:install)
+pnpm gen:secret             # CRON_SECRET / NEXTAUTH_SECRET 生成
+pnpm check:env --env=production  # env vars 検証
+pnpm preflight              # 統合事前チェック
+pnpm smoke                  # 本番 smoke test
+pnpm db:seed-companies      # サンプル企業投入
+pnpm db:seed-jobs           # サンプル求人投入
+```
+
+### 重要 endpoints
+- `/api/health` — 軽量ヘルスチェック
+- `/api/health?full=1` — 全項目チェック
+- `/admin/status` — 管理者ダッシュボード
+- `/api/admin/sentry-test` — Sentry 接続確認
+
+---
+
+## 設計上の重要事項
+
+### 認証 / 権限
+- **2 種類のユーザー**: `User` (求職者 / NextAuth) + `CompanyUser` (企業 / 別 model)
+- `User` には Notification が紐付くが、`CompanyUser` には紐付かない
+  - 企業向け通知は **dashboard バナー方式** で実装（GbizINFO リマインダー参照）
+- 役割: `seeker` / `company_admin` / `company_member` / `admin`
+
+### 求人ソース
+- `direct`: 当社認定の掲載企業からの直接募集
+- `hellowork`: HelloWork API 由来（参照のみ、応募は HW 経由案内）
+- `EmptyJobsState` などの components は **direct のみフィルタ** されることが多い
+
+### 課金モデル
+- **成果報酬モデル**（採用 1 件あたり ¥50,000、`HIRING_FEE_AMOUNT`）
+- 月額サブスクは無し
+- Stripe Invoicing (`collection_method: "send_invoice"`) で請求書発行
+- MoneyForward クラウド請求書も併用可（`lib/billing.ts`）
+
+### スクレイピング対策の階層
+1. `robots.txt` で AI クローラを Disallow
+2. `middleware.ts` で curl 等の bot UA を 403
+3. 各 API endpoint で IP 単位 rate-limit
+4. `X-Robots-Tag: noarchive` で Wayback Machine 退避
+5. CSP で外部スクリプトを許可リスト方式
+
+---
+
+## 次セッションで Claude に伝えるべきこと（テンプレ）
+
+```
+新しいセッションを始めます。SESSION_HANDOVER.md を最初に読んでください。
+
+今日のゴール:
+- [ ] SENTRY_ORG を Vercel に設定 (値: xxx)
+- [ ] GSC でサイトマップ送信
+- [ ] pnpm smoke で本番動作確認
+- [ ] (会議結果次第) メール / Stripe の最終方針実装
+
+それと、企業の ID/PASS を admin から発行できる仕組みを
+セッション後半で実装したいです。
+```
+
+---
+
+最終更新: 2026-05-13 / 直近 PR: #120 (LAUNCH_CHECKLIST + LINE 署名検証テスト)
