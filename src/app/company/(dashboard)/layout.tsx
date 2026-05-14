@@ -20,6 +20,18 @@ export default async function CompanyLayout({
     redirect("/login")
   }
 
+  // 直接発行された企業ユーザーは初回 PW 変更を完了するまでダッシュボードに入れない
+  const userId = (session.user as { id?: string }).id
+  if (userId) {
+    const cu = await prisma.companyUser.findUnique({
+      where: { id: userId },
+      select: { mustChangePassword: true },
+    })
+    if (cu?.mustChangePassword) {
+      redirect("/company/change-password")
+    }
+  }
+
   const companyId = (session.user as { companyId?: string }).companyId ?? ""
   const company = companyId
     ? await prisma.company.findUnique({

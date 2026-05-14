@@ -4,6 +4,7 @@ import Link from "next/link"
 import { prisma } from "@/lib/db"
 import { CompanyApprovalActions } from "./approval-actions"
 import { PaymentMethodSelector } from "./payment-method-selector"
+import { InvitationManager } from "./invitation-manager"
 
 export const metadata: Metadata = {
   title: "企業詳細",
@@ -26,13 +27,32 @@ export default async function AdminCompanyDetailPage({
     where: { id },
     include: {
       companyUsers: {
-        select: { id: true, email: true, name: true, role: true, createdAt: true },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          role: true,
+          mustChangePassword: true,
+          createdAt: true,
+        },
       },
       _count: { select: { jobs: true, applications: true, scouts: true } },
     },
   })
 
   if (!company) notFound()
+
+  const pendingInvitations = await prisma.companyInvitation.findMany({
+    where: { companyId: id, acceptedAt: null },
+    orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      expiresAt: true,
+      createdAt: true,
+    },
+  })
 
   const status = STATUS_LABEL[company.status] ?? STATUS_LABEL.pending
 
@@ -153,18 +173,39 @@ export default async function AdminCompanyDetailPage({
       {/* Users */}
       <div className="border bg-white p-6 shadow-sm">
         <h2 className="font-bold text-gray-900">担当者</h2>
-        <ul className="mt-3 divide-y">
-          {company.companyUsers.map((u) => (
-            <li key={u.id} className="py-2 text-sm">
-              <p className="text-gray-900">{u.name ?? "(名前未設定)"}</p>
-              <p className="text-gray-500">
-                {u.email} · {u.role} ·{" "}
-                {u.createdAt.toLocaleDateString("ja-JP")}
-              </p>
-            </li>
-          ))}
-        </ul>
+        {company.companyUsers.length === 0 ? (
+          <p className="mt-3 text-sm text-gray-500">
+            まだ担当者がいません。下の「ログイン情報を発行」から招待してください。
+          </p>
+        ) : (
+          <ul className="mt-3 divide-y">
+            {company.companyUsers.map((u) => (
+              <li key={u.id} className="py-2 text-sm">
+                <p className="text-gray-900">{u.name ?? "(名前未設定)"}</p>
+                <p className="text-gray-500">
+                  {u.email} · {u.role} ·{" "}
+                  {u.createdAt.toLocaleDateString("ja-JP")}
+                  {u.mustChangePassword && (
+                    <span className="ml-2 inline-block bg-amber-100 px-2 py-0.5 text-xs text-amber-800">
+                      仮 PW 未変更
+                    </span>
+                  )}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
+
+      {/* Invitation manager */}
+      <InvitationManager
+        companyId={company.id}
+        pendingInvitations={pendingInvitations.map((inv) => ({
+          ...inv,
+          expiresAt: inv.expiresAt.toISOString(),
+          createdAt: inv.createdAt.toISOString(),
+        }))}
+      />
     </div>
   )
 }
