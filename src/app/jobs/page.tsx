@@ -19,13 +19,8 @@ import {
   GuestSignupCta,
   GuestTrialBanner,
 } from "@/components/jobs/guest-signup-cta"
+import { GUEST_LIMIT } from "@/lib/guest-job-access"
 import type { Metadata } from "next"
-
-/**
- * 未登録ユーザーが一覧で閲覧できる求人件数（お試し検索）。
- * これを超える件数は GuestSignupCta で登録誘導する。
- */
-const GUEST_LIMIT = 15
 
 type Props = {
   searchParams: Promise<Record<string, string | undefined>>
