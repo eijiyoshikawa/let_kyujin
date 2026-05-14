@@ -4,7 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 
-type TabType = "seeker" | "company";
+type TabType = "seeker" | "company" | "admin";
 
 export default function LoginPage() {
   const [activeTab, setActiveTab] = useState<TabType>("seeker");
@@ -20,7 +20,11 @@ export default function LoginPage() {
 
     try {
       const providerId =
-        activeTab === "seeker" ? "seeker-credentials" : "company-credentials";
+        activeTab === "seeker"
+          ? "seeker-credentials"
+          : activeTab === "company"
+            ? "company-credentials"
+            : "admin-credentials";
 
       const result = await signIn(providerId, {
         email,
@@ -31,7 +35,12 @@ export default function LoginPage() {
       if (result?.error) {
         setError("メールアドレスまたはパスワードが正しくありません。");
       } else if (result?.ok) {
-        window.location.href = activeTab === "seeker" ? "/mypage" : "/company";
+        window.location.href =
+          activeTab === "seeker"
+            ? "/mypage"
+            : activeTab === "company"
+              ? "/company/dashboard"
+              : "/admin";
       }
     } catch {
       setError("ログイン中にエラーが発生しました。もう一度お試しください。");
@@ -77,6 +86,20 @@ export default function LoginPage() {
               }`}
             >
               企業ログイン
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveTab("admin");
+                setError("");
+              }}
+              className={`flex-1  px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === "admin"
+                  ? "bg-white text-primary-600 shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              管理者
             </button>
           </div>
 
@@ -143,17 +166,19 @@ export default function LoginPage() {
             </div>
           )}
 
-          <div className="mt-4 text-center text-sm text-gray-500">
-            アカウントをお持ちでない方は
-            <Link
-              href={
-                activeTab === "seeker" ? "/register" : "/company/register"
-              }
-              className="ml-1 font-medium text-primary-600 hover:text-primary-500"
-            >
-              新規登録
-            </Link>
-          </div>
+          {activeTab !== "admin" && (
+            <div className="mt-4 text-center text-sm text-gray-500">
+              アカウントをお持ちでない方は
+              <Link
+                href={
+                  activeTab === "seeker" ? "/register" : "/company/register"
+                }
+                className="ml-1 font-medium text-primary-600 hover:text-primary-500"
+              >
+                新規登録
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>
